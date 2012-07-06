@@ -21,4 +21,8 @@ public interface CommandListener {
 	
 	public void onPreferences();
 	public void onDelete(VctToolView vctView, Vct data, VctView view, CTabItem tab);
+	public void onStart(VctToolView vctView, Vct data, VctView view, CTabItem tab);
+	public void onStop(VctToolView vctToolView, Vct data, VctView view,
+			CTabItem tab);
+
 }

@@ -147,6 +147,37 @@ public class CommandAdapter implements CommandListener {
 
 	}
 
+
+	// @Override
+	public void onStart(VctToolView vctToolView, Vct data, VctView view,
+			CTabItem tab) {
+		MessageDialog d = new MessageDialog(vctToolView.getShell(),
+				"To be implemented.", SWT.ICON_INFORMATION);
+
+		//TODO: VCT Start: to be implemented
+		System.out.println("VCT Start: to be implemented");
+		view.dispose();
+		tab.dispose();
+		if (rootController != null)
+			rootController.reloadVcts();
+
+	}
+
+	// @Override
+	public void onStop(VctToolView vctToolView, Vct data, VctView view,
+			CTabItem tab) {
+		MessageDialog d = new MessageDialog(vctToolView.getShell(),
+				"To be implemented.", SWT.ICON_INFORMATION);
+
+		//TODO: VCT Stop: to be implemented
+		System.out.println("VCT Stop: to be implemented");
+		view.dispose();
+		tab.dispose();
+		if (rootController != null)
+			rootController.reloadVcts();
+
+	}
+
 	public void setRootController(RootController c) {
 		this.rootController = c;
 	}

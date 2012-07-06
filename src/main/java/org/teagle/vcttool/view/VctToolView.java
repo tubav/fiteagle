@@ -134,7 +134,38 @@ public class VctToolView {
 		}
 		
 	}
-	
+
+	class StartAdapter extends SelectionAdapter
+	{
+		
+		@Override
+		public void widgetSelected(SelectionEvent event)
+		{
+			CTabItem tab = tabFolderVcts.getSelection();
+			VctView view = (VctView)tab.getControl();
+			Vct vct = ((VctController)tab.getData()).getVct();
+			
+			fireStartVctEvent(vct, view, tab);
+		}
+		
+	}
+
+
+	class StopAdapter extends SelectionAdapter
+	{
+		
+		@Override
+		public void widgetSelected(SelectionEvent event)
+		{
+			CTabItem tab = tabFolderVcts.getSelection();
+			VctView view = (VctView)tab.getControl();
+			Vct vct = ((VctController)tab.getData()).getVct();
+			
+			fireStopVctEvent(vct, view, tab);
+		}
+		
+	}
+
 	private Shell shell;
 	
 	private SashForm sashForm;
@@ -236,6 +267,16 @@ public class VctToolView {
 		itemDelete.setToolTipText("Delete this VCT");
 		itemDelete.addSelectionListener(new DeleteAdapter());
 
+		final ToolItem itemStart = new ToolItem(toolbarFile, SWT.PUSH);
+		itemStart.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/start.png")));
+		itemStart.setToolTipText("Start this VCT");
+		itemStart.addSelectionListener(new StartAdapter());
+
+		final ToolItem itemStop = new ToolItem(toolbarFile, SWT.PUSH);
+		itemStop.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/stop.png")));
+		itemStop.setToolTipText("Stop this VCT");
+		itemStop.addSelectionListener(new StopAdapter());
+		
 		toolbarFile.pack();
 		Point size = toolbarFile.getSize();
 		
@@ -649,6 +690,28 @@ public class VctToolView {
 			CommandListener listener = it.next();
 			try {
 				listener.onDelete(this, data, view, tab);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void fireStartVctEvent(Vct data, VctView view, CTabItem tab) {
+		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
+			CommandListener listener = it.next();
+			try {
+				listener.onStart(this, data, view, tab);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void fireStopVctEvent(Vct data, VctView view, CTabItem tab) {
+		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
+			CommandListener listener = it.next();
+			try {
+				listener.onStop(this, data, view, tab);
 			} catch (RuntimeException e) {
 				e.printStackTrace();
 			}
