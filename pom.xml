@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.fhg.fokus.ngni.teagle</groupId>
+	<artifactId>vct</artifactId>
+	<packaging>jar</packaging>
+	<name>vct</name>
+	<version>0.1</version>
+	<url>http://maven.apache.org</url>
+
+<repositories>
+    <repository>
+        <id>swt-repo</id>
+        <url>https://swt-repo.googlecode.com/svn/repo/</url>
+    </repository>
+</repositories>
+  
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<!--
+								set up the root of the maven repository in order to load the
+								jars from the repository
+							-->
+							<classpathPrefix>libs</classpathPrefix>
+							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+				  	<finalName>vcttool-0.1</finalName>
+				  	<appendAssemblyId>false</appendAssemblyId>
+				  	<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+					<descriptors>
+						<descriptor>src/main/assembly/webstart.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+	
+	    <dependency>
+        <groupId>org.eclipse.swt</groupId>
+        <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+        <version>3.7.2</version>
+    </dependency>
+    
+
+	<dependency>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-client</artifactId>
+                        <version>1.12</version>
+                </dependency>
+		<dependency>
+			<groupId>org.vafada</groupId>
+			<artifactId>swtcalendar</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.fokus.ngni.teagle</groupId>
+			<artifactId>model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.fokus.ngni.teagle</groupId>
+			<artifactId>util</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.fokus.ngni.teagle</groupId>
+			<artifactId>tssgrepoclient</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.6</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>0.9.24</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.fokus.ngni.openpe</groupId>
+			<artifactId>openpe.pem1</artifactId>
+			<version>0.0.6-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.3.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.fhg.fokus.ngni.teagle</groupId>
+			<artifactId>model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
