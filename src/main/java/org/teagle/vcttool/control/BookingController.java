@@ -14,14 +14,14 @@ import org.teagle.vcttool.view.CommandAdapter;
 import org.teagle.vcttool.view.VctToolView;
 import org.teagle.vcttool.view.dialogs.BookingResultDialog;
 
-import com.thoughtworks.xstream.XStream;
-
 import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
 import teagle.vct.model.VctState;
 import teagle.vct.util.Util;
+
+import com.thoughtworks.xstream.XStream;
 
 /**
  * @author sim

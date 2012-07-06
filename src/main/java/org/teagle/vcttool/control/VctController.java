@@ -10,14 +10,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teagle.vcttool.app.ValidateActions;
 import org.teagle.vcttool.view.ConnectionView;
 import org.teagle.vcttool.view.ResourceInstanceWidget;
 import org.teagle.vcttool.view.VctListener;
 import org.teagle.vcttool.view.VctView;
-import org.teagle.vcttool.app.ValidateActions;
-import org.teagle.vcttool.control.ResourceInstanceController;
-
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 
 import teagle.vct.model.Configuration;
 import teagle.vct.model.Connection;
@@ -28,6 +25,7 @@ import teagle.vct.model.ResourceInstanceState;
 import teagle.vct.model.ResourceSpec;
 import teagle.vct.model.Vct;
 import teagle.vct.util.Util;
+import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 
 /**
  * @author sim

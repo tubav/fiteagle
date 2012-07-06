@@ -2,8 +2,11 @@ package teagle.vct.app;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import teagle.vct.model.ResourceSpec;
 
 /**
  * Models a time interval when a specific {@link ResourceSpec} is available for booking.

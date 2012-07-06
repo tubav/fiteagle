@@ -3,7 +3,6 @@
  */
 package org.teagle.vcttool.view;
 
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -33,10 +32,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.teagle.vcttool.control.VctController;
-import org.teagle.vcttool.view.dialogs.MessageDialog;
 
 import teagle.vct.model.Vct;
-import teagle.vct.util.Util;
 
 /**
  * @author sim

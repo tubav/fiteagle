@@ -3,17 +3,16 @@
  */
 package org.teagle.vcttool.control;
 
+import org.eclipse.swt.custom.CTabItem;
 import org.teagle.vcttool.app.ProgressException;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.app.VctToolApp;
 import org.teagle.vcttool.view.CommandAdapter;
 import org.teagle.vcttool.view.VctToolView;
 import org.teagle.vcttool.view.VctView;
-import org.eclipse.swt.custom.CTabItem;
 
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.RepoClientConfig;
-
 import teagle.vct.model.Vct;
 
 /**

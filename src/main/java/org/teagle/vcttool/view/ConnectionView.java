@@ -8,9 +8,6 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.teagle.vcttool.app.ValidateActions;
-
-import teagle.vct.util.Util;
 
 import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 

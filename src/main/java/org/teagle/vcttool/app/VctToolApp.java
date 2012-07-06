@@ -7,14 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teagle.vcttool.control.ProgressDialogController;
 import org.teagle.vcttool.control.RootController;
 import org.teagle.vcttool.control.VctToolConfig;
 import org.teagle.vcttool.view.CommandAdapter;

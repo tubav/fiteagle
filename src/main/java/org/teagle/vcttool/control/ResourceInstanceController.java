@@ -23,7 +23,7 @@ import org.teagle.vcttool.view.dialogs.MessageDialog;
 import teagle.vct.model.ConfigParamAtomic;
 import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
-import teagle.vct.model.Ptm; 
+import teagle.vct.model.Ptm;
 import teagle.vct.model.ResourceInstance;
 
 /**

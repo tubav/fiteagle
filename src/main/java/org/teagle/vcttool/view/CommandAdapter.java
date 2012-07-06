@@ -10,13 +10,12 @@ import org.teagle.vcttool.control.RootController;
 import org.teagle.vcttool.view.dialogs.InputDialog;
 import org.teagle.vcttool.view.dialogs.MessageDialog;
 
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
-
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.RepositoryException;
 import teagle.vct.model.Vct;
 import teagle.vct.tssg.impl.TSSGVct;
 import teagle.vct.util.Util;
+import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 
 /**
  * @author sim
