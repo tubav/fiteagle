@@ -182,7 +182,7 @@ public class VctToolView {
 		
 		Display display = new Display();
 		shell = new Shell(display);
-		shell.setText("Teagle VCT");
+		shell.setText("OpenTeagle Controller | VCTTool");
 		shell.setSize(900, 500);
 		
 		GridLayout layout = new GridLayout(1, false);
