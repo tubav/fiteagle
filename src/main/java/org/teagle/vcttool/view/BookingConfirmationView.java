@@ -26,7 +26,6 @@ public class BookingConfirmationView extends VctToolDialog implements SelectionL
 	
 	final VctToolApp.BookConfirmResult[] confirmResult = { VctToolApp.BookConfirmResult.CANCEL };
 	private Button ok;
-	private Button buttonOk;
 	
 	
 	public BookingConfirmationView(Vct vct)

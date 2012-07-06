@@ -33,7 +33,6 @@ public class BookingResultDialog extends Dialog implements SelectionListener {
 	private Group params;
 
 	private Button buttonOk;
-	private Button buttonCancel;
 	
     String combine(String[] s, String glue)
     {

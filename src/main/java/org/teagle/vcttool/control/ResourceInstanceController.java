@@ -89,7 +89,7 @@ public class ResourceInstanceController implements ResourceInstanceListener, Con
 //				view.addConfigSource(((ConfigParamAtomic)params).getCommonName(), params, null);
 //			}
 			
-			List <ConfigParamAtomic> params = (List<ConfigParamAtomic>) resourceInstance.getResourceSpec().getConfigurationParameters();
+			List<? extends ConfigParamAtomic> params = resourceInstance.getResourceSpec().getConfigurationParameters();
 			for (ConfigParamAtomic atomic : params){
 				if (atomic.getType().startsWith("reference")) {
 					view.addConfigSource(atomic.getCommonName(), atomic, null);
