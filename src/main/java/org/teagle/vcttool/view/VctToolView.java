@@ -271,11 +271,13 @@ public class VctToolView {
 		itemStart.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/start.png")));
 		itemStart.setToolTipText("Start this VCT");
 		itemStart.addSelectionListener(new StartAdapter());
+		itemStart.setEnabled(false);
 
 		final ToolItem itemStop = new ToolItem(toolbarFile, SWT.PUSH);
 		itemStop.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/stop.png")));
 		itemStop.setToolTipText("Stop this VCT");
 		itemStop.addSelectionListener(new StopAdapter());
+		itemStop.setEnabled(false);
 		
 		toolbarFile.pack();
 		Point size = toolbarFile.getSize();
