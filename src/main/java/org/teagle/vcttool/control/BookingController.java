@@ -28,12 +28,49 @@ import com.thoughtworks.xstream.XStream;
  *
  */
 public class BookingController implements BookingListener {
+	private static final int STATUS_OK = 0;
 	private RootController controller;
 	private CommandAdapter ca;
 	
 	//TODO: do this through jax
 	private XStream xs;
 	private URL reqProcUrl;
+	
+
+	private void executeVCTcommand(final Vct data, final String[] answer, final String command)
+			throws IOException {
+		try {
+			URLConnection conn = reqProcUrl.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Content-Type", "text/plain");
+	
+			String req = "<string-array><string>VctRegistry</string><string>"
+					+ command
+					+ "</string><string>"
+					+ data.getPerson().getUserName()
+					+ "</string><string>"
+					+ data.getCommonName()
+					+ "</string></string-array>";
+			conn.getOutputStream().write(req.getBytes());
+			answer[0] = Util.readStream(conn.getInputStream());
+			Util.debug("Answer from reqproc: " + answer[0]);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	private void prepareVCTcommand(final VctToolView vctView, final Vct data,
+			final String commandStopVCT, final String textStopVCT) {
+		final String[] answer = { null };		
+		controller.handleProgressJob(new ProgressJob() {
+			public void run() throws Exception {
+				executeVCTcommand(data, answer, commandStopVCT);
+			}
+		}, textStopVCT);
+		if (answer[0] != null)
+			showRequestProcessorResult(answer[0], vctView);
+	}
 	
 	public BookingController(RootController controller, CommandAdapter ca, VctToolConfig config)
 	{
@@ -67,45 +104,28 @@ public class BookingController implements BookingListener {
 		final String[] answer = { null };
 		
 		controller.handleProgressJob(new ProgressJob() {
-			
-
 			public void run() throws Exception {
-				try
-				{
-					URLConnection conn = reqProcUrl.openConnection();
-					conn.setDoOutput(true);
-					conn.setRequestProperty("Content-Type", "text/plain");
-			
-					String req = "<string-array><string>VctRegistry</string><string>setVct</string><string>"
-							+ data.getPerson().getUserName()
-							+ "</string><string>"
-							+ data.getCommonName()
-							+ "</string></string-array>";
-					conn.getOutputStream().write(req.getBytes());
-					answer[0] = Util.readStream(conn.getInputStream());
-					Util.debug("Answer from reqproc: " + answer[0]);
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-					throw e;
-				}
+				executeVCTcommand(data, answer, "setVct");
 			}
 		}, "booking in progress...");
 
-		if (answer[0] != null)
-			showBookingResult(answer[0], vctView);
-		
+		if (answer[0] != null) {
+			showRequestProcessorResult(answer[0], vctView);
+		}
 	}
 	
-	private void showBookingResult(String answer, VctToolView view)
+	private void showRequestProcessorResult(String answer, VctToolView view)
 	{
 		OrchestrateReturn or = (OrchestrateReturn) xs.fromXML(answer);
-		
 		System.out.println(or.message);
 		
-		BookingResultDialog d = new BookingResultDialog(view.getShell(), or.status, or.message, or.log, or.logbook);
-		d.show();
+		new BookingResultDialog(view.getShell(), or.status, or.message, or.log, or.logbook).show();
+		updateView(view, or.status);
+	}
+
+	private void updateView(VctToolView view, int status) {
+		if (STATUS_OK == status)
+			view.setLifecycleButtonsEnabled(true);
 	}
 
 	public void onExportXml(Vct data) {
@@ -180,4 +200,19 @@ public class BookingController implements BookingListener {
 		controller.addVct(newVctController);
 	}
 
+	public void onStop(final VctToolView vctView, final Vct data) {
+		System.out.println("do_stop");
+		final String commandStopVCT = "stopVct";
+		final String textStopVCT = "stopping in progress...";
+		
+		prepareVCTcommand(vctView, data, commandStopVCT, textStopVCT);
+	}
+
+	public void onStart(final VctToolView vctView, final Vct data) {
+		System.out.println("do_start");
+		final String commandStopVCT = "startVct";
+		final String textStopVCT = "start in progress...";
+		
+		prepareVCTcommand(vctView, data, commandStopVCT, textStopVCT);
+	}
 }

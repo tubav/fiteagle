@@ -177,6 +177,11 @@ public class VctToolView {
 	private Set<CommandListener> commandListeners = new CopyOnWriteArraySet<CommandListener>();
 	private Set<BookingListener> bookingListeners = new CopyOnWriteArraySet<BookingListener>();
 	
+	final CoolBar coolBar;
+	final ToolBar toolbarFile;
+	final ToolItem itemStart;
+	final ToolItem itemStop;
+
 	
 	public VctToolView() {
 		
@@ -184,7 +189,7 @@ public class VctToolView {
 		shell = new Shell(display);
 		shell.setText("OpenTeagle Controller | VCTTool");
 		shell.setSize(900, 500);
-		
+			
 		GridLayout layout = new GridLayout(1, false);
 		shell.setLayout(layout);
 
@@ -229,11 +234,10 @@ public class VctToolView {
 		menuItemHelp.setMenu(menuHelp);
 		 */
 		
-		CoolBar coolBar = new CoolBar(shell, SWT.FLAT);
-		coolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
-		ToolBar toolbarFile = new ToolBar(coolBar, SWT.FLAT);
-		
+		coolBar = new CoolBar(shell, SWT.FLAT);
+		coolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));	
+		toolbarFile = new ToolBar(coolBar, SWT.FLAT);
+
 		ToolItem itemNew = new ToolItem(toolbarFile, SWT.PUSH);
 		itemNew.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/new_wiz.gif")));
 		itemNew.setToolTipText("Create new empty Vct");
@@ -267,13 +271,13 @@ public class VctToolView {
 		itemDelete.setToolTipText("Delete this VCT");
 		itemDelete.addSelectionListener(new DeleteAdapter());
 
-		final ToolItem itemStart = new ToolItem(toolbarFile, SWT.PUSH);
+		itemStart = new ToolItem(toolbarFile, SWT.PUSH);		
 		itemStart.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/start.png")));
 		itemStart.setToolTipText("Start this VCT");
 		itemStart.addSelectionListener(new StartAdapter());
 		itemStart.setEnabled(false);
 
-		final ToolItem itemStop = new ToolItem(toolbarFile, SWT.PUSH);
+		itemStop = new ToolItem(toolbarFile, SWT.PUSH);
 		itemStop.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/stop.png")));
 		itemStop.setToolTipText("Stop this VCT");
 		itemStop.addSelectionListener(new StopAdapter());
@@ -632,17 +636,6 @@ public class VctToolView {
 		}
 	}
 
-	private void fireBookingBookEvent(Vct data) {
-		for (Iterator<BookingListener> it = bookingListeners.iterator(); it.hasNext(); ) {
-			BookingListener listener = it.next();
-			try {
-				listener.onBook(this, data);
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private void fireBookingExportXmlEvent(Vct data) {
 		for (Iterator<BookingListener> it = bookingListeners.iterator(); it.hasNext(); ) {
 			BookingListener listener = it.next();
@@ -699,10 +692,10 @@ public class VctToolView {
 	}
 
 	private void fireStartVctEvent(Vct data, VctView view, CTabItem tab) {
-		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
-			CommandListener listener = it.next();
+		for (Iterator<BookingListener> it = bookingListeners.iterator(); it.hasNext(); ) {
+			BookingListener listener = it.next();
 			try {
-				listener.onStart(this, data, view, tab);
+				listener.onStart(this, data);
 			} catch (RuntimeException e) {
 				e.printStackTrace();
 			}
@@ -710,14 +703,31 @@ public class VctToolView {
 	}
 
 	private void fireStopVctEvent(Vct data, VctView view, CTabItem tab) {
-		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
-			CommandListener listener = it.next();
+		for (Iterator<BookingListener> it = bookingListeners.iterator(); it.hasNext(); ) {
+			BookingListener listener = it.next();
 			try {
-				listener.onStop(this, data, view, tab);
+				listener.onStop(this, data);
 			} catch (RuntimeException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
+	private void fireBookingBookEvent(Vct data) {
+		for (Iterator<BookingListener> it = bookingListeners.iterator(); it.hasNext(); ) {
+			BookingListener listener = it.next();
+			try {
+				listener.onBook(this, data);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void setLifecycleButtonsEnabled(boolean bool) {
+		this.itemStart.setEnabled(bool);
+		this.itemStop.setEnabled(bool);
+	}
+
 
 }

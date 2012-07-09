@@ -3,6 +3,8 @@
  */
 package org.teagle.vcttool.view;
 
+import org.eclipse.swt.custom.CTabItem;
+
 import teagle.vct.model.Vct;
 
 /**
@@ -16,5 +18,7 @@ public interface BookingListener {
 	public void onShowState(Vct data);
 	public void onCloneUnprovisioned(Vct data);
 	void onBook(VctToolView vctView, Vct data);
+	public void onStart(VctToolView vctView, Vct data);
+	public void onStop(VctToolView vctToolView, Vct data);
 	
 }
