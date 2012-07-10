@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.teagle.client.TeagleClient;
+import org.teagle.api.TeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.view.BookingListener;
 import org.teagle.vcttool.view.CommandAdapter;

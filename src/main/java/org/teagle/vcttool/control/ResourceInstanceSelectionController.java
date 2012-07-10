@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.teagle.client.TeagleClient;
+import org.teagle.api.TeagleClient;
 
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.ResourceInstanceState;
