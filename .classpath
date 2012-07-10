@@ -5,6 +5,7 @@
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/org/eclipse/swt/org.eclipse.swt.cocoa.macosx.x86_64/3.7.2/org.eclipse.swt.cocoa.macosx.x86_64-3.7.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.27/jcommander-1.27.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.12/jersey-client-1.12.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.12/jersey-core-1.12.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/vafada/swtcalendar/1.0/swtcalendar-1.0.jar"/>
@@ -32,6 +33,7 @@
   <classpathentry kind="var" path="M2_REPO/org/osgi/org.osgi.core/4.2.0/org.osgi.core-4.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/osgi/org.osgi.compendium/4.2.0/org.osgi.compendium-4.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/broker/broker.openpe.pem1_output_utils/1.0-SNAPSHOT/broker.openpe.pem1_output_utils-1.0-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/thoughtworks/xstream/xstream/1.3.1/xstream-1.3.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/thoughtworks/xstream/xstream/1.4.2/xstream-1.4.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar"/>
 </classpath>
