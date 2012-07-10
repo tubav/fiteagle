@@ -3,8 +3,13 @@
  */
 package org.teagle.vcttool.control;
 
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.teagle.client.TeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
@@ -17,6 +22,7 @@ import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
+import teagle.vct.tssg.impl.TSSGVct;
 import teagle.vct.util.Util;
 
 import com.thoughtworks.xstream.XStream;
@@ -69,6 +75,8 @@ public class BookingController implements BookingListener {
 	}
 	
 	public void onBook(final VctToolView vctView, final Vct data) {
+		System.out.println("DEBUG: Booking: " +  TeagleClient.toString(data));
+
 		if (data.isModified() && !ca.onSave(vctView, data))
 				return;
 		/*
@@ -99,6 +107,7 @@ public class BookingController implements BookingListener {
 		System.out.println(or.message);
 		
 		new BookingResultDialog(view.getShell(), or.status, or.message, or.log, or.logbook).show();
+		
 		updateView(view, or.status);
 	}
 
