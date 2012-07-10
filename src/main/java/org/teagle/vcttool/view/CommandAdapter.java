@@ -5,6 +5,7 @@ package org.teagle.vcttool.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
+import org.teagle.client.TeagleClient;
 import org.teagle.vcttool.app.ValidateActions;
 import org.teagle.vcttool.control.RootController;
 import org.teagle.vcttool.view.dialogs.InputDialog;
@@ -88,6 +89,7 @@ public class CommandAdapter implements CommandListener {
 				} else if (!ModelManager.getInstance().vctExists(vctName,
 						((TSSGVct) data).getPerson().getUserName())) {
 					((TSSGVct) data).setCommonName(dialog.getName());
+					System.out.println("DEBUG: Booking (really): " +  TeagleClient.toString(data));
 					data = ((TSSGVct) data).persist();
 					rootController.reloadVcts();
 					return true;
