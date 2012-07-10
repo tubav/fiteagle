@@ -3,6 +3,7 @@
  */
 package org.teagle.vcttool.view.dialogs;
 
+import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,6 +76,9 @@ public class BookingResultDialog extends Dialog implements SelectionListener {
 	    addTextArea("message", mesg, "result description", ms);
 	    addConfigurationParameter("log url", url, "location of the OE log. Look here for more information.");
 	    addTextArea("log", logstr, "The operation's log.", ls);
+	    
+	    params.pack();
+	    container.pack();
 	}
 	
 	private String dropLog(LogBook book, String log, String indent)
@@ -109,6 +113,8 @@ public class BookingResultDialog extends Dialog implements SelectionListener {
 	    if (size > 0)
 	    	data.heightHint = size;
 	    //data.verticalSpan = 20;
+	    data.widthHint = Toolkit.getDefaultToolkit().getScreenSize().width / 2; 
+
 	    text.setLayoutData(data);
 	    text.setText(value);
 	    
@@ -117,7 +123,7 @@ public class BookingResultDialog extends Dialog implements SelectionListener {
 	    if (description != null && !description.isEmpty()) {
 		    label.setToolTipText(description);
 		    text.setToolTipText(description);
-	    }   
+	    }
 	}
 
 	public void addConfigurationParameter(String name, String defaultValue, String description) {
