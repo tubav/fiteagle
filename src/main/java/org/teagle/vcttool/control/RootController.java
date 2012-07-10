@@ -34,6 +34,8 @@ public class RootController {
 	//private VctToolApp app;
 	private CommandAdapter ca;
 	
+	public VctToolConfig getConfig() {return this.config;}
+	
 	public RootController(VctToolApp app, VctToolView toolView, VctToolConfig config, CommandAdapter ca) {
 		view = toolView;
 		this.config = config;

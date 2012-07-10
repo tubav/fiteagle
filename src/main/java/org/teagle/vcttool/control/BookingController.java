@@ -3,11 +3,10 @@
  */
 package org.teagle.vcttool.control;
 
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 
+import org.teagle.client.TeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.view.BookingListener;
 import org.teagle.vcttool.view.CommandAdapter;
@@ -18,10 +17,10 @@ import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
-import teagle.vct.model.VctState;
 import teagle.vct.util.Util;
 
 import com.thoughtworks.xstream.XStream;
+
 
 /**
  * @author sim
@@ -31,41 +30,16 @@ public class BookingController implements BookingListener {
 	private static final int STATUS_OK = 0;
 	private RootController controller;
 	private CommandAdapter ca;
-	
-	//TODO: do this through jax
 	private XStream xs;
-	private URL reqProcUrl;
+	private TeagleClient client;
 	
-
-	private void executeVCTcommand(final Vct data, final String[] answer, final String command)
-			throws IOException {
-		try {
-			URLConnection conn = reqProcUrl.openConnection();
-			conn.setDoOutput(true);
-			conn.setRequestProperty("Content-Type", "text/plain");
-	
-			String req = "<string-array><string>VctRegistry</string><string>"
-					+ command
-					+ "</string><string>"
-					+ data.getPerson().getUserName()
-					+ "</string><string>"
-					+ data.getCommonName()
-					+ "</string></string-array>";
-			conn.getOutputStream().write(req.getBytes());
-			answer[0] = Util.readStream(conn.getInputStream());
-			Util.debug("Answer from reqproc: " + answer[0]);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
 
 	private void prepareVCTcommand(final VctToolView vctView, final Vct data,
 			final String commandStopVCT, final String textStopVCT) {
 		final String[] answer = { null };		
 		controller.handleProgressJob(new ProgressJob() {
 			public void run() throws Exception {
-				executeVCTcommand(data, answer, commandStopVCT);
+				client.execVctCommand(data, answer, commandStopVCT);
 			}
 		}, textStopVCT);
 		if (answer[0] != null)
@@ -76,9 +50,17 @@ public class BookingController implements BookingListener {
 	{
 		this.controller = controller;
 		this.ca = ca;
-		this.reqProcUrl = config.getReqprocUrl();
+		initTeagleClient(config);
+		initOrchestrationReturn();
+	}
+
+	private void initTeagleClient(VctToolConfig config) {
+		URL reqProcUrl = config.getReqprocUrl();
 		assert(reqProcUrl != null);
-		
+		this.client = new TeagleClient(config);
+	}
+
+	private void initOrchestrationReturn() {
 		xs = Util.newXstream();
 		//xs.alias("testbed", Testbed.class);
 		xs.alias("idmapping", OrchestrateReturn.Result.Mapping[].class);
@@ -99,19 +81,16 @@ public class BookingController implements BookingListener {
 		*/
 		System.out.println("do_book");
 		
-		data.setState(VctState.State.INPROGRESS_SYNC);
-		data.persist();
 		final String[] answer = { null };
 		
 		controller.handleProgressJob(new ProgressJob() {
 			public void run() throws Exception {
-				executeVCTcommand(data, answer, "setVct");
+				client.bookVct(data, answer);
 			}
 		}, "booking in progress...");
 
-		if (answer[0] != null) {
+		if (answer[0] != null)
 			showRequestProcessorResult(answer[0], vctView);
-		}
 	}
 	
 	private void showRequestProcessorResult(String answer, VctToolView view)

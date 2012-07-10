@@ -177,10 +177,12 @@ public class VctToolView {
 	private Set<CommandListener> commandListeners = new CopyOnWriteArraySet<CommandListener>();
 	private Set<BookingListener> bookingListeners = new CopyOnWriteArraySet<BookingListener>();
 	
-	final CoolBar coolBar;
-	final ToolBar toolbarFile;
-	final ToolItem itemStart;
-	final ToolItem itemStop;
+	private final CoolBar coolBar;
+	private final ToolBar toolbarFile;
+	private ToolItem buttonStart;
+	private ToolItem buttonStop;
+
+	private ToolItem buttonDelete;
 
 	
 	public VctToolView() {
@@ -248,42 +250,8 @@ public class VctToolView {
 			}
 		});
 		
-		new ToolItem(toolbarFile, SWT.SEPARATOR);
+		createButtons();
 		
-		final ToolItem itemSave = new ToolItem(toolbarFile, SWT.PUSH);
-		itemSave.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/save_edit.gif")));
-		itemSave.setToolTipText("Save current Vct");
-	//itemSave.setData(tabFolderVcts.getSelection());
-		itemSave.addSelectionListener(new SaveAdapter());
-
-		final ToolItem itemSaveAs = new ToolItem(toolbarFile, SWT.PUSH);
-		itemSaveAs.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/saveas_edit.gif")));
-		itemSaveAs.setToolTipText("Save current Vct as...");
-		itemSaveAs.addSelectionListener(new SaveAsAdapter());
-		
-		final ToolItem itemBook = new ToolItem(toolbarFile, SWT.PUSH);
-		itemBook.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/book.png")));
-		itemBook.setToolTipText("Book current Vct");
-		itemBook.addSelectionListener(new BookAdapter());
-		
-		final ToolItem itemDelete = new ToolItem(toolbarFile, SWT.PUSH);
-		itemDelete.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/close.png")));
-		itemDelete.setToolTipText("Delete this VCT");
-		itemDelete.addSelectionListener(new DeleteAdapter());
-
-		itemStart = new ToolItem(toolbarFile, SWT.PUSH);		
-		itemStart.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/start.png")));
-		itemStart.setToolTipText("Start this VCT");
-		itemStart.addSelectionListener(new StartAdapter());
-		itemStart.setEnabled(false);
-
-		itemStop = new ToolItem(toolbarFile, SWT.PUSH);
-		itemStop.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/stop.png")));
-		itemStop.setToolTipText("Stop this VCT");
-		itemStop.addSelectionListener(new StopAdapter());
-		itemStop.setEnabled(false);
-		
-		toolbarFile.pack();
 		Point size = toolbarFile.getSize();
 		
 		CoolItem coolItemFile = new CoolItem(coolBar, SWT.NONE);
@@ -338,7 +306,37 @@ public class VctToolView {
 		
 	    sashForm.setWeights(new int[] { 32, 68 });
 	}
+
+	private void createButtons() {
+		createSaveBookButtons();
+		createLifecycleButtons();
+		toolbarFile.pack();
+	}
+
+	private void createSaveBookButtons() {
+		new ToolItem(toolbarFile, SWT.SEPARATOR);
+		createButton("/icons/save_edit.gif", "Save this VCT", new SaveAdapter()); 
+		createButton("/icons/saveas_edit.gif", "Save this VCT as...", new SaveAsAdapter());		
+		createButton("/icons/book.png", "Book this VCT", new BookAdapter());
+	}
+
+	private void createLifecycleButtons() {
+		new ToolItem(toolbarFile, SWT.SEPARATOR);
+		buttonDelete = createButton("/icons/close.png", "Delete this VCT", new DeleteAdapter());
+		buttonStart = createButton("/icons/start.png", "Start this VCT", new StartAdapter());
+		buttonStop = createButton("/icons/stop.png", "Stop this VCT", new StopAdapter());
+		this.setLifecycleButtonsEnabled(false);
+	}
 	
+	private ToolItem createButton(final String pathToIcon, final String tooltip,
+			final SelectionAdapter selectionAdapter) {
+		ToolItem button = new ToolItem(toolbarFile, SWT.PUSH);
+		button.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream(pathToIcon)));
+		button.setToolTipText(tooltip);
+		button.addSelectionListener(selectionAdapter);
+		return button;
+	}
+
 	public void showDialog(VctToolDialog d)
 	{
 		Shell dlg = d.getShell();
@@ -725,8 +723,9 @@ public class VctToolView {
 	}
 
 	public void setLifecycleButtonsEnabled(boolean bool) {
-		this.itemStart.setEnabled(bool);
-		this.itemStop.setEnabled(bool);
+		this.buttonStart.setEnabled(bool);
+		this.buttonStop.setEnabled(bool);
+		this.buttonDelete.setEnabled(bool);
 	}
 
 
