@@ -24,11 +24,13 @@ public class CLI {
 	private static final String CMD_STOP_VCT = "stopVCT";
 	private static final String CMD_DELETE_VCT = "deleteVCT";
 	private static final String CMD_LIST_VCTS = "listVCTs";
+	private static final String CMD_LIST_RIS = "listRIs";
 	private final transient CommandBookVCT commandBookVCT = new CommandBookVCT();
 	private final transient CommandStartVCT commandStartVCT = new CommandStartVCT();
 	private final transient CommandStopVCT commandStopVCT = new CommandStopVCT();
 	private final transient CommandDeleteVCT commandDeleteVCT = new CommandDeleteVCT();
 	private final transient CommandListVCTs commandListVCTs = new CommandListVCTs();
+	private final transient CommandListRIs commandListRIs = new CommandListRIs();
 	private TeagleClient client;
 
 	public static void main(final String[] args) {
@@ -44,6 +46,7 @@ public class CLI {
 		parameter.addCommand(CLI.CMD_STOP_VCT, this.commandStopVCT);
 		parameter.addCommand(CLI.CMD_DELETE_VCT, this.commandDeleteVCT);
 		parameter.addCommand(CLI.CMD_LIST_VCTS, this.commandListVCTs);
+		parameter.addCommand(CLI.CMD_LIST_RIS, this.commandListRIs);
 		String result = "";
 
 		try {
@@ -60,6 +63,8 @@ public class CLI {
 				result = this.commandDeleteVCT.exec();
 			} else if (CLI.CMD_LIST_VCTS.equals(command)) {
 				result = this.commandListVCTs.exec();
+			} else if (CLI.CMD_LIST_RIS.equals(command)) {
+				result = this.commandListRIs.exec();
 			} else {
 				result = CLI.getUsage(parameter);
 			}
@@ -133,7 +138,12 @@ public class CLI {
 	@Parameters(separators = "=", commandDescription = "Lists booked VCTs")
 	private class CommandListVCTs {
 		public String exec() throws IOException {
-			return Printer.vctsToString(client.getVCTs());
-		}
+			return Printer.vctsToString(client.getVCTs());}
+	}
+	
+	@Parameters(separators = "=", commandDescription = "Lists Resource Instances")
+	private class CommandListRIs {
+		public String exec() throws IOException {
+			return Printer.risToString(client.getResourceInstances());}
 	}
 }
