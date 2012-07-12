@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.teagle.api.TeagleClient;
 
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.Person;
@@ -36,9 +37,10 @@ public class VctSelectionController {
 	//private Composite parent;
 	
 	private Map<String, VctController> controllers = new HashMap<String, VctController>();
+	private RootController root;
 	
 	public VctSelectionController(final RootController root, String username, Composite parent) {
-		//this.root = root;
+		this.root = root;
 		
 		this.username = username;
 		//this.parent = parent;
@@ -59,14 +61,10 @@ public class VctSelectionController {
 	
 	public void init()
 	{
-		
-		List<Vct> vcts = ModelManager.getInstance().findVctsByUserName(username);
-		Collections.sort(vcts, new Comparator<Vct>() {
+		TeagleClient client = new TeagleClient(root.getConfig());
+		List<Vct> vcts = client.getVCTs(); 
+				//ModelManager.getInstance().findVctsByUserName(username);
 
-			public int compare(Vct o1, Vct o2) {
-				return o1.getCommonName().toLowerCase().compareTo(o2.getCommonName().toLowerCase());
-			}
-		});
 		for (Vct vct : vcts) {
 			TreeItem vctItem = new TreeItem(tree, SWT.NONE);
 			vctItem.setText(vct.getCommonName());

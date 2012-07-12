@@ -10,7 +10,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -145,7 +148,7 @@ public class TeagleClient {
 		return result;
 	}
 
-	public Collection<ResourceInstance> findResourceInstancesByUserName(
+	private Collection<ResourceInstance> findResourceInstancesByUserName(
 			String username) {
 		System.out.println("Calling modelmanager");
 
@@ -235,12 +238,24 @@ public class TeagleClient {
 		return this.result;
 	}
 
-	public Collection<ResourceInstance> getResourceInstances() {
-		return this.findResourceInstancesByUserName(this.username);
+	public List<ResourceInstance> getResourceInstances() {
+		List<ResourceInstance> instances = (List<ResourceInstance>) this.findResourceInstancesByUserName(this.username);
+		Collections.sort(instances, new Comparator<ResourceInstance>() {
+			public int compare(ResourceInstance o1, ResourceInstance o2) {
+				return o1.getCommonName().toLowerCase().compareTo(o2.getCommonName().toLowerCase());
+			}
+		});
+		return instances;
 	}
 
-	public Collection<Vct> getVCTs() {
-		return this.repoClient.findVctsByUserName(this.username);
+	public List<Vct> getVCTs() {
+		List<Vct> vcts = this.repoClient.findVctsByUserName(this.username);
+		Collections.sort(vcts, new Comparator<Vct>() {
+			public int compare(Vct o1, Vct o2) {
+				return o1.getCommonName().toLowerCase().compareTo(o2.getCommonName().toLowerCase());
+			}
+		});
+		return vcts;
 	}
 
 }

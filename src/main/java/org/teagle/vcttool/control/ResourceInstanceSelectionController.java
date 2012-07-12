@@ -41,8 +41,8 @@ public class ResourceInstanceSelectionController {
 		//this.root = root;
 
 		this.teagleClient = new TeagleClient(root.getConfig());
-		Collection<ResourceInstance> instances = teagleClient.findResourceInstancesByUserName(username);
-			
+		Collection<ResourceInstance> instances = teagleClient.getResourceInstances();
+
 		tree = new Tree(parent, SWT.NONE);
 		for (ResourceInstance instance : instances) {
 			controlers.put(instance.getCommonName(), new ResourceInstanceController(instance));
