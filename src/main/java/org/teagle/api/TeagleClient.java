@@ -37,10 +37,11 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 public class TeagleClient {
 
 	private final URL reqProcUrl;
-	private ModelManager repoClient;
+	private final String username;
+	private final ModelManager repoClient;
 	private OrchestrateReturn result = new OrchestrateReturn(-1,
 			"not initialized");
-
+	
 	public TeagleClient(String username, String password, URL reqUrl,
 			URL repoUrl) {
 		boolean doPrefetching = false;
@@ -50,6 +51,7 @@ public class TeagleClient {
 
 		this.reqProcUrl = reqUrl;
 		this.repoClient = ModelManager.getInstance();
+		this.username = username;
 	}
 
 	public TeagleClient(VctToolConfig config) {
@@ -231,6 +233,14 @@ public class TeagleClient {
 
 	public OrchestrateReturn getResult() {
 		return this.result;
+	}
+
+	public Collection<ResourceInstance> getResourceInstances() {
+		return this.findResourceInstancesByUserName(this.username);
+	}
+
+	public Collection<Vct> getVCTs() {
+		return this.repoClient.findVctsByUserName(this.username);
 	}
 
 }

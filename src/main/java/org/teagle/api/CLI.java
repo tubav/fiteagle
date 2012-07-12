@@ -23,10 +23,13 @@ public class CLI {
 	private static final String CMD_START_VCT = "startVCT";
 	private static final String CMD_STOP_VCT = "stopVCT";
 	private static final String CMD_DELETE_VCT = "deleteVCT";
+	private static final String CMD_LIST_VCTS = "listVCTs";
 	private final transient CommandBookVCT commandBookVCT = new CommandBookVCT();
 	private final transient CommandStartVCT commandStartVCT = new CommandStartVCT();
 	private final transient CommandStopVCT commandStopVCT = new CommandStopVCT();
 	private final transient CommandDeleteVCT commandDeleteVCT = new CommandDeleteVCT();
+	private final transient CommandListVCTs commandListVCTs = new CommandListVCTs();
+	private TeagleClient client;
 
 	public static void main(final String[] args) {
 		System.out.println(new CLI().parse(args));
@@ -34,15 +37,18 @@ public class CLI {
 
 	public String parse(final String[] args) {
 		final JCommander parameter = new JCommander(this);
+
 		parameter.setProgramName("OpenTeagleCLI");
 		parameter.addCommand(CLI.CMD_BOOK_VCT, this.commandBookVCT);
 		parameter.addCommand(CLI.CMD_START_VCT, this.commandStartVCT);
 		parameter.addCommand(CLI.CMD_STOP_VCT, this.commandStopVCT);
 		parameter.addCommand(CLI.CMD_DELETE_VCT, this.commandDeleteVCT);
+		parameter.addCommand(CLI.CMD_LIST_VCTS, this.commandListVCTs);
 		String result = "";
 
 		try {
 			parameter.parse(args);
+			this.client = new TeagleClient(user, password, reqUrl, repoUrl);
 			final String command = parameter.getParsedCommand();
 			if (CLI.CMD_BOOK_VCT.equals(command)) {
 				result = this.commandBookVCT.exec();
@@ -52,6 +58,8 @@ public class CLI {
 				result = this.commandStopVCT.exec();
 			} else if (CLI.CMD_DELETE_VCT.equals(command)) {
 				result = this.commandDeleteVCT.exec();
+			} else if (CLI.CMD_LIST_VCTS.equals(command)) {
+				result = this.commandListVCTs.exec();
 			} else {
 				result = CLI.getUsage(parameter);
 			}
@@ -84,14 +92,9 @@ public class CLI {
 		private String filename = "";
 
 		public String exec() throws IOException {
-			TeagleClient client = new TeagleClient(user, password, reqUrl,
-					repoUrl);
-
 			client.bookVct(new File(filename));
-
 			return client.getResult().message;
 		}
-
 	}
 
 	@Parameters(separators = "=", commandDescription = "Starts a booked VCT")
@@ -100,8 +103,6 @@ public class CLI {
 		private String vctName = "";
 
 		public String exec() throws IOException {
-			TeagleClient client = new TeagleClient(user, password, reqUrl,
-					repoUrl);
 			client.startVct(user, vctName);
 			return client.getResult().message;
 		}
@@ -113,8 +114,6 @@ public class CLI {
 		private String vctName = "";
 
 		public String exec() throws IOException {
-			TeagleClient client = new TeagleClient(user, password, reqUrl,
-					repoUrl);
 			client.stopVct(user, vctName);
 			return client.getResult().message;
 		}
@@ -126,11 +125,15 @@ public class CLI {
 		private String vctName = "";
 
 		public String exec() throws IOException {
-			TeagleClient client = new TeagleClient(user, password, reqUrl,
-					repoUrl);
 			client.deleteVct(user, vctName);
 			return client.getResult().message;
 		}
 	}
 
+	@Parameters(separators = "=", commandDescription = "Lists booked VCTs")
+	private class CommandListVCTs {
+		public String exec() throws IOException {
+			return Printer.vctsToString(client.getVCTs());
+		}
+	}
 }
