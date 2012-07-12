@@ -64,15 +64,24 @@ public class TeagleClient {
 
 	public void execVctCommand(final Vct vct, final String[] result,
 			final String command) {
+		this.execVctCommand(vct.getPerson().getUserName(), vct.getCommonName(), result, command);
+	}
+	
+	public void execVctCommand(final String username, final String vctname, final String command) {
+		String[] results = { null };
+		this.execVctCommand(username, vctname, results , command);
+		this.result = TeagleClient.toResult(results[0]);
+	}
+
+	
+	public void execVctCommand(final String username, final String vctname, final String[] result,
+			final String command) {
 		try {
 			URLConnection conn = reqProcUrl.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestProperty("Content-Type", "text/plain");
 
-			String req = "<string-array><string>VctRegistry</string><string>"
-					+ command + "</string><string>"
-					+ vct.getPerson().getUserName() + "</string><string>"
-					+ vct.getCommonName() + "</string></string-array>";
+			String req = genRequest(username, vctname, command);
 			conn.getOutputStream().write(req.getBytes());
 			result[0] = Util.readStream(conn.getInputStream());
 			Util.debug("Answer from reqproc: " + result[0]);
@@ -80,6 +89,14 @@ public class TeagleClient {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private String genRequest(final String username, final String vctname, final String command) {
+		String req = "<string-array><string>VctRegistry</string><string>"
+				+ command + "</string><string>"
+				+ username + "</string><string>"
+				+ vctname + "</string></string-array>";
+		return req;
 	}
 
 	public void bookVct(Vct vct, String[] answer) {
@@ -89,6 +106,22 @@ public class TeagleClient {
 		this.execVctCommand(vct, answer, "setVct");
 	}
 
+	public void startVct(final String username, final String vctname) {
+		System.out.println("DEBUG: Starting: " + vctname);
+		this.execVctCommand(username, vctname, "startVct");
+	}
+
+	public void stopVct(final String username, final String vctname) {
+		System.out.println("DEBUG: Stopping: " + vctname);
+		this.execVctCommand(username, vctname, "stopVct");
+	}
+	
+	public void deleteVct(String username, String vctname) {
+		System.out.println("DEBUG: Deleting: " + vctname);
+		this.execVctCommand(username, vctname, "deleteVct");		
+	}
+
+	
 	public void bookVct(File vctFile, String[] answer) throws IOException {
 		String vctString = fileToString(vctFile);
 		this.bookVct(vctString, answer);
@@ -199,4 +232,5 @@ public class TeagleClient {
 	public OrchestrateReturn getResult() {
 		return this.result;
 	}
+
 }
