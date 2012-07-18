@@ -2,16 +2,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.fhg.fokus.ngni.teagle</groupId>
-	<artifactId>vct</artifactId>
+	<groupId>org.fiteagle.client</groupId>
+	<artifactId>vcttool</artifactId>
 	<packaging>jar</packaging>
-	<name>vct</name>
-	<version>0.1</version>
-	<url>http://maven.apache.org</url>
+	<name>vcttool</name>
+	<version>0.2</version>
+	<url>http://fiteagle.org</url>
     
     <properties>
 		<eclipse.groupId>org.eclipse.swt</eclipse.groupId>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <repositories>
@@ -212,12 +213,15 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-				  	<finalName>vcttool-0.1</finalName>
-				  	<appendAssemblyId>false</appendAssemblyId>
+				  	<finalName>${project.artifactId}</finalName>
+				  	<appendAssemblyId>true</appendAssemblyId>
                     <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
 					<descriptors>
 						<descriptor>src/main/assembly/webstart.xml</descriptor>
 					</descriptors>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
 					<archive>
                         <manifest>
 							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>

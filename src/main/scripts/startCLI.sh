@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp target/vcttool-0.1/vct-0.1.jar org.teagle.api.CLI ${@}
+java -cp target/vcttool-jar-with-dependencies.jar org.teagle.api.CLI ${@}

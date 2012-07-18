@@ -4,15 +4,13 @@ OpenTeagle_VCTTool
 Compile
 -------
 
-1. ./prepare.sh (until we've a nexus server)
-2. mvn compile
-
+1. ./prepare.sh (until we've all jar file on the repository)
+2. mvn -T2 compile
 
 Start VCTTool
 -------------
 1. mvn package
 2. ./src/main/scripts/startVCTTool.sh
-
 
 Start CLI
 -------------
