@@ -194,7 +194,7 @@ public class ResourceInstanceController implements ResourceInstanceListener, Con
 				String newValue = targetControler.getResourceInstance().getCommonName();
 				for (int i = 0; i < entries.length; i++) {
 					added += "," + entries[i];
-					if (newValue.equals(entries[i])) {
+					if (null != newValue && newValue.equals(entries[i])) {
 						newValue = null;
 					}
 				}
