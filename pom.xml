@@ -16,6 +16,10 @@
 
     <repositories>
         <repository>
+            <id>default</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
         </repository>
@@ -308,6 +312,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -315,6 +320,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+-->
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
@@ -322,5 +328,11 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+
 	</dependencies>
 </project>
