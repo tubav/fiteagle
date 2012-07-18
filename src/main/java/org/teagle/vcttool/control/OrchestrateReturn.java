@@ -57,5 +57,4 @@ public class OrchestrateReturn {
 	public String log;
 	public LogBook logbook;
 	public Result result;
-	private String launchparams;
 }

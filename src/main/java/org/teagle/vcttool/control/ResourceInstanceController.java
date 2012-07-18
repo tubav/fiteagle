@@ -10,8 +10,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.teagle.vcttool.view.ConnectionEvent;
 import org.teagle.vcttool.view.ConnectionListener;
 import org.teagle.vcttool.view.ResourceInstanceListener;
@@ -31,8 +29,6 @@ import teagle.vct.model.ResourceInstance;
  *
  */
 public class ResourceInstanceController implements ResourceInstanceListener, ConnectionListener {
-
-	private final static Logger log = LoggerFactory.getLogger(ResourceInstanceController.class);
 	
 	private ResourceInstance resourceInstance;
 	private Ptm ptm;
@@ -252,13 +248,10 @@ public class ResourceInstanceController implements ResourceInstanceListener, Con
 		
 		String description = resourceInstance.getDescription();
 		if (description.equals("")){
-			MessageDialog dialog = new MessageDialog(vctView.getShell(), "No description available.");
-//			dialog.setMessage("No description given");
-				
+			new MessageDialog(vctView.getShell(), "No description available.");
 		}
 		else{
-			MessageDialog dialog = new MessageDialog(vctView.getShell(), description);
-//			dialog.setMessage(description);
+			new MessageDialog(vctView.getShell(), description);
 		}
 		
 		

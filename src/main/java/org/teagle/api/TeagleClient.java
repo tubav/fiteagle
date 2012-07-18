@@ -211,7 +211,7 @@ public class TeagleClient {
 			@Override
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
 				return new MapperWrapper(next) {
-					@Override
+					@Override @SuppressWarnings("rawtypes")
 					public boolean shouldSerializeMember(Class definedIn,
 							String fieldName) {
 						if (definedIn == Object.class) {

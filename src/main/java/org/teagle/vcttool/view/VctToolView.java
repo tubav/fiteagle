@@ -504,23 +504,23 @@ public class VctToolView {
 
 		return menuBooking;
 	}
-
+/*
 	private Menu createHelpMenu() {
 		Menu menuHelp = new Menu(shell, SWT.DROP_DOWN);
 
 		MenuItem menuItemContents = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemContents.setText("&Contents");
-//		menuItemContents.addSelectionListener(this);
+		//menuItemContents.addSelectionListener(this);
 		menuItemContents.setEnabled(false);
 		
 		MenuItem menuItemAbout = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemAbout.setText("&About...");
-//		menuItemAbout.addSelectionListener(this);
+		//menuItemAbout.addSelectionListener(this);
 		menuItemAbout.setEnabled(false);
 		
 		return menuHelp;
 	}
-
+*/
 	public void addCommandListener(CommandListener listener) {
 		commandListeners.add(listener);
 	}
@@ -599,7 +599,7 @@ public class VctToolView {
 			}
 		}
 	}
-	
+/*	
 	private void fireOpenEvent() {
 		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
 			CommandListener listener = it.next();
@@ -610,6 +610,7 @@ public class VctToolView {
 			}
 		}
 	}
+	*/
 	
 	private void fireSaveEvent(Vct data) {
 		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {

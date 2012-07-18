@@ -58,7 +58,7 @@ public class ResourceInstanceSelectionController {
 		dragSource.setTransfer(types);		
 		dragSource.addDragListener(new DragSourceAdapter() {
 			public void dragSetData(DragSourceEvent event) {
-				Object data = tree.getSelection()[0].getData();
+					//Object data = tree.getSelection()[0].getData();
 					String transfer = "instance:" + ((ResourceInstance)tree.getSelection()[0].getData()).getCommonName();
 					event.data = transfer;					
 			}

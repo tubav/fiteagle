@@ -9,8 +9,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
-
 /**
  * @author sim
  * 
@@ -22,8 +20,7 @@ public class ConnectionView {
 
 	private String type;
 
-	private CLabel source;
-	private CLabel target;
+	private CLabel source;;
 
 	private ResourceInstanceWidget sourceWidget;
 	private ResourceInstanceWidget targetWidget;
@@ -54,7 +51,6 @@ public class ConnectionView {
 	}
 
 	public void setTarget(ResourceInstanceWidget widget, CLabel label) {
-		target = label;
 		targetWidget = widget;
 		dragPosition = null;
 	}
@@ -72,7 +68,7 @@ public class ConnectionView {
 			return;
 		}
 
-		EvaluationHandler handler = new EvaluationHandler();
+		//EvaluationHandler handler = new EvaluationHandler();
 //
 //		if (!ValidateActions.validateConnection(
 //				sourceWidget.getResourceInstance(),

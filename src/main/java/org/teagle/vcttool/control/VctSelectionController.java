@@ -31,7 +31,7 @@ public class VctSelectionController {
 	//private RootController root;
 	
 	private Tree tree;
-	private String username;
+	//private String username;
 	//private Composite parent;
 	
 	private Map<String, VctController> controllers = new HashMap<String, VctController>();
@@ -40,7 +40,7 @@ public class VctSelectionController {
 	public VctSelectionController(final RootController root, String username, Composite parent) {
 		this.root = root;
 		
-		this.username = username;
+		//this.username = username;
 		//this.parent = parent;
 		tree = new Tree(parent, SWT.NONE);
 		init();
