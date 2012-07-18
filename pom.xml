@@ -23,6 +23,10 @@
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
         </repository>
+        <repository>
+            <id>fiteagle-repo</id>
+            <url>http://tubav.github.com/org.fiteagle/repo/</url>
+        </repository>
     </repositories>
 
   <profiles>
@@ -286,12 +290,12 @@
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
 			<artifactId>model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
 			<artifactId>util</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
