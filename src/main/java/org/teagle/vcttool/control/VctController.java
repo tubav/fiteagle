@@ -173,7 +173,8 @@ public class VctController implements VctListener {
 
 				log.debug("destination resource instance is {}", destinationResourceInstance.getCommonName());						
 				ResourceInstanceController destinationControler = ResourceInstanceSelectionController.findResourceInstanceController(destinationResourceInstance.getCommonName());
-				destinationWidget = destinationControler.getView(this);
+				if (destinationControler != null)
+					destinationWidget = destinationControler.getView(this);
 
 				if (sourceWidget != null && destinationWidget != null) {
 					ConnectionView connectionView = createContainsConnectionView(sourceWidget, destinationWidget);
