@@ -3,13 +3,8 @@
  */
 package org.teagle.vcttool.control;
 
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.teagle.api.TeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
@@ -22,7 +17,6 @@ import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
-import teagle.vct.tssg.impl.TSSGVct;
 import teagle.vct.util.Util;
 
 import com.thoughtworks.xstream.XStream;

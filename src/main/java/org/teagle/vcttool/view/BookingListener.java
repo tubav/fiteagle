@@ -3,8 +3,6 @@
  */
 package org.teagle.vcttool.view;
 
-import org.eclipse.swt.custom.CTabItem;
-
 import teagle.vct.model.Vct;
 
 /**
