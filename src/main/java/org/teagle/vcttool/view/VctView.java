@@ -157,17 +157,13 @@ public class VctView extends Composite implements PaintListener, MouseListener, 
 							System.out.println("connection failed");
 							break;
 						}
-						else
-							{dragConnection.setTarget(widget, target);
-							connections.add(dragConnection);
-							found = widget;
-							break;
-						}
-					}else
-					{
-						if(source == null)
-							source = widget;
+						dragConnection.setTarget(widget, target);
+						connections.add(dragConnection);
+						found = widget;
+						break;
 					}
+					if(source == null)
+						source = widget;
 				}
 			}
 			dragConnection = null;

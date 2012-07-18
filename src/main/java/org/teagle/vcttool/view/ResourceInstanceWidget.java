@@ -219,9 +219,8 @@ public class ResourceInstanceWidget extends Composite implements Listener {
 	public CLabel findTargetLabel(Point point) {
 		if (dstPin.getBounds().contains(toControl(point))) {
 			return dstPin;
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	public void deleteConnection(ConnectionView connectionView) {

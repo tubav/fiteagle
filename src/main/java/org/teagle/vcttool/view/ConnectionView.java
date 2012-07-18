@@ -20,7 +20,7 @@ public class ConnectionView {
 
 	private String type;
 
-	private CLabel source;;
+	private CLabel source;
 
 	private ResourceInstanceWidget sourceWidget;
 	private ResourceInstanceWidget targetWidget;

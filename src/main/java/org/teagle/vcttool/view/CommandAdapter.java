@@ -46,8 +46,7 @@ public class CommandAdapter implements CommandListener {
 		if (data.isModified()) {
 			if (!data.isPersisted())
 				return onSaveAs(vctView, data);
-			else
-				data = (Vct) data.persist();
+			data = (Vct) data.persist();
 		} else {
 			System.out.println("wasn't changed");
 		}
