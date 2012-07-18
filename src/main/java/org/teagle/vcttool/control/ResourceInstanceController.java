@@ -156,6 +156,8 @@ public class ResourceInstanceController implements ResourceInstanceListener, Con
 			break;
 		case SWT.CANCEL:
 			break;
+		default:
+			break;
 		}
 	}
 

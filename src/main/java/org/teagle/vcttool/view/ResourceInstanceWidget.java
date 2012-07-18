@@ -311,6 +311,8 @@ public class ResourceInstanceWidget extends Composite implements Listener {
 				fireMoved(getLocation());
 			}
 			break;
+		default:
+			break;
 		}		
 	}
 

@@ -98,6 +98,8 @@ public class CommandAdapter implements CommandListener {
 				break;
 			case SWT.CANCEL:
 				break;
+			default:
+				break;
 			}
 		}
 		return false;
