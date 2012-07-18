@@ -192,14 +192,29 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
 				<configuration>
 				  	<finalName>vcttool-0.1</finalName>
 				  	<appendAssemblyId>false</appendAssemblyId>
-				  	<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
 					<descriptors>
 						<descriptor>src/main/assembly/webstart.xml</descriptor>
 					</descriptors>
+					<archive>
+                        <manifest>
+							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
+                        </manifest>
+                  </archive>
 				</configuration>
+                <executions>
+                  <execution>
+                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                    <phase>package</phase> <!-- bind to the packaging phase -->
+                    <goals>
+                      <goal>single</goal>
+                    </goals>
+                  </execution>
+                </executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -207,7 +222,6 @@
 
     
 	<dependencies>
-	
                 <dependency>
                         <groupId>org.eclipse.swt</groupId>
                         <artifactId>${swt.artifactId}</artifactId>
@@ -248,38 +262,28 @@
 			<artifactId>openpe.pem1</artifactId>
 			<version>0.0.6-SNAPSHOT</version>
 			<type>jar</type>
-			<scope>system</scope>
-            <systemPath>${project.basedir}/lib/openpe.pem1-0.0.6-20110617.085800-3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.openpe.input</groupId>
 			<artifactId>openpe.pem1.input</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<type>jar</type>
-			<scope>system</scope>
-            <systemPath>${project.basedir}/lib/broker.openpe.pem1_input_utils-1.0-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
 			<artifactId>model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-            <systemPath>${project.basedir}/lib/model-0.0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
 			<artifactId>util</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-            <systemPath>${project.basedir}/lib/util-0.0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
 			<artifactId>tssgrepoclient</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
-			<scope>system</scope>
-            <systemPath>${project.basedir}/lib/tssgrepoclient-0.0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
 
         <dependency>
