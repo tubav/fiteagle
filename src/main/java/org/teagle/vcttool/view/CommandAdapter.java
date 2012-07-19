@@ -185,4 +185,11 @@ public class CommandAdapter implements CommandListener {
 		this.rootController = c;
 	}
 
+	public void onRefresh() {
+		System.out.println("VCT Refresh");
+		if (rootController != null) {
+			rootController.reloadAll();
+		}
+	}
+
 }

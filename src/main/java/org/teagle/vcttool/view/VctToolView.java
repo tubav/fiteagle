@@ -55,12 +55,24 @@ public class VctToolView {
 		
 		protected abstract void fireEvent(Vct vct);
 	}
-	
-	class SaveAdapter extends VctToolViewSelectionAdapter 
-	{
+
+	class NewVctAdapter extends SelectionAdapter {
 		@Override
-		protected void fireEvent(Vct vct) 
-		{
+		public void widgetSelected(SelectionEvent event) {
+			fireNewEvent(event.widget.getData());
+		}
+	}
+	
+	class RefreshAdapter extends SelectionAdapter {
+		@Override
+		public void widgetSelected(SelectionEvent event) {
+			fireRefreshEvent(event.widget.getData());
+		}
+	}
+
+	class SaveAdapter extends VctToolViewSelectionAdapter {
+		@Override
+		protected void fireEvent(Vct vct) {
 			fireSaveEvent(vct);
 		}
 	}
@@ -239,16 +251,6 @@ public class VctToolView {
 		coolBar = new CoolBar(shell, SWT.FLAT);
 		coolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));	
 		toolbarFile = new ToolBar(coolBar, SWT.FLAT);
-
-		ToolItem itemNew = new ToolItem(toolbarFile, SWT.PUSH);
-		itemNew.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/new_wiz.gif")));
-		itemNew.setToolTipText("Create new empty Vct");
-		itemNew.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				fireNewEvent(event.widget.getData());
-			}
-		});
 		
 		createButtons();
 		
@@ -313,7 +315,10 @@ public class VctToolView {
 		toolbarFile.pack();
 	}
 
-	private void createSaveBookButtons() {
+	private void createSaveBookButtons() {		
+		createButton("/icons/new_wiz.gif", "Create new VCT", new NewVctAdapter());
+		createButton("/icons/refresh.gif", "Refresh", new RefreshAdapter());
+		
 		new ToolItem(toolbarFile, SWT.SEPARATOR);
 		createButton("/icons/save_edit.gif", "Save this VCT", new SaveAdapter()); 
 		createButton("/icons/saveas_edit.gif", "Save this VCT as...", new SaveAsAdapter());		
@@ -599,7 +604,19 @@ public class VctToolView {
 			}
 		}
 	}
-/*	
+	
+	private void fireRefreshEvent(Object data) {
+		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
+			CommandListener listener = it.next();
+			try {
+				listener.onRefresh();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/*	
 	private void fireOpenEvent() {
 		for (Iterator<CommandListener> it = commandListeners.iterator(); it.hasNext(); ) {
 			CommandListener listener = it.next();

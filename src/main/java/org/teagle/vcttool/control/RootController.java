@@ -107,11 +107,25 @@ public class RootController {
 		view.addBookingListener(bookingController);
 	}
 	
-	public void reloadVcts()
-	{
-		vctSelectionController.reload();
+	public void reloadAll() {
+		this.reloadVcts();
+		this.reloadInstances();
+		reloadSpecs();
 	}
 
+	public void reloadVcts() {
+		this.vctSelectionController.reload();
+	}
+
+	public void reloadSpecs() {
+		this.resourceSpecSelectionController.reload();
+	}
+
+	public void reloadInstances() {
+		this.resourceInstanceSelectionController.reload();
+	}
+
+	
 	public VctToolView getView() {
 		return view;
 	}

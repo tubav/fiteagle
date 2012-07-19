@@ -55,33 +55,6 @@ public class ResourceSpecSelectionController {
 	public ResourceSpecSelectionController(RootController root, Composite parent) {
 		//this.root = root;
 		
-		List<? extends Ptm> ptms = ModelManager.getInstance().listPtms();
-
-		Map<ResourceSpec, List<Availability>> resourceMap = new HashMap<ResourceSpec, List<Availability>>();
-		List<? extends ResourceSpec> resources = ModelManager.getInstance().listResourceSpecs();
-		for (ResourceSpec resource : resources) {
-			resourceMap.put(resource, null);
-		}
-
-		List<Organisation> orgs = new ArrayList<Organisation>();
-		
-		java.util.Map<ResourceSpec, java.util.List<Ptm>> specifications = new HashMap<ResourceSpec, java.util.List<Ptm>>();
-
-		for (ResourceSpec spec : resourceMap.keySet()) {
-			java.util.List<Ptm> p = null;
-			if (!specifications.containsKey(spec)) {
-				p = new ArrayList<Ptm>();
-				specifications.put(spec, p);				
-			} else {
-				p = specifications.get(spec);
-			}
-			for (Ptm ptm : ptms) {
-				if (ptm.getResourceSpecs().contains(spec)) {
-					orgs.add(ptm.getOrganisation());
-					p.add(ptm);						
-				}
-			}			
-		}
 
 		content = new Composite(parent, SWT.NONE);
 		content.setLayout(new GridLayout(1, false));
@@ -115,7 +88,7 @@ public class ResourceSpecSelectionController {
 		
 		tree = new Tree(content, SWT.NONE);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		DragSource dragSource = new DragSource(tree, DND.DROP_COPY|DND.DROP_MOVE);
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 		dragSource.setTransfer(types);		
@@ -135,7 +108,40 @@ public class ResourceSpecSelectionController {
 				}
 			}
 		});
+
+		init();
 		
+	}
+
+	private void init() {
+		List<? extends Ptm> ptms = ModelManager.getInstance().listPtms();
+		List<Organisation> orgs = new ArrayList<Organisation>();
+		Map<ResourceSpec, List<Availability>> resourceMap = new HashMap<ResourceSpec, List<Availability>>();
+		
+		List<? extends ResourceSpec> resources = ModelManager.getInstance().listResourceSpecs();
+		for (ResourceSpec resource : resources) {
+			resourceMap.put(resource, null);
+		}
+		
+		java.util.Map<ResourceSpec, java.util.List<Ptm>> specifications = new HashMap<ResourceSpec, java.util.List<Ptm>>();
+
+		for (ResourceSpec spec : resourceMap.keySet()) {
+			java.util.List<Ptm> p = null;
+			if (!specifications.containsKey(spec)) {
+				p = new ArrayList<Ptm>();
+				specifications.put(spec, p);				
+			} else {
+				p = specifications.get(spec);
+			}
+			for (Ptm ptm : ptms) {
+				if (ptm.getResourceSpecs().contains(spec)) {
+					orgs.add(ptm.getOrganisation());
+					p.add(ptm);						
+				}
+			}			
+		}
+		
+				
 		resources = new ArrayList<ResourceSpec>(specifications.keySet());
 
 		Collections.sort(resources, new Comparator<ResourceSpec>() {
@@ -170,6 +176,12 @@ public class ResourceSpecSelectionController {
 	
 	public Control getSelectionView() {
 		return content;
+	}
+
+
+	public void reload() {
+		tree.removeAll();
+		init();
 	}
 
 }

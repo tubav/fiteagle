@@ -61,7 +61,6 @@ public class VctSelectionController {
 	{
 		TeagleClient client = new TeagleClient(root.getConfig());
 		List<Vct> vcts = client.getVCTs(); 
-				//ModelManager.getInstance().findVctsByUserName(username);
 
 		for (Vct vct : vcts) {
 			TreeItem vctItem = new TreeItem(tree, SWT.NONE);
@@ -77,13 +76,10 @@ public class VctSelectionController {
 
 	}
 	
-	public void reload()
-	{
+	public void reload() {
 		controllers.clear();
 		tree.removeAll();
 		init();
-		
-		
 	}
 	
 	public Control getSelectionView() {

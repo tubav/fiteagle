@@ -36,23 +36,16 @@ public class ResourceInstanceSelectionController {
 	
 	private Tree tree;
 	private TeagleClient teagleClient;
+
+	private Composite parent;
 	
 	public ResourceInstanceSelectionController(RootController root, String username, Composite parent) {
 		//this.root = root;
-
-		this.teagleClient = new TeagleClient(root.getConfig());
-		Collection<ResourceInstance> instances = teagleClient.getResourceInstances();
-
-		tree = new Tree(parent, SWT.NONE);
-		for (ResourceInstance instance : instances) {
-			controlers.put(instance.getCommonName(), new ResourceInstanceController(instance));
-			if (instance.getState() == ResourceInstanceState.State.PROVISIONED) {
-				TreeItem instanceItem = new TreeItem(tree, SWT.NONE);
-				instanceItem.setText(instance.getCommonName());
-				instanceItem.setData(instance);			
-			}
-		}
 		
+		this.teagleClient = new TeagleClient(root.getConfig());
+		this.parent = parent;
+		
+		tree = new Tree(parent, SWT.NONE);
 		DragSource dragSource = new DragSource(tree, DND.DROP_COPY|DND.DROP_MOVE);
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 		dragSource.setTransfer(types);		
@@ -63,6 +56,20 @@ public class ResourceInstanceSelectionController {
 					event.data = transfer;					
 			}
 		});
+		init();
+	}
+
+	private void init() {
+		Collection<ResourceInstance> instances = teagleClient.getResourceInstances();
+		
+		for (ResourceInstance instance : instances) {
+			controlers.put(instance.getCommonName(), new ResourceInstanceController(instance));
+			if (instance.getState() == ResourceInstanceState.State.PROVISIONED) {
+				TreeItem instanceItem = new TreeItem(tree, SWT.NONE);
+				instanceItem.setText(instance.getCommonName());
+				instanceItem.setData(instance);			
+			}
+		}		
 
 	}
 	
@@ -80,6 +87,12 @@ public class ResourceInstanceSelectionController {
 	
 	public Control getSelectionView() {
 		return tree;
+	}
+
+	public void reload() {
+		controlers.clear();
+		tree.removeAll();
+		init();		
 	}
 
 }
