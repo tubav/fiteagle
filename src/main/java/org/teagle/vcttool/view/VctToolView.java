@@ -198,62 +198,38 @@ public class VctToolView {
 
 	
 	public VctToolView() {
-		
-		Display display = new Display();
-		shell = new Shell(display);
-		shell.setText("OpenTeagle Controller | VCTTool");
-		shell.setSize(900, 500);
-			
-		GridLayout layout = new GridLayout(1, false);
-		shell.setLayout(layout);
+		initShell();
+		initMainMenu();
 
-		shell.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/openteagle.png")));
-		
-		shell.addShellListener(new ShellAdapter() {
-			@Override
-			public void shellClosed(ShellEvent event) {
-				fireExitEvent(event.data);
-			}
-		});
-		
-		Menu mainMenu = new Menu(shell, SWT.BAR);
-		shell.setMenuBar(mainMenu);
-
-		MenuItem menuItemFile = new MenuItem(mainMenu, SWT.CASCADE);
-		menuItemFile.setText("&File");
-		
-		Menu menuFile = createFileMenu();
-		menuItemFile.setMenu(menuFile);
-
-		
-		MenuItem menuItemTools = new MenuItem(mainMenu, SWT.CASCADE);
-		menuItemTools.setText("&Tools");
-		
-		Menu menuTools = createToolsMenu();
-		menuItemTools.setMenu(menuTools);
-
-		
-		MenuItem menuItemBooking = new MenuItem(mainMenu, SWT.CASCADE);
-		menuItemBooking.setText("&Booking");
-		
-		Menu menuBooking = createBookingMenu();
-		menuItemBooking.setMenu(menuBooking);
-
-		// No content yet
-		/*
-		MenuItem menuItemHelp = new MenuItem(mainMenu, SWT.CASCADE);
-		menuItemHelp.setText("&Help");
-		
-		Menu menuHelp = createHelpMenu();
-		menuItemHelp.setMenu(menuHelp);
-		 */
-		
 		coolBar = new CoolBar(shell, SWT.FLAT);
 		coolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));	
 		toolbarFile = new ToolBar(coolBar, SWT.FLAT);
 		
 		createButtons();
+		initToolbar();
+		initTabs();
+	}
+
+	private void initTabs() {
+		sashForm = new SashForm(shell, SWT.NONE);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
+		tabFolderSelection = new CTabFolder(sashForm, SWT.BORDER);
+		
+		tabFolderVcts = new CTabFolder(sashForm, SWT.BOTTOM|SWT.BORDER);
+
+		tabFolderVcts.addCTabFolder2Listener(new CTabFolder2Adapter() {			
+			@Override
+			public void close(CTabFolderEvent event) {
+/*				if (tabFolderVcts.getItemCount() == 1)
+					event.doit = false;*/
+			}
+		});
+		
+	    sashForm.setWeights(new int[] { 32, 68 });
+	}
+
+	private void initToolbar() {
 		Point size = toolbarFile.getSize();
 		
 		CoolItem coolItemFile = new CoolItem(coolBar, SWT.NONE);
@@ -290,23 +266,60 @@ public class VctToolView {
 		coolItemRest.setPreferredSize(preferred);
 
 		coolBar.pack();
-		
-		sashForm = new SashForm(shell, SWT.NONE);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		tabFolderSelection = new CTabFolder(sashForm, SWT.BORDER);
-		
-		tabFolderVcts = new CTabFolder(sashForm, SWT.BOTTOM|SWT.BORDER);
+	}
 
-		tabFolderVcts.addCTabFolder2Listener(new CTabFolder2Adapter() {			
+	private void initMainMenu() {
+		Menu mainMenu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(mainMenu);
+
+		MenuItem menuItemFile = new MenuItem(mainMenu, SWT.CASCADE);
+		menuItemFile.setText("&File");
+		
+		Menu menuFile = createFileMenu();
+		menuItemFile.setMenu(menuFile);
+
+		
+		MenuItem menuItemTools = new MenuItem(mainMenu, SWT.CASCADE);
+		menuItemTools.setText("&Tools");
+		
+		Menu menuTools = createToolsMenu();
+		menuItemTools.setMenu(menuTools);
+
+		
+		MenuItem menuItemBooking = new MenuItem(mainMenu, SWT.CASCADE);
+		menuItemBooking.setText("&Booking");
+		
+		Menu menuBooking = createBookingMenu();
+		menuItemBooking.setMenu(menuBooking);
+		
+		// No content yet
+		/*
+		MenuItem menuItemHelp = new MenuItem(mainMenu, SWT.CASCADE);
+		menuItemHelp.setText("&Help");
+		
+		Menu menuHelp = createHelpMenu();
+		menuItemHelp.setMenu(menuHelp);
+		 */
+	
+	}
+
+	private void initShell() {
+		Display display = new Display();
+		shell = new Shell(display);
+		shell.setText("OpenTeagle Controller | VCTTool");
+		shell.setSize(900, 500);
+			
+		GridLayout layout = new GridLayout(1, false);
+		shell.setLayout(layout);
+
+		shell.setImage(new Image(shell.getDisplay(), getClass().getResourceAsStream("/icons/openteagle.png")));
+		
+		shell.addShellListener(new ShellAdapter() {
 			@Override
-			public void close(CTabFolderEvent event) {
-/*				if (tabFolderVcts.getItemCount() == 1)
-					event.doit = false;*/
+			public void shellClosed(ShellEvent event) {
+				fireExitEvent(event.data);
 			}
 		});
-		
-	    sashForm.setWeights(new int[] { 32, 68 });
 	}
 
 	private void createButtons() {

@@ -31,21 +31,19 @@ import teagle.vct.model.ResourceInstanceState;
 public class ResourceInstanceSelectionController {
 
 	private static Map<String, ResourceInstanceController> controlers = new HashMap<String, ResourceInstanceController>();
-
-	//private RootController root;
 	
 	private Tree tree;
 	private TeagleClient teagleClient;
-
-	private Composite parent;
 	
 	public ResourceInstanceSelectionController(RootController root, String username, Composite parent) {
-		//this.root = root;
-		
 		this.teagleClient = new TeagleClient(root.getConfig());
-		this.parent = parent;
 		
 		tree = new Tree(parent, SWT.NONE);
+		initDragDrop();
+		init();
+	}
+
+	private void initDragDrop() {
 		DragSource dragSource = new DragSource(tree, DND.DROP_COPY|DND.DROP_MOVE);
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 		dragSource.setTransfer(types);		
@@ -56,7 +54,6 @@ public class ResourceInstanceSelectionController {
 					event.data = transfer;					
 			}
 		});
-		init();
 	}
 
 	private void init() {

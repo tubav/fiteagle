@@ -39,9 +39,12 @@ public class RootController {
 	public RootController(VctToolApp app, VctToolView toolView, VctToolConfig config, CommandAdapter ca) {
 		view = toolView;
 		this.config = config;
-		//this.app = app;
 		this.ca = ca;
-		
+		addCommandListeners();		
+		ModelManager.getInstance().config(new RepoClientConfig(config.getRepoUrl(), config.getUsername(), config.getPassword(), config.getDoPrefetching()));
+	}
+
+	private void addCommandListeners() {
 		this.view.addCommandListener(new CommandAdapter(this) {
 			@Override
 			public void onNew() {
@@ -76,8 +79,6 @@ public class RootController {
 				
 			}
 		});
-		
-		ModelManager.getInstance().config(new RepoClientConfig(config.getRepoUrl(), config.getUsername(), config.getPassword(), config.getDoPrefetching()));
 	}
 	
 	public void init() {

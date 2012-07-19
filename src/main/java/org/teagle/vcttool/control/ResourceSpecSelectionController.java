@@ -89,6 +89,11 @@ public class ResourceSpecSelectionController {
 		tree = new Tree(content, SWT.NONE);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
+		initDragDrop();
+		initViews();
+	}
+
+	private void initDragDrop() {
 		DragSource dragSource = new DragSource(tree, DND.DROP_COPY|DND.DROP_MOVE);
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 		dragSource.setTransfer(types);		
@@ -108,12 +113,9 @@ public class ResourceSpecSelectionController {
 				}
 			}
 		});
-
-		init();
-		
 	}
 
-	private void init() {
+	private void initViews() {
 		List<? extends Ptm> ptms = ModelManager.getInstance().listPtms();
 		List<Organisation> orgs = new ArrayList<Organisation>();
 		Map<ResourceSpec, List<Availability>> resourceMap = new HashMap<ResourceSpec, List<Availability>>();
@@ -181,7 +183,7 @@ public class ResourceSpecSelectionController {
 
 	public void reload() {
 		tree.removeAll();
-		init();
+		initViews();
 	}
 
 }

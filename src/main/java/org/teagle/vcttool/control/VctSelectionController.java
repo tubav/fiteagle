@@ -39,11 +39,12 @@ public class VctSelectionController {
 	
 	public VctSelectionController(final RootController root, String username, Composite parent) {
 		this.root = root;
-		
-		//this.username = username;
-		//this.parent = parent;
 		tree = new Tree(parent, SWT.NONE);
-		init();
+		initMouseListener();
+		initViews();
+	}
+
+	private void initMouseListener() {
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent event) {
@@ -54,10 +55,9 @@ public class VctSelectionController {
 				}
 			}
 		});
-
 	}
 	
-	public void init()
+	public void initViews()
 	{
 		TeagleClient client = new TeagleClient(root.getConfig());
 		List<Vct> vcts = client.getVCTs(); 
@@ -79,7 +79,7 @@ public class VctSelectionController {
 	public void reload() {
 		controllers.clear();
 		tree.removeAll();
-		init();
+		initViews();
 	}
 	
 	public Control getSelectionView() {
