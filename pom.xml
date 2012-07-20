@@ -55,7 +55,7 @@
 -->	
 	<modules>
         <module>core</module>
-<!--		<module>clients</module>-->
+	<module>clients</module>
 	</modules>
 	<build>
 		<pluginManagement>

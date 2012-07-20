@@ -21,16 +21,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>swt-repo</id>
-            <url>https://swt-repo.googlecode.com/svn/repo/</url>
-        </repository>
-        <repository>
-            <id>fiteagle-repo</id>
-            <url>http://tubav.github.com/org.fiteagle/maven/</url>
-        </repository>
-    </repositories>
+  <repositories>
+    <repository>
+      <id>fiteagle-repo</id>
+      <url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+    </repository>
+  </repositories>
 
   <profiles>
   <!-- Windows -->
