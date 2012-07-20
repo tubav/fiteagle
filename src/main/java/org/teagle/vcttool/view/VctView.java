@@ -31,11 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.teagle.vcttool.app.ValidateActions;
 
 import teagle.vct.model.ConfigParamAtomic;
-import teagle.vct.util.Util;
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 
 /**
  * @author sim
@@ -134,7 +131,7 @@ public class VctView extends Composite implements PaintListener, MouseListener, 
 	public ResourceInstanceWidget dragConnectionEnd(Point end, ResourceInstanceWidget src,CLabel cLabel) {
 		ResourceInstanceWidget found = null;
 		ResourceInstanceWidget source = null;
-		ResourceInstanceWidget destination = null;
+//		ResourceInstanceWidget destination = null;
 		if (dragConnection != null) {
 			for (Control control : content.getChildren()) {
 				if (control instanceof ResourceInstanceWidget) {
@@ -142,21 +139,21 @@ public class VctView extends Composite implements PaintListener, MouseListener, 
 					CLabel target = widget.findTargetLabel(end);
 					if (target != null) {	
 						source = src;
-						destination = widget;
+//						destination = widget;
 						String connectionType = "contains";
 						if(cLabel.getData() != null){
 							connectionType = ((ConfigParamAtomic)cLabel.getData()).getType();
 							if(connectionType == null)
 								System.out.println("Error: Error when attemptig to get connection type");
 						}
-						EvaluationHandler handler = new EvaluationHandler();						
+						/*EvaluationHandler handler = new EvaluationHandler();						
 						if(! ValidateActions.validateConnection(source.getResourceInstance(), destination.getResourceInstance(), connectionType, handler))
 						{
 							Util.showMsg(this.getShell(), SWT.ERROR,
 									"Connection Failed", handler.getMessage());
 							System.out.println("connection failed");
 							break;
-						}
+						}*/
 						dragConnection.setTarget(widget, target);
 						connections.add(dragConnection);
 						found = widget;

@@ -194,7 +194,7 @@ public class VctToolApp {
 				e.printStackTrace();
 			}
 		}
-		ValidateActions.init(config.getString("repo.username"), config.getString("pe.endpoint"),this);		
+		//ValidateActions.init(config.getString("repo.username"), config.getString("pe.endpoint"),this);		
 		return vctConfig;
 	}
 

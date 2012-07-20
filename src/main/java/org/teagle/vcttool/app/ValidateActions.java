@@ -1,21 +1,5 @@
 package org.teagle.vcttool.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import oma.xml.fokus.pem1_input_template.PolicyIdentifiers;
-import oma.xml.fokus.soap_pem1_input_template.Event;
-import oma.xml.fokus.soap_pem1_input_template.EventParameter;
-import oma.xml.fokus.soap_pem1_input_template.FOKUSSOAPInputTemplateType;
-import teagle.vct.model.Connection;
-import teagle.vct.model.ModelManager;
-import teagle.vct.model.Ptm;
-import teagle.vct.model.ResourceInstance;
-import teagle.vct.model.ResourceSpec;
-import teagle.vct.model.Vct;
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
-import de.fhg.fokus.ngni.openpe.pem1.PolicyEvaluation;
-import de.fhg.fokus.ngni.openpe.pem1.PolicyEvaluationFactory;
 /**
  * Validates the usage of the VCT Tool against policies defined at the Policy Engine side. Validation is performed when :<br/>
  * 	<ul>
@@ -33,7 +17,7 @@ import de.fhg.fokus.ngni.openpe.pem1.PolicyEvaluationFactory;
  *   2. Otherwise the explicit configured endpoint will be used. 
  */
 public class ValidateActions {
-	
+/*	
 	private static String userName;
 	
 	private static VctToolApp vctToolApp;
@@ -268,7 +252,7 @@ public class ValidateActions {
 
 		return template;
 	}
-
+*/
 
 	
 }

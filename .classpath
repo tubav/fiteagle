@@ -4,21 +4,19 @@
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/teagle/model/0.1/model-0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/teagle/util/0.1/util-0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/eclipse/swt/org.eclipse.swt.cocoa.macosx.x86_64/3.8/org.eclipse.swt.cocoa.macosx.x86_64-3.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.27/jcommander-1.27.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/thoughtworks/xstream/xstream/1.4.2/xstream-1.4.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar"/>
+  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/teagle/tssgrepoclient/0.0.1-SNAPSHOT/tssgrepoclient-0.0.1-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.12/jersey-client-1.12.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.12/jersey-core-1.12.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.27/jcommander-1.27.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.1/joda-time-2.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.2/commons-codec-1.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/openpe/openpe.pem1/0.0.6-SNAPSHOT/openpe.pem1-0.0.6-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/openpe/input/openpe.pem1.input/1.0-SNAPSHOT/openpe.pem1.input-1.0-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/teagle/model/0.1/model-0.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/teagle/util/0.1/util-0.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/thoughtworks/xstream/xstream/1.4.2/xstream-1.4.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar"/>
-  <classpathentry kind="var" path="M2_REPO/de/fhg/fokus/ngni/teagle/tssgrepoclient/0.0.1-SNAPSHOT/tssgrepoclient-0.0.1-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.8.1/junit-4.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-configuration/commons-configuration/1.6/commons-configuration-1.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>

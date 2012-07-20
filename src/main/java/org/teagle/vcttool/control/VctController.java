@@ -5,12 +5,10 @@ package org.teagle.vcttool.control;
 
 import java.util.List;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teagle.vcttool.app.ValidateActions;
 import org.teagle.vcttool.view.ConnectionView;
 import org.teagle.vcttool.view.ResourceInstanceWidget;
 import org.teagle.vcttool.view.VctListener;
@@ -25,7 +23,6 @@ import teagle.vct.model.ResourceInstanceState;
 import teagle.vct.model.ResourceSpec;
 import teagle.vct.model.Vct;
 import teagle.vct.util.Util;
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 
 /**
  * @author sim
@@ -75,13 +72,13 @@ public class VctController implements VctListener {
 				System.out.println("spec: " + spec.getCommonName() + "comp: "
 						+ specName);
 				// Validate use of Resource.
-				EvaluationHandler handler = new EvaluationHandler();
+				/*EvaluationHandler handler = new EvaluationHandler();
 				if (!ValidateActions.validateResourceUsage(spec, commonName, handler)) {
 					Util.showMsg(view.getShell(), SWT.ERROR,
 							"Resource Selection Failed", handler.getMessage());
 					System.out.println("spec: " + spec.getCommonName()
 							+ "comp: " + specName + " failed to be retrieved");
-				} else {
+				} else {*/
 					ResourceInstance resourceInstance = ModelManager
 							.getInstance().createResourceInstance(spec);
 					resourceInstance.setCommonName(commonName);
@@ -89,7 +86,7 @@ public class VctController implements VctListener {
 					resourceInstance.setState(ResourceInstanceState.State.NEW);
 
 					addResourceInstance(resourceInstance, position);
-				}
+				//}
 				return;
 			}
 		

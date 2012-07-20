@@ -12,7 +12,7 @@
     <properties>
 		<eclipse.groupId>org.eclipse.swt</eclipse.groupId>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <repositories>
@@ -26,7 +26,7 @@
         </repository>
         <repository>
             <id>fiteagle-repo</id>
-            <url>http://tubav.github.com/org.fiteagle/repo/</url>
+            <url>http://tubav.github.com/org.fiteagle/maven/</url>
         </repository>
     </repositories>
 
@@ -244,54 +244,7 @@
 
     
 	<dependencies>
-                <dependency>
-                        <groupId>org.eclipse.swt</groupId>
-                        <artifactId>${swt.artifactId}</artifactId>
-                        <version>3.8</version>
-                </dependency>
-	
-                <dependency>
-                        <groupId>com.beust</groupId>
-                        <artifactId>jcommander</artifactId>
-                        <version>1.27</version>
-                </dependency>
-
-	<dependency>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-client</artifactId>
-                        <version>1.12</version>
-                </dependency>
-                <!--
-		<dependency>
-			<groupId>org.vafada</groupId>
-			<artifactId>swtcalendar</artifactId>
-			<version>0.5</version>
-		</dependency>
-		-->
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.fhg.fokus.ngni.openpe</groupId>
-			<artifactId>openpe.pem1</artifactId>
-			<version>0.0.6-SNAPSHOT</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>de.fhg.fokus.ngni.openpe.input</groupId>
-			<artifactId>openpe.pem1.input</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
+			<dependency>
 			<groupId>de.fhg.fokus.ngni.teagle</groupId>
 			<artifactId>model</artifactId>
 			<version>0.1</version>
@@ -307,7 +260,32 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
-
+                <dependency>
+                        <groupId>org.eclipse.swt</groupId>
+                        <artifactId>${swt.artifactId}</artifactId>
+                        <version>3.8</version>
+                </dependency>
+	
+                <dependency>
+                        <groupId>com.beust</groupId>
+                        <artifactId>jcommander</artifactId>
+                        <version>1.27</version>
+                </dependency>
+	<dependency>
+                        <groupId>com.sun.jersey</groupId>
+                        <artifactId>jersey-client</artifactId>
+                        <version>1.12</version>
+                </dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -320,15 +298,6 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.24</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
--->
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
@@ -341,6 +310,5 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.6.6</version>
         </dependency>
-
 	</dependencies>
 </project>

@@ -6,7 +6,6 @@ package org.teagle.vcttool.view;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.teagle.api.TeagleClient;
-import org.teagle.vcttool.app.ValidateActions;
 import org.teagle.vcttool.control.RootController;
 import org.teagle.vcttool.view.dialogs.InputDialog;
 import org.teagle.vcttool.view.dialogs.MessageDialog;
@@ -15,8 +14,6 @@ import teagle.vct.model.ModelManager;
 import teagle.vct.model.RepositoryException;
 import teagle.vct.model.Vct;
 import teagle.vct.tssg.impl.TSSGVct;
-import teagle.vct.util.Util;
-import de.fhg.fokus.ngni.openpe.pem1.EvaluationHandler;
 
 /**
  * @author sim
@@ -65,13 +62,13 @@ public class CommandAdapter implements CommandListener {
 	 */
 	public boolean onSaveAs(VctToolView vctView, Vct data) {
 
-		EvaluationHandler handler = new EvaluationHandler();
+/*		EvaluationHandler handler = new EvaluationHandler();
 		if (!ValidateActions.validateVCT(data, handler)) {
 			Util.showMsg(vctView.getShell(), SWT.ERROR,
 					"VCT failed to be saved", handler.getMessage());
 			System.out.println("Failed to save VCT");
 		} else {
-
+*/
 			InputDialog dialog = new InputDialog(vctView.getShell(),
 					"Save VCT as...");
 			dialog.addInputField("Name", "", "VCT-Name");
@@ -101,7 +98,7 @@ public class CommandAdapter implements CommandListener {
 			default:
 				break;
 			}
-		}
+//		}
 		return false;
 	}
 
