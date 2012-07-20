@@ -17,6 +17,7 @@
 	<modules>
 		<module>vcttool</module>
 		<module>repository</module>
+		<module>cli</module>
 	</modules>
 
    <repositories>
