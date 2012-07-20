@@ -10,7 +10,7 @@
 	<url>http://fiteagle.org/</url>
 
 	<description>
-        FITeagle - Future Internet Testbed Experimentation Framework
+        FITeagle | Future Internet Testbed Experimentation Framework
     </description>
 
 	<organization>
@@ -37,10 +37,10 @@
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
         </repository>
-        <repository>
-            <id>fiteagle-repo</id>
-            <url>http://tubav.github.com/org.fiteagle/maven/</url>
-        </repository>
+   <repository>
+      <id>fiteagle-repo</id>
+      <url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+    </repository>
 	</repositories>
 
 <!--
@@ -70,14 +70,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.5</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.3</version>
-					<configuration>
-						<tarLongFileMode>gnu</tarLongFileMode>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>

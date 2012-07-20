@@ -4,7 +4,6 @@
 package org.teagle.vcttool.view;
 
 import org.eclipse.swt.SWT;
-
 import org.eclipse.swt.custom.CTabItem;
 import org.teagle.clients.cli.TeagleClient;
 import org.teagle.vcttool.control.RootController;

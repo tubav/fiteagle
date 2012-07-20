@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
@@ -481,7 +481,7 @@ public class Util
 
 	public static XStream newXstream()
 	{
-		return new XStream(new DomDriver(null, new XmlFriendlyReplacer(
+		return new XStream(new DomDriver(null, new XmlFriendlyNameCoder(
 				"SYMDOLLAR", "_")))
 		{
 			@Override
@@ -491,7 +491,7 @@ public class Util
 				return new MapperWrapper(next)
 				{
 					@Override
-					public boolean shouldSerializeMember(Class definedIn,
+					public boolean shouldSerializeMember(@SuppressWarnings("rawtypes") Class definedIn,
 							String fieldName)
 					{
 						// System.out.println("Shouldserialize? " + fieldName);
@@ -512,7 +512,7 @@ public class Util
 
 	public static XStream newXstream(Mapper mapper)
 	{
-		return new XStream(null, new DomDriver(null, new XmlFriendlyReplacer(
+		return new XStream(null, new DomDriver(null, new XmlFriendlyNameCoder(
 				"SYMDOLLAR", "_")), Util.class.getClassLoader(), mapper);
 	}
 

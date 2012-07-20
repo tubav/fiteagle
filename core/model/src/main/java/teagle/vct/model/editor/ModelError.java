@@ -6,6 +6,7 @@ package teagle.vct.model.editor;
  * a reflection error).
  */
 public class ModelError extends Exception {
+	private static final long serialVersionUID = 6919314123315872593L;
 	public ModelError(Throwable t) { super(t); }
 	public ModelError(String msg) { super(msg); }
 }

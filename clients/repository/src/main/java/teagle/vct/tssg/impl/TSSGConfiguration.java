@@ -11,8 +11,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import teagle.vct.model.Configuration;
 import teagle.vct.model.ConfigParamAtomic;
+import teagle.vct.model.Configuration;
 import teagle.vct.model.RepositoryException;
 
 /**

@@ -27,8 +27,10 @@
 
 package teagle.vct.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An essential implementation of document templates, primarily for html.

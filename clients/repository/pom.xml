@@ -4,7 +4,7 @@
   <name>FITeagle :: Clients :: Repository</name>
   <groupId>org.fiteagle.clients</groupId>
   <artifactId>repository</artifactId>
-  <version>0.1</version>
+
 
   <parent>
     <artifactId>clients</artifactId>

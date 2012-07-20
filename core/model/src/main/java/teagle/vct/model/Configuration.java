@@ -3,7 +3,6 @@
  */
 package teagle.vct.model;
 
-import java.util.List;
 
 /**
  * @author sim

@@ -7,7 +7,6 @@
 	<groupId>org.fiteagle.clients</groupId>
 	<artifactId>cli</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1</version>
 
 	<parent>
 		<groupId>org.fiteagle</groupId>
@@ -89,48 +88,15 @@
 <build>
 
 <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<!--
-								set up the root of the maven repository in order to load the
-								jars from the repository
-							-->
-							<classpathPrefix>libs</classpathPrefix>
-							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
+			<configuration>
 				  	<finalName>${project.artifactId}</finalName>
 				  	<appendAssemblyId>true</appendAssemblyId>
                     <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-					<archive>
-                        <manifest>
-							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
-                        </manifest>
-                  </archive>
 				</configuration>
                 <executions>
                   <execution>

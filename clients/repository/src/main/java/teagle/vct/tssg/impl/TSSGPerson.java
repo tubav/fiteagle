@@ -17,8 +17,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import teagle.vct.model.Email;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.Organisation;
-import teagle.vct.model.PersonRole;
 import teagle.vct.model.Person;
+import teagle.vct.model.PersonRole;
 import teagle.vct.model.RepositoryException;
 
 /**

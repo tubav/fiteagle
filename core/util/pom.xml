@@ -6,7 +6,6 @@
   <groupId>org.fiteagle.core</groupId>
   <artifactId>util</artifactId>
   <packaging>jar</packaging>
-  <version>0.1</version>
 
   <parent>
     <groupId>org.fiteagle</groupId>
