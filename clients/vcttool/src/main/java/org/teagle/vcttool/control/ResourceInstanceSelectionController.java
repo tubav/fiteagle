@@ -23,74 +23,86 @@ import org.teagle.clients.cli.TeagleClient;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.ResourceInstanceState;
 
-
 /**
  * @author sim
- *
+ * 
  */
 public class ResourceInstanceSelectionController {
 
 	private static Map<String, ResourceInstanceController> controlers = new HashMap<String, ResourceInstanceController>();
-	
-	private Tree tree;
-	private TeagleClient teagleClient;
-	
-	public ResourceInstanceSelectionController(RootController root, String username, Composite parent) {
-		this.teagleClient = new TeagleClient(root.getConfig().getUsername(), root.getConfig().getPassword(), root.getConfig().getReqprocUrl(), root.getConfig().getRepoUrl());
 
-		
-		tree = new Tree(parent, SWT.NONE);
-		initDragDrop();
-		init();
+	private final Tree tree;
+	private final TeagleClient teagleClient;
+
+	public ResourceInstanceSelectionController(final RootController root,
+			final String username, final Composite parent) {
+		this.teagleClient = new TeagleClient(root.getConfig().getUsername(),
+				root.getConfig().getPassword(), root.getConfig()
+						.getReqprocUrl(), root.getConfig().getRepoUrl());
+
+		this.tree = new Tree(parent, SWT.NONE);
+		this.initDragDrop();
+		this.init();
 	}
 
 	private void initDragDrop() {
-		DragSource dragSource = new DragSource(tree, DND.DROP_COPY|DND.DROP_MOVE);
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
-		dragSource.setTransfer(types);		
+		final DragSource dragSource = new DragSource(this.tree, DND.DROP_COPY
+				| DND.DROP_MOVE);
+		final Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		dragSource.setTransfer(types);
 		dragSource.addDragListener(new DragSourceAdapter() {
-			public void dragSetData(DragSourceEvent event) {
-					//Object data = tree.getSelection()[0].getData();
-					String transfer = "instance:" + ((ResourceInstance)tree.getSelection()[0].getData()).getCommonName();
-					event.data = transfer;					
+			@Override
+			public void dragSetData(final DragSourceEvent event) {
+				// Object data = tree.getSelection()[0].getData();
+				final String transfer = "instance:"
+						+ ((ResourceInstance) ResourceInstanceSelectionController.this.tree
+								.getSelection()[0].getData()).getCommonName();
+				event.data = transfer;
 			}
 		});
 	}
 
 	private void init() {
-		Collection<ResourceInstance> instances = teagleClient.getResourceInstances();
-		
-		for (ResourceInstance instance : instances) {
-			controlers.put(instance.getCommonName(), new ResourceInstanceController(instance));
+		final Collection<ResourceInstance> instances = this.teagleClient
+				.getResourceInstances();
+
+		for (final ResourceInstance instance : instances) {
+			ResourceInstanceSelectionController.controlers.put(instance
+					.getCommonName(), new ResourceInstanceController(instance));
 			if (instance.getState() == ResourceInstanceState.State.PROVISIONED) {
-				TreeItem instanceItem = new TreeItem(tree, SWT.NONE);
+				final TreeItem instanceItem = new TreeItem(this.tree, SWT.NONE);
 				instanceItem.setText(instance.getCommonName());
-				instanceItem.setData(instance);			
+				instanceItem.setData(instance);
 			}
-		}		
+		}
 
 	}
-	
-	public void addResourceInstanceControler(ResourceInstanceController controler) {
-		controlers.put(controler.getResourceInstance().getCommonName(), controler);
+
+	public void addResourceInstanceControler(
+			final ResourceInstanceController controler) {
+		ResourceInstanceSelectionController.controlers.put(controler
+				.getResourceInstance().getCommonName(), controler);
 	}
-	
-	public ResourceInstanceController removeResourceInstanceControler(String commonName) {
-		return controlers.remove(commonName);
+
+	public ResourceInstanceController removeResourceInstanceControler(
+			final String commonName) {
+		return ResourceInstanceSelectionController.controlers
+				.remove(commonName);
 	}
-	
-	public static ResourceInstanceController findResourceInstanceController(String commonName) {
-		return controlers.get(commonName);
+
+	public static ResourceInstanceController findResourceInstanceController(
+			final String commonName) {
+		return ResourceInstanceSelectionController.controlers.get(commonName);
 	}
-	
+
 	public Control getSelectionView() {
-		return tree;
+		return this.tree;
 	}
 
 	public void reload() {
-		controlers.clear();
-		tree.removeAll();
-		init();		
+		ResourceInstanceSelectionController.controlers.clear();
+		this.tree.removeAll();
+		this.init();
 	}
 
 }

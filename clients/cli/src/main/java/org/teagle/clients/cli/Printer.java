@@ -8,27 +8,27 @@ import teagle.vct.model.Vct;
 
 public class Printer {
 
-	public static String toStringVct(Vct vct) {
+	public static String toStringVct(final Vct vct) {
 		return vct.getCommonName() + " (" + vct.getState() + ")";
 	}
 
-	public static String vctsToString(Collection<Vct> vcts) {
-			String result = "";
-			for (Vct vct : vcts) {
-				result += " * " + Printer.toStringVct(vct) + "\n";
-			}
-			return result;	
-	}
-
-	public static String risToString(List<ResourceInstance> resourceInstances) {
+	public static String vctsToString(final Collection<Vct> vcts) {
 		String result = "";
-		for (ResourceInstance ri : resourceInstances)
-			result += " * " + Printer.toStringRI(ri) + "\n";
-		return result;	
+		for (final Vct vct : vcts)
+			result += " * " + Printer.toStringVct(vct) + "\n";
+		return result;
 	}
 
-	private static String toStringRI(ResourceInstance ri) {
+	public static String risToString(
+			final List<ResourceInstance> resourceInstances) {
+		String result = "";
+		for (final ResourceInstance ri : resourceInstances)
+			result += " * " + Printer.toStringRI(ri) + "\n";
+		return result;
+	}
+
+	private static String toStringRI(final ResourceInstance ri) {
 		return ri.getCommonName() + " (" + ri.getDescription() + ")";
 	}
-	
+
 }

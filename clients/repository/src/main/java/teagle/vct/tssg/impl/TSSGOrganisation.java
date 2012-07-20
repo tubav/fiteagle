@@ -23,151 +23,150 @@ import teagle.vct.model.ResourceSpec;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="organisation")
+@XmlRootElement(name = "organisation")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TSSGOrganisation extends TSSGObject implements Organisation, Serializable {
+public class TSSGOrganisation extends TSSGObject implements Organisation,
+		Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1461644803668723016L;
-	
-	protected static TSSGCache<TSSGOrganisation> cache = new TSSGCache<TSSGOrganisation>("organisation", new TSSGOrganisation[]{});
-	
+
+	protected static TSSGCache<TSSGOrganisation> cache = new TSSGCache<TSSGOrganisation>(
+			"organisation", new TSSGOrganisation[] {});
+
 	private String name = "";
 
-	@XmlElement(name="resourceSpec")
-	@XmlElementWrapper(name="hasResources")
-	private List<TSSGResourceSpec> resourceSpecs = new ArrayList<TSSGResourceSpec>();
+	@XmlElement(name = "resourceSpec")
+	@XmlElementWrapper(name = "hasResources")
+	private final List<TSSGResourceSpec> resourceSpecs = new ArrayList<TSSGResourceSpec>();
 
-	@XmlElement(name="role")
-	@XmlElementWrapper(name="hasOrgRoles")//added by sha
-	private List<TSSGOrganisationRole> roles = new ArrayList<TSSGOrganisationRole>();
-	
-	@XmlElement(name="person")
-	@XmlElementWrapper(name="people")//added by sha
-	private List<TSSGPerson> persons = new ArrayList<TSSGPerson>();
+	@XmlElement(name = "role")
+	@XmlElementWrapper(name = "hasOrgRoles")
+	// added by sha
+	private final List<TSSGOrganisationRole> roles = new ArrayList<TSSGOrganisationRole>();
 
-	public TSSGOrganisation() {		
+	@XmlElement(name = "person")
+	@XmlElementWrapper(name = "people")
+	// added by sha
+	private final List<TSSGPerson> persons = new ArrayList<TSSGPerson>();
+
+	public TSSGOrganisation() {
 	}
-	
-	protected TSSGOrganisation(Organisation org) {
-		name = org.getName();
-		for (Person person : org.getPersons()) {
-			addPerson(person);
-		}
-		for (OrganisationRole role : org.getRoles()) {
-			addRole(role);
-		}
-		for (ResourceSpec spec : org.getResourceSpecs()) {
-			addResourceSpec(spec);
-		}
-		flag = true;
+
+	protected TSSGOrganisation(final Organisation org) {
+		this.name = org.getName();
+		for (final Person person : org.getPersons())
+			this.addPerson(person);
+		for (final OrganisationRole role : org.getRoles())
+			this.addRole(role);
+		for (final ResourceSpec spec : org.getResourceSpecs())
+			this.addResourceSpec(spec);
+		this.flag = true;
 	}
-	
-	public static TSSGOrganisation find(String id) {
-		return cache.find(id);
+
+	public static TSSGOrganisation find(final String id) {
+		return TSSGOrganisation.cache.find(id);
 	}
 
 	public static List<? extends Organisation> list() {
-		return cache.list();
+		return TSSGOrganisation.cache.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGOrganisation persist() {
-		for (ListIterator<TSSGPerson> it = persons.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGPerson> it = this.persons.listIterator(); it
+				.hasNext();)
 			it.set(it.next().resolve().persist());
-		}
-		for (ListIterator<TSSGOrganisationRole> it = roles.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGOrganisationRole> it = this.roles
+				.listIterator(); it.hasNext();)
 			it.set(it.next().resolve().persist());
-		}
-		for (ListIterator<TSSGResourceSpec> it = resourceSpecs.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGResourceSpec> it = this.resourceSpecs
+				.listIterator(); it.hasNext();)
 			it.set(it.next().resolve().persist());
-		}
-		return cache.persist(this);
+		return TSSGOrganisation.cache.persist(this);
 	}
 
 	@Override
 	public void delete() throws RepositoryException {
-		for (ListIterator<TSSGPerson> it = persons.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGPerson> it = this.persons.listIterator(); it
+				.hasNext();)
 			it.next().resolve().delete();
-		}
-		for (ListIterator<TSSGOrganisationRole> it = roles.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGOrganisationRole> it = this.roles
+				.listIterator(); it.hasNext();)
 			it.next().resolve().delete();
-		}
-		for (ListIterator<TSSGResourceSpec> it = resourceSpecs.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGResourceSpec> it = this.resourceSpecs
+				.listIterator(); it.hasNext();)
 			it.next().resolve().delete();
-		}
-		cache.delete(this);
+		TSSGOrganisation.cache.delete(this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGOrganisation resolve() {
-		return id != null ? cache.find(id) : this;
+		return this.id != null ? TSSGOrganisation.cache.find(this.id) : this;
 	}
-	
+
 	@Override
 	public boolean isModified() {
 		boolean modified = super.isModified();
-		for (TSSGOrganisationRole role : roles) {
+		for (final TSSGOrganisationRole role : this.roles)
 			modified |= role.resolve().isModified();
-		}
-		for (TSSGPerson person : persons) {
+		for (final TSSGPerson person : this.persons)
 			modified |= person.resolve().isModified();
-		}
-		for (TSSGResourceSpec spec : resourceSpecs) {
+		for (final TSSGResourceSpec spec : this.resourceSpecs)
 			modified |= spec.resolve().isModified();
-		}
-		return modified; 
+		return modified;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGOrganisationInstance getInstance() {
 		return new TSSGOrganisationInstance(this);
-	}	
-
-	@Override
-	public void addPerson(Person person) {
-		TSSGPerson p = (person instanceof TSSGPerson) ? (TSSGPerson)person : new TSSGPerson(person);
-		p.addOrganisation(this);		
-		persons.add(p);
-		flag = true;
 	}
 
 	@Override
-	public void addResourceSpec(ResourceSpec resourceSpec) {
-		TSSGResourceSpec spec = (resourceSpec instanceof TSSGResourceSpec) ? (TSSGResourceSpec)resourceSpec : new TSSGResourceSpec(resourceSpec);
-		resourceSpecs.add(spec);
-		flag = true;
+	public void addPerson(final Person person) {
+		final TSSGPerson p = (person instanceof TSSGPerson) ? (TSSGPerson) person
+				: new TSSGPerson(person);
+		p.addOrganisation(this);
+		this.persons.add(p);
+		this.flag = true;
 	}
 
 	@Override
-	public void addRole(OrganisationRole role) {
-		TSSGOrganisationRole r = (role instanceof TSSGOrganisationRole) ? (TSSGOrganisationRole)role : new TSSGOrganisationRole(role);
-		roles.add(r);
-		flag = true;
+	public void addResourceSpec(final ResourceSpec resourceSpec) {
+		final TSSGResourceSpec spec = (resourceSpec instanceof TSSGResourceSpec) ? (TSSGResourceSpec) resourceSpec
+				: new TSSGResourceSpec(resourceSpec);
+		this.resourceSpecs.add(spec);
+		this.flag = true;
+	}
+
+	@Override
+	public void addRole(final OrganisationRole role) {
+		final TSSGOrganisationRole r = (role instanceof TSSGOrganisationRole) ? (TSSGOrganisationRole) role
+				: new TSSGOrganisationRole(role);
+		this.roles.add(r);
+		this.flag = true;
 	}
 
 	@Override
 	public String getName() {
-		if(name!=null){
-			return name.trim();
-		}
-		else{
-			return name;			
-		}
+		if (this.name != null)
+			return this.name.trim();
+		else
+			return this.name;
 	}
 
 	@Override
 	public List<? extends Person> getPersons() {
-		List<Person> array = new ArrayList<Person>();
-		for (TSSGPerson person : persons) {
-			TSSGPerson p = (TSSGPerson)TSSGPerson.find(person.getId());
+		final List<Person> array = new ArrayList<Person>();
+		for (final TSSGPerson person : this.persons) {
+			final TSSGPerson p = TSSGPerson.find(person.getId());
 			array.add(p != null ? p : person);
 		}
 		return array;
@@ -175,9 +174,9 @@ public class TSSGOrganisation extends TSSGObject implements Organisation, Serial
 
 	@Override
 	public List<? extends ResourceSpec> getResourceSpecs() {
-		List<ResourceSpec> array = new ArrayList<ResourceSpec>();
-		for (TSSGResourceSpec spec : resourceSpecs) {
-			TSSGResourceSpec s = (TSSGResourceSpec)TSSGResourceSpec.find(spec.getId());
+		final List<ResourceSpec> array = new ArrayList<ResourceSpec>();
+		for (final TSSGResourceSpec spec : this.resourceSpecs) {
+			final TSSGResourceSpec s = TSSGResourceSpec.find(spec.getId());
 			array.add(s != null ? s : spec);
 		}
 		return array;
@@ -185,39 +184,40 @@ public class TSSGOrganisation extends TSSGObject implements Organisation, Serial
 
 	@Override
 	public List<? extends OrganisationRole> getRoles() {
-		List<OrganisationRole> array = new ArrayList<OrganisationRole>();
-		for (TSSGOrganisationRole role : roles) {
-			TSSGOrganisationRole r = (TSSGOrganisationRole)TSSGOrganisationRole.find(role.getId());
+		final List<OrganisationRole> array = new ArrayList<OrganisationRole>();
+		for (final TSSGOrganisationRole role : this.roles) {
+			final TSSGOrganisationRole r = TSSGOrganisationRole.find(role
+					.getId());
 			array.add(r != null ? r : role);
 		}
 		return array;
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		flag = true;
+		this.flag = true;
 	}
 
 	@Override
-	public void removePerson(Person person) {
-		persons.remove(person);
-		flag = true;
+	public void removePerson(final Person person) {
+		this.persons.remove(person);
+		this.flag = true;
 	}
 
 	@Override
-	public void removeResourceSpec(ResourceSpec resourceSpec) {
-		resourceSpecs.remove(resourceSpec);
-		flag = true;
+	public void removeResourceSpec(final ResourceSpec resourceSpec) {
+		this.resourceSpecs.remove(resourceSpec);
+		this.flag = true;
 	}
 
 	@Override
-	public void removeRole(OrganisationRole role) {
-		roles.remove(role);
-		flag = true;
+	public void removeRole(final OrganisationRole role) {
+		this.roles.remove(role);
+		this.flag = true;
 	}
 
-	@XmlRootElement(name="organisationInstance")
+	@XmlRootElement(name = "organisationInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	static public class TSSGOrganisationInstance implements Serializable {
 
@@ -226,99 +226,93 @@ public class TSSGOrganisation extends TSSGObject implements Organisation, Serial
 		 */
 		private static final long serialVersionUID = 3228694694573119635L;
 
-		private String name;
+		private final List<PersonData> people = new ArrayList<PersonData>();
 
-		private List<PersonData> people = new ArrayList<PersonData>();
-		
-		private List<ResourceSpecData> hasResources = new ArrayList<ResourceSpecData>();
+		private final List<ResourceSpecData> hasResources = new ArrayList<ResourceSpecData>();
 
-		@XmlElementWrapper(name="hasOrgRoles")
-		@XmlElement(name="role")
-		private List<String> roleIds = new ArrayList<String>();
-		
+		@XmlElementWrapper(name = "hasOrgRoles")
+		@XmlElement(name = "role")
+		private final List<String> roleIds = new ArrayList<String>();
+
 		protected TSSGOrganisationInstance() {
 		}
-		
-		protected TSSGOrganisationInstance(TSSGOrganisation instance) {
-			name = instance.name;
-			for (TSSGPerson person : instance.persons) {
-				PersonData data = new PersonData();
+
+		protected TSSGOrganisationInstance(final TSSGOrganisation instance) {
+			for (final TSSGPerson person : instance.persons) {
+				final PersonData data = new PersonData();
 				data.person.add(person.getId());
-				people.add(data);
+				this.people.add(data);
 			}
-			for (TSSGResourceSpec resourceSpec : instance.resourceSpecs) {
-				ResourceSpecData data = new ResourceSpecData();
+			for (final TSSGResourceSpec resourceSpec : instance.resourceSpecs) {
+				final ResourceSpecData data = new ResourceSpecData();
 				data.resourceSpec.add(resourceSpec.getId());
-				hasResources.add(data);
+				this.hasResources.add(data);
 			}
-			for (TSSGOrganisationRole role : instance.roles) {
-				roleIds.add(role.getId());
-			}
+			for (final TSSGOrganisationRole role : instance.roles)
+				this.roleIds.add(role.getId());
 		}
 
-		@XmlType(name="people")
+		@XmlType(name = "people")
 		@XmlAccessorType(XmlAccessType.FIELD)
 		static protected class PersonData {
 			protected List<String> person = new ArrayList<String>();
 		}
 
-		@XmlType(name="hasResources")
+		@XmlType(name = "hasResources")
 		@XmlAccessorType(XmlAccessType.FIELD)
 		static protected class ResourceSpecData {
 			protected List<String> resourceSpec = new ArrayList<String>();
 		}
 	}
 
-	public static void main(String[] args) throws RepositoryException {
+	public static void main(final String[] args) throws RepositoryException {
 		TSSGOrganisation org = new TSSGOrganisation();
 		org.name = "testOrganisation5";
 
-		TSSGResourceSpec spec1 = new TSSGResourceSpec();
+		final TSSGResourceSpec spec1 = new TSSGResourceSpec();
 		spec1.commonName = "newResourceSpec7";
 		spec1.description = "whatever";
 
-		
-		List<TSSGConfigParamAtomic> params = new ArrayList<TSSGConfigParamAtomic>();
-		TSSGConfigParamAtomic param = new TSSGConfigParamAtomic();
+		final List<TSSGConfigParamAtomic> params = new ArrayList<TSSGConfigParamAtomic>();
+		final TSSGConfigParamAtomic param = new TSSGConfigParamAtomic();
 		param.commonName = "newTestAtomic1";
 		param.description = "what ever description";
 		param.setType("string");
 		param.setDefaultValue("this is the default");
 		params.add(param);
-		
+
 		spec1.setConfigurationParameters(params);
-		
-		TSSGResourceSpec spec2 = new TSSGResourceSpec();
+
+		final TSSGResourceSpec spec2 = new TSSGResourceSpec();
 		spec2.commonName = "newResourceSpec8";
 		spec2.description = "whatever";
-		
 
-		List<TSSGConfigParamAtomic> params2 = new ArrayList<TSSGConfigParamAtomic>();
-		TSSGConfigParamAtomic param2 = new TSSGConfigParamAtomic();
+		final List<TSSGConfigParamAtomic> params2 = new ArrayList<TSSGConfigParamAtomic>();
+		final TSSGConfigParamAtomic param2 = new TSSGConfigParamAtomic();
 		param2.commonName = "newTestAtomic1";
 		param2.description = "what ever description";
 		param2.setType("string");
 		param2.setDefaultValue("this is the default");
 		params2.add(param2);
-		
+
 		spec2.setConfigurationParameters(params2);
 
 		org.addResourceSpec(spec1);
 		org.addResourceSpec(spec2);
 
 		org = org.persist();
-		
-		TSSGPerson person1 = new TSSGPerson();
+
+		final TSSGPerson person1 = new TSSGPerson();
 		person1.setUserName("orgTestUser1");
 		person1.setFullName("Full Name");
 		person1.setPassword("password");
-		
+
 		org.addPerson(person1);
-		
+
 		org = org.persist();
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 		org.delete();

@@ -13,11 +13,12 @@ import teagle.vct.model.Entity;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="entity")
+@XmlRootElement(name = "entity")
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class TSSGEntity extends TSSGObject implements Entity, Serializable {
+public abstract class TSSGEntity extends TSSGObject implements Entity,
+		Serializable {
 
 	/**
 	 * 
@@ -25,54 +26,61 @@ public abstract class TSSGEntity extends TSSGObject implements Entity, Serializa
 	private static final long serialVersionUID = 4532521231117336048L;
 
 	protected String commonName = "";
-	
+
 	protected String description = "";
-	
+
 	public TSSGEntity() {
 	}
-	
-	protected TSSGEntity(Entity entity) {
-		commonName = entity.getCommonName();
-		description = entity.getDescription();
+
+	protected TSSGEntity(final Entity entity) {
+		this.commonName = entity.getCommonName();
+		this.description = entity.getDescription();
 	}
 
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Entity#getCommonName()
 	 */
 	@Override
 	public String getCommonName() {
-		return commonName;
+		return this.commonName;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Entity#getDescription()
-	 */ 
+	 */
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Entity#setCommonName(java.lang.String)
 	 */
 	@Override
-	public void setCommonName(String commonName) {
+	public void setCommonName(final String commonName) {
 		this.commonName = commonName;
-		flag = true;
+		this.flag = true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Entity#setDescription(java.lang.String)
 	 */
 	@Override
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		flag = true;
+		this.flag = true;
 	}
 
 	@Override
 	public boolean isPersisted() {
-		return getId() != null;
+		return this.getId() != null;
 	}
 }

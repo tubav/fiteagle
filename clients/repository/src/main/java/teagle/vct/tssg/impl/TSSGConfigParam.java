@@ -13,11 +13,12 @@ import teagle.vct.model.ConfigParam;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="configParam")
+@XmlRootElement(name = "configParam")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TSSGConfigParam extends TSSGEntity implements ConfigParam, Serializable {
+public class TSSGConfigParam extends TSSGEntity implements ConfigParam,
+		Serializable {
 
 	/**
 	 * 
@@ -26,24 +27,22 @@ public class TSSGConfigParam extends TSSGEntity implements ConfigParam, Serializ
 
 	public TSSGConfigParam() {
 	}
-	
-	protected TSSGConfigParam(ConfigParam param) {
-		super(param);		
+
+	protected TSSGConfigParam(final ConfigParam param) {
+		super(param);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGConfigParam resolve() {
-		TSSGConfigParam resolved = TSSGConfigParamComposite.find(id);
-		if (resolved == null) {
-			resolved = TSSGConfigParamAtomic.find(id);
-		}
+		TSSGConfigParam resolved = TSSGConfigParamComposite.find(this.id);
+		if (resolved == null)
+			resolved = TSSGConfigParamAtomic.find(this.id);
 		return resolved;
 	}
-	
+
 	@Override
-	public TSSGConfigParam persist()
-	{
+	public TSSGConfigParam persist() {
 		return this;
 	}
 }

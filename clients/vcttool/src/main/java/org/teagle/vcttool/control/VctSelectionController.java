@@ -24,84 +24,92 @@ import teagle.vct.model.VctState;
 
 /**
  * @author sim
- *
+ * 
  */
 public class VctSelectionController {
 
-	//private RootController root;
-	
-	private Tree tree;
-	//private String username;
-	//private Composite parent;
-	
-	private Map<String, VctController> controllers = new HashMap<String, VctController>();
-	private RootController root;
-	
-	public VctSelectionController(final RootController root, String username, Composite parent) {
+	// private RootController root;
+
+	private final Tree tree;
+	// private String username;
+	// private Composite parent;
+
+	private final Map<String, VctController> controllers = new HashMap<String, VctController>();
+	private final RootController root;
+
+	public VctSelectionController(final RootController root,
+			final String username, final Composite parent) {
 		this.root = root;
-		tree = new Tree(parent, SWT.NONE);
-		initMouseListener();
-		initViews();
+		this.tree = new Tree(parent, SWT.NONE);
+		this.initMouseListener();
+		this.initViews();
 	}
 
 	private void initMouseListener() {
-		tree.addMouseListener(new MouseAdapter() {
+		this.tree.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDoubleClick(MouseEvent event) {
-				TreeItem item = tree.getItem(new Point(event.x, event.y));
+			public void mouseDoubleClick(final MouseEvent event) {
+				final TreeItem item = VctSelectionController.this.tree
+						.getItem(new Point(event.x, event.y));
 				if (item != null) {
-					VctController vctController = (VctController)item.getData();
-					root.getView().addVctView(vctController.getView(root.getView().getVctPane()), vctController, vctController.getVct().getCommonName());
+					final VctController vctController = (VctController) item
+							.getData();
+					VctSelectionController.this.root.getView().addVctView(
+							vctController
+									.getView(VctSelectionController.this.root
+											.getView().getVctPane()),
+							vctController,
+							vctController.getVct().getCommonName());
 				}
 			}
 		});
 	}
-	
-	public void initViews()
-	{
-		TeagleClient client = new TeagleClient(root.getConfig().getUsername(), root.getConfig().getPassword(), root.getConfig().getReqprocUrl(), root.getConfig().getRepoUrl());
-		List<Vct> vcts = client.getVCTs(); 
 
-		for (Vct vct : vcts) {
-			TreeItem vctItem = new TreeItem(tree, SWT.NONE);
+	public void initViews() {
+		final TeagleClient client = new TeagleClient(this.root.getConfig()
+				.getUsername(), this.root.getConfig().getPassword(), this.root
+				.getConfig().getReqprocUrl(), this.root.getConfig()
+				.getRepoUrl());
+		final List<Vct> vcts = client.getVCTs();
+
+		for (final Vct vct : vcts) {
+			final TreeItem vctItem = new TreeItem(this.tree, SWT.NONE);
 			vctItem.setText(vct.getCommonName());
-			VctController controller = new VctController(vct);
-			controllers.put(vct.getCommonName(), controller);
-			
+			final VctController controller = new VctController(vct);
+			this.controllers.put(vct.getCommonName(), controller);
+
 			vctItem.setData(controller);
-			
-			tree.showItem(vctItem);
+
+			this.tree.showItem(vctItem);
 		}
-		
 
 	}
-	
+
 	public void reload() {
-		controllers.clear();
-		tree.removeAll();
-		initViews();
+		this.controllers.clear();
+		this.tree.removeAll();
+		this.initViews();
 	}
-	
-	public Control getSelectionView() {
-		return tree;
-	}
-	
-	
 
-	public VctController createEmptyVct(String username) {
-		return createEmptyVct(username, null);
+	public Control getSelectionView() {
+		return this.tree;
 	}
-	
-	public VctController createEmptyVct(String username, String vctName) {
-		Vct vct = ModelManager.getInstance().createVct();
+
+	public VctController createEmptyVct(final String username) {
+		return this.createEmptyVct(username, null);
+	}
+
+	public VctController createEmptyVct(final String username, String vctName) {
+		final Vct vct = ModelManager.getInstance().createVct();
 		int i = 1;
 		if (vctName == null)
 			vctName = "Vct" + i;
-		while (controllers.containsKey(vctName)) 
+		while (this.controllers.containsKey(vctName))
 			vctName = "Vct" + i++;
-		
+
 		vct.setCommonName(vctName);
-		Person person = ModelManager.getInstance().findPersonByUserName(username);
+		Person person = ModelManager.getInstance().findPersonByUserName(
+				username);
 		if (person == null) {
 			person = ModelManager.getInstance().createPerson();
 			person.setUserName(username);
@@ -109,8 +117,8 @@ public class VctSelectionController {
 		}
 		vct.setPerson(person);
 		vct.setState(VctState.State.NEW);
-		VctController controller = new VctController(vct);
-		controllers.put(vctName, controller);
+		final VctController controller = new VctController(vct);
+		this.controllers.put(vctName, controller);
 		return controller;
 	}
 }

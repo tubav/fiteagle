@@ -21,164 +21,169 @@ import teagle.vct.model.RepositoryException;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="configParamComposite")
+@XmlRootElement(name = "configParamComposite")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TSSGConfigParamComposite extends TSSGConfigParam implements ConfigParamComposite, Serializable {
+public class TSSGConfigParamComposite extends TSSGConfigParam implements
+		ConfigParamComposite, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2690800135915649699L;
 
-	protected static TSSGCache<TSSGConfigParamComposite> cache = new TSSGCache<TSSGConfigParamComposite>("configParamComposite", new TSSGConfigParamComposite[]{});
+	protected static TSSGCache<TSSGConfigParamComposite> cache = new TSSGCache<TSSGConfigParamComposite>(
+			"configParamComposite", new TSSGConfigParamComposite[] {});
 
-	@XmlElement(name="configParamAtomic")
-	@XmlElementWrapper(name="configParams")
-	private List<TSSGConfigParamAtomic> configParams = new ArrayList<TSSGConfigParamAtomic>();
+	@XmlElement(name = "configParamAtomic")
+	@XmlElementWrapper(name = "configParams")
+	private final List<TSSGConfigParamAtomic> configParams = new ArrayList<TSSGConfigParamAtomic>();
 
 	public TSSGConfigParamComposite() {
 	}
-	
-	protected TSSGConfigParamComposite(ConfigParamComposite param) {
+
+	protected TSSGConfigParamComposite(final ConfigParamComposite param) {
 		super(param);
-		for (ConfigParamAtomic parameter : param.getConfigurationParameters()) {
-			addConfigurationParameter(parameter);
-		}		
-		flag = true;
+		for (final ConfigParamAtomic parameter : param
+				.getConfigurationParameters())
+			this.addConfigurationParameter(parameter);
+		this.flag = true;
 	}
-	
-	public static TSSGConfigParamComposite find(String id) {
-		return cache.find(id);
+
+	public static TSSGConfigParamComposite find(final String id) {
+		return TSSGConfigParamComposite.cache.find(id);
 	}
 
 	public static List<? extends ConfigParamComposite> list() {
-		return cache.list();
+		return TSSGConfigParamComposite.cache.list();
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public TSSGConfigParamComposite persist() {
-		for (ListIterator<TSSGConfigParamAtomic> it = configParams.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGConfigParamAtomic> it = this.configParams
+				.listIterator(); it.hasNext();)
 			it.set(it.next().resolve().persist());
-		}
-		return cache.persist(this);
+		return TSSGConfigParamComposite.cache.persist(this);
 	}
 
 	@Override
 	public void delete() throws RepositoryException {
-		cache.delete(this);
+		TSSGConfigParamComposite.cache.delete(this);
 	}
 
 	@Override
 	public TSSGConfigParamComposite resolve() {
-		return id != null ? cache.find(id) : this;
+		return this.id != null ? TSSGConfigParamComposite.cache.find(this.id)
+				: this;
 	}
-	
+
 	@Override
 	public boolean isModified() {
 		boolean modified = super.isModified();
-		for (TSSGConfigParamAtomic atomic : configParams) {
-			modified |= atomic.resolve().isModified();			
-		}
-		return modified; 
+		for (final TSSGConfigParamAtomic atomic : this.configParams)
+			modified |= atomic.resolve().isModified();
+		return modified;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGConfigParamCompositeInstance getInstance() {
 		return new TSSGConfigParamCompositeInstance(this);
-	}	
-
-	/* (non-Javadoc)
-	 * @see teagle.vct.model.ConfigParamComposite#addConfigurationParameter(teagle.vct.model.ConfigParamAtomic)
-	 */
-	@Override
-	public void addConfigurationParameter(ConfigParamAtomic parameter) {
-		TSSGConfigParamAtomic param = (parameter instanceof TSSGConfigParamAtomic) ? (TSSGConfigParamAtomic)parameter : new TSSGConfigParamAtomic(parameter);
-		configParams.add(param);
-		flag = true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * teagle.vct.model.ConfigParamComposite#addConfigurationParameter(teagle
+	 * .vct.model.ConfigParamAtomic)
+	 */
+	@Override
+	public void addConfigurationParameter(final ConfigParamAtomic parameter) {
+		final TSSGConfigParamAtomic param = (parameter instanceof TSSGConfigParamAtomic) ? (TSSGConfigParamAtomic) parameter
+				: new TSSGConfigParamAtomic(parameter);
+		this.configParams.add(param);
+		this.flag = true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.ConfigParamComposite#getConfigurationParameters()
 	 */
 	@Override
 	public List<? extends ConfigParamAtomic> getConfigurationParameters() {
-		List<ConfigParamAtomic> array = new ArrayList<ConfigParamAtomic>();
-		for (TSSGConfigParamAtomic atomic : configParams) {
-			ConfigParamAtomic a = TSSGConfigParamAtomic.find(atomic.getId());
+		final List<ConfigParamAtomic> array = new ArrayList<ConfigParamAtomic>();
+		for (final TSSGConfigParamAtomic atomic : this.configParams) {
+			final ConfigParamAtomic a = TSSGConfigParamAtomic.find(atomic
+					.getId());
 			array.add(a == null ? atomic : a);
 		}
 		return array;
 	}
 
 	@Override
-	public void removeConfigurationParameter(ConfigParamAtomic parameter) {
-		configParams.remove(parameter);
-		flag = true;
+	public void removeConfigurationParameter(final ConfigParamAtomic parameter) {
+		this.configParams.remove(parameter);
+		this.flag = true;
 	}
 
-	@XmlRootElement(name="configParamCompositeInstance")
+	@XmlRootElement(name = "configParamCompositeInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
-	public static class TSSGConfigParamCompositeInstance implements Serializable {
-		
+	public static class TSSGConfigParamCompositeInstance implements
+			Serializable {
+
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -7059345101561107816L;
 
-		private String commonName;
-		
-		private String description;
-		
-		private List<ConfigParamAtomicData> configParams = new ArrayList<ConfigParamAtomicData>();
-		
+		private final List<ConfigParamAtomicData> configParams = new ArrayList<ConfigParamAtomicData>();
+
 		protected TSSGConfigParamCompositeInstance() {
 		}
-		
-		protected TSSGConfigParamCompositeInstance(TSSGConfigParamComposite composite) {
-			commonName = composite.commonName;
-			description = composite.description;
-			for (TSSGConfigParamAtomic atomic : composite.configParams) {
-				ConfigParamAtomicData data = new ConfigParamAtomicData();
+
+		protected TSSGConfigParamCompositeInstance(
+				final TSSGConfigParamComposite composite) {
+			for (final TSSGConfigParamAtomic atomic : composite.configParams) {
+				final ConfigParamAtomicData data = new ConfigParamAtomicData();
 				data.configParamAtomic.add(atomic.getId());
-				configParams.add(data);
+				this.configParams.add(data);
 			}
 		}
-		
-		@XmlType(name="configParams")
+
+		@XmlType(name = "configParams")
 		@XmlAccessorType(XmlAccessType.FIELD)
 		static protected class ConfigParamAtomicData {
 			protected List<String> configParamAtomic = new ArrayList<String>();
 		}
 	}
 
-	public static void main(String[] args) throws RepositoryException {
+	public static void main(final String[] args) throws RepositoryException {
 		TSSGConfigParamComposite composite = new TSSGConfigParamComposite();
 		composite.commonName = "newTestComposite";
 		composite.description = "what ever description";
 
-		TSSGConfigParamAtomic atomic1 = new TSSGConfigParamAtomic();
+		final TSSGConfigParamAtomic atomic1 = new TSSGConfigParamAtomic();
 		atomic1.commonName = "newTestAtomic1";
 		atomic1.description = "what ever description";
 		atomic1.setType("string");
 		atomic1.setDefaultValue("this is the default");
-		
-		TSSGConfigParamAtomic atomic2 = new TSSGConfigParamAtomic();
+
+		final TSSGConfigParamAtomic atomic2 = new TSSGConfigParamAtomic();
 		atomic2.commonName = "newTestAtomic2";
 		atomic2.description = "what ever description";
 		atomic2.setType("string");
 		atomic2.setDefaultValue("this is the default");
-		
+
 		composite.addConfigurationParameter(atomic1);
 		composite.addConfigurationParameter(atomic2);
-		
+
 		composite = composite.persist();
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 		composite.delete();

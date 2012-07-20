@@ -22,165 +22,171 @@ import org.eclipse.swt.widgets.Text;
 
 import teagle.vct.util.OrchestrateReturn;
 import teagle.vct.util.OrchestrateReturn.LogBook;
+
 //import teagle.util.OrchestrateReturn.LogEntry;
 
 /**
  * @author sim
- *
+ * 
  */
 public class BookingResultDialog extends Dialog implements SelectionListener {
 
-	private Map<String, String> configParams = new HashMap<String, String>();
-	
-	private Group params;
+	private final Map<String, String> configParams = new HashMap<String, String>();
 
-	private Button buttonOk;
-	
-    String combine(String[] s, String glue)
-    {
-      int k=s.length;
-      if (k==0)
-        return "";
-      StringBuilder out=new StringBuilder();
-      out.append(s[0]);
-      for (int x=1;x<k;++x)
-        out.append(glue).append(s[x]);
-      return out.toString();
-    }
+	private final Group params;
 
-	public BookingResultDialog(Shell shell, int code, String mesg, String url, OrchestrateReturn.LogBook log) {
-		super(shell, "Booking finished");
-		
-		Composite container = getContainer();
-		
-		params = new Group(container, SWT.NONE);
+	private final Button buttonOk;
 
-		GridLayout layout = new GridLayout(2, false);
-		params.setLayout(layout);
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
-		//data.verticalSpan = 20;
-		params.setLayoutData(data);
-
-		buttonOk = new Button(container, SWT.PUSH);
-	    buttonOk.setText("OK");
-	    buttonOk.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
-	    buttonOk.addSelectionListener(this);
-	    
-	    String[] lines = mesg.split("\n");
-	    int ms = 0;
-	    if (lines != null && lines.length > 10)
-	    	ms = 150;
-	    int ls = 250;
-	    String logstr = dropLog(log, "", "");
-    
-	    addConfigurationParameter("result", Integer.toString(code), "the result code");
-	    addTextArea("message", mesg, "result description", ms);
-	    addConfigurationParameter("log url", url, "location of the OE log. Look here for more information.");
-	    addTextArea("log", logstr, "The operation's log.", ls);
-	    
-	    params.pack();
-	    container.pack();
+	String combine(final String[] s, final String glue) {
+		final int k = s.length;
+		if (k == 0)
+			return "";
+		final StringBuilder out = new StringBuilder();
+		out.append(s[0]);
+		for (int x = 1; x < k; ++x)
+			out.append(glue).append(s[x]);
+		return out.toString();
 	}
-	
-	private String dropLog(LogBook book, String log, String indent)
-	{
-		for (int i = 0; i < book.entries.length; ++i)
-		{
-			Object entry = book.entries[i];
-			if (entry instanceof LogBook)
-			{
-				LogBook inner = (LogBook)entry;
-				log += "\nBEGIN INNER LOG: name=" + inner.name + " component=" + inner.component + "\n";
-				log += dropLog(inner, log, indent + "    ");
-				log += "\nEND INNER LOG: name=" + inner.name + " component=" + inner.component + "\n";
-			}
-			else
-			{
+
+	public BookingResultDialog(final Shell shell, final int code,
+			final String mesg, final String url,
+			final OrchestrateReturn.LogBook log) {
+		super(shell, "Booking finished");
+
+		final Composite container = this.getContainer();
+
+		this.params = new Group(container, SWT.NONE);
+
+		final GridLayout layout = new GridLayout(2, false);
+		this.params.setLayout(layout);
+		final GridData data = new GridData(SWT.FILL, SWT.FILL, true, false, 2,
+				1);
+		// data.verticalSpan = 20;
+		this.params.setLayoutData(data);
+
+		this.buttonOk = new Button(container, SWT.PUSH);
+		this.buttonOk.setText("OK");
+		this.buttonOk.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false,
+				false));
+		this.buttonOk.addSelectionListener(this);
+
+		final String[] lines = mesg.split("\n");
+		int ms = 0;
+		if ((lines != null) && (lines.length > 10))
+			ms = 150;
+		final int ls = 250;
+		final String logstr = this.dropLog(log, "", "");
+
+		this.addConfigurationParameter("result", Integer.toString(code),
+				"the result code");
+		this.addTextArea("message", mesg, "result description", ms);
+		this.addConfigurationParameter("log url", url,
+				"location of the OE log. Look here for more information.");
+		this.addTextArea("log", logstr, "The operation's log.", ls);
+
+		this.params.pack();
+		container.pack();
+	}
+
+	private String dropLog(final LogBook book, String log, final String indent) {
+		for (int i = 0; i < book.entries.length; ++i) {
+			final Object entry = book.entries[i];
+			if (entry instanceof LogBook) {
+				final LogBook inner = (LogBook) entry;
+				log += "\nBEGIN INNER LOG: name=" + inner.name + " component="
+						+ inner.component + "\n";
+				log += this.dropLog(inner, log, indent + "    ");
+				log += "\nEND INNER LOG: name=" + inner.name + " component="
+						+ inner.component + "\n";
+			} else {
 				log += indent + entry;
-				if (i < book.entries.length - 1)
+				if (i < (book.entries.length - 1))
 					log += "\n";
 			}
 		}
 		return log;
 	}
-	
-	public void addTextArea(String name, String value, String description, int size) {
-	    Label label = new Label(params, SWT.NONE);
-	    label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-	    label.setText(name);
-	    Text text = new Text(params, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-	    
-	    GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
-	    if (size > 0)
-	    	data.heightHint = size;
-	    //data.verticalSpan = 20;
-	    data.widthHint = Toolkit.getDefaultToolkit().getScreenSize().width / 2; 
 
-	    text.setLayoutData(data);
-	    text.setText(value);
-	    
-	    text.setData(name);
-	    
-	    if (description != null && !description.isEmpty()) {
-		    label.setToolTipText(description);
-		    text.setToolTipText(description);
-	    }
+	public void addTextArea(final String name, final String value,
+			final String description, final int size) {
+		final Label label = new Label(this.params, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		label.setText(name);
+		final Text text = new Text(this.params, SWT.BORDER | SWT.READ_ONLY
+				| SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+
+		final GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
+		if (size > 0)
+			data.heightHint = size;
+		// data.verticalSpan = 20;
+		data.widthHint = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
+
+		text.setLayoutData(data);
+		text.setText(value);
+
+		text.setData(name);
+
+		if ((description != null) && !description.isEmpty()) {
+			label.setToolTipText(description);
+			text.setToolTipText(description);
+		}
 	}
 
-	public void addConfigurationParameter(String name, String defaultValue, String description) {
-	    Label label = new Label(params, SWT.NONE);
-	    label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
-	    label.setText(name);
-	    Text text = new Text(params, SWT.BORDER | SWT.READ_ONLY);
-	    
-	    text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-	    if (defaultValue != null && !defaultValue.isEmpty()) {
-	    	text.setText(defaultValue);
-	    }
-	    
-	    text.setData(name);
-	    
-	    if (description != null && !description.isEmpty()) {
-		    label.setToolTipText(description);
-		    text.setToolTipText(description);
-	    }   
+	public void addConfigurationParameter(final String name,
+			final String defaultValue, final String description) {
+		final Label label = new Label(this.params, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		label.setText(name);
+		final Text text = new Text(this.params, SWT.BORDER | SWT.READ_ONLY);
+
+		text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		if ((defaultValue != null) && !defaultValue.isEmpty())
+			text.setText(defaultValue);
+
+		text.setData(name);
+
+		if ((description != null) && !description.isEmpty()) {
+			label.setToolTipText(description);
+			text.setToolTipText(description);
+		}
 	}
 
-	public void addConfigurationParameter(String name, boolean defaultValue, String description) {
-		Button checkbox = new Button(params, SWT.CHECK | SWT.RIGHT_TO_LEFT);
-		checkbox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+	public void addConfigurationParameter(final String name,
+			final boolean defaultValue, final String description) {
+		final Button checkbox = new Button(this.params, SWT.CHECK
+				| SWT.RIGHT_TO_LEFT);
+		checkbox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2,
+				1));
 		checkbox.setText(name);
 		checkbox.setSelection(defaultValue);
-		
+
 		checkbox.setData(name);
-		
-	    if (description != null && !description.isEmpty()) {
-		    checkbox.setToolTipText(description);
-	    }   
+
+		if ((description != null) && !description.isEmpty())
+			checkbox.setToolTipText(description);
 	}
 
-	public String getConfiguratonParameter(String name) {
-		return configParams.get(name);
-	}
-	
-	public void widgetDefaultSelected(SelectionEvent arg0) {
+	public String getConfiguratonParameter(final String name) {
+		return this.configParams.get(name);
 	}
 
-	public void widgetSelected(SelectionEvent event) {
-		if (event.widget == buttonOk) {
-			for (Control control : params.getChildren()) {
-				Object data = control.getData();
-				if (data != null) {
-					if (control instanceof Text) {
-						configParams.put(data.toString(), ((Text)control).getText());
-					} else if (control instanceof Button) {
-						configParams.put(data.toString(), String.valueOf(((Button)control).getSelection()));
-					}
-				}
+	public void widgetDefaultSelected(final SelectionEvent arg0) {
+	}
+
+	public void widgetSelected(final SelectionEvent event) {
+		if (event.widget == this.buttonOk) {
+			for (final Control control : this.params.getChildren()) {
+				final Object data = control.getData();
+				if (data != null)
+					if (control instanceof Text)
+						this.configParams.put(data.toString(),
+								((Text) control).getText());
+					else if (control instanceof Button)
+						this.configParams.put(data.toString(), String
+								.valueOf(((Button) control).getSelection()));
 			}
-			hide(SWT.OK);					
-		} else {
-			hide(SWT.CANCEL);			
-		}
+			this.hide(SWT.OK);
+		} else
+			this.hide(SWT.CANCEL);
 	}
 }

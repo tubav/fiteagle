@@ -11,17 +11,17 @@ public class ConstraintViolation extends RepositoryException {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConstraintViolation(String message) {
+	public ConstraintViolation(final String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConstraintViolation(Throwable cause) {
+	public ConstraintViolation(final Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConstraintViolation(String message, Throwable cause) {
+	public ConstraintViolation(final String message, final Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}

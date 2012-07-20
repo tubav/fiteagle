@@ -33,72 +33,73 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An essential implementation of document templates, primarily for html.
- * This is only used by the vct tool for generating the booking summary and
- * confirmation. 
+ * An essential implementation of document templates, primarily for html. This
+ * is only used by the vct tool for generating the booking summary and
+ * confirmation.
  * 
- * The syntax for templates is as simple as it gets: only the ${keyword} 
- * construct is allowed, and such occurrences are substituted by calling 
- * the render() method. No recursive rendering is done (for an html.template
- * that contains a list of sections that can themselves be generated from 
+ * The syntax for templates is as simple as it gets: only the ${keyword}
+ * construct is allowed, and such occurrences are substituted by calling the
+ * render() method. No recursive rendering is done (for an html.template that
+ * contains a list of sections that can themselves be generated from
  * section.html, you will have to define a ${sections} placeholder, then
- * generate all sections, concatenate them manually and render the html
- * page using the result. Rudimentary but not really a nuisance given the
- * cost of alternatives. 
+ * generate all sections, concatenate them manually and render the html page
+ * using the result. Rudimentary but not really a nuisance given the cost of
+ * alternatives.
  * 
  * This code comes from the OMACO project, with perhaps very small changes.
  */
 public class Template {
-	private String file;
+	private final String file;
 	private String text;
-	private Map<String, String> defaults = new HashMap<String, String>();
+	private final Map<String, String> defaults = new HashMap<String, String>();
 
 	/**
-	 * create a new template that is to be loaded from the *resource* passed
-	 * as parameter.
+	 * create a new template that is to be loaded from the *resource* passed as
+	 * parameter.
+	 * 
 	 * @param file
 	 */
-	public Template(String resource) {
+	public Template(final String resource) {
 		this.file = resource;
 	}
-	
+
 	public Map<String, String> defaults() {
-		return defaults;
-	}
-	
-	private String replace(String result, Map<String, String> dict) {
-		for (Map.Entry<String, String> entry: dict.entrySet()) {
-			String pattern = "${" + entry.getKey() + "}";
-			result = result.replace(pattern, entry.getValue());
-		}
-		return result; 
+		return this.defaults;
 	}
 
-	public String render(Map<String, String> dict) throws IOException {
-		if (text==null) {
-			InputStream s = Util.resourceStream(file);
-			if (s==null) throw new IOException("can't open template: " + file);
-			text = Util.readStream(s);
+	private String replace(String result, final Map<String, String> dict) {
+		for (final Map.Entry<String, String> entry : dict.entrySet()) {
+			final String pattern = "${" + entry.getKey() + "}";
+			result = result.replace(pattern, entry.getValue());
 		}
-		
-		return replace(
-				replace(text, dict),
-				defaults);
+		return result;
 	}
-	
+
+	public String render(final Map<String, String> dict) throws IOException {
+		if (this.text == null) {
+			final InputStream s = Util.resourceStream(this.file);
+			if (s == null)
+				throw new IOException("can't open template: " + this.file);
+			this.text = Util.readStream(s);
+		}
+
+		return this.replace(this.replace(this.text, dict), this.defaults);
+	}
+
 	/**
-	 * Convenience function for rendering a template. It accepts as parameters
-	 * a list of pairs of strings, representing keywords and values. 
+	 * Convenience function for rendering a template. It accepts as parameters a
+	 * list of pairs of strings, representing keywords and values.
+	 * 
 	 * @return The generated document as a string.
 	 */
-	public String render(String ... args) throws IOException {
-		if (args.length % 2 == 1)
+	public String render(final String... args) throws IOException {
+		if ((args.length % 2) == 1)
 			throw new IOException("expecting even number of arguments");
-		
-		Map<String, String> dict = new HashMap<String, String>();
-		for (int i=1; i<args.length; i += 2)
-			dict.put(args[i-1], args[i]);
-		
-		return render(dict);		
+
+		final Map<String, String> dict = new HashMap<String, String>();
+		for (int i = 1; i < args.length; i += 2)
+			dict.put(args[i - 1], args[i]);
+
+		return this.render(dict);
 	}
 }

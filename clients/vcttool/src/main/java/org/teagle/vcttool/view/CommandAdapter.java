@@ -22,7 +22,7 @@ import teagle.vct.tssg.impl.TSSGVct;
 public class CommandAdapter implements CommandListener {
 	RootController rootController;
 
-	public CommandAdapter(RootController rootController) {
+	public CommandAdapter(final RootController rootController) {
 		this.rootController = rootController;
 	}
 
@@ -39,14 +39,13 @@ public class CommandAdapter implements CommandListener {
 	 * 
 	 * @see org.teagle.vcttool.view.CommandListener#onSave()
 	 */
-	public boolean onSave(VctToolView vctView, Vct data) {
+	public boolean onSave(final VctToolView vctView, Vct data) {
 		if (data.isModified()) {
 			if (!data.isPersisted())
-				return onSaveAs(vctView, data);
+				return this.onSaveAs(vctView, data);
 			data = (Vct) data.persist();
-		} else {
+		} else
 			System.out.println("wasn't changed");
-		}
 
 		return true;
 	}
@@ -60,45 +59,46 @@ public class CommandAdapter implements CommandListener {
 	 * 
 	 * @see org.teagle.vcttool.view.CommandListener#onSaveAs()
 	 */
-	public boolean onSaveAs(VctToolView vctView, Vct data) {
+	public boolean onSaveAs(final VctToolView vctView, Vct data) {
 
-/*		EvaluationHandler handler = new EvaluationHandler();
-		if (!ValidateActions.validateVCT(data, handler)) {
-			Util.showMsg(vctView.getShell(), SWT.ERROR,
-					"VCT failed to be saved", handler.getMessage());
-			System.out.println("Failed to save VCT");
-		} else {
-*/
-			InputDialog dialog = new InputDialog(vctView.getShell(),
-					"Save VCT as...");
-			dialog.addInputField("Name", "", "VCT-Name");
-			switch (dialog.show()) {
-			case SWT.OK:
-				// String vctName = ((TSSGVct)data).getPerson().getUserName() +
-				// "_"
-				// + dialog.getName();
+		/*
+		 * EvaluationHandler handler = new EvaluationHandler(); if
+		 * (!ValidateActions.validateVCT(data, handler)) {
+		 * Util.showMsg(vctView.getShell(), SWT.ERROR, "VCT failed to be saved",
+		 * handler.getMessage()); System.out.println("Failed to save VCT"); }
+		 * else {
+		 */
+		final InputDialog dialog = new InputDialog(vctView.getShell(),
+				"Save VCT as...");
+		dialog.addInputField("Name", "", "VCT-Name");
+		switch (dialog.show()) {
+		case SWT.OK:
+			// String vctName = ((TSSGVct)data).getPerson().getUserName() +
+			// "_"
+			// + dialog.getName();
 
-				String vctName = dialog.getName();
-				if (dialog.getName().equals("")) {
-					vctView.showError("No name given.");
-					System.out.println("no name given");
-				} else if (!ModelManager.getInstance().vctExists(vctName,
-						((TSSGVct) data).getPerson().getUserName())) {
-					((TSSGVct) data).setCommonName(dialog.getName());
-					System.out.println("DEBUG: Booking (really): " +  TeagleClient.toString(data));
-					data = ((TSSGVct) data).persist();
-					rootController.reloadVcts();
-					return true;
-				} else
-					vctView.showError("VCT name already taken.");
+			final String vctName = dialog.getName();
+			if (dialog.getName().equals("")) {
+				vctView.showError("No name given.");
+				System.out.println("no name given");
+			} else if (!ModelManager.getInstance().vctExists(vctName,
+					((TSSGVct) data).getPerson().getUserName())) {
+				((TSSGVct) data).setCommonName(dialog.getName());
+				System.out.println("DEBUG: Booking (really): "
+						+ TeagleClient.toString(data));
+				data = ((TSSGVct) data).persist();
+				this.rootController.reloadVcts();
+				return true;
+			} else
+				vctView.showError("VCT name already taken.");
 
-				break;
-			case SWT.CANCEL:
-				break;
-			default:
-				break;
-			}
-//		}
+			break;
+		case SWT.CANCEL:
+			break;
+		default:
+			break;
+		}
+		// }
 		return false;
 	}
 
@@ -119,9 +119,9 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	// @Override
-	public void onDelete(VctToolView vctToolView, Vct data, VctView view,
-			CTabItem tab) {
-		MessageDialog d = new MessageDialog(vctToolView.getShell(),
+	public void onDelete(final VctToolView vctToolView, final Vct data,
+			final VctView view, final CTabItem tab) {
+		final MessageDialog d = new MessageDialog(vctToolView.getShell(),
 				"Are you sure? This can not be undone.", SWT.ICON_QUESTION
 						| SWT.OK | SWT.CANCEL);
 
@@ -134,7 +134,7 @@ public class CommandAdapter implements CommandListener {
 		if (data.isPersisted())
 			try {
 				data.delete();
-			} catch (RepositoryException e) {
+			} catch (final RepositoryException e) {
 				e.printStackTrace();
 				vctToolView.showException(e);
 				return;
@@ -142,51 +142,49 @@ public class CommandAdapter implements CommandListener {
 		System.out.println("deleted");
 		view.dispose();
 		tab.dispose();
-		if (rootController != null)
-			rootController.reloadVcts();
+		if (this.rootController != null)
+			this.rootController.reloadVcts();
 
 	}
 
-
 	// @Override
-	public void onStart(VctToolView vctToolView, Vct data, VctView view,
-			CTabItem tab) {
-		new MessageDialog(vctToolView.getShell(),
-				"To be implemented.", SWT.ICON_INFORMATION);
+	public void onStart(final VctToolView vctToolView, final Vct data,
+			final VctView view, final CTabItem tab) {
+		new MessageDialog(vctToolView.getShell(), "To be implemented.",
+				SWT.ICON_INFORMATION);
 
-		//TODO: VCT Start: to be implemented
+		// TODO: VCT Start: to be implemented
 		System.out.println("VCT Start: to be implemented");
 		view.dispose();
 		tab.dispose();
-		if (rootController != null)
-			rootController.reloadVcts();
+		if (this.rootController != null)
+			this.rootController.reloadVcts();
 
 	}
 
 	// @Override
-	public void onStop(VctToolView vctToolView, Vct data, VctView view,
-			CTabItem tab) {
-		new MessageDialog(vctToolView.getShell(),
-				"To be implemented.", SWT.ICON_INFORMATION);
+	public void onStop(final VctToolView vctToolView, final Vct data,
+			final VctView view, final CTabItem tab) {
+		new MessageDialog(vctToolView.getShell(), "To be implemented.",
+				SWT.ICON_INFORMATION);
 
-		//TODO: VCT Stop: to be implemented
+		// TODO: VCT Stop: to be implemented
 		System.out.println("VCT Stop: to be implemented");
 		view.dispose();
 		tab.dispose();
-		if (rootController != null)
-			rootController.reloadVcts();
+		if (this.rootController != null)
+			this.rootController.reloadVcts();
 
 	}
 
-	public void setRootController(RootController c) {
+	public void setRootController(final RootController c) {
 		this.rootController = c;
 	}
 
 	public void onRefresh() {
 		System.out.println("VCT Refresh");
-		if (rootController != null) {
-			rootController.reloadAll();
-		}
+		if (this.rootController != null)
+			this.rootController.reloadAll();
 	}
 
 }

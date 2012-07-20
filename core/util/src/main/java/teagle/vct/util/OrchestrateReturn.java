@@ -6,7 +6,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XStreamAlias("return")
 public class OrchestrateReturn {
 	// ! use this when creating an error return (no mappings)
-	public OrchestrateReturn(int status, String message) {
+	public OrchestrateReturn(final int status, final String message) {
 		this.status = status;
 		this.message = message;
 		this.log = "";

@@ -11,17 +11,17 @@ public class OrchestrationException extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	public OrchestrationException(String message) {
+	public OrchestrationException(final String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public OrchestrationException(Throwable cause) {
+	public OrchestrationException(final Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public OrchestrationException(String message, Throwable cause) {
+	public OrchestrationException(final String message, final Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}

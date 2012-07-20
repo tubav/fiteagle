@@ -8,7 +8,12 @@ public class ProgressException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	public ProgressException(Exception e) { super(e); }
-	public ProgressException(String msg) { super(msg); }
+
+	public ProgressException(final Exception e) {
+		super(e);
+	}
+
+	public ProgressException(final String msg) {
+		super(msg);
+	}
 }

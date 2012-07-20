@@ -12,26 +12,28 @@ import teagle.vct.model.Vct;
 public class TeagleClientTest {
 
 	private TeagleClient client;
-	
-	@Before public void setup() throws MalformedURLException {
-		String repoUrl = "http://localhost:9080/repository/rest";
-		String reqUrl = "http://localhost:9000/reqproc";
-		String user = "root";
-		String pwd = "root";
-		
-		//todo: inject a local mock - do not test using external servers
+
+	@Before
+	public void setup() throws MalformedURLException {
+		final String repoUrl = "http://localhost:9080/repository/rest";
+		final String reqUrl = "http://localhost:9000/reqproc";
+		final String user = "root";
+		final String pwd = "root";
+
+		// todo: inject a local mock - do not test using external servers
 		this.client = new TeagleClient(user, pwd, reqUrl, repoUrl);
 	}
-	
-	//@Test
+
+	// @Test
 	public void testGetResourceInstances() {
-		Collection<ResourceInstance> actual = this.client.getResourceInstances();
+		final Collection<ResourceInstance> actual = this.client
+				.getResourceInstances();
 		Assert.assertFalse(actual.isEmpty());
 	}
 
-	//@Test
+	// @Test
 	public void testGetVCTs() {
-		Collection<Vct> actual = this.client.getVCTs();
+		final Collection<Vct> actual = this.client.getVCTs();
 		Assert.assertFalse(actual.isEmpty());
 	}
 

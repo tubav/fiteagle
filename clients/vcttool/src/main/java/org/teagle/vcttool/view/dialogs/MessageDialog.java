@@ -5,33 +5,31 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 public class MessageDialog {
-	
+
 	private String myMessage = "";
 
 	private int result = SWT.CANCEL;
-	
-	public MessageDialog(Shell shell, String message) 
-	{
+
+	public MessageDialog(final Shell shell, final String message) {
 		this(shell, message, SWT.ICON_INFORMATION);
 	}
-	
-	public MessageDialog(Shell shell, String message, int style) 
-	{    
-	    myMessage = message;
-	    
-	    MessageBox messageBox = new MessageBox(shell, style);
-	    messageBox.setMessage(myMessage);
-	    result = messageBox.open();
 
-//	    display.dispose();
-	  }
-	
-	public void setMessage(String mes){
+	public MessageDialog(final Shell shell, final String message,
+			final int style) {
+		this.myMessage = message;
+
+		final MessageBox messageBox = new MessageBox(shell, style);
+		messageBox.setMessage(this.myMessage);
+		this.result = messageBox.open();
+
+		// display.dispose();
+	}
+
+	public void setMessage(final String mes) {
 		this.myMessage = mes;
 	}
-	
-	public int getResult()
-	{
-		return result;
+
+	public int getResult() {
+		return this.result;
 	}
 }

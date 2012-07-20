@@ -16,9 +16,9 @@ import teagle.vct.model.RepositoryException;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="cost")
+@XmlRootElement(name = "cost")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TSSGCost extends TSSGObject implements Cost, Serializable {
 
@@ -27,89 +27,98 @@ public class TSSGCost extends TSSGObject implements Cost, Serializable {
 	 */
 	private static final long serialVersionUID = -8256086011998804579L;
 
-	protected static TSSGCache<TSSGCost> cache = new TSSGCache<TSSGCost>("cost", new TSSGCost[]{});
-	
-	@XmlElement(name="costAmount")
+	protected static TSSGCache<TSSGCost> cache = new TSSGCache<TSSGCost>(
+			"cost", new TSSGCost[] {});
+
+	@XmlElement(name = "costAmount")
 	private double amount;
 
-	@XmlElement(name="costDenominator")
+	@XmlElement(name = "costDenominator")
 	private String currency = "";
 
 	public TSSGCost() {
 	}
 
-	protected TSSGCost(Cost cost) {
-		amount = cost.getAmount();
-		currency = cost.getCurrency();
-		flag = true;
+	protected TSSGCost(final Cost cost) {
+		this.amount = cost.getAmount();
+		this.currency = cost.getCurrency();
+		this.flag = true;
 	}
-	
-	public static TSSGCost find(String id) {
-		return cache.find(id);
+
+	public static TSSGCost find(final String id) {
+		return TSSGCost.cache.find(id);
 	}
 
 	public static List<? extends Cost> list() {
-		return cache.list();
+		return TSSGCost.cache.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGCost persist() {
-		return cache.persist(this);
+		return TSSGCost.cache.persist(this);
 	}
 
 	@Override
 	public void delete() throws RepositoryException {
-		cache.delete(this);
+		TSSGCost.cache.delete(this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGCost resolve() {
-		return id != null ? cache.find(id) : this;
+		return this.id != null ? TSSGCost.cache.find(this.id) : this;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGCostInstance getInstance() {
 		return new TSSGCostInstance(this);
-	}	
+	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Cost#getAmount()
 	 */
 	@Override
 	public double getAmount() {
-		return amount;
+		return this.amount;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Cost#getCurrency()
 	 */
 	@Override
 	public String getCurrency() {
-		return currency;
+		return this.currency;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Cost#setAmount(double)
 	 */
 	@Override
-	public void setAmount(double amount) {
+	public void setAmount(final double amount) {
 		this.amount = amount;
-		flag = true;
+		this.flag = true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.Cost#setCurrency(java.lang.String)
 	 */
 	@Override
-	public void setCurrency(String currency) {
+	public void setCurrency(final String currency) {
 		this.currency = currency;
-		flag = true;
+		this.flag = true;
 	}
 
-	@XmlRootElement(name="costInstance")
+	@XmlRootElement(name = "costInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class TSSGCostInstance implements Serializable {
 
@@ -118,36 +127,36 @@ public class TSSGCost extends TSSGObject implements Cost, Serializable {
 		 */
 		private static final long serialVersionUID = -5751580631201913138L;
 
-		@XmlElement(name="costAmount")
+		@XmlElement(name = "costAmount")
 		private String amount;
-		
-		@XmlElement(name="costDenominator")
+
+		@XmlElement(name = "costDenominator")
 		private String currency = "";
-		
+
 		protected TSSGCostInstance() {
 		}
-		
-		protected TSSGCostInstance(TSSGCost cost) {
-			this.amount = String.valueOf((long)cost.amount);
+
+		protected TSSGCostInstance(final TSSGCost cost) {
+			this.amount = String.valueOf((long) cost.amount);
 			this.currency = cost.currency;
 		}
-		
+
 	}
 
-	public static void main(String[] args) throws RepositoryException {
+	public static void main(final String[] args) throws RepositoryException {
 		TSSGCost cost = new TSSGCost();
 		cost.setAmount(20);
 		cost.setCurrency("Yen");
-		
+
 		cost = cost.persist();
-		
+
 		cost.setAmount(30);
-		
+
 		cost = cost.persist();
-		
+
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 		cost.delete();

@@ -9,70 +9,68 @@ public class RepoClientConfig {
 	private boolean doPrefetching = true;
 	private boolean doAutoclear = false;
 	private int autoClearInterval = 1800000;
-	
-	public RepoClientConfig(URL repoUrl, String username, String password,
-			boolean doPrefetching)
-	{
+
+	public RepoClientConfig(final URL repoUrl, final String username,
+			final String password, final boolean doPrefetching) {
 		this(repoUrl, username, password, doPrefetching, false);
 	}
-	
-	public RepoClientConfig(URL repoUrl, String username, String password,
-			boolean doPrefetching, boolean doAutoclear)	
-	{
+
+	public RepoClientConfig(final URL repoUrl, final String username,
+			final String password, final boolean doPrefetching,
+			final boolean doAutoclear) {
 		this.url = repoUrl;
 		this.username = username;
 		this.password = password;
 		this.doPrefetching = doPrefetching;
 		this.doAutoclear = doAutoclear;
 	}
-	public URL getUrl()
-	{
-		return url;
+
+	public URL getUrl() {
+		return this.url;
 	}
-	public void setUrl(URL url)
-	{
+
+	public void setUrl(final URL url) {
 		this.url = url;
 	}
-	public String getUsername()
-	{
-		return username;
+
+	public String getUsername() {
+		return this.username;
 	}
-	public void setUsername(String username)
-	{
+
+	public void setUsername(final String username) {
 		this.username = username;
 	}
-	public String getPassword()
-	{
-		return password;
+
+	public String getPassword() {
+		return this.password;
 	}
-	public void setPassword(String password)
-	{
+
+	public void setPassword(final String password) {
 		this.password = password;
 	}
-	public boolean getDoPrefetching()
-	{
-		return doPrefetching;
+
+	public boolean getDoPrefetching() {
+		return this.doPrefetching;
 	}
-	public void setDoPrefetching(boolean doPrefetching)
-	{
+
+	public void setDoPrefetching(final boolean doPrefetching) {
 		this.doPrefetching = doPrefetching;
 	}
-	public boolean getDoAutoclear()
-	{
-		return doAutoclear;
+
+	public boolean getDoAutoclear() {
+		return this.doAutoclear;
 	}
-	public void setDoAutoclear(boolean doAutoclear)
-	{
+
+	public void setDoAutoclear(final boolean doAutoclear) {
 		this.doAutoclear = doAutoclear;
 	}
-	public int getAutoClearInterval()
-	{
-		return autoClearInterval;
+
+	public int getAutoClearInterval() {
+		return this.autoClearInterval;
 	}
-	public void setAutoClearInterval(int autoClearInterval)
-	{
+
+	public void setAutoClearInterval(final int autoClearInterval) {
 		this.autoClearInterval = autoClearInterval;
 	}
-	
-	
+
 }

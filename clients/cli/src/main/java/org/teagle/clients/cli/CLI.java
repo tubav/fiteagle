@@ -51,23 +51,23 @@ public class CLI {
 
 		try {
 			parameter.parse(args);
-			this.client = new TeagleClient(user, password, reqUrl, repoUrl);
+			this.client = new TeagleClient(this.user, this.password,
+					this.reqUrl, this.repoUrl);
 			final String command = parameter.getParsedCommand();
-			if (CLI.CMD_BOOK_VCT.equals(command)) {
+			if (CLI.CMD_BOOK_VCT.equals(command))
 				result = this.commandBookVCT.exec();
-			} else if (CLI.CMD_START_VCT.equals(command)) {
+			else if (CLI.CMD_START_VCT.equals(command))
 				result = this.commandStartVCT.exec();
-			} else if (CLI.CMD_STOP_VCT.equals(command)) {
+			else if (CLI.CMD_STOP_VCT.equals(command))
 				result = this.commandStopVCT.exec();
-			} else if (CLI.CMD_DELETE_VCT.equals(command)) {
+			else if (CLI.CMD_DELETE_VCT.equals(command))
 				result = this.commandDeleteVCT.exec();
-			} else if (CLI.CMD_LIST_VCTS.equals(command)) {
+			else if (CLI.CMD_LIST_VCTS.equals(command))
 				result = this.commandListVCTs.exec();
-			} else if (CLI.CMD_LIST_RIS.equals(command)) {
+			else if (CLI.CMD_LIST_RIS.equals(command))
 				result = this.commandListRIs.exec();
-			} else {
+			else
 				result = CLI.getUsage(parameter);
-			}
 		} catch (final Exception ex) {
 			result = "ERROR: " + ex.getMessage() + "\n";
 			result += CLI.getUsage(parameter);
@@ -94,56 +94,58 @@ public class CLI {
 	@Parameters(separators = "=", commandDescription = "Book a VCT based on a file")
 	private class CommandBookVCT {
 		@Parameter(names = "-filename", description = "The filename with the VCT description", required = true)
-		private String filename = "";
+		private final String filename = "";
 
 		public String exec() throws IOException {
-			client.bookVct(new File(filename));
-			return client.getResult().message;
+			CLI.this.client.bookVct(new File(this.filename));
+			return CLI.this.client.getResult().message;
 		}
 	}
 
 	@Parameters(separators = "=", commandDescription = "Starts a booked VCT")
 	private class CommandStartVCT {
 		@Parameter(names = "-vctname", description = "The name of the VCT", required = true)
-		private String vctName = "";
+		private final String vctName = "";
 
 		public String exec() throws IOException {
-			client.startVct(user, vctName);
-			return client.getResult().message;
+			CLI.this.client.startVct(CLI.this.user, this.vctName);
+			return CLI.this.client.getResult().message;
 		}
 	}
 
 	@Parameters(separators = "=", commandDescription = "Stops a started VCT")
 	private class CommandStopVCT {
 		@Parameter(names = "-vctname", description = "The name of the VCT", required = true)
-		private String vctName = "";
+		private final String vctName = "";
 
 		public String exec() throws IOException {
-			client.stopVct(user, vctName);
-			return client.getResult().message;
+			CLI.this.client.stopVct(CLI.this.user, this.vctName);
+			return CLI.this.client.getResult().message;
 		}
 	}
 
 	@Parameters(separators = "=", commandDescription = "Deletes a booked VCT")
 	private class CommandDeleteVCT {
 		@Parameter(names = "-vctname", description = "The name of the VCT", required = true)
-		private String vctName = "";
+		private final String vctName = "";
 
 		public String exec() throws IOException {
-			client.deleteVct(user, vctName);
-			return client.getResult().message;
+			CLI.this.client.deleteVct(CLI.this.user, this.vctName);
+			return CLI.this.client.getResult().message;
 		}
 	}
 
 	@Parameters(separators = "=", commandDescription = "Lists booked VCTs")
 	private class CommandListVCTs {
 		public String exec() throws IOException {
-			return Printer.vctsToString(client.getVCTs());}
+			return Printer.vctsToString(CLI.this.client.getVCTs());
+		}
 	}
-	
+
 	@Parameters(separators = "=", commandDescription = "Lists Resource Instances")
 	private class CommandListRIs {
 		public String exec() throws IOException {
-			return Printer.risToString(client.getResourceInstances());}
+			return Printer.risToString(CLI.this.client.getResourceInstances());
+		}
 	}
 }

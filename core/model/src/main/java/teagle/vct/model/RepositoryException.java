@@ -11,17 +11,17 @@ public class RepositoryException extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RepositoryException(String message) {
+	public RepositoryException(final String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public RepositoryException(Throwable cause) {
+	public RepositoryException(final Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public RepositoryException(String message, Throwable cause) {
+	public RepositoryException(final String message, final Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}

@@ -17,101 +17,120 @@ import teagle.vct.model.Vct;
 
 /**
  * @author sim
- *
+ * 
  */
 public class RootController {
 
-	private VctToolConfig config;
-	
-	private VctToolView view;
-	
+	private final VctToolConfig config;
+
+	private final VctToolView view;
+
 	private ResourceSpecSelectionController resourceSpecSelectionController;
 	private VctSelectionController vctSelectionController;
 	private ResourceInstanceSelectionController resourceInstanceSelectionController;
 
 	private BookingController bookingController;
-	
-	//private VctToolApp app;
-	private CommandAdapter ca;
-	
-	public VctToolConfig getConfig() {return this.config;}
-	
-	public RootController(VctToolApp app, VctToolView toolView, VctToolConfig config, CommandAdapter ca) {
-		view = toolView;
+
+	// private VctToolApp app;
+	private final CommandAdapter ca;
+
+	public VctToolConfig getConfig() {
+		return this.config;
+	}
+
+	public RootController(final VctToolApp app, final VctToolView toolView,
+			final VctToolConfig config, final CommandAdapter ca) {
+		this.view = toolView;
 		this.config = config;
 		this.ca = ca;
-		addCommandListeners();		
-		ModelManager.getInstance().config(new RepoClientConfig(config.getRepoUrl(), config.getUsername(), config.getPassword(), config.getDoPrefetching()));
+		this.addCommandListeners();
+		ModelManager.getInstance().config(
+				new RepoClientConfig(config.getRepoUrl(), config.getUsername(),
+						config.getPassword(), config.getDoPrefetching()));
 	}
 
 	private void addCommandListeners() {
 		this.view.addCommandListener(new CommandAdapter(this) {
 			@Override
 			public void onNew() {
-				VctController empty = createEmptyVct();
-				addVct(empty);	
-			}
-			
-			@Override
-			public void onOpen(){
-				//TODO
-				System.out.println("Root: onOpen");
-				//vctSelectionController.getSelectionView();
-//				VctController controller = (VctController)view.getVctPane().getSelection().getData();
-//				controller.onOpen();
+				final VctController empty = RootController.this
+						.createEmptyVct();
+				RootController.this.addVct(empty);
 			}
 
 			@Override
-			public boolean onSave(VctToolView vctView, Vct data) {
-				//VctController controller = (VctController)view.getVctPane().getSelection().getData();
-				//controller.save();
+			public void onOpen() {
+				// TODO
+				System.out.println("Root: onOpen");
+				// vctSelectionController.getSelectionView();
+				// VctController controller =
+				// (VctController)view.getVctPane().getSelection().getData();
+				// controller.onOpen();
+			}
+
+			@Override
+			public boolean onSave(final VctToolView vctView, final Vct data) {
+				// VctController controller =
+				// (VctController)view.getVctPane().getSelection().getData();
+				// controller.save();
 				return false;
 			}
-			
-			@Override 
-			public boolean onSaveAs(VctToolView vctView, Vct data) {
+
+			@Override
+			public boolean onSaveAs(final VctToolView vctView, final Vct data) {
 				return false;
 			}
-			
-			@Override  
-			public void onDelete(VctToolView vctView, Vct data, VctView view, CTabItem tab)
-			{
-				
+
+			@Override
+			public void onDelete(final VctToolView vctView, final Vct data,
+					final VctView view, final CTabItem tab) {
+
 			}
 		});
 	}
-	
+
 	public void init() {
 		System.out.println("creating resourceInstanceSelectionController");
-		
-		resourceInstanceSelectionController = new ResourceInstanceSelectionController(this, config.getUsername(), view.getSelectionPane());
-		view.addSelectionControl("Resource Instances",resourceInstanceSelectionController.getSelectionView(), -1);
+
+		this.resourceInstanceSelectionController = new ResourceInstanceSelectionController(
+				this, this.config.getUsername(), this.view.getSelectionPane());
+		this.view
+				.addSelectionControl("Resource Instances",
+						this.resourceInstanceSelectionController
+								.getSelectionView(), -1);
 
 		System.out.println("creating vctSelectionController");
-		
-		vctSelectionController = new VctSelectionController(this, config.getUsername(), view.getSelectionPane());
-		view.addSelectionControl("VCTs", vctSelectionController.getSelectionView(), -1);
-		
+
+		this.vctSelectionController = new VctSelectionController(this,
+				this.config.getUsername(), this.view.getSelectionPane());
+		this.view.addSelectionControl("VCTs",
+				this.vctSelectionController.getSelectionView(), -1);
+
 		System.out.println("creating VctController");
-		
-		VctController empty = vctSelectionController.createEmptyVct(config.getUsername());		
-		view.addVctView(empty.getView(view.getVctPane()), empty, empty.getVct().getCommonName());		
+
+		final VctController empty = this.vctSelectionController
+				.createEmptyVct(this.config.getUsername());
+		this.view.addVctView(empty.getView(this.view.getVctPane()), empty,
+				empty.getVct().getCommonName());
 
 		System.out.println("creating resourceSpecSelectionController");
-		
-		resourceSpecSelectionController = new ResourceSpecSelectionController(this, view.getSelectionPane());
-		view.addSelectionControl("Resource Specs", resourceSpecSelectionController.getSelectionView(), 0);
+
+		this.resourceSpecSelectionController = new ResourceSpecSelectionController(
+				this, this.view.getSelectionPane());
+		this.view.addSelectionControl("Resource Specs",
+				this.resourceSpecSelectionController.getSelectionView(), 0);
 
 		System.out.println("creating bookingController");
-		
-		bookingController = new BookingController(this, ca, config);
-		view.addBookingListener(bookingController);
+
+		this.bookingController = new BookingController(this, this.ca,
+				this.config);
+		this.view.addBookingListener(this.bookingController);
 	}
-	
+
 	public void reloadAll() {
 		this.reloadVcts();
 		this.reloadInstances();
-		reloadSpecs();
+		this.reloadSpecs();
 	}
 
 	public void reloadVcts() {
@@ -126,51 +145,44 @@ public class RootController {
 		this.resourceInstanceSelectionController.reload();
 	}
 
-	
 	public VctToolView getView() {
-		return view;
+		return this.view;
 	}
-	
-	public void runProgressJob(ProgressJob job, String text) throws ProgressException
-	{
-		ProgressDialogController c = new ProgressDialogController(view, text);
+
+	public void runProgressJob(final ProgressJob job, final String text)
+			throws ProgressException {
+		final ProgressDialogController c = new ProgressDialogController(
+				this.view, text);
 		c.run(job);
 	}
-	
-	public void runProgressJob(ProgressJob job) throws ProgressException
-	{
-		runProgressJob(job, "Operation in progress...");
+
+	public void runProgressJob(final ProgressJob job) throws ProgressException {
+		this.runProgressJob(job, "Operation in progress...");
 	}
-	
-	public void handleProgressJob(ProgressJob job, String text)
-	{
-		try
-		{
-			runProgressJob(job, text);
-		}
-		catch (ProgressException e)
-		{
-			view.showException(e);
+
+	public void handleProgressJob(final ProgressJob job, final String text) {
+		try {
+			this.runProgressJob(job, text);
+		} catch (final ProgressException e) {
+			this.view.showException(e);
 		}
 	}
-	
-	private VctController createEmptyVct()
-	{
-		return createEmptyVct(null);
+
+	private VctController createEmptyVct() {
+		return this.createEmptyVct(null);
 	}
-	
-	VctController createEmptyVct(String name)
-	{
-		return vctSelectionController.createEmptyVct(config.getUsername(), name); 
+
+	VctController createEmptyVct(final String name) {
+		return this.vctSelectionController.createEmptyVct(
+				this.config.getUsername(), name);
 	}
-	
-	void addVct(VctController vctController)
-	{
-		view.addVctView(vctController.getView(view.getVctPane()), vctController, vctController.getVct().getCommonName());
+
+	void addVct(final VctController vctController) {
+		this.view.addVctView(vctController.getView(this.view.getVctPane()),
+				vctController, vctController.getVct().getCommonName());
 	}
-	
-	public ResourceInstanceSelectionController getResourceInstanceSelectionController()
-	{
-		return resourceInstanceSelectionController;
+
+	public ResourceInstanceSelectionController getResourceInstanceSelectionController() {
+		return this.resourceInstanceSelectionController;
 	}
 }

@@ -15,9 +15,9 @@ import teagle.vct.model.RepositoryException;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="object")
+@XmlRootElement(name = "object")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TSSGObject implements Serializable {
 
@@ -28,38 +28,47 @@ public class TSSGObject implements Serializable {
 
 	@XmlTransient
 	protected boolean flag = false;
-	
+
 	@XmlAttribute
 	public String id;
-	
+
 	/**
 	 * @return the id
 	 */
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
-	
-	public <T extends TSSGObject> T resolve() { return null; };
-	
-	public <T extends TSSGObject> T persist() { return null; };
-	
-	public void delete() throws RepositoryException { };
-	
-	public <T extends Serializable> T getInstance() { return null; };
-	
-	public boolean isModified() { return flag; };
-	
-	public static <T extends TSSGObject> T find(String id)
-		throws RepositoryException
-	{
+
+	public <T extends TSSGObject> T resolve() {
+		return null;
+	};
+
+	public <T extends TSSGObject> T persist() {
+		return null;
+	};
+
+	public void delete() throws RepositoryException {
+	};
+
+	public <T extends Serializable> T getInstance() {
+		return null;
+	};
+
+	public boolean isModified() {
+		return this.flag;
+	};
+
+	public static <T extends TSSGObject> T find(final String id)
+			throws RepositoryException {
 		throw new IllegalAccessError();
 	}
-	
+
 }

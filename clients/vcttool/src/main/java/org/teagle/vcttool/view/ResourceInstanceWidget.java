@@ -3,8 +3,6 @@
  */
 package org.teagle.vcttool.view;
 
-
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -33,37 +31,36 @@ import teagle.vct.model.ResourceInstance;
 
 /**
  * @author sim
- *
+ * 
  */
 public class ResourceInstanceWidget extends Composite implements Listener {
 
-	private Group group;
+	private final Group group;
 
-	private Label state;
-	private Label ptmName;
+	private final Label state;
+	private final Label ptmName;
 
-	private CLabel dstPin;
-	private CLabel srcPin;
+	private final CLabel dstPin;
+	private final CLabel srcPin;
 
-	private Composite sourceList;
+	private final Composite sourceList;
 
-	private Set<ConnectionListener> connectionListeners = new CopyOnWriteArraySet<ConnectionListener>();
-	private Set<ResourceInstanceListener> instanceListeners = new CopyOnWriteArraySet<ResourceInstanceListener>();
+	private final Set<ConnectionListener> connectionListeners = new CopyOnWriteArraySet<ConnectionListener>();
+	private final Set<ResourceInstanceListener> instanceListeners = new CopyOnWriteArraySet<ResourceInstanceListener>();
 
 	private Point posOrig;
 	private Point posDragged;
 
-	private VctView vctView;
+	private final VctView vctView;
 
 	private ResourceInstance resourceInstance;
-	
-	public ResourceInstanceWidget(VctView parent) {
-		super(parent.getContentView(), SWT.NONE);
-		
-		vctView = parent;
 
-		
-		RowLayout layout = new RowLayout();
+	public ResourceInstanceWidget(final VctView parent) {
+		super(parent.getContentView(), SWT.NONE);
+
+		this.vctView = parent;
+
+		final RowLayout layout = new RowLayout();
 		layout.wrap = false;
 		layout.marginLeft = 0;
 		layout.marginRight = 0;
@@ -71,351 +68,356 @@ public class ResourceInstanceWidget extends Composite implements Listener {
 		layout.marginWidth = 0;
 		layout.marginTop = 0;
 		layout.marginBottom = 0;
-		
-		setLayout(layout);
-		
-		Image imgOrange = new Image(getDisplay(), Thread.currentThread().getContextClassLoader().getResourceAsStream("icons/bu131.gif"));
 
-		group = new Group(this, SWT.NONE);
-		GridLayout groupLayout = new GridLayout(3, false);
+		this.setLayout(layout);
+
+		final Image imgOrange = new Image(this.getDisplay(), Thread
+				.currentThread().getContextClassLoader()
+				.getResourceAsStream("icons/bu131.gif"));
+
+		this.group = new Group(this, SWT.NONE);
+		final GridLayout groupLayout = new GridLayout(3, false);
 		groupLayout.marginLeft = 0;
 		groupLayout.marginRight = 0;
 		groupLayout.marginWidth = 0;
 		groupLayout.horizontalSpacing = 10;
-		
-		group.setLayout(groupLayout);
-		group.addListener(SWT.MouseDown, this);
-		group.addListener(SWT.MouseUp, this);
-		group.addListener(SWT.MouseMove, this);
-		group.addListener(SWT.MouseDoubleClick, this);
 
-		dstPin = new CLabel(group, SWT.NONE);
-		dstPin.setImage(imgOrange);
-		dstPin.addListener(SWT.MouseUp, this);
-		GridData data = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2);
+		this.group.setLayout(groupLayout);
+		this.group.addListener(SWT.MouseDown, this);
+		this.group.addListener(SWT.MouseUp, this);
+		this.group.addListener(SWT.MouseMove, this);
+		this.group.addListener(SWT.MouseDoubleClick, this);
+
+		this.dstPin = new CLabel(this.group, SWT.NONE);
+		this.dstPin.setImage(imgOrange);
+		this.dstPin.addListener(SWT.MouseUp, this);
+		final GridData data = new GridData(SWT.LEFT, SWT.TOP, false, false, 1,
+				2);
 		data.horizontalIndent = 0;
-		dstPin.setLayoutData(data);
-		
-		state = new Label(group, SWT.NONE);
-		state.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
-		state.addListener(SWT.MouseDown, this);
-		state.addListener(SWT.MouseUp, this);
-		state.addListener(SWT.MouseMove, this);
-		state.addListener(SWT.MouseDoubleClick, this);
+		this.dstPin.setLayoutData(data);
 
-		sourceList = new Composite(group, SWT.NONE);
-		GridData data2 = new GridData(SWT.RIGHT, SWT.TOP, true, false, 1, 3);
+		this.state = new Label(this.group, SWT.NONE);
+		this.state
+				.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
+		this.state.addListener(SWT.MouseDown, this);
+		this.state.addListener(SWT.MouseUp, this);
+		this.state.addListener(SWT.MouseMove, this);
+		this.state.addListener(SWT.MouseDoubleClick, this);
+
+		this.sourceList = new Composite(this.group, SWT.NONE);
+		final GridData data2 = new GridData(SWT.RIGHT, SWT.TOP, true, false, 1,
+				3);
 		data2.horizontalIndent = 0;
-		sourceList.setLayoutData(data2);
-		FillLayout fillLayout = new FillLayout(SWT.VERTICAL|SWT.RIGHT);
+		this.sourceList.setLayoutData(data2);
+		final FillLayout fillLayout = new FillLayout(SWT.VERTICAL | SWT.RIGHT);
 		fillLayout.marginHeight = 0;
-		fillLayout.marginWidth = 0;		
-		sourceList.setLayout(fillLayout);
+		fillLayout.marginWidth = 0;
+		this.sourceList.setLayout(fillLayout);
 
-		ptmName = new Label(group, SWT.NONE);
-		ptmName.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
-		ptmName.addListener(SWT.MouseDown, this);
-		ptmName.addListener(SWT.MouseUp, this);
-		ptmName.addListener(SWT.MouseMove, this);
-		ptmName.addListener(SWT.MouseDoubleClick, this);
-		
-		srcPin = new CLabel(sourceList, SWT.RIGHT_TO_LEFT);
-		srcPin.setImage(imgOrange);
-		srcPin.addListener(SWT.MouseDown, this);
-		srcPin.addListener(SWT.MouseUp, this);
-		srcPin.addListener(SWT.MouseMove, this);
-		
-		
-//		GridData data3 = new GridData(SWT.LEFT, SWT.BOTTOM, false, false);
-		GridData data3 = new GridData();
+		this.ptmName = new Label(this.group, SWT.NONE);
+		this.ptmName.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false,
+				false));
+		this.ptmName.addListener(SWT.MouseDown, this);
+		this.ptmName.addListener(SWT.MouseUp, this);
+		this.ptmName.addListener(SWT.MouseMove, this);
+		this.ptmName.addListener(SWT.MouseDoubleClick, this);
+
+		this.srcPin = new CLabel(this.sourceList, SWT.RIGHT_TO_LEFT);
+		this.srcPin.setImage(imgOrange);
+		this.srcPin.addListener(SWT.MouseDown, this);
+		this.srcPin.addListener(SWT.MouseUp, this);
+		this.srcPin.addListener(SWT.MouseMove, this);
+
+		// GridData data3 = new GridData(SWT.LEFT, SWT.BOTTOM, false, false);
+		final GridData data3 = new GridData();
 		data3.horizontalAlignment = GridData.FILL;
 		data3.horizontalIndent = 1;
-		
-		Button helpButton = new Button(group, SWT.PUSH);
+
+		final Button helpButton = new Button(this.group, SWT.PUSH);
 		helpButton.setLayoutData(data3);
 		helpButton.setText("?");
 		helpButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
-				fireHelp(vctView);
+			public void widgetSelected(final SelectionEvent event) {
+				ResourceInstanceWidget.this
+						.fireHelp(ResourceInstanceWidget.this.vctView);
 			}
 		});
 		helpButton.setEnabled(true);
-				
-		Button configButton = new Button(group, SWT.PUSH);
+
+		final Button configButton = new Button(this.group, SWT.PUSH);
 		configButton.setLayoutData(data3);
 		configButton.setText("config");
 		configButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
-				fireConfig(vctView);
+			public void widgetSelected(final SelectionEvent event) {
+				ResourceInstanceWidget.this
+						.fireConfig(ResourceInstanceWidget.this.vctView);
 			}
 		});
 		configButton.setEnabled(true);
-		
-		Button deleteButton = new Button(group, SWT.PUSH);
-//		deleteButton.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
+
+		final Button deleteButton = new Button(this.group, SWT.PUSH);
+		// deleteButton.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false,
+		// false));
 		deleteButton.setLayoutData(data3);
 		deleteButton.setText("X");
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
-				fireDelete();
+			public void widgetSelected(final SelectionEvent event) {
+				ResourceInstanceWidget.this.fireDelete();
 			}
 		});
 		deleteButton.setEnabled(true);
-				
+
 	}
 
-	
-	public void setResourceInstance(ResourceInstance resInstance)
-	{
+	public void setResourceInstance(final ResourceInstance resInstance) {
 		this.resourceInstance = resInstance;
 	}
-	
-	public ResourceInstance getResourceInstance()
-	{
+
+	public ResourceInstance getResourceInstance() {
 		return this.resourceInstance;
 	}
-	
-	public void setName(String name) {
-		group.setText(name);
+
+	public void setName(final String name) {
+		this.group.setText(name);
 	}
-	
-	public void setDescription(String description) {
-		group.setToolTipText(description);
+
+	public void setDescription(final String description) {
+		this.group.setToolTipText(description);
 	}
-	
-	public void setState(String state) {
+
+	public void setState(final String state) {
 		this.state.setText("State: " + state);
 	}
 
-	public void setPtmName(String name) {
-		ptmName.setText("Ptm: " + name);
-	}
-	
-	public Point getDstPinPosition() {
-		Rectangle imageBounds = dstPin.getImage().getBounds();
-		Rectangle bounds = dstPin.getBounds();
-		return dstPin.toDisplay(imageBounds.x - 4, bounds.height/2);
-	}
-	
-	public CLabel getDstPin() {
-		return dstPin;
+	public void setPtmName(final String name) {
+		this.ptmName.setText("Ptm: " + name);
 	}
 
-	public CLabel getSrcPin(String identifier) {
-		for (Control control : sourceList.getChildren()) {
-			if (control instanceof CLabel) {
-				String name =  ((CLabel)control).getText();
-				if (name != null && name.equals(identifier)) {
-					return (CLabel)control;					
-				}
-			}
-		}
-		return srcPin;
+	public Point getDstPinPosition() {
+		final Rectangle imageBounds = this.dstPin.getImage().getBounds();
+		final Rectangle bounds = this.dstPin.getBounds();
+		return this.dstPin.toDisplay(imageBounds.x - 4, bounds.height / 2);
 	}
-	
-	public CLabel findTargetLabel(Point point) {
-		if (dstPin.getBounds().contains(toControl(point))) {
-			return dstPin;
-		}
+
+	public CLabel getDstPin() {
+		return this.dstPin;
+	}
+
+	public CLabel getSrcPin(final String identifier) {
+		for (final Control control : this.sourceList.getChildren())
+			if (control instanceof CLabel) {
+				final String name = ((CLabel) control).getText();
+				if ((name != null) && name.equals(identifier))
+					return (CLabel) control;
+			}
+		return this.srcPin;
+	}
+
+	public CLabel findTargetLabel(final Point point) {
+		if (this.dstPin.getBounds().contains(this.toControl(point)))
+			return this.dstPin;
 		return null;
 	}
-	
-	public void deleteConnection(ConnectionView connectionView) {
-		ConnectionEvent connectionEvent = new ConnectionEvent();
+
+	public void deleteConnection(final ConnectionView connectionView) {
+		final ConnectionEvent connectionEvent = new ConnectionEvent();
 		connectionEvent.sourceLabel = connectionView.getSourceLabel();
 		connectionEvent.source = this;
 		connectionEvent.target = connectionView.getTargetWidget();
-		connectionEvent.parent = vctView;
+		connectionEvent.parent = this.vctView;
 
-		fireConnectionDeletedEvent(new ConnectionEvent());		
+		this.fireConnectionDeletedEvent(new ConnectionEvent());
 	}
-	
-	public void addConfigSource(String name, Object data, String tooltip) {
-		CLabel source = new CLabel(sourceList, SWT.RIGHT_TO_LEFT|SWT.BORDER_SOLID);
+
+	public void addConfigSource(final String name, final Object data,
+			final String tooltip) {
+		final CLabel source = new CLabel(this.sourceList, SWT.RIGHT_TO_LEFT
+				| SWT.BORDER_SOLID);
 		source.setText(name);
-		Image imgGrey = new Image(getDisplay(), Thread.currentThread().getContextClassLoader().getResourceAsStream("icons/bu127.gif"));
+		final Image imgGrey = new Image(this.getDisplay(), Thread
+				.currentThread().getContextClassLoader()
+				.getResourceAsStream("icons/bu127.gif"));
 		source.setImage(imgGrey);
 
-		Menu menu = new Menu(getShell(), SWT.POP_UP);
-		MenuItem details = new MenuItem(menu, SWT.PUSH);
+		final Menu menu = new Menu(this.getShell(), SWT.POP_UP);
+		final MenuItem details = new MenuItem(menu, SWT.PUSH);
 		details.setText("Details...");
-		MenuItem clear = new MenuItem(menu, SWT.PUSH);
+		final MenuItem clear = new MenuItem(menu, SWT.PUSH);
 		clear.setText("Clear");
-		
+
 		source.setMenu(menu);
-		
-		if (data != null) {
+
+		if (data != null)
 			source.setData(data);
-		}
-		
-		if (tooltip != null) {
+
+		if (tooltip != null)
 			source.setToolTipText(tooltip);
-		}
-		
+
 		source.addListener(SWT.MouseDown, this);
 		source.addListener(SWT.MouseUp, this);
 		source.addListener(SWT.MouseMove, this);
 	}
 
-
-	public void handleEvent(Event event) {
+	public void handleEvent(final Event event) {
 		switch (event.type) {
 		case SWT.MouseDoubleClick:
-			fireEditConfig(vctView);
-			posOrig = null;
+			this.fireEditConfig(this.vctView);
+			this.posOrig = null;
 			break;
 		case SWT.MouseDown:
-			if (event.widget != null && event.widget instanceof CLabel) {
-				ConnectionView connection = new ConnectionView(event.widget == srcPin ? "CONTAINS" : "REFERENCES");
-				connection.setSource(this, (CLabel)event.widget);
-				connection.setDragPosition(((CLabel)event.widget).toDisplay(event.x, event.y));
-				vctView.dragConnectionBegin(connection);										
+			if ((event.widget != null) && (event.widget instanceof CLabel)) {
+				final ConnectionView connection = new ConnectionView(
+						event.widget == this.srcPin ? "CONTAINS" : "REFERENCES");
+				connection.setSource(this, (CLabel) event.widget);
+				connection.setDragPosition(((CLabel) event.widget).toDisplay(
+						event.x, event.y));
+				this.vctView.dragConnectionBegin(connection);
 
 			} else {
-				posOrig = getLocation();
-				posDragged = toDisplay(event.x, event.y);
+				this.posOrig = this.getLocation();
+				this.posDragged = this.toDisplay(event.x, event.y);
 			}
 			break;
 		case SWT.MouseMove:
-			if (event.widget != null && event.widget instanceof CLabel) {
-				vctView.dragConnectionUpdate(((CLabel)event.widget).toDisplay(event.x, event.y));
-			} else if (posOrig != null) {
-				Point posNew = toDisplay(event.x, event.y);
-				int x = posOrig.x + posNew.x - posDragged.x;
-				int y = posOrig.y + posNew.y - posDragged.y;
-				
-				if (x < 0) x = 0;
-				if (y < 0) y = 0;
-				
-				setLocation(x, y);
+			if ((event.widget != null) && (event.widget instanceof CLabel))
+				this.vctView.dragConnectionUpdate(((CLabel) event.widget)
+						.toDisplay(event.x, event.y));
+			else if (this.posOrig != null) {
+				final Point posNew = this.toDisplay(event.x, event.y);
+				int x = (this.posOrig.x + posNew.x) - this.posDragged.x;
+				int y = (this.posOrig.y + posNew.y) - this.posDragged.y;
 
-				getParent().redraw();
+				if (x < 0)
+					x = 0;
+				if (y < 0)
+					y = 0;
+
+				this.setLocation(x, y);
+
+				this.getParent().redraw();
 			}
 			break;
 		case SWT.MouseUp:
-			if (event.widget != null && event.widget instanceof CLabel) {
-				ResourceInstanceWidget target = vctView.dragConnectionEnd(((CLabel)event.widget).toDisplay(event.x, event.y), this,(CLabel)event.widget);
-				if (target != null) {					
-					ConnectionEvent connectionEvent = new ConnectionEvent();
-					connectionEvent.sourceLabel = (CLabel)event.widget;
+			if ((event.widget != null) && (event.widget instanceof CLabel)) {
+				final ResourceInstanceWidget target = this.vctView
+						.dragConnectionEnd(((CLabel) event.widget).toDisplay(
+								event.x, event.y), this, (CLabel) event.widget);
+				if (target != null) {
+					final ConnectionEvent connectionEvent = new ConnectionEvent();
+					connectionEvent.sourceLabel = (CLabel) event.widget;
 					connectionEvent.source = this;
 					connectionEvent.target = target;
-					connectionEvent.parent = vctView;
-					fireConnectionNewEvent(connectionEvent);
+					connectionEvent.parent = this.vctView;
+					this.fireConnectionNewEvent(connectionEvent);
 				}
-			} else if (posOrig != null) {
-				posOrig = null;
-				fireMoved(getLocation());
+			} else if (this.posOrig != null) {
+				this.posOrig = null;
+				this.fireMoved(this.getLocation());
 			}
 			break;
 		default:
 			break;
-		}		
+		}
 	}
 
-	public void addConnectionListener(ConnectionListener listener) {
-		connectionListeners.add(listener);
+	public void addConnectionListener(final ConnectionListener listener) {
+		this.connectionListeners.add(listener);
 	}
-	
-	public void removeConnectionListener(ConnectionListener listener) {
-		connectionListeners.remove(listener);
+
+	public void removeConnectionListener(final ConnectionListener listener) {
+		this.connectionListeners.remove(listener);
 	}
-	
-	public void addResourceInstanceListener(ResourceInstanceListener listener) {
-		instanceListeners.add(listener);
+
+	public void addResourceInstanceListener(
+			final ResourceInstanceListener listener) {
+		this.instanceListeners.add(listener);
 	}
-	
-	public void removeResourceInstanceListener(ResourceInstanceListener listener) {
-		instanceListeners.remove(listener);
+
+	public void removeResourceInstanceListener(
+			final ResourceInstanceListener listener) {
+		this.instanceListeners.remove(listener);
 	}
-	
-	private void fireConnectionNewEvent(ConnectionEvent event) {
-		for (Iterator<ConnectionListener> it = connectionListeners.iterator(); it.hasNext(); ) {
-			ConnectionListener listener = it.next();
+
+	private void fireConnectionNewEvent(final ConnectionEvent event) {
+		for (ConnectionListener listener : this.connectionListeners) {
 			try {
 				listener.onConnectionNew(event);
-			} catch (RuntimeException e) {
+			} catch (final RuntimeException e) {
 				// log output
-				connectionListeners.remove(listener);
+				this.connectionListeners.remove(listener);
 			}
 		}
-	}
-	
-	private void fireConnectionDeletedEvent(ConnectionEvent event) {
-		for (Iterator<ConnectionListener> it = connectionListeners.iterator(); it.hasNext(); ) {
-			ConnectionListener listener = it.next();
-			try {
-				listener.onConnectionDeleted(event);
-			} catch (RuntimeException e) {
-				// log output
-				connectionListeners.remove(listener);
-			}
-		}
-	}
-	
-	private void fireMoved(Point position) {
-		for (Iterator<ResourceInstanceListener> it = instanceListeners.iterator(); it.hasNext(); ) {
-			ResourceInstanceListener listener = it.next();
-			try {
-				listener.onMoved(position);
-			} catch (RuntimeException e) {
-				// log output
-				instanceListeners.remove(listener);
-			}
-		}		
-	}
-	
-	private void fireEditConfig(VctView vctView) {
-		for (Iterator<ResourceInstanceListener> it = instanceListeners.iterator(); it.hasNext(); ) {
-			ResourceInstanceListener listener = it.next();
-			try {
-				listener.onEditConfig(vctView);
-			} catch (RuntimeException e) {
-				// log output
-				instanceListeners.remove(listener);
-			}
-		}		
 	}
 
-	private void fireHelp(VctView vctView) {
-		for (Iterator<ResourceInstanceListener> it = instanceListeners.iterator(); it.hasNext(); ) {
-			ResourceInstanceListener listener = it.next();
+	private void fireConnectionDeletedEvent(final ConnectionEvent event) {
+		for (ConnectionListener listener : this.connectionListeners) {
 			try {
-				listener.onHelp(vctView);
-			} catch (RuntimeException e) {
+				listener.onConnectionDeleted(event);
+			} catch (final RuntimeException e) {
 				// log output
-				instanceListeners.remove(listener);
-			}
-		}		
-	}
-	
-	private void fireDelete() {
-		for (Iterator<ResourceInstanceListener> it = instanceListeners.iterator(); it.hasNext(); ) {
-			ResourceInstanceListener listener = it.next();
-			try {
-				listener.onDelete(this);
-			} catch (RuntimeException e) {
-				// log output
-				instanceListeners.remove(listener);
-			}
-		}		
-	}
-	
-	private void fireConfig (VctView vctView) {
-		// TODO
-		System.out.println("configure");
-		for (Iterator<ResourceInstanceListener> it = instanceListeners.iterator(); it.hasNext(); ) {
-			ResourceInstanceListener listener = it.next();
-			try {
-				listener.onEditConfig(vctView);
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-				//instanceListeners.remove(listener);
+				this.connectionListeners.remove(listener);
 			}
 		}
 	}
-	
+
+	private void fireMoved(final Point position) {
+		for (ResourceInstanceListener listener : this.instanceListeners) {
+			try {
+				listener.onMoved(position);
+			} catch (final RuntimeException e) {
+				// log output
+				this.instanceListeners.remove(listener);
+			}
+		}
+	}
+
+	private void fireEditConfig(final VctView vctView) {
+		for (ResourceInstanceListener listener : this.instanceListeners) {
+			try {
+				listener.onEditConfig(vctView);
+			} catch (final RuntimeException e) {
+				// log output
+				this.instanceListeners.remove(listener);
+			}
+		}
+	}
+
+	private void fireHelp(final VctView vctView) {
+		for (ResourceInstanceListener listener : this.instanceListeners) {
+			try {
+				listener.onHelp(vctView);
+			} catch (final RuntimeException e) {
+				// log output
+				this.instanceListeners.remove(listener);
+			}
+		}
+	}
+
+	private void fireDelete() {
+		for (ResourceInstanceListener listener : this.instanceListeners) {
+			try {
+				listener.onDelete(this);
+			} catch (final RuntimeException e) {
+				// log output
+				this.instanceListeners.remove(listener);
+			}
+		}
+	}
+
+	private void fireConfig(final VctView vctView) {
+		// TODO
+		System.out.println("configure");
+		for (ResourceInstanceListener listener : this.instanceListeners) {
+			try {
+				listener.onEditConfig(vctView);
+			} catch (final RuntimeException e) {
+				e.printStackTrace();
+				// instanceListeners.remove(listener);
+			}
+		}
+	}
+
 }

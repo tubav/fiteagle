@@ -23,9 +23,9 @@ import teagle.vct.model.RepositoryException;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="person")
+@XmlRootElement(name = "person")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TSSGPerson extends TSSGObject implements Person, Serializable {
 
@@ -34,156 +34,157 @@ public class TSSGPerson extends TSSGObject implements Person, Serializable {
 	 */
 	private static final long serialVersionUID = 6544806703604481502L;
 
-	protected static TSSGCache<TSSGPerson> cache = new TSSGCache<TSSGPerson>("person", new TSSGPerson[]{});
-	
-	@XmlElement(name="personRole")
-	@XmlElementWrapper(name="personRoles")
-	private List<TSSGPersonRole> personRoles = new ArrayList<TSSGPersonRole>();
-	
+	protected static TSSGCache<TSSGPerson> cache = new TSSGCache<TSSGPerson>(
+			"person", new TSSGPerson[] {});
+
+	@XmlElement(name = "personRole")
+	@XmlElementWrapper(name = "personRoles")
+	private final List<TSSGPersonRole> personRoles = new ArrayList<TSSGPersonRole>();
+
 	private String userName = "";
-	
+
 	private String fullName = "";
-	
+
 	private String password = "";
-	
-	@XmlElement(name="email")
-	@XmlElementWrapper(name="emails")
-	private List<TSSGEmail> emails = new ArrayList<TSSGEmail>();
-	
-	@XmlElement(name="organisation")
-	@XmlElementWrapper(name="organisations")
-	private List<TSSGOrganisation> organisations = new ArrayList<TSSGOrganisation>();
-	
+
+	@XmlElement(name = "email")
+	@XmlElementWrapper(name = "emails")
+	private final List<TSSGEmail> emails = new ArrayList<TSSGEmail>();
+
+	@XmlElement(name = "organisation")
+	@XmlElementWrapper(name = "organisations")
+	private final List<TSSGOrganisation> organisations = new ArrayList<TSSGOrganisation>();
+
 	public TSSGPerson() {
 	}
 
-	protected TSSGPerson(Person person) {
-		userName = person.getUserName();
-		fullName = person.getFullName();
-		for (Email email : person.getEmails()) {
-			addEmail(email);
-		}
-		for (PersonRole role : person.getRoles()) {
-			addRole(role);
-		}
-		for (Organisation org : person.getOrganisations()) {
-			addOrganisation(org);
-		}		
-		flag = true;
+	protected TSSGPerson(final Person person) {
+		this.userName = person.getUserName();
+		this.fullName = person.getFullName();
+		for (final Email email : person.getEmails())
+			this.addEmail(email);
+		for (final PersonRole role : person.getRoles())
+			this.addRole(role);
+		for (final Organisation org : person.getOrganisations())
+			this.addOrganisation(org);
+		this.flag = true;
 	}
-	
-	public static TSSGPerson find(String id) {
-		return cache.find(id);
+
+	public static TSSGPerson find(final String id) {
+		return TSSGPerson.cache.find(id);
 	}
 
 	public static List<? extends Person> list() {
-		return cache.list();
+		return TSSGPerson.cache.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGPerson persist() {
-//		for (ListIterator<TSSGOrganisation> it = organisations.listIterator(); it.hasNext(); ) {
-//			it.set(it.next().resolve().persist());
-//		}
-		for (ListIterator<TSSGPersonRole> it = personRoles.listIterator(); it.hasNext(); ) {
+		// for (ListIterator<TSSGOrganisation> it =
+		// organisations.listIterator(); it.hasNext(); ) {
+		// it.set(it.next().resolve().persist());
+		// }
+		for (final ListIterator<TSSGPersonRole> it = this.personRoles
+				.listIterator(); it.hasNext();)
 			it.set(it.next().resolve().persist());
-		}
-		for (ListIterator<TSSGEmail> it = emails.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGEmail> it = this.emails.listIterator(); it
+				.hasNext();)
 			it.set(it.next().resolve().persist());
-		}
-		TSSGPerson persisted = cache.persist(this);
+		final TSSGPerson persisted = TSSGPerson.cache.persist(this);
 		return persisted;
 	}
 
 	@Override
 	public void delete() throws RepositoryException {
-		for (ListIterator<TSSGPersonRole> it = personRoles.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGPersonRole> it = this.personRoles
+				.listIterator(); it.hasNext();)
 			it.next().resolve().delete();
-		}
-		for (ListIterator<TSSGEmail> it = emails.listIterator(); it.hasNext(); ) {
+		for (final ListIterator<TSSGEmail> it = this.emails.listIterator(); it
+				.hasNext();)
 			it.next().resolve().delete();
-		}
-		cache.delete(this);
+		TSSGPerson.cache.delete(this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGPerson resolve() {
-		return id != null ? cache.find(id) : this;
+		return this.id != null ? TSSGPerson.cache.find(this.id) : this;
 	}
-	
+
 	@Override
 	public boolean isModified() {
 		boolean modified = super.isModified();
-//		for (TSSGOrganisation org : organisations) {
-//			modified |= org.resolve().isModified();
-//		}
-		for (TSSGPersonRole role : personRoles) {
+		// for (TSSGOrganisation org : organisations) {
+		// modified |= org.resolve().isModified();
+		// }
+		for (final TSSGPersonRole role : this.personRoles)
 			modified |= role.resolve().isModified();
-		}
-		for (TSSGEmail email : emails) {
+		for (final TSSGEmail email : this.emails)
 			modified |= email.resolve().isModified();
-		}
-		return modified; 
+		return modified;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGPersonInstance getInstance() {
 		return new TSSGPersonInstance(this);
-	}	
+	}
 
 	@Override
 	public String getFullName() {
-		return fullName;
+		return this.fullName;
 	}
 
 	@Override
 	public String getUserName() {
-		return userName;
+		return this.userName;
 	}
 
 	@Override
-	public void setFullName(String fullName) {
+	public void setFullName(final String fullName) {
 		this.fullName = fullName;
-		flag = true;
+		this.flag = true;
 	}
 
 	@Override
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
-		flag = true;
+		this.flag = true;
 	}
 
 	@Override
-	public void addEmail(Email email) {
-		System.out.println("addEmail called...person.getName = " + this.getUserName());
-		TSSGEmail em = (email instanceof TSSGEmail) ? (TSSGEmail)email : new TSSGEmail(email);
+	public void addEmail(final Email email) {
+		System.out.println("addEmail called...person.getName = "
+				+ this.getUserName());
+		final TSSGEmail em = (email instanceof TSSGEmail) ? (TSSGEmail) email
+				: new TSSGEmail(email);
 		em.setPerson(this);
-		emails.add(em);
-		flag = true;
+		this.emails.add(em);
+		this.flag = true;
 	}
 
 	@Override
-	public void addOrganisation(Organisation organisation) {
-		TSSGOrganisation org = (organisation instanceof TSSGOrganisation) ? (TSSGOrganisation)organisation : new TSSGOrganisation(organisation);
-		organisations.add(org);
-		flag = true;
+	public void addOrganisation(final Organisation organisation) {
+		final TSSGOrganisation org = (organisation instanceof TSSGOrganisation) ? (TSSGOrganisation) organisation
+				: new TSSGOrganisation(organisation);
+		this.organisations.add(org);
+		this.flag = true;
 	}
 
 	@Override
-	public void addRole(PersonRole personRole) {
-		TSSGPersonRole r = (personRole instanceof TSSGPersonRole) ? (TSSGPersonRole)personRole : new TSSGPersonRole(personRole);
-		personRoles.add(r);
-		flag = true;
+	public void addRole(final PersonRole personRole) {
+		final TSSGPersonRole r = (personRole instanceof TSSGPersonRole) ? (TSSGPersonRole) personRole
+				: new TSSGPersonRole(personRole);
+		this.personRoles.add(r);
+		this.flag = true;
 	}
 
 	@Override
 	public List<? extends Email> getEmails() {
-		List<Email> array = new ArrayList<Email>();
-		for (TSSGEmail email : emails) {
-			TSSGEmail e = (TSSGEmail)TSSGEmail.find(email.getId());
+		final List<Email> array = new ArrayList<Email>();
+		for (final TSSGEmail email : this.emails) {
+			final TSSGEmail e = TSSGEmail.find(email.getId());
 			array.add(e != null ? e : email);
 		}
 		return array;
@@ -191,9 +192,9 @@ public class TSSGPerson extends TSSGObject implements Person, Serializable {
 
 	@Override
 	public List<? extends Organisation> getOrganisations() {
-		List<Organisation> array = new ArrayList<Organisation>();
-		for (TSSGOrganisation org : organisations) {
-			TSSGOrganisation o = (TSSGOrganisation)TSSGOrganisation.find(org.getId());
+		final List<Organisation> array = new ArrayList<Organisation>();
+		for (final TSSGOrganisation org : this.organisations) {
+			final TSSGOrganisation o = TSSGOrganisation.find(org.getId());
 			array.add(o != null ? o : org);
 		}
 		return array;
@@ -201,48 +202,51 @@ public class TSSGPerson extends TSSGObject implements Person, Serializable {
 
 	@Override
 	public List<? extends PersonRole> getRoles() {
-		List<PersonRole> array = new ArrayList<PersonRole>();
-		for (TSSGPersonRole role : personRoles) {
-			TSSGPersonRole r = (TSSGPersonRole)TSSGPersonRole.find(role.getId());
+		final List<PersonRole> array = new ArrayList<PersonRole>();
+		for (final TSSGPersonRole role : this.personRoles) {
+			final TSSGPersonRole r = TSSGPersonRole.find(role.getId());
 			array.add(r != null ? r : role);
 		}
 		return array;
 	}
 
 	@Override
-	public void removeEmail(Email email) {
-		emails.remove(email);
-		flag = true;
+	public void removeEmail(final Email email) {
+		this.emails.remove(email);
+		this.flag = true;
 	}
 
 	@Override
-	public void removeOrganisation(Organisation organisation) {
-		organisations.remove(organisation);
-		flag = true;
+	public void removeOrganisation(final Organisation organisation) {
+		this.organisations.remove(organisation);
+		this.flag = true;
 	}
 
 	@Override
-	public void removeRole(PersonRole role) {
-		personRoles.remove(role);
-		flag = true;
+	public void removeRole(final PersonRole role) {
+		this.personRoles.remove(role);
+		this.flag = true;
 	}
 
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
-	public void setPassword(String password) {
+	@Override
+	public void setPassword(final String password) {
 		this.password = password;
-		flag = true;
+		this.flag = true;
 	}
 
 	/**
 	 * @return the password
 	 */
+	@Override
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
-	
-	@XmlRootElement(name="personInstance")
+
+	@XmlRootElement(name = "personInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class TSSGPersonInstance implements Serializable {
 
@@ -251,84 +255,77 @@ public class TSSGPerson extends TSSGObject implements Person, Serializable {
 		 */
 		private static final long serialVersionUID = 4880071517781061939L;
 
-		private String userName;
-		
-		private String fullName;
-		
-		private String password;
-		
-		@XmlElementWrapper(name="emails")
-		@XmlElement(name="email")
-		private List<String> emailIds = new ArrayList<String>();
-		
-		@XmlElementWrapper(name="personRoles")
-		@XmlElement(name="personRole")
-		private List<String> personRoleIds = new ArrayList<String>();
-		
-		@XmlElementWrapper(name="organisations")
-		@XmlElement(name="organisation")
-		private List<String> organisationIds = new ArrayList<String>();
-		
+		@XmlElementWrapper(name = "emails")
+		@XmlElement(name = "email")
+		private final List<String> emailIds = new ArrayList<String>();
+
+		@XmlElementWrapper(name = "personRoles")
+		@XmlElement(name = "personRole")
+		private final List<String> personRoleIds = new ArrayList<String>();
+
+		@XmlElementWrapper(name = "organisations")
+		@XmlElement(name = "organisation")
+		private final List<String> organisationIds = new ArrayList<String>();
+
 		protected TSSGPersonInstance() {
 		}
-		
-		protected TSSGPersonInstance(TSSGPerson instance) {
-			this.userName = instance.userName;
-			this.fullName = instance.fullName;
-			this.password = instance.password;
-			for (TSSGEmail email : instance.emails) {
-				emailIds.add(email.getId());
-			}
-			for (TSSGPersonRole role : instance.personRoles) {
-				personRoleIds.add(role.getId());
-			}
-			for (TSSGOrganisation org : instance.organisations) {
-				organisationIds.add(org.getId());
-			}
+
+		protected TSSGPersonInstance(final TSSGPerson instance) {
+			for (final TSSGEmail email : instance.emails)
+				this.emailIds.add(email.getId());
+			for (final TSSGPersonRole role : instance.personRoles)
+				this.personRoleIds.add(role.getId());
+			for (final TSSGOrganisation org : instance.organisations)
+				this.organisationIds.add(org.getId());
 		}
 	}
 
-	public static void main(String[] args) {
-//		TSSGPerson person = (TSSGPerson)ModelManager.getInstance().findPersonByUserName("testuser");
+	public static void main(final String[] args) {
+		// TSSGPerson person =
+		// (TSSGPerson)ModelManager.getInstance().findPersonByUserName("testuser");
 
 		TSSGPerson person = new TSSGPerson();
 		person.fullName = "repouser";
-		person.password = "ad0234829205b9033196ba818f7a872b";//testing for re-hashing a hash in the repos
+		person.password = "ad0234829205b9033196ba818f7a872b";// testing for
+																// re-hashing a
+																// hash in the
+																// repos
 		person.userName = "repouser10";
 
 		person = person.persist();
-		
-		TSSGEmail email1 = new TSSGEmail();
+
+		final TSSGEmail email1 = new TSSGEmail();
 		email1.setAddress("stefan.harder@fokus.fraunhofer.de");
-		TSSGEmail email2 = new TSSGEmail();
+		final TSSGEmail email2 = new TSSGEmail();
 		email2.setAddress("second@example.com");
-		
+
 		person.addEmail(email1);
 		person.addEmail(email2);
-	
-		TSSGOrganisation o = (TSSGOrganisation)ModelManager.getInstance().getOrganisation("Fraunhofer FOKUS");
+
+		final TSSGOrganisation o = (TSSGOrganisation) ModelManager
+				.getInstance().getOrganisation("Fraunhofer FOKUS");
 		o.addPerson(person);
-		o.persist();//ModelManager.getInstance().persist(o);
+		o.persist();// ModelManager.getInstance().persist(o);
 		person.addOrganisation(o);
-		
+
 		person.addRole(TSSGPersonRole.find("4"));
-		
-		//md5("lala") = 2e3817293fc275dbee74bd71ce6eb056
-//		person.setPassword("2e3817293fc275dbee74bd71ce6eb056");
-//		person.setPassword("test");
+
+		// md5("lala") = 2e3817293fc275dbee74bd71ce6eb056
+		// person.setPassword("2e3817293fc275dbee74bd71ce6eb056");
+		// person.setPassword("test");
 		person = person.persist();
-		
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		TSSGPerson person = find("233");
-//		try {
-//			person.delete();
-//		} catch (RepositoryException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
+		// try {
+		// Thread.sleep(5000);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// TSSGPerson person = find("233");
+		// try {
+		// person.delete();
+		// } catch (RepositoryException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 }

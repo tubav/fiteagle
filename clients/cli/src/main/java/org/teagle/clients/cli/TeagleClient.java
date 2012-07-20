@@ -1,7 +1,6 @@
 package org.teagle.clients.cli;
 
 import java.io.BufferedReader;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -43,10 +42,10 @@ public class TeagleClient {
 	private final ModelManager repoClient;
 	private OrchestrateReturn result = new OrchestrateReturn(-1,
 			"not initialized");
-	
-	public TeagleClient(String username, String password, URL reqUrl,
-			URL repoUrl) {
-		boolean doPrefetching = false;
+
+	public TeagleClient(final String username, final String password,
+			final URL reqUrl, final URL repoUrl) {
+		final boolean doPrefetching = false;
 		ModelManager.getInstance()
 				.config(new RepoClientConfig(repoUrl, username, password,
 						doPrefetching));
@@ -56,49 +55,51 @@ public class TeagleClient {
 		this.username = username;
 	}
 
-	public TeagleClient(String user, String password, String reqUrl,
-			String repoUrl) throws MalformedURLException {
+	public TeagleClient(final String user, final String password,
+			final String reqUrl, final String repoUrl)
+			throws MalformedURLException {
 		this(user, password, new URL(reqUrl), new URL(repoUrl));
 	}
 
 	public void execVctCommand(final Vct vct, final String[] result,
 			final String command) {
-		this.execVctCommand(vct.getPerson().getUserName(), vct.getCommonName(), result, command);
+		this.execVctCommand(vct.getPerson().getUserName(), vct.getCommonName(),
+				result, command);
 	}
-	
-	public void execVctCommand(final String username, final String vctname, final String command) {
-		String[] results = { null };
-		this.execVctCommand(username, vctname, results , command);
+
+	public void execVctCommand(final String username, final String vctname,
+			final String command) {
+		final String[] results = { null };
+		this.execVctCommand(username, vctname, results, command);
 		this.result = TeagleClient.toResult(results[0]);
 	}
 
-	
-	public void execVctCommand(final String username, final String vctname, final String[] result,
-			final String command) {
+	public void execVctCommand(final String username, final String vctname,
+			final String[] result, final String command) {
 		try {
-			URLConnection conn = reqProcUrl.openConnection();
+			final URLConnection conn = this.reqProcUrl.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestProperty("Content-Type", "text/plain");
 
-			String req = genRequest(username, vctname, command);
+			final String req = this.genRequest(username, vctname, command);
 			conn.getOutputStream().write(req.getBytes());
 			result[0] = Util.readStream(conn.getInputStream());
 			Util.debug("Answer from reqproc: " + result[0]);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
-	
-	private String genRequest(final String username, final String vctname, final String command) {
-		String req = "<string-array><string>VctRegistry</string><string>"
-				+ command + "</string><string>"
-				+ username + "</string><string>"
-				+ vctname + "</string></string-array>";
+
+	private String genRequest(final String username, final String vctname,
+			final String command) {
+		final String req = "<string-array><string>VctRegistry</string><string>"
+				+ command + "</string><string>" + username
+				+ "</string><string>" + vctname + "</string></string-array>";
 		return req;
 	}
 
-	public void bookVct(Vct vct, String[] answer) {
+	public void bookVct(Vct vct, final String[] answer) {
 		vct.setState(VctState.State.INPROGRESS_SYNC);
 		vct = (Vct) vct.persist();
 		System.out.println("DEBUG: Booking: " + TeagleClient.toString(vct));
@@ -114,43 +115,43 @@ public class TeagleClient {
 		System.out.println("DEBUG: Stopping: " + vctname);
 		this.execVctCommand(username, vctname, "stopVct");
 	}
-	
-	public void deleteVct(String username, String vctname) {
+
+	public void deleteVct(final String username, final String vctname) {
 		System.out.println("DEBUG: Deleting: " + vctname);
-		this.execVctCommand(username, vctname, "deleteVct");		
+		this.execVctCommand(username, vctname, "deleteVct");
 	}
 
-	
-	public void bookVct(File vctFile, String[] answer) throws IOException {
-		String vctString = fileToString(vctFile);
+	public void bookVct(final File vctFile, final String[] answer)
+			throws IOException {
+		final String vctString = TeagleClient.fileToString(vctFile);
 		this.bookVct(vctString, answer);
 	}
 
-	public void bookVct(String vctString, String[] answer) {
-		Vct vct = TeagleClient.toVct(vctString);
+	public void bookVct(final String vctString, final String[] answer) {
+		final Vct vct = TeagleClient.toVct(vctString);
 		this.bookVct(vct, answer);
 	}
 
-	private static String fileToString(File file) throws IOException {
-		BufferedReader fileReader = new BufferedReader(new FileReader(file));
+	private static String fileToString(final File file) throws IOException {
+		final BufferedReader fileReader = new BufferedReader(new FileReader(
+				file));
 		String line;
 		String result = "";
-		while ((line = fileReader.readLine()) != null) {
+		while ((line = fileReader.readLine()) != null)
 			result += line;
-		}
 		fileReader.close();
 		return result;
 	}
 
 	private Collection<ResourceInstance> findResourceInstancesByUserName(
-			String username) {
+			final String username) {
 		System.out.println("Calling modelmanager");
 
-		Collection<ResourceInstance> origInstances = this.repoClient
+		final Collection<ResourceInstance> origInstances = this.repoClient
 				.findResourceInstancesByUserName(username);
-		LinkedList<ResourceInstance> instances = new LinkedList<ResourceInstance>();
+		final LinkedList<ResourceInstance> instances = new LinkedList<ResourceInstance>();
 
-		for (ResourceInstance a : origInstances) {
+		for (final ResourceInstance a : origInstances)
 			if (a.getState().equals(State.PROVISIONED)
 					&& !a.getDescription().contains("VNode")
 					&& !a.getDescription().contains("iperf")) {
@@ -160,39 +161,38 @@ public class TeagleClient {
 				System.out.println();
 				instances.add(a);
 			}
-		}
 		// Collections.sort(instances);
 		return instances;
 	}
 
-	public static String toString(Vct data) {
+	public static String toString(final Vct data) {
 		String xmlString = "";
 		try {
-			Marshaller marshaller = JAXBContext.newInstance(TSSGVct.class)
-					.createMarshaller();
-			StringWriter sw = new StringWriter();
+			final Marshaller marshaller = JAXBContext
+					.newInstance(TSSGVct.class).createMarshaller();
+			final StringWriter sw = new StringWriter();
 			marshaller.marshal(data, sw);
 			xmlString = sw.toString();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
 		}
 		return xmlString;
 	}
 
-	public static Vct toVct(String vctString) {
+	public static Vct toVct(final String vctString) {
 		Vct vct = null;
 		try {
-			Unmarshaller unmarshaller = JAXBContext.newInstance(TSSGVct.class)
-					.createUnmarshaller();
+			final Unmarshaller unmarshaller = JAXBContext.newInstance(
+					TSSGVct.class).createUnmarshaller();
 			vct = (Vct) unmarshaller.unmarshal(new StringReader(vctString));
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
 		}
 		return vct;
 	}
 
-	public static OrchestrateReturn toResult(String resultString) {
-		XStream xs = newXstream();
+	public static OrchestrateReturn toResult(final String resultString) {
+		final XStream xs = TeagleClient.newXstream();
 		xs.alias("idmapping", OrchestrateReturn.Result.Mapping[].class);
 		xs.alias("logentry", String.class);
 		xs.processAnnotations(OrchestrateReturn.class);
@@ -203,14 +203,14 @@ public class TeagleClient {
 		return new XStream(new DomDriver(null, new XmlFriendlyNameCoder(
 				"SYMDOLLAR", "_"))) {
 			@Override
-			protected MapperWrapper wrapMapper(MapperWrapper next) {
+			protected MapperWrapper wrapMapper(final MapperWrapper next) {
 				return new MapperWrapper(next) {
-					@Override @SuppressWarnings("rawtypes")
-					public boolean shouldSerializeMember(Class definedIn,
-							String fieldName) {
-						if (definedIn == Object.class) {
+					@Override
+					@SuppressWarnings("rawtypes")
+					public boolean shouldSerializeMember(final Class definedIn,
+							final String fieldName) {
+						if (definedIn == Object.class)
 							return false;
-						}
 						return super
 								.shouldSerializeMember(definedIn, fieldName);
 					}
@@ -222,8 +222,8 @@ public class TeagleClient {
 		// XmlFriendlyReplacer("SYMDOLLAR", "_")));
 	}
 
-	public void bookVct(File file) throws IOException {
-		String[] resultString = { null };
+	public void bookVct(final File file) throws IOException {
+		final String[] resultString = { null };
 		this.bookVct(file, resultString);
 		this.result = TeagleClient.toResult(resultString[0]);
 	}
@@ -233,20 +233,27 @@ public class TeagleClient {
 	}
 
 	public List<ResourceInstance> getResourceInstances() {
-		List<ResourceInstance> instances = (List<ResourceInstance>) this.findResourceInstancesByUserName(this.username);
+		final List<ResourceInstance> instances = (List<ResourceInstance>) this
+				.findResourceInstancesByUserName(this.username);
 		Collections.sort(instances, new Comparator<ResourceInstance>() {
-			public int compare(ResourceInstance o1, ResourceInstance o2) {
-				return o1.getCommonName().toLowerCase().compareTo(o2.getCommonName().toLowerCase());
+			@Override
+			public int compare(final ResourceInstance o1,
+					final ResourceInstance o2) {
+				return o1.getCommonName().toLowerCase()
+						.compareTo(o2.getCommonName().toLowerCase());
 			}
 		});
 		return instances;
 	}
 
 	public List<Vct> getVCTs() {
-		List<Vct> vcts = this.repoClient.findVctsByUserName(this.username);
+		final List<Vct> vcts = this.repoClient
+				.findVctsByUserName(this.username);
 		Collections.sort(vcts, new Comparator<Vct>() {
-			public int compare(Vct o1, Vct o2) {
-				return o1.getCommonName().toLowerCase().compareTo(o2.getCommonName().toLowerCase());
+			@Override
+			public int compare(final Vct o1, final Vct o2) {
+				return o1.getCommonName().toLowerCase()
+						.compareTo(o2.getCommonName().toLowerCase());
 			}
 		});
 		return vcts;

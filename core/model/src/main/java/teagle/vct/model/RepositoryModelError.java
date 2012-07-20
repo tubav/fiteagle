@@ -10,15 +10,15 @@ public class RepositoryModelError extends RepositoryException {
 	public RepositoryModelError() {
 	}
 
-	public RepositoryModelError(String message) {
+	public RepositoryModelError(final String message) {
 		super(message);
 	}
 
-	public RepositoryModelError(Throwable cause) {
+	public RepositoryModelError(final Throwable cause) {
 		super(cause);
 	}
 
-	public RepositoryModelError(String message, Throwable cause) {
+	public RepositoryModelError(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

@@ -10,46 +10,42 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author sim
- *
+ * 
  */
 public class Dialog {
-	private Shell dialog;
+	private final Shell dialog;
 
 	protected int result = SWT.OK;
-	
-	protected Dialog(Shell shell, String name) {
-		dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
-		if (name != null) {
-			dialog.setText(name);			
-		}
 
-		GridLayout layout = new GridLayout(2, false);
-		dialog.setLayout(layout);
-		dialog.setMinimumSize(300, -1);
+	protected Dialog(final Shell shell, final String name) {
+		this.dialog = new Shell(shell, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		if (name != null)
+			this.dialog.setText(name);
+
+		final GridLayout layout = new GridLayout(2, false);
+		this.dialog.setLayout(layout);
+		this.dialog.setMinimumSize(300, -1);
 	}
 
 	public int show() {
-		dialog.pack();
-		dialog.open();
-		while (!dialog.isDisposed()) {
-			if (!dialog.getDisplay().readAndDispatch()) {
-				dialog.getDisplay().sleep();				
-			}
-		}
-		return result;
+		this.dialog.pack();
+		this.dialog.open();
+		while (!this.dialog.isDisposed())
+			if (!this.dialog.getDisplay().readAndDispatch())
+				this.dialog.getDisplay().sleep();
+		return this.result;
 	}
 
-	protected void hide(int result) {
+	protected void hide(final int result) {
 		this.result = result;
-		dialog.close();
+		this.dialog.close();
 	}
 
 	protected Composite getContainer() {
-		return dialog;
+		return this.dialog;
 	}
 
-	public int getResult()
-	{
-		return result;
+	public int getResult() {
+		return this.result;
 	}
 }

@@ -15,100 +15,110 @@ import teagle.vct.model.RepositoryException;
 
 /**
  * @author sim
- *
+ * 
  */
-@XmlRootElement(name="configParamAtomic")
+@XmlRootElement(name = "configParamAtomic")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TSSGConfigParamAtomic extends TSSGConfigParam implements ConfigParamAtomic, Serializable {
+public class TSSGConfigParamAtomic extends TSSGConfigParam implements
+		ConfigParamAtomic, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1171347002488523106L;
 
-	protected static TSSGCache<TSSGConfigParamAtomic> cache = new TSSGCache<TSSGConfigParamAtomic>("configParamAtomic", new TSSGConfigParamAtomic[]{});
-	
-	//@XmlElement(name="defaultParamValue")
+	protected static TSSGCache<TSSGConfigParamAtomic> cache = new TSSGCache<TSSGConfigParamAtomic>(
+			"configParamAtomic", new TSSGConfigParamAtomic[] {});
+
+	// @XmlElement(name="defaultParamValue")
 	private String defaultParamValue = "";
 
-	//@XmlElement(name="configParamType")
+	// @XmlElement(name="configParamType")
 	private String configParamType = "";
-	
+
 	public TSSGConfigParamAtomic() {
 	}
 
-	protected TSSGConfigParamAtomic(ConfigParamAtomic param) {
+	protected TSSGConfigParamAtomic(final ConfigParamAtomic param) {
 		super(param);
-		defaultParamValue = param.getDefaultValue();
-		configParamType = param.getType();
-		flag = true;
+		this.defaultParamValue = param.getDefaultValue();
+		this.configParamType = param.getType();
+		this.flag = true;
 	}
-	
-	public static TSSGConfigParamAtomic find(String id) {
-		return cache.find(id);
+
+	public static TSSGConfigParamAtomic find(final String id) {
+		return TSSGConfigParamAtomic.cache.find(id);
 	}
 
 	public static List<? extends ConfigParamAtomic> list() {
-		return cache.list();
+		return TSSGConfigParamAtomic.cache.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGConfigParamAtomic persist() {
-		return cache.persist(this);
+		return TSSGConfigParamAtomic.cache.persist(this);
 	}
 
 	@Override
 	public void delete() throws RepositoryException {
-		cache.delete(this);
+		TSSGConfigParamAtomic.cache.delete(this);
 	}
 
 	@Override
 	public TSSGConfigParamAtomic resolve() {
-		return id != null ? cache.find(id) : this;
+		return this.id != null ? TSSGConfigParamAtomic.cache.find(this.id)
+				: this;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGConfigParamAtomicInstance getInstance() {
 		return new TSSGConfigParamAtomicInstance(this);
-	}	
+	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.ConfigParamAtomic#getDefaultValue()
 	 */
 	@Override
 	public String getDefaultValue() {
-		return defaultParamValue;
+		return this.defaultParamValue;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.ConfigParamAtomic#getType()
 	 */
 	@Override
 	public String getType() {
-		return configParamType;
+		return this.configParamType;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.ConfigParamAtomic#setDefaultValue(java.lang.String)
 	 */
 	@Override
-	public void setDefaultValue(String defaultValue) {
-		defaultParamValue = defaultValue;
-		flag = true;
+	public void setDefaultValue(final String defaultValue) {
+		this.defaultParamValue = defaultValue;
+		this.flag = true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see teagle.vct.model.ConfigParamAtomic#setType(java.lang.String)
 	 */
 	@Override
-	public void setType(String type) {
-		configParamType = type;
-		flag = true;
+	public void setType(final String type) {
+		this.configParamType = type;
+		this.flag = true;
 	}
 
-	@XmlRootElement(name="configParamAtomicInstance")
+	@XmlRootElement(name = "configParamAtomicInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class TSSGConfigParamAtomicInstance implements Serializable {
 
@@ -116,37 +126,27 @@ public class TSSGConfigParamAtomic extends TSSGConfigParam implements ConfigPara
 		 * 
 		 */
 		private static final long serialVersionUID = -5607457572404350156L;
-		
-		private String commonName;
 
-		private String description;
-
-		private String defaultParamValue;
-		private String configParamType;
-		
 		protected TSSGConfigParamAtomicInstance() {
 		}
-		
-		protected TSSGConfigParamAtomicInstance(TSSGConfigParamAtomic config) {
-			commonName = config.commonName;
-			description = config.description;
-			defaultParamValue = config.defaultParamValue;
-			configParamType = config.configParamType;
+
+		protected TSSGConfigParamAtomicInstance(
+				final TSSGConfigParamAtomic config) {
 		}
-		
+
 	}
 
-	public static void main(String[] args) throws RepositoryException {
+	public static void main(final String[] args) throws RepositoryException {
 		TSSGConfigParamAtomic atomic = new TSSGConfigParamAtomic();
 		atomic.commonName = "newTestAtomic";
 		atomic.description = "what ever description";
 		atomic.configParamType = "string";
 		atomic.defaultParamValue = "this is the default";
-		
+
 		atomic = atomic.persist();
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 		atomic.delete();
@@ -154,6 +154,6 @@ public class TSSGConfigParamAtomic extends TSSGConfigParam implements ConfigPara
 
 	@Override
 	public boolean isReference() {
-		return getType().toLowerCase().startsWith("reference");
+		return this.getType().toLowerCase().startsWith("reference");
 	}
 }
