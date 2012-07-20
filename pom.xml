@@ -1,25 +1,36 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.fiteagle.client</groupId>
-	<artifactId>vcttool</artifactId>
-	<packaging>jar</packaging>
-	<name>vcttool</name>
-	<version>0.2</version>
-	<url>http://fiteagle.org</url>
-    
-    <properties>
-		<eclipse.groupId>org.eclipse.swt</eclipse.groupId>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+	<groupId>org.fiteagle</groupId>
+	<artifactId>fiteagle</artifactId>
+	<version>0.11</version>
+	<name>FITeagle</name>
+	<packaging>pom</packaging>
+	<url>http://fiteagle.org/</url>
 
-    <repositories>
-        <repository>
-            <id>default</id>
-            <url>http://repo1.maven.org/maven2/</url>
-        </repository>
+	<description>
+        FITeagle - Future Internet Testbed Experimentation Framework
+    </description>
+
+	<organization>
+		<name>Berlin University of Technology, Next Generation Networks (AV)</name>
+		<url>http://av.tu-berlin.de</url>
+	</organization>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License 3</name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<fiteagle.version>${project.version}</fiteagle.version>
+	</properties>
+
+	<repositories>
         <repository>
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
@@ -28,287 +39,224 @@
             <id>fiteagle-repo</id>
             <url>http://tubav.github.com/org.fiteagle/maven/</url>
         </repository>
-    </repositories>
+	</repositories>
 
-  <profiles>
-  <!-- Windows -->
-    <profile>
-      <id>swt-win32-x86</id>
-      <activation>
-        <os>
-          <family>windows</family>
-          <arch>x86</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.win32.win32.x86</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-win32-x86_64</id>
-      <activation>
-        <os>
-          <family>windows</family>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.win32.win32.x86_64</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-win32-amd64</id>
-      <activation>
-        <os>
-          <family>windows</family>
-          <arch>amd64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.win32.win32.x86_64</swt.artifactId>
-      </properties>
-    </profile>
-
-  <!-- Linux -->
-    <profile>
-      <id>swt-linux-x86</id>
-      <activation>
-        <os>
-          <name>linux</name>
-          <arch>i386</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.gtk.linux.x86</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-linux-x86_64</id>
-      <activation>
-        <os>
-          <name>linux</name>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-linux-amd64</id>
-      <activation>
-        <os>
-          <name>linux</name>
-          <arch>amd64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
-      </properties>
-    </profile>
-
-  <!-- Mac -->
-    <profile>
-      <id>swt-macosx-x86</id>
-      <activation>
-        <os>
-          <name>mac os x</name>
-          <arch>x86</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.cocoa.macosx</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-macosx-x86_64</id>
-      <activation>
-        <os>
-          <name>mac os x</name>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-macosx-amd64</id>
-      <activation>
-        <os>
-          <name>mac os x</name>
-          <arch>amd64</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artifactId>
-      </properties>
-    </profile>
-
-  <!-- Solaris -->
-    <profile>
-      <id>swt-solaris-x86</id>
-      <activation>
-        <os>
-          <name>solaris</name>
-          <arch>x86</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.gtk.solaris.x86</swt.artifactId>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>swt-solaris-sparc</id>
-      <activation>
-        <os>
-          <name>solaris</name>
-          <arch>sparc</arch>
-        </os>
-      </activation>
-      <properties>
-        <swt.artifactId>org.eclipse.swt.gtk.solaris.sparc</swt.artifactId>
-      </properties>
-    </profile>
-  </profiles>
-      
+<!--
+	<dependencyManagement>
+		<dependencies>		
+			<dependency>
+				<groupId>org.fiteagle</groupId>
+				<artifactId>platform</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
+	</dependencyManagement>
+	
+	<modules>
+        <module>core</module>
+		<module>clients</module>
+	</modules>
+	-->
 	<build>
-
-<plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<tarLongFileMode>gnu</tarLongFileMode>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
+					<configuration>
+						<instructions>
+							<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						</instructions>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.servicemix.tooling</groupId>
+					<artifactId>depends-maven-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+				</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<!--
-								set up the root of the maven repository in order to load the
-								jars from the repository
-							-->
-							<classpathPrefix>libs</classpathPrefix>
-							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
-						</manifest>
-					</archive>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.2</version>
 				<configuration>
-				  	<finalName>${project.artifactId}</finalName>
-				  	<appendAssemblyId>true</appendAssemblyId>
-                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-					<descriptors>
-						<descriptor>src/main/assembly/webstart.xml</descriptor>
-					</descriptors>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-					<archive>
-                        <manifest>
-							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
-                        </manifest>
-                  </archive>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<pushChanges>false</pushChanges>
+					<localCheckout>true</localCheckout>
 				</configuration>
-                <executions>
-                  <execution>
-                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                    <phase>package</phase> <!-- bind to the packaging phase -->
-                    <goals>
-                      <goal>single</goal>
-                    </goals>
-                  </execution>
-                </executions>
 			</plugin>
 		</plugins>
+    </pluginManagement>
 	</build>
-
-
-    
-	<dependencies>
-			<dependency>
-			<groupId>de.fhg.fokus.ngni.teagle</groupId>
-			<artifactId>model</artifactId>
-			<version>0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.fhg.fokus.ngni.teagle</groupId>
-			<artifactId>util</artifactId>
-			<version>0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.fhg.fokus.ngni.teagle</groupId>
-			<artifactId>tssgrepoclient</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>jar</type>
-		</dependency>
-                <dependency>
-                        <groupId>org.eclipse.swt</groupId>
-                        <artifactId>${swt.artifactId}</artifactId>
-                        <version>3.8</version>
-                </dependency>
 	
-                <dependency>
-                        <groupId>com.beust</groupId>
-                        <artifactId>jcommander</artifactId>
-                        <version>1.27</version>
-                </dependency>
-	<dependency>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-client</artifactId>
-                        <version>1.12</version>
-                </dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-        </dependency>
-		<dependency>
-			<groupId>commons-configuration</groupId>
-			<artifactId>commons-configuration</artifactId>
-			<version>1.6</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>1.4.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.6</version>
-        </dependency>
-	</dependencies>
+	<scm>
+        <connection>scm:git:git://github.com/tubav/fiteagle.git</connection>
+        <developerConnection>scm:git:git@github.com:tubav/fiteagle.git</developerConnection>
+        <url>http://github.com/fiteagle/fiteagle</url>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>fiteagle-release</id>
+			<name>maven.fiteagle.org-releases</name>
+			<url>http://maven.fiteagle.org/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>fiteagle-snapshot</id>
+			<name>libs-snapshot-local</name>
+			<url>http://maven.fiteagle.org/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+		<site>
+			<id>github</id>
+			<name>fiteagle</name>
+			<url>http://github.com/tubav/fiteagle/</url>
+		</site>
+	</distributionManagement>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>http://github.com/tubav/fiteagle</url>
+	</issueManagement>
+
+	<mailingLists>
+		<mailingList>
+			<name>fiteagle-dev</name>
+			<subscribe>http://lists.fiteagle.org/cgi-bin/mailman/listinfo/dev</subscribe>
+			<unsubscribe>http://lists.fiteagle.org/cgi-bin/mailman/listinfo/dev</unsubscribe>
+			<post>dev@lists.fiteagle.org</post>
+			<archive>http://lists.fiteagle.org/pipermail/dev/</archive>
+		</mailingList>
+		<mailingList>
+			<name>fiteagle-user</name>
+			<subscribe>http://lists.fiteagle.org/cgi-bin/mailman/listinfo/users</subscribe>
+			<unsubscribe>http://lists.fiteagle.org/cgi-bin/mailman/listinfo/users</unsubscribe>
+			<post>users@lists.fiteagle.org</post>
+			<archive>http://lists.fiteagle.org/pipermail/users/</archive>
+		</mailingList>
+	</mailingLists>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.4</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>scm</report>
+							<report>license</report>
+							<report>dependencies</report>
+							<report>dependency-convergence</report>
+							<report>dependency-management</report>
+							<report>mailing-list</report>
+							<report>modules</report>
+							<report>summary</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<!-- Adding location information is very slow, so
+					     we disable it. -->
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8.1</version>
+				<!-- Only generating an aggregated report for the
+				     top-level project is considerably faster and we
+				     don't need individual JavaDoc reports anyway. -->
+				<inherited>false</inherited>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+				<!-- Similar to the JavaDoc report, the value of a
+				     single top-level report is bigger than individual
+				     reports. -->
+				<inherited>false</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.12</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.4.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.7.1</version>
+				<configuration>
+					<sourceEncoding>utf-8</sourceEncoding>
+					<minimumTokens>100</minimumTokens>
+					<targetJdk>1.6</targetJdk>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

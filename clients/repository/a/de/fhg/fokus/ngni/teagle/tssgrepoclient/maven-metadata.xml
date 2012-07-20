@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>de.fhg.fokus.ngni.teagle</groupId>
+  <artifactId>tssgrepoclient</artifactId>
+  <versioning>
+    <versions>
+      <version>0.0.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20120718182247</lastUpdated>
+  </versioning>
+</metadata>

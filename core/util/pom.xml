@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+<!--  <parent>
+    <artifactId>teagle_vct</artifactId>
+    <groupId>de.fhg.fokus.ngni.teagle</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+-->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.fhg.fokus.ngni.teagle</groupId>
+  <artifactId>util</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1</version>
+  <name>util</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+			<version>3.8</version>
+<!--
+			<version>${version.swt}</version>
+			<classifier>${profile.os}</classifier>
+-->
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.2</version>
+		</dependency>
+  </dependencies>
+ <repositories>
+        <repository>
+            <id>default</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>swt-repo</id>
+            <url>https://swt-repo.googlecode.com/svn/repo/</url>
+        </repository>
+    </repositories>
+
+</project>

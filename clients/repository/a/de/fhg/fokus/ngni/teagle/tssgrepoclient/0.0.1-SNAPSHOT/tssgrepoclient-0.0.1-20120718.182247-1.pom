@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+<!--  <parent>
+    <artifactId>teagle_vct</artifactId>
+    <groupId>de.fhg.fokus.ngni.teagle</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>-->
+  <groupId>de.fhg.fokus.ngni.teagle</groupId>
+  <artifactId>tssgrepoclient</artifactId>
+  <name>tssgrepoclient</name>
+  <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+    	<groupId>com.sun.jersey</groupId>
+    	<artifactId>jersey-client</artifactId>
+    	<version>1.1.5-ea-v20091019</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>de.fhg.fokus.ngni.teagle</groupId>
+    	<artifactId>model</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<type>jar</type>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-log4j12</artifactId>
+    	<version>1.6.6</version>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
+<!--    <dependency>
+    	<groupId>ch.qos.logback</groupId>
+    	<artifactId>logback-classic</artifactId>
+    	<version>0.9.20</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+-->
+  </dependencies>
+</project>
