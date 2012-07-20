@@ -22,11 +22,11 @@
   </repositories>
 
   <dependencies>
-		<dependency>
-			<groupId>org.eclipse.swt</groupId>
-			<artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
-			<version>3.8</version>
-		</dependency>
+                  <dependency>
+                        <groupId>org.eclipse.swt</groupId>
+                        <artifactId>${swt.artifactId}</artifactId>
+                        <version>${swt.version}</version>
+                </dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
