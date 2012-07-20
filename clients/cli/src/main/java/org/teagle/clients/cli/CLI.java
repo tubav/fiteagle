@@ -31,7 +31,7 @@ public class CLI {
 	private final transient CommandDeleteVCT commandDeleteVCT = new CommandDeleteVCT();
 	private final transient CommandListVCTs commandListVCTs = new CommandListVCTs();
 	private final transient CommandListRIs commandListRIs = new CommandListRIs();
-	private TeagleClient client;
+	private LegacyTeagleClient client;
 
 	public static void main(final String[] args) {
 		System.out.println(new CLI().parse(args));
@@ -51,7 +51,7 @@ public class CLI {
 
 		try {
 			parameter.parse(args);
-			this.client = new TeagleClient(this.user, this.password,
+			this.client = new LegacyTeagleClient(this.user, this.password,
 					this.reqUrl, this.repoUrl);
 			final String command = parameter.getParsedCommand();
 			if (CLI.CMD_BOOK_VCT.equals(command))

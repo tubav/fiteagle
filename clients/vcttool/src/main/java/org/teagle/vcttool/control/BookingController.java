@@ -6,7 +6,7 @@ package org.teagle.vcttool.control;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.teagle.clients.cli.TeagleClient;
+import org.teagle.clients.cli.LegacyTeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.view.BookingListener;
 import org.teagle.vcttool.view.CommandAdapter;
@@ -31,7 +31,7 @@ public class BookingController implements BookingListener {
 	private final RootController controller;
 	private final CommandAdapter ca;
 	private XStream xs;
-	private TeagleClient client;
+	private LegacyTeagleClient client;
 
 	private void prepareVCTcommand(final VctToolView vctView, final Vct data,
 			final String commandStopVCT, final String textStopVCT) {
@@ -57,7 +57,7 @@ public class BookingController implements BookingListener {
 	private void initTeagleClient(final VctToolConfig config) {
 		final URL reqProcUrl = config.getReqprocUrl();
 		assert (reqProcUrl != null);
-		this.client = new TeagleClient(config.getUsername(),
+		this.client = new LegacyTeagleClient(config.getUsername(),
 				config.getPassword(), config.getReqprocUrl(),
 				config.getRepoUrl());
 	}
@@ -71,7 +71,7 @@ public class BookingController implements BookingListener {
 	}
 
 	public void onBook(final VctToolView vctView, final Vct data) {
-		System.out.println("DEBUG: Booking: " + TeagleClient.toString(data));
+		System.out.println("DEBUG: Booking: " + LegacyTeagleClient.toString(data));
 
 		if (data.isModified() && !this.ca.onSave(vctView, data))
 			return;

@@ -14,31 +14,31 @@
 		<artifactId>clients</artifactId>
 		<version>0.1</version>
 	</parent>
-    
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
 
-  <repositories>
-    <repository>
-      <id>fiteagle-repo</id>
-      <url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
-    </repository>
-  </repositories>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
-      
+	<repositories>
+		<repository>
+			<id>fiteagle-repo</id>
+			<url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+		</repository>
+	</repositories>
+
+
 	<build>
 
-<plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -47,10 +47,8 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<!--
-								set up the root of the maven repository in order to load the
-								jars from the repository
-							-->
+							<!-- set up the root of the maven repository in order to load the 
+								jars from the repository -->
 							<classpathPrefix>libs</classpathPrefix>
 							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
 						</manifest>
@@ -60,38 +58,38 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-				  	<finalName>${project.artifactId}</finalName>
-				  	<appendAssemblyId>true</appendAssemblyId>
-                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+					<finalName>${project.artifactId}</finalName>
+					<appendAssemblyId>true</appendAssemblyId>
+					<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
 					<descriptors>
 						<descriptor>src/main/assembly/webstart.xml</descriptor>
 					</descriptors>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 					<archive>
-                        <manifest>
+						<manifest>
 							<mainClass>org.teagle.vcttool.app.VctToolApp</mainClass>
-                        </manifest>
-                  </archive>
+						</manifest>
+					</archive>
 				</configuration>
-                <executions>
-                  <execution>
-                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                    <phase>package</phase> <!-- bind to the packaging phase -->
-                    <goals>
-                      <goal>single</goal>
-                    </goals>
-                  </execution>
-                </executions>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
 
 
-    
+
 	<dependencies>
-			<dependency>
+		<dependency>
 			<groupId>org.fiteagle.core</groupId>
 			<artifactId>model</artifactId>
 			<version>0.1</version>
@@ -109,29 +107,24 @@
 		</dependency>
 		<dependency>
 			<groupId>org.fiteagle.clients</groupId>
-			<artifactId>cli</artifactId>
+			<artifactId>api</artifactId>
 			<version>0.1</version>
 			<type>jar</type>
 		</dependency>
-		
-		
-		
-                <dependency>
-                        <groupId>org.eclipse.swt</groupId>
-                        <artifactId>${swt.artifactId}</artifactId>
-                        <version>${swt.version}</version>
-                </dependency>
-	
-                <dependency>
-                        <groupId>com.beust</groupId>
-                        <artifactId>jcommander</artifactId>
-                        <version>1.27</version>
-                </dependency>
-	<dependency>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-client</artifactId>
-                        <version>1.12</version>
-                </dependency>
+
+
+
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>${swt.artifactId}</artifactId>
+			<version>${swt.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.12</version>
+		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -142,11 +135,11 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>
 		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
@@ -161,10 +154,10 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.6</version>
-        </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.6</version>
+		</dependency>
 	</dependencies>
 </project>

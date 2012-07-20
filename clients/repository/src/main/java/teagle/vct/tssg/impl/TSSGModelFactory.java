@@ -4,16 +4,13 @@
 package teagle.vct.tssg.impl;
 
 import java.util.ArrayList;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import teagle.vct.model.ConfigParamAtomic;
 import teagle.vct.model.ConfigParamComposite;
@@ -40,8 +37,6 @@ import teagle.vct.model.Vct;
  * 
  */
 public final class TSSGModelFactory extends ModelManager {
-
-	private final Logger log = LoggerFactory.getLogger(TSSGModelFactory.class);
 
 	private boolean autoClearCache = false;
 	private long autoClearCacheInterval = 1800000;
@@ -94,7 +89,6 @@ public final class TSSGModelFactory extends ModelManager {
 		}
 
 		if (this.prefetching) {
-			this.log.debug("repo prefetching enabled, starting prefetching...");
 			this.prefetchData();
 		}
 	}
@@ -181,7 +175,6 @@ public final class TSSGModelFactory extends ModelManager {
 		});
 		task8.start();
 
-		this.log.debug("all prefetching threads started");
 	}
 
 	@Override
