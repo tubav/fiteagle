@@ -22,7 +22,7 @@
   </repositories>
 
   <dependencies>
-                  <dependency>
+                <dependency>
                         <groupId>org.eclipse.swt</groupId>
                         <artifactId>${swt.artifactId}</artifactId>
                         <version>${swt.version}</version>
