@@ -6,7 +6,7 @@ package org.teagle.vcttool.control;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.teagle.api.TeagleClient;
+import org.teagle.clients.cli.TeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.view.BookingListener;
 import org.teagle.vcttool.view.CommandAdapter;
@@ -17,6 +17,7 @@ import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
+import teagle.vct.util.OrchestrateReturn;
 import teagle.vct.util.Util;
 
 import com.thoughtworks.xstream.XStream;
@@ -57,7 +58,7 @@ public class BookingController implements BookingListener {
 	private void initTeagleClient(VctToolConfig config) {
 		URL reqProcUrl = config.getReqprocUrl();
 		assert(reqProcUrl != null);
-		this.client = new TeagleClient(config);
+		this.client = new TeagleClient(config.getUsername(), config.getPassword(), config.getReqprocUrl(), config.getRepoUrl());
 	}
 
 	private void initOrchestrationReturn() {

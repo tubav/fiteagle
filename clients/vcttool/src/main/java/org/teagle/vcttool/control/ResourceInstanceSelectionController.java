@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.teagle.api.TeagleClient;
+import org.teagle.clients.cli.TeagleClient;
 
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.ResourceInstanceState;
@@ -36,7 +36,8 @@ public class ResourceInstanceSelectionController {
 	private TeagleClient teagleClient;
 	
 	public ResourceInstanceSelectionController(RootController root, String username, Composite parent) {
-		this.teagleClient = new TeagleClient(root.getConfig());
+		this.teagleClient = new TeagleClient(root.getConfig().getUsername(), root.getConfig().getPassword(), root.getConfig().getReqprocUrl(), root.getConfig().getRepoUrl());
+
 		
 		tree = new Tree(parent, SWT.NONE);
 		initDragDrop();

@@ -4,6 +4,7 @@
 package org.teagle.vcttool.view.dialogs;
 
 import java.awt.Toolkit;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,9 +20,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.teagle.vcttool.control.OrchestrateReturn;
-import org.teagle.vcttool.control.OrchestrateReturn.LogBook;
-//import org.teagle.vcttool.control.OrchestrateReturn.LogEntry;
+import teagle.vct.util.OrchestrateReturn;
+import teagle.vct.util.OrchestrateReturn.LogBook;
+//import teagle.util.OrchestrateReturn.LogEntry;
 
 /**
  * @author sim

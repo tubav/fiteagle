@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.teagle.api.TeagleClient;
+import org.teagle.clients.cli.TeagleClient;
 
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.Person;
@@ -59,7 +59,7 @@ public class VctSelectionController {
 	
 	public void initViews()
 	{
-		TeagleClient client = new TeagleClient(root.getConfig());
+		TeagleClient client = new TeagleClient(root.getConfig().getUsername(), root.getConfig().getPassword(), root.getConfig().getReqprocUrl(), root.getConfig().getRepoUrl());
 		List<Vct> vcts = client.getVCTs(); 
 
 		for (Vct vct : vcts) {

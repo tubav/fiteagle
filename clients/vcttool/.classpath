@@ -4,11 +4,13 @@
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/org/fiteagle/core/model/0.1/model-0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/fiteagle/core/util/0.1/util-0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/fiteagle/clients/repository/0.1/repository-0.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/eclipse/swt/org.eclipse.swt.cocoa.macosx.x86_64/3.8/org.eclipse.swt.cocoa.macosx.x86_64-3.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.27/jcommander-1.27.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.12/jersey-client-1.12.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.12/jersey-core-1.12.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/fiteagle/clients/cli/0.1/cli-0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.27/jcommander-1.27.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.1/joda-time-2.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
@@ -26,4 +28,5 @@
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.6.6/slf4j-log4j12-1.6.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/eclipse/swt/org.eclipse.swt.cocoa.macosx.x86_64/3.8/org.eclipse.swt.cocoa.macosx.x86_64-3.8.jar"/>
 </classpath>
