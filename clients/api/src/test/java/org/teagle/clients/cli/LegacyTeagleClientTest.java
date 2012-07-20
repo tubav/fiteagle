@@ -9,9 +9,9 @@ import org.junit.Before;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
 
-public class TeagleClientTest {
+public class LegacyTeagleClientTest {
 
-	private TeagleClient client;
+	private LegacyTeagleClient client;
 
 	@Before
 	public void setup() throws MalformedURLException {
@@ -21,7 +21,7 @@ public class TeagleClientTest {
 		final String pwd = "root";
 
 		// todo: inject a local mock - do not test using external servers
-		this.client = new TeagleClient(user, pwd, reqUrl, repoUrl);
+		this.client = new LegacyTeagleClient(user, pwd, reqUrl, repoUrl);
 	}
 
 	// @Test

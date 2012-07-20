@@ -35,7 +35,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
-public class TeagleClient {
+public class LegacyTeagleClient {
 
 	private final URL reqProcUrl;
 	private final String username;
@@ -43,7 +43,7 @@ public class TeagleClient {
 	private OrchestrateReturn result = new OrchestrateReturn(-1,
 			"not initialized");
 
-	public TeagleClient(final String username, final String password,
+	public LegacyTeagleClient(final String username, final String password,
 			final URL reqUrl, final URL repoUrl) {
 		final boolean doPrefetching = false;
 		ModelManager.getInstance()
@@ -55,7 +55,7 @@ public class TeagleClient {
 		this.username = username;
 	}
 
-	public TeagleClient(final String user, final String password,
+	public LegacyTeagleClient(final String user, final String password,
 			final String reqUrl, final String repoUrl)
 			throws MalformedURLException {
 		this(user, password, new URL(reqUrl), new URL(repoUrl));
@@ -71,7 +71,7 @@ public class TeagleClient {
 			final String command) {
 		final String[] results = { null };
 		this.execVctCommand(username, vctname, results, command);
-		this.result = TeagleClient.toResult(results[0]);
+		this.result = LegacyTeagleClient.toResult(results[0]);
 	}
 
 	public void execVctCommand(final String username, final String vctname,
@@ -102,7 +102,7 @@ public class TeagleClient {
 	public void bookVct(Vct vct, final String[] answer) {
 		vct.setState(VctState.State.INPROGRESS_SYNC);
 		vct = (Vct) vct.persist();
-		System.out.println("DEBUG: Booking: " + TeagleClient.toString(vct));
+		System.out.println("DEBUG: Booking: " + LegacyTeagleClient.toString(vct));
 		this.execVctCommand(vct, answer, "setVct");
 	}
 
@@ -123,12 +123,12 @@ public class TeagleClient {
 
 	public void bookVct(final File vctFile, final String[] answer)
 			throws IOException {
-		final String vctString = TeagleClient.fileToString(vctFile);
+		final String vctString = LegacyTeagleClient.fileToString(vctFile);
 		this.bookVct(vctString, answer);
 	}
 
 	public void bookVct(final String vctString, final String[] answer) {
-		final Vct vct = TeagleClient.toVct(vctString);
+		final Vct vct = LegacyTeagleClient.toVct(vctString);
 		this.bookVct(vct, answer);
 	}
 
@@ -192,7 +192,7 @@ public class TeagleClient {
 	}
 
 	public static OrchestrateReturn toResult(final String resultString) {
-		final XStream xs = TeagleClient.newXstream();
+		final XStream xs = LegacyTeagleClient.newXstream();
 		xs.alias("idmapping", OrchestrateReturn.Result.Mapping[].class);
 		xs.alias("logentry", String.class);
 		xs.processAnnotations(OrchestrateReturn.class);
@@ -225,7 +225,7 @@ public class TeagleClient {
 	public void bookVct(final File file) throws IOException {
 		final String[] resultString = { null };
 		this.bookVct(file, resultString);
-		this.result = TeagleClient.toResult(resultString[0]);
+		this.result = LegacyTeagleClient.toResult(resultString[0]);
 	}
 
 	public OrchestrateReturn getResult() {
