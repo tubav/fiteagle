@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<packaging>pom</packaging>
+
+	<name>FITeagle :: Clients</name>
+	<groupId>org.fiteagle</groupId>
+    <artifactId>clients</artifactId>
+    <packaging>pom</packaging>
+    <version>0.1</version>
+	
 	<parent>
-		<artifactId>fiteagle</artifactId>
 		<groupId>org.fiteagle</groupId>
+		<artifactId>fiteagle</artifactId>
 		<version>0.1</version>
 	</parent>
-	<name>FITeagle :: Clients</name>
-	<artifactId>org.fiteagle.clients</artifactId>
+
 	<modules>
+		<module>vcttool</module>
 		<module>repository</module>
 	</modules>
+
+   <repositories>
+    <repository>
+      <id>fiteagle-repo</id>
+      <url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+    </repository>
+  </repositories>
 </project>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<name>FITeagle</name>
 	<groupId>org.fiteagle</groupId>
 	<artifactId>fiteagle</artifactId>
-	<version>0.11</version>
-	<name>FITeagle</name>
 	<packaging>pom</packaging>
+	<version>0.1</version>
 	<url>http://fiteagle.org/</url>
 
 	<description>
@@ -51,12 +52,11 @@
 				<type>pom</type>
 			</dependency>
 	</dependencyManagement>
-	
+-->	
 	<modules>
         <module>core</module>
-		<module>clients</module>
+<!--		<module>clients</module>-->
 	</modules>
-	-->
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -141,6 +141,12 @@
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
+			<id>fiteagle</id>
+			<name>fiteagle</name>
+			<url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+		</repository>
+<!--		<repository>
+			<uniqueVersion>false</uniqueVersion>
 			<id>fiteagle-release</id>
 			<name>maven.fiteagle.org-releases</name>
 			<url>http://maven.fiteagle.org/artifactory/libs-release-local</url>
@@ -150,7 +156,7 @@
 			<id>fiteagle-snapshot</id>
 			<name>libs-snapshot-local</name>
 			<url>http://maven.fiteagle.org/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
+		</snapshotRepository>-->
 		<site>
 			<id>github</id>
 			<name>fiteagle</name>

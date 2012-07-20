@@ -1,18 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">  
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.fhg.fokus.ngni.teagle</groupId>
+
+  <name>FITeagle :: Core :: Model</name>
+  <groupId>org.fiteagle.core</groupId>
   <artifactId>model</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>model</name>
-<!--
+  <version>0.1</version>
+
   <parent>
-    <artifactId>teagle_vct</artifactId>
-    <groupId>de.fhg.fokus.ngni.teagle</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>org.fiteagle</groupId>
+    <artifactId>core</artifactId>
+    <version>0.1</version>
   </parent>
--->
-  <dependencies>
-  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>fiteagle-repo</id>
+      <url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+    </repository>
+  </repositories>
 </project>
