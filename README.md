@@ -9,7 +9,7 @@ that is described here.
 Common tasks
 ------------
 1. Compile: mvn -T2 compile
-2. Start application: mvn package && ./src/main/scripts/startXXX.sh
+2. Start application/server: ./src/main/scripts/startXXX.sh
 
 Open in Eclipse
 ---------------
