@@ -74,17 +74,17 @@
 <dependency>
     <groupId>com.sun.jersey</groupId>
     <artifactId>jersey-bundle</artifactId>
-    <version>1.9-ea01</version>
+    <version>1.12</version>
 </dependency>
 <dependency>
     <groupId>com.sun.jersey</groupId>
     <artifactId>jersey-grizzly</artifactId>
-    <version>1.9-ea01</version>
+    <version>1.12</version>
 </dependency>
 <dependency>
     <groupId>com.sun.jersey</groupId>
     <artifactId>jersey-grizzly2</artifactId>
-    <version>1.9-ea01</version>
+    <version>1.12</version>
 </dependency>
 <dependency>
 	<groupId>com.sun.grizzly</groupId>
@@ -105,15 +105,15 @@
 	<scope>compile</scope>
 </dependency>
 <dependency>
-	<groupId>de.fhg.fokus.ngni.teagle</groupId>
-	<artifactId>tssgrepoclient</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>org.fiteagle.clients</groupId>
+	<artifactId>repository</artifactId>
+	<version>0.1</version>
 	<scope>compile</scope>
 </dependency>
 <dependency>
-	<groupId>de.fhg.fokus.ngni.teagle</groupId>
+	<groupId>org.fiteagle.core</groupId>
 	<artifactId>model</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<scope>compile</scope>
 </dependency>
 <dependency>
