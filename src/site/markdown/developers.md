@@ -6,11 +6,18 @@ General
 This repository is divided into sub projects that should all follow the same procedure
 that is described here.
 
-Common tasks
-------------
- * Compile: mvn -T2 compile
- * Generate documentation: mvn -N site
- * Start module: ./src/main/scripts/startXXX.sh
+First steps
+-----------
+
+The following commands should download all required libraries and compile every module
+within this project. After this you can start for example the CLI.
+
+    git clone https://github.com/tubav/fiteagle.git
+    cd fiteagle
+    mvn compile
+    cd clients/cli
+    mvn package
+    ./src/main/scripts/startCLI.sh
 
 Create a new module
 -------------------
