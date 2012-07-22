@@ -1,0 +1,25 @@
+<project name="FITeagle">
+  <bannerLeft>
+    <name>FITeagle</name>
+    <src>./images/logo_fiteagle.png</src>
+    <href>http://fiteagle.org</href>
+  </bannerLeft>
+  <bannerRight>
+    <name>TU Berlin | AV</name>
+    <src>./images/logo_av.png</src>
+    <href>http://av.tu-berlin.de</href>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="TU Berlin (AV)" href="http://av.tu-berlin.de" />
+      <item name="FITeagle" href="http://fiteagle.org"/>
+    </links>
+
+    <menu name="Documentation">
+      <item name="Introduction" href="intro.html"/>
+      <item name="For Developers" href="developers.html"/>
+    </menu>
+
+    <menu ref="reports"/>
+  </body>
+</project>
