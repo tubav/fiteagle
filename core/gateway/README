@@ -1,0 +1,18 @@
+
+There is need for creating two Java Keystores, one under the name .keystore and one under the name keystore (using diffrent names requires modifications in the scripts to properly locate the files. 
+
+keystore will contain the key-pair of the tgw. Export the tgw certificate and import it into .keystore. Create also a key-pair in .keystore and export the certificate of that pair, import this into keystore. This resolves the issue for securely accessing and  initialising the axis engine and publishing the Teagle WS i/f for PTMs. 
+
+jetty.xml should be placed together with the teaglegw.jar (it contains also links the keystores)
+
+The scripts and jetty.xml assume that the keystores are one directory higher, adapt accordingly if needed.
+
+Replace the username/password definitions in the scripts for allowing access from the tgw to the repo.
+
+Fill in also the proper public IP address of the tgw in the start_gw.sh script
+
+Before starting the tgw (start_gw.sh), run startParser.sh to collect the certificates (will be stored in .keystore) from the PTMs that are listed in the repository. This will create conf.xml that is needed by the tgw to learn the PTMs.
+
+The tgw certificate (from keystore) needs to be configured in the trust-stores of the PTMs with which these tgw instance will be communicating (see pii-wiki regarding PTM installation).
+
+

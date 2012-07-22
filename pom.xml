@@ -57,6 +57,7 @@
 	<modules>
         <module>core</module>
 	<module>clients</module>
+	<module>ptm</module>
 	</modules>
 	<build>
 		<pluginManagement>

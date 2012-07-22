@@ -1,0 +1,28 @@
+#! /bin/sh
+
+if test -z "$PTM_HOME"; then
+	PTM_HOME=`dirname $0`/..
+	export PTM_HOME=`readlink -f "$PTM_HOME"`
+	echo PTM_HOME is not set. Setting to $PTM_HOME
+fi
+
+RADIR="$PTM_HOME/ra"
+MODULEDIR="$PTM_HOME/lib"
+
+CP=$RADIR:$MODULEDIR
+
+for f in `ls $RADIR/*.jar $MODULEDIR/*.jar 2>/dev/null`; do
+	CP=$CP:$f
+done
+
+if test -z "$CLASSPATH"; then
+	export CLASSPATH="$CLASSPATH:$CP"
+else
+	export CLASSPATH="$CP"
+fi
+
+echo CLASSPATH: $CLASSPATH
+echo starting RA...
+
+exec java -cp $CLASSPATH de.fhg.fokus.ptm.bin.RARunner $@
+

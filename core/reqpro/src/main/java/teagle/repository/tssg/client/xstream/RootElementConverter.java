@@ -16,7 +16,6 @@ public class RootElementConverter extends ReflectionConverter
 		super(mapper, reflectionProvider);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
     public boolean canConvert(Class clazz) {
         return clazz.equals(RootElement.class);

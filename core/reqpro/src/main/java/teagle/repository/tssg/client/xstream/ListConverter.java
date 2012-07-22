@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 public class ListConverter extends ArrayConverter
 {
-	private Mapper mapper;
+	private final Mapper mapper;
 	
 	public ListConverter(Mapper mapper)
 	{
@@ -17,7 +17,6 @@ public class ListConverter extends ArrayConverter
 		this.mapper = mapper;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
     public boolean canConvert(Class clazz) 
 	{

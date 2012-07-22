@@ -18,6 +18,7 @@
 		<module>model</module>
 		<module>util</module>
 		<module>reqpro</module>
+		<module>gateway</module>
 	</modules>
 	
    <repositories>
