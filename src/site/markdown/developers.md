@@ -3,16 +3,21 @@ For Developers
 
 General
 -------
-This repository is divided into self-contained sub projects
-(interconnected via mvn/jars) that should all follow the same procedure
-that is described here. When changing or adding code the whole project
-MUST compile and SHOULD run without any configuration (e.g. use a
-stub/in-memory database as default and give the user the option to
-configure a local MySQL database). Furthermore, we strongly SUGGEST you
-to follow the principles of the [Clean Code
-Developer](http://www.clean-code-developer.com) web site and MAYBE to
-have a look at [Uncle Bob's Clean Code](http://www.cleancoders.com/)
-video series.
+
+ * Each module should be a self-contained sub project (maybe interconnected with
+ others via mvn/jars).
+ * When changing or adding code the whole project MUST compile.
+ * The unit tests MUST pass without any user configuration (e.g. use a
+ stubs like an in-memory database if needed).
+ * Code coverage goal: [80% and no
+ less!](http://googletesting.blogspot.de/2010/07/code-coverage-goal-80-and-no-less.html)
+ * Applications SHOULD work out of the box without any user
+ configuration (again use stubs by default and give the user the option
+ to configure a replacement).
+ * We strongly SUGGEST to follow the principles of the [Clean Code
+ Developer](http://www.clean-code-developer.com) web site
+ * Also MAYBE have a look at [Uncle Bob's Clean
+ Code](http://www.cleancoders.com/) video series.
 
 First steps
 -----------
@@ -35,7 +40,12 @@ Start for example the CLI:
 
     cd clients/cli
     ./src/main/scripts/startCLI.sh
-    
+
+Continuous Integration
+----------------------
+
+See public [travis-ci](http://travis-ci.org/#!/tubav/fiteagle) service.
+
 Setup deployment
 -----------------
 
@@ -66,6 +76,14 @@ Checkin new code
 Create a new module
 -------------------
 
+When designing a new module / component have in mind that [delivery
+mechanisms and databases are just annoying
+details]
+(http://blog.8thlight.com/uncle-bob/2011/09/30/Screaming-Architecture.html)
+and the core component should now not know anything
+about web servers or specific databases. Defer this decision by using
+stubs and simple implementations as long as possible.
+
     mkdir path/to/module
     cd path/to/module/..
     nano pom.xml #add the new module
@@ -83,3 +101,4 @@ Integrate into Eclipse
    ((add your local clone repo)) > Import existing projects > 
  * CLI: mvn eclipse:clean
  * Eclipse: right click on the project > Configure > Convert to Maven
+ * Repeat this with all modules in order to be able to refactor code easily
