@@ -85,7 +85,7 @@ Edit the file .m2/settings.xml:
 
 Then deploy the site:
 
-    mvn -N ghSite:site
+    mvn -N clean site ghSite:site
 
 Checkin new code
 -----------------
