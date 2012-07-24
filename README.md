@@ -1,6 +1,6 @@
 FITeagle
 ========
 
-Future Internet Testbed Experimentation.
+Future Internet Testbed Experimentatin Framework.
 
-Documentation under src/site/markdown (generate HTML by running "mvn -N site").
+For further information please have a look at [http://fiteagle.org](http://fiteagle.org).
