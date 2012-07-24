@@ -3,10 +3,14 @@ For Developers
 
 General
 -------
-This repository is divided into sub projects that should all follow the
-same procedure that is described here. When changing or adding code we
-strongly suggest you to follow the principles of the [Clean Code
-Developer](http://www.clean-code-developer.com) web site and maybe to
+This repository is divided into self-contained sub projects
+(interconnected via mvn/jars) that should all follow the same procedure
+that is described here. When changing or adding code the whole project
+MUST compile and SHOULD run without any configuration (e.g. use a
+stub/in-memory database as default and give the user the option to
+configure a local MySQL database). Furthermore, we strongly SUGGEST you
+to follow the principles of the [Clean Code
+Developer](http://www.clean-code-developer.com) web site and MAYBE to
 have a look at [Uncle Bob's Clean Code](http://www.cleancoders.com/)
 video series.
 
@@ -23,7 +27,7 @@ Now have a look at the documentation:
     mvn -N site
     open target/site/index.html
 
-Try to test the whole project:
+Try to compile and test the whole project:
 
     mvn test
 
