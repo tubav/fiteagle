@@ -1,6 +1,6 @@
 html, body {
-  margin:0;
-  padding:0;
+  margin:0 !important;
+  padding:0  !important;
   background: white;
 }
 
@@ -18,18 +18,16 @@ h1, h2, h3, h4, h5, h6 {
   background:transparent;
   border:0px;
   font-weight:normal;
+  margin-top:1em;
+  margin-bottom:.3em;
+}
+
+.container-fluid {
+  padding:0;
 }
 
 a {
   color:#f09030 !important;
-}
-
-#breadcrumbs, #footer {
-  color:#fff !important;
-}
-
-#breadcrumbs a, #footer a {
-  color:#000 !important;
 }
 
 .section {
@@ -49,24 +47,12 @@ a {
   border-bottom: 1px solid black;
 }
 
-#breadcrumbs, #footer {
-  padding:.7em;
-  background: #f09030;
-  background: -moz-linear-gradient(top, #f09030, #d07010);
-  background: -webkit-linear-gradient(top, #f09030, #d07010);
-  background: -ms-linear-gradient(top, #f09030, #d07010);
-  background: -o-linear-gradient(top, #f09030, #d07010);
-  background: linear-gradient(top, #f09030, #d07010);
-  border-top: 0px;
-  border-bottom: 1px solid black;
-}
-
 .source {
   border:0px !important;
 }
 
 pre, code {
-  width: 100%;
+  width: 90%;
   color: #222;
   background-color: #fff;
 
@@ -79,7 +65,7 @@ pre, code {
 }
 
 pre {
-  width: 100%;
+  width: 90%;
   padding: 10px !important;
   box-shadow: 0 0 10px rgba(0,0,0,.2);
   overflow: auto;
