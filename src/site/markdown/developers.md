@@ -46,12 +46,12 @@ Continuous Integration
 
 See public [travis-ci](http://travis-ci.org/#!/tubav/fiteagle) service.
 
-Setup deployment
------------------
+Artifact Deployment
+-------------------
 
 Edit the file .m2/settings.xml:
 
-    ?xml version="1.0"?>
+    <?xml version="1.0"?>
     <settings>
         <servers>
             <server>
@@ -61,6 +61,31 @@ Edit the file .m2/settings.xml:
             </server>
         </servers>
     </settings>
+
+Then deploy the artifact:
+
+    mvn deploy
+    
+
+Site Deployment
+---------------
+
+Edit the file .m2/settings.xml:
+
+    <?xml version="1.0"?>
+    <settings>
+        <servers>
+            <server>
+                <id>github</id>
+                <username>xxx</username>
+                <password>xxx</password>
+              </server>
+        </servers>
+    </settings>
+
+Then deploy the site:
+
+    mvn -N ghSite:site
 
 Checkin new code
 -----------------
