@@ -147,7 +147,7 @@ open target/site/index.html
     &lt;/servers&gt;
 &lt;/settings&gt;
 </pre></div><p>Then deploy the site:</p>
-<div class="source"><pre class="prettyprint">mvn -N ghSite:site
+<div class="source"><pre class="prettyprint">mvn -N clean site ghSite:site
 </pre></div></div><div class="section"><h2>Checkin new code<a name="Checkin_new_code"></a></h2>
 <div class="source"><pre class="prettyprint">cd path/to/project/root
 mvn -T3 clean test
