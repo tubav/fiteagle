@@ -15,7 +15,7 @@
       <item name="FITeagle" href="http://fiteagle.org"/>
     </links>
 
-    <menu name="Documentation">
+    <menu name="General Information">
       <item name="Introduction" href="intro.html"/>
       <item name="For Developers" href="developers.html"/>
       <item name="Current Status" href="status.html"/>
