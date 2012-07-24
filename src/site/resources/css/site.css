@@ -1,3 +1,9 @@
+html, body {
+  margin:0;
+  padding:0;
+  background: white;
+}
+
 body {
   background: #f7f7f7;
   background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
@@ -6,7 +12,6 @@ body {
   background: -o-linear-gradient(top, #f7f7f7, #e1e1e1);
   background: linear-gradient(top, #f7f7f7, #e1e1e1);
 }
-
 
 h1, h2, h3, h4, h5, h6 {
   color: #212121;
@@ -19,8 +24,12 @@ a {
   color:#f09030 !important;
 }
 
-#breadcrumbs, #breadcrumbs a {
+#breadcrumbs, #footer {
   color:#fff !important;
+}
+
+#breadcrumbs a, #footer a {
+  color:#000 !important;
 }
 
 .section {
@@ -30,6 +39,7 @@ a {
 
 
 #banner {
+  padding:1em;
   background: #212121;
   background: -moz-linear-gradient(top, #373737, #212121);
   background: -webkit-linear-gradient(top, #373737, #212121);
@@ -39,7 +49,8 @@ a {
   border-bottom: 1px solid black;
 }
 
-#breadcrumbs {
+#breadcrumbs, #footer {
+  padding:.7em;
   background: #f09030;
   background: -moz-linear-gradient(top, #f09030, #d07010);
   background: -webkit-linear-gradient(top, #f09030, #d07010);
