@@ -5,7 +5,7 @@
   <name>FITeagle :: PTM</name>
   <groupId>org.fiteagle</groupId>
   <artifactId>ptm</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
 
   <parent>
     <groupId>org.fiteagle</groupId>
