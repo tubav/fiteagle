@@ -1,3 +1,35 @@
 .poweredBy {
     display:none;
 }
+
+a {
+  color:#f09030 !important;
+}
+
+#breadcrumbs, #breadcrumbs a {
+  color:#fff !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #212121;
+}
+
+#banner {
+  background: #212121;
+  background: -moz-linear-gradient(top, #373737, #212121);
+  background: -webkit-linear-gradient(top, #373737, #212121);
+  background: -ms-linear-gradient(top, #373737, #212121);
+  background: -o-linear-gradient(top, #373737, #212121);
+  background: linear-gradient(top, #373737, #212121);
+  border-bottom: 0px;
+}
+
+#breadcrumbs {
+  background: #f09030;
+  background: -moz-linear-gradient(top, #f09030, #d07010);
+  background: -webkit-linear-gradient(top, #f09030, #d07010);
+  background: -ms-linear-gradient(top, #f09030, #d07010);
+  background: -o-linear-gradient(top, #f09030, #d07010);
+  background: linear-gradient(top, #f09030, #d07010);
+  border-top: 0px;
+}
