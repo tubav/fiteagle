@@ -3,7 +3,7 @@
 	<name>FITeagle :: Core :: Gateway</name>
 	<groupId>org.fiteagle.core</groupId>
 	<artifactId>gateway</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>org.fiteagle</groupId>
