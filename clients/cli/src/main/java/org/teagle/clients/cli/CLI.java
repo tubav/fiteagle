@@ -5,19 +5,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import org.teagle.api.util.APIProperties;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 public class CLI {
 	@Parameter(names = "-repourl", description = "The repository URL")
-	public String repoUrl = "http://localhost:9080/repository/rest";
+	public String repoUrl;
 	@Parameter(names = "-requrl", description = "The request processor URL")
-	public String reqUrl = "http://localhost:9000/reqproc";
+	public String reqUrl;
 	@Parameter(names = "-user", description = "The username")
-	public String user = "root";
-	@Parameter(names = "-pwd", description = "The password")
-	public String password = "root";
+	public String user;
+	@Parameter(names = "-pwd", description = "The password", password = true)
+	public String password;
 
 	private static final String CMD_BOOK_VCT = "createVCT";
 	private static final String CMD_START_VCT = "startVCT";
@@ -32,23 +34,19 @@ public class CLI {
 	private final transient CommandListVCTs commandListVCTs = new CommandListVCTs();
 	private final transient CommandListRIs commandListRIs = new CommandListRIs();
 	private LegacyTeagleClient client;
+	private final JCommander parameter;
 
 	public static void main(final String[] args) {
 		System.out.println(new CLI().parse(args));
 	}
 
+	public CLI() {
+		initDefaultParameter();
+		this.parameter = setupParameter();
+	}
+
 	public String parse(final String[] args) {
-		final JCommander parameter = new JCommander(this);
-
-		parameter.setProgramName("OpenTeagleCLI");
-		parameter.addCommand(CLI.CMD_BOOK_VCT, this.commandBookVCT);
-		parameter.addCommand(CLI.CMD_START_VCT, this.commandStartVCT);
-		parameter.addCommand(CLI.CMD_STOP_VCT, this.commandStopVCT);
-		parameter.addCommand(CLI.CMD_DELETE_VCT, this.commandDeleteVCT);
-		parameter.addCommand(CLI.CMD_LIST_VCTS, this.commandListVCTs);
-		parameter.addCommand(CLI.CMD_LIST_RIS, this.commandListRIs);
-		String result = "";
-
+		String result;
 		try {
 			parameter.parse(args);
 			this.client = new LegacyTeagleClient(this.user, this.password,
@@ -72,8 +70,36 @@ public class CLI {
 			result = "ERROR: " + ex.getMessage() + "\n";
 			result += CLI.getUsage(parameter);
 		}
-
 		return result;
+	}
+
+	private JCommander setupParameter() {
+		final JCommander parameter = new JCommander(this);
+
+		parameter.setProgramName("fiteagle_cli");
+		parameter.addCommand(CLI.CMD_BOOK_VCT, this.commandBookVCT);
+		parameter.addCommand(CLI.CMD_START_VCT, this.commandStartVCT);
+		parameter.addCommand(CLI.CMD_STOP_VCT, this.commandStopVCT);
+		parameter.addCommand(CLI.CMD_DELETE_VCT, this.commandDeleteVCT);
+		parameter.addCommand(CLI.CMD_LIST_VCTS, this.commandListVCTs);
+		parameter.addCommand(CLI.CMD_LIST_RIS, this.commandListRIs);
+		return parameter;
+	}
+
+	private void initDefaultParameter() {
+		this.repoUrl = APIProperties.getRepoUrl();
+		this.reqUrl = APIProperties.getReqUrl();
+		this.user = APIProperties.getUser();
+		this.password = APIProperties.getPassword();
+
+		if (this.repoUrl.isEmpty())
+			this.repoUrl = "http://localhost:9080/repository/rest";
+		if (this.reqUrl.isEmpty())
+			this.reqUrl = "http://localhost:9000/reqproc";
+		if (this.user.isEmpty())
+			this.user = "root";
+		if (this.password.isEmpty())
+			this.password = "root";
 	}
 
 	private static String getUsage(final JCommander parameter) {
@@ -87,6 +113,8 @@ public class CLI {
 		parameter.usage();
 		System.setOut(stdout);
 		System.setErr(stderr);
+		printStream
+				.println("Hint: you can set defaults at ~/.fiteagle/api.properties.");
 
 		return stream.toString();
 	}

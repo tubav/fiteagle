@@ -13,18 +13,51 @@ video series.
 First steps
 -----------
 
-The following commands should download all required libraries and
-compile every module within this project. After this you can have a look at
-the documentation or start for example the CLI.
+First check out the code:
 
     git clone https://github.com/tubav/fiteagle.git
     cd fiteagle
-    mvn compile
+
+Now have a look at the documentation:
+
     mvn -N site
     open target/site/index.html
+
+Try to test the whole project:
+
+    mvn test
+
+Start for example the CLI:
+
     cd clients/cli
-    mvn package
     ./src/main/scripts/startCLI.sh
+    
+Setup deployment
+-----------------
+
+Edit the file .m2/settings.xml:
+
+    ?xml version="1.0"?>
+    <settings>
+        <servers>
+            <server>
+                <id>fiteagle</id>
+                    <username>xxx</username>
+                    <password>xxx</password>
+            </server>
+        </servers>
+    </settings>
+
+Checkin new code
+-----------------
+
+    cd path/to/project/root
+    mvn -T3 clean test
+    mvn deploy
+    git status
+    git add path/to/new/files
+    git commit -m "Fixed xyz" .
+    git push
 
 Create a new module
 -------------------
