@@ -1,3 +1,9 @@
 language: java
 jdk:
   - openjdk6
+notifications:
+  email:
+    recipients:
+      - alexander.willner@tu-berlin.de
+    on_success: change
+    on_failure: always
