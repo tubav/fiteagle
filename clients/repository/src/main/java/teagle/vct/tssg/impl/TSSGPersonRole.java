@@ -17,64 +17,62 @@ import teagle.vct.model.PersonRole;
 
 /**
  * @author sim
- * 
+ *
  */
-@XmlRootElement(name = "personRole")
+@XmlRootElement(name="personRole")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TSSGPersonRole extends TSSGObject implements PersonRole,
-		Serializable {
+public class TSSGPersonRole extends TSSGObject implements PersonRole, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -124818263548417447L;
-
-	// protected static TSSGCache<TSSGPersonRole> cache = new
-	// TSSGCache<TSSGPersonRole>("personRole", new TSSGPersonRole[]{});
+	
+//	protected static TSSGCache<TSSGPersonRole> cache = new TSSGCache<TSSGPersonRole>("personRole", new TSSGPersonRole[]{});
 	protected static Map<String, TSSGPersonRole> cache = new HashMap<String, TSSGPersonRole>();
-
+	
 	private String name = "";
 
 	static {
-		final TSSGPersonRole panlabCustomer = new TSSGPersonRole();
+		TSSGPersonRole panlabCustomer = new TSSGPersonRole();
 		panlabCustomer.id = "1";
 		panlabCustomer.name = "Panlab Customer";
-
-		TSSGPersonRole.cache.put(panlabCustomer.id, panlabCustomer);
-
-		final TSSGPersonRole teagleAdministrator = new TSSGPersonRole();
+		
+		cache.put(panlabCustomer.id, panlabCustomer);
+		
+		TSSGPersonRole teagleAdministrator = new TSSGPersonRole();
 		teagleAdministrator.id = "2";
 		teagleAdministrator.name = "Teagle Administrator";
-
-		TSSGPersonRole.cache.put(teagleAdministrator.id, teagleAdministrator);
-
-		final TSSGPersonRole vctUser = new TSSGPersonRole();
+		
+		cache.put(teagleAdministrator.id, teagleAdministrator);
+		
+		TSSGPersonRole vctUser = new TSSGPersonRole();
 		vctUser.id = "3";
 		vctUser.name = "VCT User";
+		
+		cache.put(vctUser.id, vctUser);
 
-		TSSGPersonRole.cache.put(vctUser.id, vctUser);
-
-		final TSSGPersonRole panlabPartner = new TSSGPersonRole();
+		TSSGPersonRole panlabPartner = new TSSGPersonRole();
 		panlabPartner.id = "4";
 		panlabPartner.name = "Panlab Partner";
-
-		TSSGPersonRole.cache.put(panlabPartner.id, panlabPartner);
+		
+		cache.put(panlabPartner.id, panlabPartner);
 	}
-
+	
 	public TSSGPersonRole() {
 	}
 
-	protected TSSGPersonRole(final PersonRole role) {
-		this.name = role.getName();
-		this.flag = true;
+	protected TSSGPersonRole(PersonRole role) {
+		name = role.getName();
+		flag = true;
 	}
-
-	public static TSSGPersonRole find(final String id) {
-		return TSSGPersonRole.cache.get(id);
+	
+	public static TSSGPersonRole find(String id) {
+		return cache.get(id);
 	}
 
 	public static List<? extends PersonRole> list() {
-		return new ArrayList<TSSGPersonRole>(TSSGPersonRole.cache.values());
+		return new ArrayList<TSSGPersonRole>(cache.values());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,40 +83,37 @@ public class TSSGPersonRole extends TSSGObject implements PersonRole,
 
 	@Override
 	public void delete() {
-		// cache.delete(this);
+//		cache.delete(this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGPersonRole resolve() {
-		return this.id != null ? TSSGPersonRole.cache.get(this.id) : this;
+		return id != null ? cache.get(id) : this;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGPersonRoleInstance getInstance() {
 		return new TSSGPersonRoleInstance(this);
-	}
+	}	
 
 	/**
 	 * @return the name
 	 */
-	@Override
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
-	@Override
-	public void setName(final String name) {
+	public void setName(String name) {
 		this.name = name;
-		this.flag = true;
+		flag = true;
 	}
 
-	@XmlRootElement(name = "personRoleInstance")
+	@XmlRootElement(name="personRoleInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	static public class TSSGPersonRoleInstance implements Serializable {
 
@@ -126,21 +121,24 @@ public class TSSGPersonRole extends TSSGObject implements PersonRole,
 		 * 
 		 */
 		private static final long serialVersionUID = -4320643309065987627L;
-
+		
+		private String name;
+		
 		protected TSSGPersonRoleInstance() {
 		}
-
-		protected TSSGPersonRoleInstance(final TSSGPersonRole instance) {
+		
+		protected TSSGPersonRoleInstance(TSSGPersonRole instance) {
+			this.name = instance.name;
 		}
 	}
 
-	public static void main(final String[] args) {
-		final TSSGPersonRole role = new TSSGPersonRole();
+	public static void main(String[] args) {
+		TSSGPersonRole role = new TSSGPersonRole();
 		role.name = "testRole";
 		role.persist();
 		try {
 			Thread.sleep(5000);
-		} catch (final InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		role.delete();

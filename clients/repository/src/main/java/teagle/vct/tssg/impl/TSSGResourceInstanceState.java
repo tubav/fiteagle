@@ -15,73 +15,70 @@ import teagle.vct.model.ResourceInstanceState;
 
 /**
  * @author sim
- * 
+ *
  */
-@XmlRootElement(name = "resourceInstanceState")
+@XmlRootElement(name="resourceInstanceState")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TSSGResourceInstanceState extends TSSGEntity implements
-		ResourceInstanceState, Serializable {
+public class TSSGResourceInstanceState extends TSSGEntity implements ResourceInstanceState, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1308637823918011319L;
 
-	protected static TSSGCache<TSSGResourceInstanceState> cache = new TSSGCache<TSSGResourceInstanceState>(
-			"resourceInstanceState", new TSSGResourceInstanceState[] {});
+	protected static TSSGCache<TSSGResourceInstanceState> cache = new TSSGCache<TSSGResourceInstanceState>("resourceInstanceState", new TSSGResourceInstanceState[]{});
 
 	public TSSGResourceInstanceState() {
 	}
 
-	protected TSSGResourceInstanceState(final ResourceInstanceState state) {
+	protected TSSGResourceInstanceState(ResourceInstanceState state) {
 		super(state);
-		this.flag = true;
+		flag = true;
 	}
-
-	public static TSSGResourceInstanceState find(final String id) {
-		return TSSGResourceInstanceState.cache.find(id);
+	
+	public static TSSGResourceInstanceState find(String id) {
+		return cache.find(id);
 	}
-
+	
 	public static List<? extends ResourceInstanceState> list() {
-		return TSSGResourceInstanceState.cache.list();
+		return cache.list();		
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGResourceInstanceState persist() {
-		return TSSGResourceInstanceState.cache.persist(this);
+		return cache.persist(this);
 	}
-
+	
 	@Override
 	public void delete() throws RepositoryException {
-		TSSGResourceInstanceState.cache.delete(this);
+		cache.delete(this);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGResourceInstanceState resolve() {
-		return this.id != null ? TSSGResourceInstanceState.cache.find(this.id)
-				: this;
+		return id != null ? cache.find(id) : this;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGResourceInstanceStateInstance getInstance() {
 		return new TSSGResourceInstanceStateInstance(this);
-	}
+	}	
 
 	@Override
 	public State get() {
-		return State.valueOf(this.getCommonName());
+		return State.valueOf(getCommonName());
 	}
 
 	@Override
-	public void set(final State state) {
-		this.setCommonName(state.toString());
-		this.flag = true;
+	public void set(State state) {
+		setCommonName(state.toString());
+		flag = true;
 	}
 
-	@XmlRootElement(name = "resourceInstanceStateInstance")
+	@XmlRootElement(name="resourceInstanceStateInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public class TSSGResourceInstanceStateInstance implements Serializable {
 
@@ -90,11 +87,16 @@ public class TSSGResourceInstanceState extends TSSGEntity implements
 		 */
 		private static final long serialVersionUID = -1197266542522953286L;
 
+		private String commonName;
+		
+		private String description;
+
 		protected TSSGResourceInstanceStateInstance() {
 		}
-
-		protected TSSGResourceInstanceStateInstance(
-				final TSSGResourceInstanceState state) {
+				
+		protected TSSGResourceInstanceStateInstance(TSSGResourceInstanceState state) {
+			commonName = state.commonName;
+			description = state.description;
 		}
 	}
 }

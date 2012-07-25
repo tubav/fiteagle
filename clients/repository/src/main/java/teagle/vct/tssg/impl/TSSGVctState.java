@@ -15,9 +15,9 @@ import teagle.vct.model.VctState;
 
 /**
  * @author sim
- * 
+ *
  */
-@XmlRootElement(name = "vctState")
+@XmlRootElement(name="vctState")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TSSGVctState extends TSSGEntity implements VctState, Serializable {
 
@@ -26,59 +26,58 @@ public class TSSGVctState extends TSSGEntity implements VctState, Serializable {
 	 */
 	private static final long serialVersionUID = 1308637823918011319L;
 
-	protected static TSSGCache<TSSGVctState> cache = new TSSGCache<TSSGVctState>(
-			"vctState", new TSSGVctState[] {});
-
+	protected static TSSGCache<TSSGVctState> cache = new TSSGCache<TSSGVctState>("vctState", new TSSGVctState[]{});
+	
 	public TSSGVctState() {
 	}
-
-	protected TSSGVctState(final VctState state) {
+	
+	protected TSSGVctState(VctState state) {
 		super(state);
-		this.flag = true;
+		flag = true;
 	}
-
-	public static TSSGVctState find(final String id) {
-		return TSSGVctState.cache.find(id);
+	
+	public static TSSGVctState find(String id) {
+		return cache.find(id);
 	}
 
 	public static List<? extends VctState> list() {
-		return TSSGVctState.cache.list();
+		return cache.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGVctState persist() {
-		return TSSGVctState.cache.persist(this);
+		return cache.persist(this);
 	}
-
+	
 	@Override
 	public void delete() throws RepositoryException {
-		TSSGVctState.cache.delete(this);
+		cache.delete(this);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGVctState resolve() {
-		return this.id != null ? TSSGVctState.cache.find(this.id) : this;
+		return id != null ? cache.find(id) : this;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGVctStateInstance getInstance() {
 		return new TSSGVctStateInstance(this);
-	}
-
+	}	
+	
 	@Override
 	public State get() {
-		return State.valueOf(this.getCommonName());
+		return State.valueOf(getCommonName());
 	}
 
 	@Override
-	public void set(final State commonName) {
-		this.setCommonName(commonName.toString());
+	public void set(State commonName) {
+		setCommonName(commonName.toString());
 	}
 
-	@XmlRootElement(name = "vctStateInstance")
+	@XmlRootElement(name="vctStateInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class TSSGVctStateInstance implements Serializable {
 
@@ -87,11 +86,16 @@ public class TSSGVctState extends TSSGEntity implements VctState, Serializable {
 		 */
 		private static final long serialVersionUID = 6746657578317980907L;
 
+		private String commonName;
+		private String description;
+		
 		protected TSSGVctStateInstance() {
 		}
-
-		protected TSSGVctStateInstance(final TSSGVctState state) {
+		
+		protected TSSGVctStateInstance(TSSGVctState state) {
+			commonName = state.commonName;
+			description = state.description;
 		}
-
+		
 	}
 }

@@ -15,9 +15,9 @@ import teagle.vct.model.RepositoryException;
 
 /**
  * @author sim
- * 
+ *
  */
-@XmlRootElement(name = "geometry")
+@XmlRootElement(name="geometry")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TSSGGeometry extends TSSGObject implements Geometry, Serializable {
 
@@ -26,150 +26,134 @@ public class TSSGGeometry extends TSSGObject implements Geometry, Serializable {
 	 */
 	private static final long serialVersionUID = 6530481017122746148L;
 
-	protected static TSSGCache<TSSGGeometry> cache = new TSSGCache<TSSGGeometry>(
-			"geometry", new TSSGGeometry[] {});
-
+	protected static TSSGCache<TSSGGeometry> cache = new TSSGCache<TSSGGeometry>("geometry", new TSSGGeometry[]{});
+	
 	protected int x = 20;
-
+	
 	protected int y = 20;
-
+	
 	protected int w = 0;
-
+	
 	protected int h = 0;
-
+	
 	public TSSGGeometry() {
 	}
 
-	protected TSSGGeometry(final Geometry geometry) {
-		this.x = geometry.getX();
-		this.y = geometry.getY();
-		this.w = geometry.getW();
-		this.h = geometry.getH();
-		this.flag = true;
+	protected TSSGGeometry(Geometry geometry) {
+		x = geometry.getX();
+		y = geometry.getY();
+		w = geometry.getW();
+		h = geometry.getH();
+		flag = true;
 	}
-
-	public TSSGGeometry(final int x, final int y) {
+	
+	public TSSGGeometry(int x, int y)
+	{
 		this.x = x;
 		this.y = y;
-		this.w = this.h = 150;
+		w = h = 150;
 	}
-
-	public static TSSGGeometry find(final String id) {
-		return TSSGGeometry.cache.find(id);
+	
+	public static TSSGGeometry find(String id) {
+		return cache.find(id);
 	}
-
+	
 	public static List<? extends Geometry> list() {
-		return TSSGGeometry.cache.list();
+		return cache.list();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGGeometry persist() {
-		return TSSGGeometry.cache.persist(this);
+		return cache.persist(this);
 	}
 
 	@Override
 	public void delete() throws RepositoryException {
-		TSSGGeometry.cache.delete(this);
+		cache.delete(this);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGGeometry resolve() {
-		return this.id != null ? TSSGGeometry.cache.find(this.id) : this;
+		return id != null ? cache.find(id) : this;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGGeometryInstance getInstance() {
 		return new TSSGGeometryInstance(this);
-	}
+	}	
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#getH()
 	 */
 	@Override
 	public int getH() {
-		return this.h;
+		return h;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#getW()
 	 */
 	@Override
 	public int getW() {
-		return this.w;
+		return w;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#getX()
 	 */
 	@Override
 	public int getX() {
-		return this.x;
+		return x;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#getY()
 	 */
 	@Override
 	public int getY() {
-		return this.y;
+		return y;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#setH(int)
 	 */
 	@Override
-	public void setH(final int h) {
+	public void setH(int h) {
 		this.h = h;
-		this.flag = true;
+		flag = true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#setW(int)
 	 */
 	@Override
-	public void setW(final int w) {
+	public void setW(int w) {
 		this.w = w;
-		this.flag = true;
+		flag = true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#setX(int)
 	 */
 	@Override
-	public void setX(final int x) {
+	public void setX(int x) {
 		this.x = x;
-		this.flag = true;
+		flag = true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Geometry#setY(int)
 	 */
 	@Override
-	public void setY(final int y) {
+	public void setY(int y) {
 		this.y = y;
-		this.flag = true;
+		flag = true;
 	}
 
-	@XmlRootElement(name = "geometryInstance")
+	@XmlRootElement(name="geometryInstance")
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class TSSGGeometryInstance implements Serializable {
 
@@ -178,10 +162,19 @@ public class TSSGGeometry extends TSSGObject implements Geometry, Serializable {
 		 */
 		private static final long serialVersionUID = 5831558061750633284L;
 
+		private int x;
+		private int y;
+		private int w;
+		private int h;
+		
 		protected TSSGGeometryInstance() {
 		}
-
-		protected TSSGGeometryInstance(final TSSGGeometry geometry) {
+		
+		protected TSSGGeometryInstance(TSSGGeometry geometry) {
+			x = geometry.x;
+			y = geometry.y;
+			w = geometry.w;
+			h = geometry.h;		
 		}
 	}
 }

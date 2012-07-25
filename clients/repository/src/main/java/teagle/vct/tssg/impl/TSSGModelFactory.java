@@ -3,6 +3,7 @@
  */
 package teagle.vct.tssg.impl;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,9 +12,14 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import teagle.vct.model.ConfigParamAtomic;
 import teagle.vct.model.ConfigParamComposite;
 import teagle.vct.model.Configuration;
+import teagle.vct.model.Connection;
+import teagle.vct.model.Destination;
 import teagle.vct.model.Email;
 import teagle.vct.model.Entity;
 import teagle.vct.model.EntityNotFound;
@@ -23,26 +29,29 @@ import teagle.vct.model.Organisation;
 import teagle.vct.model.Person;
 import teagle.vct.model.PersonRole;
 import teagle.vct.model.Ptm;
-import teagle.vct.model.RepoClientConfig;
 import teagle.vct.model.RepositoryException;
-import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.ResourceInstanceState;
 import teagle.vct.model.ResourceInstanceState.State;
 import teagle.vct.model.ResourceSpec;
+import teagle.vct.model.ResourceInstance;
+import teagle.vct.model.Source;
+import teagle.vct.model.RepoClientConfig;
 import teagle.vct.model.Vct;
 
 /**
  * @author sim
- * 
+ *
  */
 public final class TSSGModelFactory extends ModelManager {
 
+	private final Logger log = LoggerFactory.getLogger(TSSGModelFactory.class);
+
 	private boolean autoClearCache = false;
 	private long autoClearCacheInterval = 1800000;
-
+	
 	private boolean prefetching = true;
-
-	public void clearCache(final boolean prefetching) {
+	
+	public void clearCache(boolean prefetching) {
 		TSSGConfigParamAtomic.cache.clear();
 		TSSGConfigParamComposite.cache.clear();
 		TSSGConfiguration.cache.clear();
@@ -52,7 +61,7 @@ public final class TSSGModelFactory extends ModelManager {
 		TSSGOrganisation.cache.clear();
 		TSSGOrganisationRole.cache.clear();
 		TSSGPerson.cache.clear();
-		// TSSGPersonRole.cache.clear();
+//		TSSGPersonRole.cache.clear();
 		TSSGConfigParamComposite.cache.clear();
 		TSSGPtm.cache.clear();
 		TSSGResourceInstance.cache.clear();
@@ -61,202 +70,205 @@ public final class TSSGModelFactory extends ModelManager {
 		TSSGVct.cache.clear();
 		TSSGVctState.cache.clear();
 
-		if (prefetching)
-			this.prefetchData();
+		if (prefetching) {
+			prefetchData();			
+		}
 	}
-
-	// TODO: proper config class
+	
+	//TODO: proper config class
 	@Override
-	public void config(final RepoClientConfig config) {
-		TSSGClient.config(config.getUrl(), config.getUsername(),
-				config.getPassword());
+	public void config(RepoClientConfig config) {
+		TSSGClient.config(config.getUrl(), config.getUsername(), config.getPassword());
+		
+		autoClearCache = config.getDoAutoclear();
+		autoClearCacheInterval = config.getAutoClearInterval();
+		
+		prefetching = config.getDoPrefetching();
 
-		this.autoClearCache = config.getDoAutoclear();
-		this.autoClearCacheInterval = config.getAutoClearInterval();
-
-		this.prefetching = config.getDoPrefetching();
-
-		if (this.autoClearCache) {
-			final Timer timer = new Timer();
+		if (autoClearCache) {
+			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
-				@Override
 				public void run() {
-					TSSGModelFactory.this
-							.clearCache(TSSGModelFactory.this.prefetching);
+					clearCache(prefetching);
 				}
-			}, this.autoClearCacheInterval, this.autoClearCacheInterval);
+			}, autoClearCacheInterval, autoClearCacheInterval);
 		}
 
-		if (this.prefetching) {
-			this.prefetchData();
+		if (prefetching) {
+			log.debug("repo prefetching enabled, starting prefetching...");
+			prefetchData();			
 		}
 	}
-
+	
 	private void prefetchData() {
-
-		final Thread task10 = new Thread(new Runnable() {
+		
+		Thread task10 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGConfiguration.list();
 			}
-		});
+		});		
 		task10.start();
-
-		final Thread task2 = new Thread(new Runnable() {
+		
+		Thread task2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGPerson.list();
 			}
-		});
+		});		
 		task2.start();
 
-		final Thread task5 = new Thread(new Runnable() {
+		Thread task5 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGResourceInstance.list();
 			}
-		});
+		});		
 		task5.start();
 
-		final Thread task4 = new Thread(new Runnable() {
+		Thread task4 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGResourceSpec.list();
 			}
-		});
+		});		
 		task4.start();
 
-		final Thread task1 = new Thread(new Runnable() {
+		Thread task1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGPtm.list();
 			}
-		});
+		});		
 		task1.start();
 
-		final Thread task3 = new Thread(new Runnable() {
+		Thread task3 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGVct.list();
 			}
-		});
+		});		
 		task3.start();
 
-		final Thread task0 = new Thread(new Runnable() {
+		Thread task0 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGOrganisation.list();
 			}
-		});
+		});		
 		task0.start();
 
-		final Thread task6 = new Thread(new Runnable() {
+		Thread task6 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGConfigParamComposite.list();
 			}
-		});
+		});		
 		task6.start();
 
-		final Thread task7 = new Thread(new Runnable() {
+		Thread task7 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGConfigParamAtomic.list();
 			}
-		});
+		});		
 		task7.start();
 
-		final Thread task8 = new Thread(new Runnable() {
+		Thread task8 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				TSSGGeometry.list();
 			}
-		});
+		});		
 		task8.start();
 
+		
+		log.debug("all prefetching threads started");		
 	}
 
 	@Override
-	public Vct findVct(final String userName, final String commonName) {
-		for (final Vct vct : TSSGVct.list())
-			if (vct.getPerson().getUserName().equals(userName)
-					&& vct.getCommonName().equals(commonName))
+	public Vct findVct(String userName, String commonName) {
+		for (Vct vct : TSSGVct.list()) {
+			if (vct.getPerson().getUserName().equals(userName) && vct.getCommonName().equals(commonName)) {
 				return vct;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public List<Vct> findVctsByUserName(final String userName) {
-		final List<Vct> vcts = new ArrayList<Vct>();
-
-		for (final Vct vct : TSSGVct.list())
-			if (vct.getPerson().getUserName().equals(userName))
+	public List<Vct> findVctsByUserName(String userName) {
+		List<Vct> vcts = new ArrayList<Vct>();
+		
+		for (Vct vct : TSSGVct.list()) {
+			if (vct.getPerson().getUserName().equals(userName)) {
 				vcts.add(vct);
+			}
+		}
 		return vcts;
 	}
 
 	@Override
-	public Person findPersonByUserName(final String userName) {
-		for (final Person person : TSSGPerson.list())
-			if (person.getUserName().equals(userName))
+	public Person findPersonByUserName(String userName) {
+		for (Person person : TSSGPerson.list()) {
+			if (person.getUserName().equals(userName)) {
 				return person;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public Collection<ResourceInstance> findResourceInstancesByUserName(
-			final String userName) {
-		final Set<ResourceInstance> instances = new HashSet<ResourceInstance>();
+	public Collection<ResourceInstance> findResourceInstancesByUserName(String userName) {
+		Set<ResourceInstance> instances = new HashSet<ResourceInstance>();
 
-		for (final Vct vct : this.findVctsByUserName(userName))
+		for (Vct vct : findVctsByUserName(userName)) 
 			instances.addAll(vct.getResourceInstances());
-
-		instances.addAll(this.findUnusedResourceInstances());
-
+		
+		instances.addAll(findUnusedResourceInstances());
+		
 		return instances;
 	}
-
+	
 	@Override
-	public List<ResourceInstance> findUnusedResourceInstances() {
-		final Set<String> usedInstances = new HashSet<String>();
-		final List<ResourceInstance> unused = new ArrayList<ResourceInstance>();
-
-		for (final TSSGVct vct : TSSGVct.list())
-			for (final TSSGResourceInstance ri : vct.getResourceInstances())
+	public List<ResourceInstance> findUnusedResourceInstances()
+	{
+		Set<String> usedInstances = new HashSet<String>();
+		List<ResourceInstance> unused = new ArrayList<ResourceInstance>();
+		
+		for (TSSGVct vct : TSSGVct.list())
+			for (TSSGResourceInstance ri : vct.getResourceInstances())
 				if (ri.getState() == State.PROVISIONED)
 					usedInstances.add(ri.getId());
-
-		for (final TSSGResourceInstance ri : TSSGResourceInstance.list())
-			if ((ri.getState() == State.PROVISIONED)
-					&& !usedInstances.contains(ri.getId()))
+			
+		for (TSSGResourceInstance ri : TSSGResourceInstance.list())
+			if (ri.getState() == State.PROVISIONED && !usedInstances.contains(ri.getId()))
 				unused.add(ri);
-
+		
 		return unused;
 	}
 
 	@Override
 	public ResourceSpec createResource() {
-		final TSSGResourceSpec spec = new TSSGResourceSpec();
+		TSSGResourceSpec spec = new TSSGResourceSpec();
 		spec.flag = true;
 		return spec;
 	}
 
 	@Override
 	public ConfigParamAtomic createConfigParamAtomic() {
-		final TSSGConfigParamAtomic atomic = new TSSGConfigParamAtomic();
+		TSSGConfigParamAtomic atomic = new TSSGConfigParamAtomic();
 		atomic.flag = true;
 		return atomic;
 	}
 
 	@Override
-	public ResourceInstance createResourceInstance(
-			final ResourceSpec resourceSpec) {
-		final TSSGResourceInstance instance = new TSSGResourceInstance();
+	public ResourceInstance createResourceInstance(ResourceSpec resourceSpec) {
+		TSSGResourceInstance instance = new TSSGResourceInstance();
 		instance.setResourceSpec(resourceSpec);
-		final List<? extends ConfigParamAtomic> configs = resourceSpec
-				.getConfigurationParameters();
-		for (final ConfigParamAtomic param : configs)
-			instance.addConfiguration(this.createConfiguration(param));
+		List<? extends ConfigParamAtomic> configs = resourceSpec.getConfigurationParameters();
+		for (ConfigParamAtomic param : configs) 
+			instance.addConfiguration(createConfiguration(param));
 
 		instance.setState(ResourceInstanceState.State.NEW);
 		instance.flag = true;
@@ -285,14 +297,14 @@ public final class TSSGModelFactory extends ModelManager {
 
 	@Override
 	public ConfigParamComposite createConfigParamComposite() {
-		final TSSGConfigParamComposite composite = new TSSGConfigParamComposite();
+		TSSGConfigParamComposite composite = new TSSGConfigParamComposite();
 		composite.flag = true;
 		return composite;
 	}
 
 	@Override
 	public Person createPerson() {
-		final TSSGPerson person = new TSSGPerson();
+		TSSGPerson person = new TSSGPerson();
 		person.flag = true;
 		return person;
 	}
@@ -300,27 +312,27 @@ public final class TSSGModelFactory extends ModelManager {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T persist(T obj) {
-		if (obj instanceof TSSGObject)
-			obj = (T) ((TSSGObject) obj).persist();
-		return obj;
+		if (obj instanceof TSSGObject) {
+			obj = (T)((TSSGObject) obj).persist();
+		}
+		return obj;			
 	}
 
 	@Override
-	public <T extends Entity> void delete(final T obj)
-			throws RepositoryException {
-		if (obj instanceof TSSGObject)
+	public <T extends Entity> void delete(T obj) throws RepositoryException {
+		if (obj instanceof TSSGObject) {
 			((TSSGObject) obj).delete();
+		}
 	}
 
 	@Override
-	public <T extends Entity> boolean isModified(final T obj) {
-		return obj instanceof TSSGObject ? ((TSSGObject) obj).isModified()
-				: true;
+	public <T extends Entity> boolean isModified(T obj) {
+		return obj instanceof TSSGObject ? ((TSSGObject)obj).isModified() : true;
 	}
 
 	@Override
-	public Configuration createConfiguration(final ConfigParamAtomic param) {
-		final TSSGConfiguration config = new TSSGConfiguration();
+	public Configuration createConfiguration(ConfigParamAtomic param) {
+		TSSGConfiguration config = new TSSGConfiguration();
 		config.setCommonName(param.getCommonName());
 		config.setDescription(param.getDescription());
 		config.setValue(param.getDefaultValue());
@@ -330,74 +342,83 @@ public final class TSSGModelFactory extends ModelManager {
 	}
 
 	@Override
-	public Organisation getOrganisation(final String organisationName) {
-		for (final Organisation o : TSSGOrganisation.list())
-			if (o.getName().trim().equals(organisationName))
+	public Organisation getOrganisation(String organisationName) {
+		for(Organisation o : TSSGOrganisation.list()){
+			if(o.getName().trim().equals(organisationName)){
 				return o;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public ResourceSpec getResourceSpec(final String resourceName) {
-		for (final ResourceSpec r : TSSGResourceSpec.list())
-			if (r.getCommonName().equals(resourceName))
+	public ResourceSpec getResourceSpec(String resourceName) {
+		for(ResourceSpec r : TSSGResourceSpec.list()){
+			if(r.getCommonName().equals(resourceName)){
 				return r;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public List<Organisation> findOrganisationsByUserName(final String userName) {
-		final List<Organisation> organisations = new ArrayList<Organisation>();
-		new ArrayList<Person>();
-		for (final Organisation o : TSSGOrganisation.list())
-			for (final Person p : o.getPersons())
-				if (p.getUserName().equals(userName))
+	public List<Organisation> findOrganisationsByUserName(String userName) {
+		List<Organisation> organisations = new ArrayList<Organisation>();
+		List<? extends Person> persons = new ArrayList<Person>();
+		for(Organisation o : TSSGOrganisation.list())
+			for(Person p : o.getPersons())
+				if(p.getUserName().equals(userName))
 					organisations.add(o);
 		return organisations;
 	}
-
+	
 	@Override
-	public ResourceInstance findResourceInstanceByName(final String name)
-			throws RepositoryException {
-		for (final ResourceInstance ri : TSSGResourceInstance.list())
+	public ResourceInstance findResourceInstanceByName(String name) throws RepositoryException
+	{
+		for (ResourceInstance ri : TSSGResourceInstance.list())
 			if (ri.getCommonName().equals(name))
 				return ri;
-
+		
 		throw new EntityNotFound(name);
 	}
 
 	@Override
-	public List<Ptm> listPtmsByOrganisation(final String organisationName) {
-		final List<Ptm> ptms = new ArrayList<Ptm>();
-		for (final Ptm ptm : TSSGPtm.list())
-			if (ptm.getOrganisation().getName().equals(organisationName))
+	public List<Ptm> listPtmsByOrganisation(String organisationName) {
+		List<Ptm> ptms = new ArrayList<Ptm>();
+		for(Ptm ptm : TSSGPtm.list()){
+			if(ptm.getOrganisation().getName().equals(organisationName)){
 				ptms.add(ptm);
+			}
+		}
 		return ptms;
 	}
 
 	@Override
-	public Ptm getPtm(final String ptmName) {
-		for (final Ptm ptm : TSSGPtm.list())
-			if (ptm.getCommonName().equals(ptmName))
+	public Ptm getPtm(String ptmName) {
+		for(Ptm ptm : TSSGPtm.list()){
+			if(ptm.getCommonName().equals(ptmName)){
 				return ptm;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Ptm createPtm() {
-		final TSSGPtm ptm = new TSSGPtm();
+		TSSGPtm ptm = new TSSGPtm();
 		ptm.flag = true;
 		return ptm;
 	}
 
 	@Override
-	public List<ResourceSpec> getResourcesNotSupportedByPtm(final Ptm ptm) {
-		final List<? extends ResourceSpec> supportedResources = ptm
-				.getResourceSpecs();
-		final List<ResourceSpec> result = new ArrayList<ResourceSpec>();
-		for (final ResourceSpec r : TSSGResourceSpec.list())
-			if (!supportedResources.contains(r))
-				result.add(r);
+	public List<ResourceSpec> getResourcesNotSupportedByPtm(Ptm ptm) {
+		List<? extends ResourceSpec> supportedResources = ptm.getResourceSpecs();
+		List<ResourceSpec> result = new ArrayList<ResourceSpec>();
+		for (ResourceSpec r : TSSGResourceSpec.list()){
+			if (!supportedResources.contains(r)){
+				result.add(r);	
+			}
+		}
 		return result;
 	}
 
@@ -408,14 +429,14 @@ public final class TSSGModelFactory extends ModelManager {
 
 	@Override
 	public Organisation createOrganisation() {
-		final TSSGOrganisation organisation = new TSSGOrganisation();
+		TSSGOrganisation organisation = new TSSGOrganisation();
 		organisation.flag = true;
 		return organisation;
 	}
 
 	@Override
 	public Email createEmail() {
-		final TSSGEmail email = new TSSGEmail();
+		TSSGEmail email = new TSSGEmail();
 		email.flag = true;
 		return email;
 	}
@@ -431,70 +452,69 @@ public final class TSSGModelFactory extends ModelManager {
 	}
 
 	@Override
-	public boolean vctExists(final String vctName, final String userName) {
-		for (final Vct vct : TSSGVct.list())
-			if (vct.getCommonName().equals(vctName)
-					&& vct.getPerson().getUserName().equals(userName))
+	public boolean vctExists(String vctName, String userName) {
+		for (Vct vct : TSSGVct.list()) 
+			if (vct.getCommonName().equals(vctName) && vct.getPerson().getUserName().equals(userName))
 				return true;
-
+		
 		return false;
 	}
 
 	@Override
-	public Geometry createGeometry(final int x, final int y) {
+	public Geometry createGeometry(int x, int y) {
 		return new TSSGGeometry(x, y);
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	public <T extends TSSGObject> T getObject(final Class<T> cls,
-			final String id) throws RepositoryException {
+	public <T extends TSSGObject> T getObject(Class<T> cls, String id)
+		throws RepositoryException
+	{
 		T t = null;
-		try {
-			t = (T) cls.getMethod("find", String.class).invoke(null, id);
-		} catch (final Exception e) {
+		try
+		{
+			t = (T)cls.getMethod("find", String.class).invoke(null, id);
+		}
+		catch (Exception e)
+		{
 			throw new RepositoryException(e);
 		}
-
+		
 		if (t == null)
-			throw new RepositoryException("Object of type "
-					+ cls.getSimpleName() + " with id " + id + "not found.");
-
+			throw new RepositoryException("Object of type " + cls.getSimpleName() + " with id " + id + "not found.");
+		
 		return t;
 	}
 
-	// @Override
-	// public List<? extends Person> findPersonsByOrganisationName(String
-	// organisationName) {
-	// List<? extends Person> persons = new ArrayList<Person>();
-	// for(Organisation o : TSSGOrganisation.list()){
-	// if(o.getName().equals(organisationName)){
-	// persons = o.getPersons();
-	// }
-	// }
-	// return persons;
-	// }
+//	@Override
+//	public List<? extends Person> findPersonsByOrganisationName(String organisationName) {
+//		List<? extends Person> persons = new ArrayList<Person>();
+//		for(Organisation o : TSSGOrganisation.list()){
+//			if(o.getName().equals(organisationName)){
+//				persons = o.getPersons();
+//			}
+//		}
+//		return persons;
+//	}
 
-	// @Override
-	// public List<ResourceSpec> findResourceSpecsByOrganisation(String
-	// organisationName) {
-	// List<ResourceSpec> resources = new ArrayList<ResourceSpec>();
-	// for(ResourceSpec r : TSSGResourceSpec.list()){
-	// if(r.getProvider()!= null &&
-	// r.getProvider().trim().equals(organisationName)){
-	// resources.add(r);
-	// }
-	// }
-	// return resources;
-	// }
+//	@Override
+//	public List<ResourceSpec> findResourceSpecsByOrganisation(String organisationName) {
+//		List<ResourceSpec> resources = new ArrayList<ResourceSpec>();
+//		for(ResourceSpec r : TSSGResourceSpec.list()){
+//			if(r.getProvider()!= null && r.getProvider().trim().equals(organisationName)){
+//				resources.add(r);
+//			}
+//		}
+//		return resources;
+//	}
 
-	// @Override
-	// public ResourceInstance getResourceInstance(String commonName) {
-	// for (ResourceInstance ri : TSSGResourceInstance.list()) {
-	// if (ri.getCommonName().equals(commonName)) {
-	// return ri;
-	// }
-	// }
-	// return null;
-	// }
+//	@Override
+//	public ResourceInstance getResourceInstance(String commonName) {
+//		for (ResourceInstance ri : TSSGResourceInstance.list()) {
+//			if (ri.getCommonName().equals(commonName)) {
+//				return ri;
+//			}
+//		}
+//		return null;
+//	}
 
 }

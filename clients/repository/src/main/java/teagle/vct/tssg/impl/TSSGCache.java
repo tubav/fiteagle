@@ -5,8 +5,11 @@ package teagle.vct.tssg.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.core.MediaType;
 
@@ -15,169 +18,161 @@ import teagle.vct.model.RepositoryException;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.AsyncWebResource.Builder;
 
 /**
  * @author sim
- * 
+ *
  */
 public class TSSGCache<T extends TSSGObject> {
 
-	private final String typePath;
-
-	private final Map<String, T> cache = new HashMap<String, T>();
+	private String typePath;
+	
+	private Map<String, T> cache = new HashMap<String, T>();
 
 	public Map<String, T> getCache() {
-		return this.cache;
+		return cache;
 	}
 
-	private final T[] dummy;
+	private T[] dummy;
 
-	private final boolean prefetching = true;
-
-	protected TSSGCache(final String typePath, final T[] dummy) {
+	private boolean prefetching = true;
+	
+	protected TSSGCache(String typePath, T[] dummy) {
 		this.typePath = typePath;
 		this.dummy = dummy;
 	}
-
+	
 	protected void clear() {
-		this.cache.clear();
+		cache.clear();
 	}
+	
+	protected T find(String id) {
 
-	protected T find(final String id) {
-
-		if (this.cache.isEmpty() && this.prefetching)
-			this.loadAll();
-
+		if (cache.isEmpty() && prefetching) {
+			loadAll();
+		}
+		
 		T element = null;
 		if (id != null) {
-			element = this.cache.get(id);
-			if ((element == null) && !this.cache.isEmpty())
+			element = cache.get(id);
+			if (element == null && !cache.isEmpty()) {
 				try {
-					element = (T) TSSGClient
-							.getWebResource()
-							.path("/" + this.typePath + "/" + id)
-							.type(MediaType.TEXT_XML)
-							.get(this.cache.values().iterator().next()
-									.getClass());
-				} catch (final UniformInterfaceException e) {
+					element = (T)TSSGClient.getWebResource().path("/" + typePath + "/" + id).type(MediaType.TEXT_XML).get(cache.values().iterator().next().getClass());
+				} catch (UniformInterfaceException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		return element;
 	}
 
 	protected List<T> list() {
-		if (this.cache.isEmpty())
-			this.loadAll();
-		return new ArrayList<T>(this.cache.values());
+		if (cache.isEmpty()) {
+			loadAll();
+		}
+		return new ArrayList<T>(cache.values());
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T persist(final T element) {
-
-		/*
-		 * if ((element.getClass().getName() ==
-		 * "teagle.vct.tssg.impl.TSSGVct")){ if
-		 * (((TSSGVct)element).exist(((TSSGVct)element).commonName)){
-		 * ((TSSGVct)element
-		 * ).setId(((TSSGVct)element).existingVct(((TSSGVct)element
-		 * ).commonName).getId()); Object instance = element.getInstance();
-		 * System.out.print("storing " + typePath + " element with id " +
-		 * element.getId() + "..."); TSSGClient.getWebResource().path("/" +
-		 * typePath + "/" +
-		 * element.getId()).type(MediaType.TEXT_XML).put(instance);
-		 * System.out.println("done"); element.flag = false; } else { Object
-		 * instance = element.getInstance();
-		 * System.out.print("...creating element of type " + typePath + "...");
-		 * try{ element = (T)TSSGClient.getWebResource().path("/" +
-		 * typePath).type(MediaType.TEXT_XML).post(element.getClass(),
-		 * instance); } catch (UniformInterfaceException e) {
-		 * e.printStackTrace(); }
-		 * 
-		 * System.out.println("done. assigned id is " + element.getId());
-		 * cache.put(element.getId(), element);
-		 * 
-		 * } }
-		 */
+	protected T persist(T element) {
+		
+/*		if ((element.getClass().getName() == "teagle.vct.tssg.impl.TSSGVct")){
+			if (((TSSGVct)element).exist(((TSSGVct)element).commonName)){
+				((TSSGVct)element).setId(((TSSGVct)element).existingVct(((TSSGVct)element).commonName).getId());
+				Object instance = element.getInstance();
+				System.out.print("storing " + typePath + " element with id " + element.getId() + "...");
+				TSSGClient.getWebResource().path("/" + typePath + "/" + element.getId()).type(MediaType.TEXT_XML).put(instance);
+				System.out.println("done");
+				element.flag = false;
+			} else {
+				Object instance = element.getInstance();
+				System.out.print("...creating element of type " + typePath + "...");
+				try{
+					element = (T)TSSGClient.getWebResource().path("/" + typePath).type(MediaType.TEXT_XML).post(element.getClass(), instance);
+				} catch (UniformInterfaceException e) {
+					e.printStackTrace();
+				}
+				
+				System.out.println("done. assigned id is " + element.getId());
+				cache.put(element.getId(), element);
+				
+			}
+		}*/
 		T newElement = element;
 		if (element.getId() != null) {
 			if (element.flag) {
-				final Object instance = element.getInstance();
-				System.out.print("storing " + this.typePath
-						+ " element with id " + element.getId() + "...");
-				TSSGClient.getWebResource()
-						.path("/" + this.typePath + "/" + element.getId())
-						.type(MediaType.TEXT_XML).put(instance);
+				Object instance = element.getInstance();
+				System.out.print("storing " + typePath + " element with id " + element.getId() + "...");
+				TSSGClient.getWebResource().path("/" + typePath + "/" + element.getId()).type(MediaType.TEXT_XML).put(instance);
 				System.out.println("done");
 				element.flag = false;
 			}
-
+			
 		} else {
-			final Object instance = element.getInstance();
-			System.out.print("creating element of type " + this.typePath
-					+ "...");
-
-			try {
-				newElement = (T) TSSGClient.getWebResource()
-						.path("/" + this.typePath).type(MediaType.TEXT_XML)
-						.post(element.getClass(), instance);
-			} catch (final UniformInterfaceException e) {
+			Object instance = element.getInstance();
+			System.out.print("creating element of type " + typePath + "...");
+		
+			try{
+				newElement = (T)TSSGClient.getWebResource().path("/" + typePath).type(MediaType.TEXT_XML).post(element.getClass(), instance);
+			} catch (UniformInterfaceException e) {
 				e.printStackTrace();
-
+				
 			}
-
+			
 			element.setId(newElement.getId());
 			System.out.println("done. assigned id is " + element.getId());
-			this.cache.put(element.getId(), newElement);
-
+			cache.put(element.getId(), newElement);
+			
 		}
 		return newElement;
 	}
-
-	protected void delete(final T element) throws RepositoryException {
+	
+	
+	protected void delete(T element) throws RepositoryException {
 		if (element.getId() != null) {
-			this.cache.remove(element.getId());
-			System.out.print("deleting " + this.typePath + " element with id "
-					+ element.getId() + "...");
-			try {
-				TSSGClient.getWebResource()
-						.path("/" + this.typePath + "/" + element.getId())
-						.type(MediaType.TEXT_XML).delete();
-			} catch (final UniformInterfaceException e) {
+			cache.remove(element.getId());
+			System.out.print("deleting " + typePath + " element with id " + element.getId() + "...");
+			try
+			{
+				TSSGClient.getWebResource().path("/" + typePath + "/" + element.getId()).type(MediaType.TEXT_XML).delete();
+			}
+			catch (UniformInterfaceException e)
+			{
 				if (e.toString().contains("returned a response status of 405"))
-					throw new ConstraintViolation("Repo refused deletion of "
-							+ this.typePath + " with id " + element.getId(), e);
+					throw new ConstraintViolation("Repo refused deletion of " + typePath + " with id " + element.getId(), e);
 				throw new RepositoryException(e);
 			}
 			System.out.println("done");
 		}
 	}
-
+	
 	private synchronized void loadAll() {
-		if (!this.cache.isEmpty())
+		if (!cache.isEmpty()) {
 			return;
-
+		}
+		
 		try {
-			System.out.println("loading " + this.typePath);
-			final long watch = System.currentTimeMillis();
-			final T[] array = (T[]) TSSGClient.getWebResource()
-					.path("/" + this.typePath).type(MediaType.TEXT_XML)
-					.get(this.dummy.getClass());
-			System.out.println("list of " + this.typePath + " loaded in "
-					+ (System.currentTimeMillis() - watch) + " ms, containing "
-					+ array.length + " elements");
-
-			for (final T resource : array)
-				this.cache.put(resource.id, resource);
-		} catch (final UniformInterfaceException e) {
+			System.out.println("loading " + typePath);
+			long watch = System.currentTimeMillis();
+			T[] array = (T[])TSSGClient.getWebResource().path("/" + typePath).type(MediaType.TEXT_XML).get(dummy.getClass());			
+			System.out.println("list of " + typePath + " loaded in " + (System.currentTimeMillis() - watch) + " ms, containing " + array.length + " elements");
+			
+			for (T resource : array) {
+				cache.put(resource.id, resource);
+			}		
+		} catch (UniformInterfaceException e) {
 			System.out.println("UniformInterfaceException");
 			e.printStackTrace();
-		} catch (final ClientHandlerException e) {
+		}
+		catch (ClientHandlerException e)
+		{
 			System.out.println("ClientHandlerException");
 			e.printStackTrace();
 		}
-
-		System.out.println("load " + this.typePath + " out");
+		
+		System.out.println("load " + typePath + " out");
 	}
 
 }

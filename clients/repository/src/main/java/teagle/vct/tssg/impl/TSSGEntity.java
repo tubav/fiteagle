@@ -13,12 +13,11 @@ import teagle.vct.model.Entity;
 
 /**
  * @author sim
- * 
+ *
  */
-@XmlRootElement(name = "entity")
+@XmlRootElement(name="entity")
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class TSSGEntity extends TSSGObject implements Entity,
-		Serializable {
+public abstract class TSSGEntity extends TSSGObject implements Entity, Serializable {
 
 	/**
 	 * 
@@ -26,61 +25,54 @@ public abstract class TSSGEntity extends TSSGObject implements Entity,
 	private static final long serialVersionUID = 4532521231117336048L;
 
 	protected String commonName = "";
-
+	
 	protected String description = "";
-
+	
 	public TSSGEntity() {
 	}
-
-	protected TSSGEntity(final Entity entity) {
-		this.commonName = entity.getCommonName();
-		this.description = entity.getDescription();
+	
+	protected TSSGEntity(Entity entity) {
+		commonName = entity.getCommonName();
+		description = entity.getDescription();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Entity#getCommonName()
 	 */
 	@Override
 	public String getCommonName() {
-		return this.commonName;
+		return commonName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Entity#getDescription()
-	 */
+	 */ 
 	@Override
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Entity#setCommonName(java.lang.String)
 	 */
 	@Override
-	public void setCommonName(final String commonName) {
+	public void setCommonName(String commonName) {
 		this.commonName = commonName;
-		this.flag = true;
+		flag = true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see teagle.vct.model.Entity#setDescription(java.lang.String)
 	 */
 	@Override
-	public void setDescription(final String description) {
+	public void setDescription(String description) {
 		this.description = description;
-		this.flag = true;
+		flag = true;
 	}
 
 	@Override
 	public boolean isPersisted() {
-		return this.getId() != null;
+		return getId() != null;
 	}
 }
