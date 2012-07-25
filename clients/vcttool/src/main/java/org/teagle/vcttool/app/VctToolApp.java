@@ -49,7 +49,7 @@ public class VctToolApp {
 		this.config = VctToolApp.loadConfig(configFileName);
 	}
 
-	private void start() {
+	void start() {
 		this.view = new VctToolView();
 
 		final CommandAdapter c = new CommandAdapter(null) {
@@ -60,27 +60,22 @@ public class VctToolApp {
 		};
 
 		this.view.addCommandListener(c);
-
 		this.view.getShell().open();
 
 		final VctToolConfig vctConfig = this.doConfigDialog(false);
 		if (!vctConfig.isComplete())
-			return;
+			System.exit(1);
 
 		System.out.println("cerating root controller");
-
 		this.rootController = new RootController(this, this.view, vctConfig, c);
 
 		System.out.println("rootcontroller created");
-
 		this.rootController.init();
-
-		System.out.println();
-
+		
+		System.out.println("setting root controller");
 		c.setRootController(this.rootController);
-
+		
 		System.out.println("running view");
-
 		this.view.run();
 	}
 
