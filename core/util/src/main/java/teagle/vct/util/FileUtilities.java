@@ -1,10 +1,11 @@
 package teagle.vct.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 import org.apache.tools.ant.util.FileUtils;
 
@@ -27,16 +28,20 @@ public class FileUtilities {
 	
 	public static String readFileAsString(final InputStream inputStream)
 			throws IOException {
-		final Reader reader = new InputStreamReader(inputStream, "UTF-8");
-		return FileUtils.readFully(reader);
+		return FileUtils.readFully(new InputStreamReader(inputStream, "UTF-8"));
 	}
 
 	public static String readFileAsString(final String filename)
 			throws IOException {
 		return FileUtilities.readFileAsString(FileUtilities.getAsResourceStream(filename));
 	}
+	
+	public static String readFileAsString(File file) throws FileNotFoundException, IOException {
+		return readFileAsString(new FileInputStream(file));
+	}
 
 	private static String correctFilename(final String filename) {
 		return filename.startsWith("/") ? filename : "/" + filename;
 	}
+
 }
