@@ -40,6 +40,10 @@ Start for example the CLI:
 
     cd clients/cli
     ./src/main/scripts/startCLI.sh
+    
+Update the sources and libraries:
+
+    git pull && mvn -U install
 
 Continuous Integration
 ----------------------
@@ -91,11 +95,11 @@ Checkin new code
 -----------------
 
     cd path/to/project/root
-    mvn -T3 clean test
-    mvn deploy
+    git pull && mvn -U install
     git status
     git add path/to/new/files
     git commit -m "Fixed xyz" .
+    mvn deploy
     git push
 
 Create a new module
@@ -120,6 +124,9 @@ stubs and simple implementations as long as possible.
 
 Integrate into Eclipse
 ----------------------
+
+((maybe this should be changed / updated))
+
  * Eclipse: Install m2e plugin
  * CLI: mvn eclipse:eclipse
  * Eclipse: File > import > Git > Project from Git > Local >
