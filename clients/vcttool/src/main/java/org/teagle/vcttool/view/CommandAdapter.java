@@ -5,7 +5,7 @@ package org.teagle.vcttool.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
-import org.teagle.clients.cli.LegacyTeagleClient;
+import org.teagle.clients.api.LegacyTeagleClient;
 import org.teagle.vcttool.control.RootController;
 import org.teagle.vcttool.view.dialogs.InputDialog;
 import org.teagle.vcttool.view.dialogs.MessageDialog;

@@ -6,7 +6,7 @@ package org.teagle.vcttool.control;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.teagle.clients.cli.LegacyTeagleClient;
+import org.teagle.clients.api.LegacyTeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.view.BookingListener;
 import org.teagle.vcttool.view.CommandAdapter;

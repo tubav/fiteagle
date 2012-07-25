@@ -1,4 +1,4 @@
-package org.teagle.clients.cli;
+package org.teagle.clients.api;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,16 +6,18 @@ import java.util.List;
 import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.Vct;
 
-public class Printer {
+public class VctPrinter {
 
 	public static String toStringVct(final Vct vct) {
-		return vct.getCommonName() + " (" + vct.getState() + ")";
+		return "Common Name: " + vct.getCommonName() + "\n" +
+	           "State: " + vct.getState() + "\n" + 
+			   "User: " + vct.getPerson().getUserName() + "\n";
 	}
 
 	public static String vctsToString(final Collection<Vct> vcts) {
 		String result = "";
 		for (final Vct vct : vcts)
-			result += " * " + Printer.toStringVct(vct) + "\n";
+			result += " * " + VctPrinter.toStringVct(vct) + "\n";
 		return result;
 	}
 
@@ -23,7 +25,7 @@ public class Printer {
 			final List<ResourceInstance> resourceInstances) {
 		String result = "";
 		for (final ResourceInstance ri : resourceInstances)
-			result += " * " + Printer.toStringRI(ri) + "\n";
+			result += " * " + VctPrinter.toStringRI(ri) + "\n";
 		return result;
 	}
 

@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.teagle.clients.cli.LegacyTeagleClient;
+import org.teagle.clients.api.LegacyTeagleClient;
 
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.Person;

@@ -1,7 +1,8 @@
-package org.teagle.clients.cli;
+package org.teagle.clients.api;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -27,6 +28,7 @@ import teagle.vct.model.ResourceInstanceState.State;
 import teagle.vct.model.Vct;
 import teagle.vct.model.VctState;
 import teagle.vct.tssg.impl.TSSGVct;
+import teagle.vct.util.FileUtilities;
 import teagle.vct.util.OrchestrateReturn;
 import teagle.vct.util.Util;
 
@@ -34,6 +36,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
+
 
 public class LegacyTeagleClient {
 
@@ -82,6 +85,7 @@ public class LegacyTeagleClient {
 			conn.setRequestProperty("Content-Type", "text/plain");
 
 			final String req = this.genRequest(username, vctname, command);
+			Util.debug("Sending to reqproc: " + req);
 			conn.getOutputStream().write(req.getBytes());
 			result[0] = Util.readStream(conn.getInputStream());
 			Util.debug("Answer from reqproc: " + result[0]);
@@ -102,7 +106,7 @@ public class LegacyTeagleClient {
 	public void bookVct(Vct vct, final String[] answer) {
 		vct.setState(VctState.State.INPROGRESS_SYNC);
 		vct = (Vct) vct.persist();
-		System.out.println("DEBUG: Booking: " + LegacyTeagleClient.toString(vct));
+		Util.debug("Booking: " + LegacyTeagleClient.toString(vct));
 		this.execVctCommand(vct, answer, "setVct");
 	}
 
@@ -187,9 +191,15 @@ public class LegacyTeagleClient {
 			vct = (Vct) unmarshaller.unmarshal(new StringReader(vctString));
 		} catch (final JAXBException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return vct;
 	}
+	
+	public static Vct toVct(File file) throws FileNotFoundException, IOException {
+		return toVct(FileUtilities.readFileAsString(file));
+	}
+
 
 	public static OrchestrateReturn toResult(final String resultString) {
 		final XStream xs = LegacyTeagleClient.newXstream();

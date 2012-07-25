@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <vct>
-  <commonName>ptmOnfokus0_3</commonName>
+  <commonName>ptmOnfokus0_42</commonName>
   <description/>
   <providesResources>
     <resourceInstance id="1861">
@@ -86,7 +86,7 @@
       </parentInstance>
     </resourceInstance>
     <resourceInstance>
-      <commonName>fokusptm.probe-821358812</commonName>
+      <commonName>fokusptm.probe-821358816</commonName>
       <description>probe resource</description>
       <shared>false</shared>
       <resourceSpec id="1476">

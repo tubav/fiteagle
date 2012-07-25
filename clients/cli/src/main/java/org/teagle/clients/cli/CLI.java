@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.teagle.api.util.APIProperties;
+import org.teagle.clients.api.LegacyTeagleClient;
+import org.teagle.clients.api.VctPrinter;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -166,14 +168,14 @@ public class CLI {
 	@Parameters(separators = "=", commandDescription = "Lists booked VCTs")
 	private class CommandListVCTs {
 		public String exec() throws IOException {
-			return Printer.vctsToString(CLI.this.client.getVCTs());
+			return VctPrinter.vctsToString(CLI.this.client.getVCTs());
 		}
 	}
 
 	@Parameters(separators = "=", commandDescription = "Lists Resource Instances")
 	private class CommandListRIs {
 		public String exec() throws IOException {
-			return Printer.risToString(CLI.this.client.getResourceInstances());
+			return VctPrinter.risToString(CLI.this.client.getResourceInstances());
 		}
 	}
 }
