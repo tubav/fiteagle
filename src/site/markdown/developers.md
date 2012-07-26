@@ -8,8 +8,8 @@ General
  others via mvn/jars).
  * When changing or adding code the whole project MUST compile.
  * The unit tests MUST pass without any user configuration (e.g. use a
- stubs like an in-memory database if needed).
- * Code coverage goal: [80% and no
+ stubs like an in-memory database if needed and use EasyMock objects).
+ * Code coverage goal (see cobertura): [80% and no
  less!](http://googletesting.blogspot.de/2010/07/code-coverage-goal-80-and-no-less.html)
  * Applications SHOULD work out of the box without any user
  configuration (again use stubs by default and give the user the option
