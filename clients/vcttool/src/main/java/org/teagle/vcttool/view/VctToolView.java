@@ -38,7 +38,7 @@ import teagle.vct.model.Vct;
  * @author sim
  * 
  */
-public class VctToolView {
+public class VctToolView implements IVctToolView {
 
 	abstract class VctToolViewSelectionAdapter extends SelectionAdapter {
 		@Override
@@ -344,6 +344,9 @@ public class VctToolView {
 		return button;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#showDialog(org.teagle.vcttool.view.VctToolDialog)
+	 */
 	public void showDialog(final VctToolDialog d) {
 		final Shell dlg = d.getShell();
 		dlg.setParent(this.shell);
@@ -354,6 +357,9 @@ public class VctToolView {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#showMessage(java.lang.String, java.lang.String, int)
+	 */
 	public void showMessage(String msg, String title, int style) {
 		if (style < 0)
 			style = SWT.ICON_INFORMATION;
@@ -368,6 +374,9 @@ public class VctToolView {
 		box.open();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#showError(java.lang.String, java.lang.String)
+	 */
 	public void showError(final String msg, String title) {
 		if (title == null)
 			title = "Error";
@@ -375,10 +384,16 @@ public class VctToolView {
 		this.showMessage(msg, title, SWT.ICON_ERROR);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#showError(java.lang.String)
+	 */
 	public void showError(final String msg) {
 		this.showError(msg, null);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#showException(java.lang.Throwable, java.lang.String)
+	 */
 	public void showException(final Throwable t, final String title) {
 		t.printStackTrace();
 		this.showMessage(t.getClass().getSimpleName() + ": " + t.getMessage()
@@ -386,20 +401,32 @@ public class VctToolView {
 				| SWT.OK);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#showException(java.lang.Throwable)
+	 */
 	public void showException(final Throwable t) {
 		this.showException(t, "An error has occured.");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#run()
+	 */
 	public void run() {
 		while (!this.shell.isDisposed())
 			if (!this.shell.getDisplay().readAndDispatch())
 				this.shell.getDisplay().sleep();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#close()
+	 */
 	public void close() {
 		this.shell.close();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#getShell()
+	 */
 	public Shell getShell() {
 		return this.shell;
 	}
@@ -526,26 +553,44 @@ public class VctToolView {
 	 * 
 	 * return menuHelp; }
 	 */
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#addCommandListener(org.teagle.vcttool.view.CommandListener)
+	 */
 	public void addCommandListener(final CommandListener listener) {
 		this.commandListeners.add(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#removeCommandListener(org.teagle.vcttool.view.CommandListener)
+	 */
 	public void removeCommandListener(final CommandListener listener) {
 		this.commandListeners.remove(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#addBookingListener(org.teagle.vcttool.view.BookingListener)
+	 */
 	public void addBookingListener(final BookingListener listener) {
 		this.bookingListeners.add(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#removeBookingListener(org.teagle.vcttool.view.BookingListener)
+	 */
 	public void removeBookingListener(final BookingListener listener) {
 		this.bookingListeners.remove(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#getVctPane()
+	 */
 	public CTabFolder getVctPane() {
 		return this.tabFolderVcts;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#addVctView(org.teagle.vcttool.view.VctView, org.teagle.vcttool.control.VctController, java.lang.String)
+	 */
 	public void addVctView(final VctView vctView, final VctController data,
 			final String name) {
 		final CTabItem tabItem = new CTabItem(this.tabFolderVcts, SWT.CLOSE);
@@ -557,10 +602,16 @@ public class VctToolView {
 		this.tabFolderVcts.setSelection(tabItem);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#getSelectionPane()
+	 */
 	public CTabFolder getSelectionPane() {
 		return this.tabFolderSelection;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#addSelectionControl(java.lang.String, org.eclipse.swt.widgets.Control, int)
+	 */
 	public void addSelectionControl(final String name, final Control control,
 			final int i) {
 
@@ -726,6 +777,9 @@ public class VctToolView {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.teagle.vcttool.view.IVctToolView#setLifecycleButtonsEnabled(boolean)
+	 */
 	public void setLifecycleButtonsEnabled(final boolean bool) {
 		this.buttonStart.setEnabled(bool);
 		this.buttonStop.setEnabled(bool);

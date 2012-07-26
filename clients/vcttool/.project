@@ -2,12 +2,7 @@
 <projectDescription>
   <name>vcttool</name>
   <comment>FITeagle | Future Internet Testbed Experimentation Framework. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
-  <projects>
-    <project>model</project>
-    <project>util</project>
-    <project>repository</project>
-    <project>api</project>
-  </projects>
+  <projects/>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

@@ -17,15 +17,15 @@ public interface CommandListener {
 
 	public void onOpen();
 
-	public boolean onSave(VctToolView vctView, Vct data);
+	public boolean onSave(IVctToolView vctView, Vct data);
 
-	public boolean onSaveAs(VctToolView vctView, Vct data);
+	public boolean onSaveAs(IVctToolView vctView, Vct data);
 
 	public void onExit();
 
 	public void onPreferences();
 
-	public void onDelete(VctToolView vctView, Vct data, VctView view,
+	public void onDelete(IVctToolView vctView, Vct data, VctView view,
 			CTabItem tab);
 
 	public void onRefresh();

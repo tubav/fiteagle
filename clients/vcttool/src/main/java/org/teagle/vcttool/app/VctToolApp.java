@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.teagle.vcttool.control.RootController;
 import org.teagle.vcttool.control.VctToolConfig;
 import org.teagle.vcttool.view.CommandAdapter;
+import org.teagle.vcttool.view.IVctToolView;
 import org.teagle.vcttool.view.VctToolView;
 import org.teagle.vcttool.view.dialogs.PreferencesDialog;
 
@@ -43,15 +44,14 @@ public class VctToolApp {
 	private RootController rootController;
 
 	private final XMLConfiguration config;
-	private VctToolView view;
+	private IVctToolView view;
 
 	public VctToolApp(final String configFileName) {
 		this.config = VctToolApp.loadConfig(configFileName);
 	}
 
-	void start() {
-		this.view = new VctToolView();
-
+	public void start(IVctToolView view) {
+		this.view = view;
 		final CommandAdapter c = new CommandAdapter(null) {
 			@Override
 			public void onPreferences() {
@@ -77,6 +77,10 @@ public class VctToolApp {
 		
 		System.out.println("running view");
 		this.view.run();
+	}
+	
+	private void start() {
+		start(new VctToolView());
 	}
 
 	private VctToolConfig doConfigDialog(final boolean force) {

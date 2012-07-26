@@ -39,7 +39,7 @@ public class CommandAdapter implements CommandListener {
 	 * 
 	 * @see org.teagle.vcttool.view.CommandListener#onSave()
 	 */
-	public boolean onSave(final VctToolView vctView, Vct data) {
+	public boolean onSave(final IVctToolView vctView, Vct data) {
 		if (data.isModified()) {
 			if (!data.isPersisted())
 				return this.onSaveAs(vctView, data);
@@ -59,7 +59,7 @@ public class CommandAdapter implements CommandListener {
 	 * 
 	 * @see org.teagle.vcttool.view.CommandListener#onSaveAs()
 	 */
-	public boolean onSaveAs(final VctToolView vctView, Vct data) {
+	public boolean onSaveAs(final IVctToolView vctView, Vct data) {
 
 		/*
 		 * EvaluationHandler handler = new EvaluationHandler(); if
@@ -119,7 +119,7 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	// @Override
-	public void onDelete(final VctToolView vctToolView, final Vct data,
+	public void onDelete(final IVctToolView vctToolView, final Vct data,
 			final VctView view, final CTabItem tab) {
 		final MessageDialog d = new MessageDialog(vctToolView.getShell(),
 				"Are you sure? This can not be undone.", SWT.ICON_QUESTION
@@ -148,7 +148,7 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	// @Override
-	public void onStart(final VctToolView vctToolView, final Vct data,
+	public void onStart(final IVctToolView vctToolView, final Vct data,
 			final VctView view, final CTabItem tab) {
 		new MessageDialog(vctToolView.getShell(), "To be implemented.",
 				SWT.ICON_INFORMATION);
@@ -163,7 +163,7 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	// @Override
-	public void onStop(final VctToolView vctToolView, final Vct data,
+	public void onStop(final IVctToolView vctToolView, final Vct data,
 			final VctView view, final CTabItem tab) {
 		new MessageDialog(vctToolView.getShell(), "To be implemented.",
 				SWT.ICON_INFORMATION);

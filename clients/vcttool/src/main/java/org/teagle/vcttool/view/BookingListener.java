@@ -19,10 +19,10 @@ public interface BookingListener {
 
 	public void onCloneUnprovisioned(Vct data);
 
-	void onBook(VctToolView vctView, Vct data);
+	void onBook(IVctToolView vctView, Vct data);
 
-	public void onStart(VctToolView vctView, Vct data);
+	public void onStart(IVctToolView vctView, Vct data);
 
-	public void onStop(VctToolView vctToolView, Vct data);
+	public void onStop(IVctToolView vctToolView, Vct data);
 
 }

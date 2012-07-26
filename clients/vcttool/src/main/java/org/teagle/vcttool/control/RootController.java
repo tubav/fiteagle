@@ -8,7 +8,7 @@ import org.teagle.vcttool.app.ProgressException;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.app.VctToolApp;
 import org.teagle.vcttool.view.CommandAdapter;
-import org.teagle.vcttool.view.VctToolView;
+import org.teagle.vcttool.view.IVctToolView;
 import org.teagle.vcttool.view.VctView;
 
 import teagle.vct.model.ModelManager;
@@ -23,7 +23,7 @@ public class RootController {
 
 	private final VctToolConfig config;
 
-	private final VctToolView view;
+	private final IVctToolView view;
 
 	private ResourceSpecSelectionController resourceSpecSelectionController;
 	private VctSelectionController vctSelectionController;
@@ -38,7 +38,7 @@ public class RootController {
 		return this.config;
 	}
 
-	public RootController(final VctToolApp app, final VctToolView toolView,
+	public RootController(final VctToolApp app, final IVctToolView toolView,
 			final VctToolConfig config, final CommandAdapter ca) {
 		this.view = toolView;
 		this.config = config;
@@ -69,7 +69,7 @@ public class RootController {
 			}
 
 			@Override
-			public boolean onSave(final VctToolView vctView, final Vct data) {
+			public boolean onSave(final IVctToolView vctView, final Vct data) {
 				// VctController controller =
 				// (VctController)view.getVctPane().getSelection().getData();
 				// controller.save();
@@ -77,12 +77,12 @@ public class RootController {
 			}
 
 			@Override
-			public boolean onSaveAs(final VctToolView vctView, final Vct data) {
+			public boolean onSaveAs(final IVctToolView vctView, final Vct data) {
 				return false;
 			}
 
 			@Override
-			public void onDelete(final VctToolView vctView, final Vct data,
+			public void onDelete(final IVctToolView vctView, final Vct data,
 					final VctView view, final CTabItem tab) {
 
 			}
@@ -145,7 +145,7 @@ public class RootController {
 		this.resourceInstanceSelectionController.reload();
 	}
 
-	public VctToolView getView() {
+	public IVctToolView getView() {
 		return this.view;
 	}
 

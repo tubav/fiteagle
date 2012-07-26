@@ -10,7 +10,7 @@ import org.teagle.clients.api.LegacyTeagleClient;
 import org.teagle.vcttool.app.ProgressJob;
 import org.teagle.vcttool.view.BookingListener;
 import org.teagle.vcttool.view.CommandAdapter;
-import org.teagle.vcttool.view.VctToolView;
+import org.teagle.vcttool.view.IVctToolView;
 import org.teagle.vcttool.view.dialogs.BookingResultDialog;
 
 import teagle.vct.model.Configuration;
@@ -33,7 +33,7 @@ public class BookingController implements BookingListener {
 	private XStream xs;
 	private LegacyTeagleClient client;
 
-	private void prepareVCTcommand(final VctToolView vctView, final Vct data,
+	private void prepareVCTcommand(final IVctToolView vctView, final Vct data,
 			final String commandStopVCT, final String textStopVCT) {
 		final String[] answer = { null };
 		this.controller.handleProgressJob(new ProgressJob() {
@@ -70,7 +70,7 @@ public class BookingController implements BookingListener {
 		this.xs.processAnnotations(OrchestrateReturn.class);
 	}
 
-	public void onBook(final VctToolView vctView, final Vct data) {
+	public void onBook(final IVctToolView vctView, final Vct data) {
 		System.out.println("DEBUG: Booking: " + LegacyTeagleClient.toString(data));
 
 		if (data.isModified() && !this.ca.onSave(vctView, data))
@@ -99,7 +99,7 @@ public class BookingController implements BookingListener {
 	}
 
 	private void showRequestProcessorResult(final String answer,
-			final VctToolView view) {
+			final IVctToolView view) {
 		final OrchestrateReturn or = (OrchestrateReturn) this.xs
 				.fromXML(answer);
 		System.out.println(or.message);
@@ -110,7 +110,7 @@ public class BookingController implements BookingListener {
 		this.updateView(view, or.status);
 	}
 
-	private void updateView(final VctToolView view, final int status) {
+	private void updateView(final IVctToolView view, final int status) {
 		if (BookingController.STATUS_OK == status)
 			view.setLifecycleButtonsEnabled(true);
 	}
@@ -201,7 +201,7 @@ public class BookingController implements BookingListener {
 		this.controller.addVct(newVctController);
 	}
 
-	public void onStop(final VctToolView vctView, final Vct data) {
+	public void onStop(final IVctToolView vctView, final Vct data) {
 		System.out.println("do_stop");
 		final String commandStopVCT = "stopVct";
 		final String textStopVCT = "stopping in progress...";
@@ -209,7 +209,7 @@ public class BookingController implements BookingListener {
 		this.prepareVCTcommand(vctView, data, commandStopVCT, textStopVCT);
 	}
 
-	public void onStart(final VctToolView vctView, final Vct data) {
+	public void onStart(final IVctToolView vctView, final Vct data) {
 		System.out.println("do_start");
 		final String commandStopVCT = "startVct";
 		final String textStopVCT = "start in progress...";

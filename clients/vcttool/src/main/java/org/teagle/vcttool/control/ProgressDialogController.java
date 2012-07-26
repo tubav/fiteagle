@@ -3,8 +3,8 @@ package org.teagle.vcttool.control;
 import org.eclipse.swt.widgets.Display;
 import org.teagle.vcttool.app.ProgressException;
 import org.teagle.vcttool.app.ProgressJob;
+import org.teagle.vcttool.view.IVctToolView;
 import org.teagle.vcttool.view.ProgressDialogView;
-import org.teagle.vcttool.view.VctToolView;
 
 public class ProgressDialogController {
 	private final Display display;
@@ -12,7 +12,7 @@ public class ProgressDialogController {
 	private boolean jobReady;
 	private ProgressException jobException;
 
-	public ProgressDialogController(final VctToolView parent, final String text) {
+	public ProgressDialogController(final IVctToolView parent, final String text) {
 		this.display = parent.getShell().getDisplay();
 		this.dlg = new ProgressDialogView(parent.getShell(), text);
 	}
