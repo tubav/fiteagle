@@ -46,6 +46,13 @@ public class LegacyTeagleClient {
 	private OrchestrateReturn result = new OrchestrateReturn(-1,
 			"not initialized");
 
+	public LegacyTeagleClient(final String username, 
+			final URL reqUrl, final ModelManager repoClient) {
+		this.reqProcUrl = reqUrl;
+		this.repoClient = repoClient;
+		this.username = username;
+	}
+	
 	public LegacyTeagleClient(final String username, final String password,
 			final URL reqUrl, final URL repoUrl) {
 		final boolean doPrefetching = false;
