@@ -47,7 +47,7 @@ public class LegacyTeagleClientTest {
 	}
 
 	//@Test
-	public void testFoo() throws IOException {
+	public void testBookingVct() throws IOException {
 		this.client.bookVct(new File("src/test/resources/vcts/simplevct.xml"));
 		OrchestrateReturn result = this.client.getResult();
 		Assert.assertEquals(0, result.status);

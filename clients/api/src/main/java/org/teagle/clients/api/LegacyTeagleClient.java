@@ -191,16 +191,9 @@ public class LegacyTeagleClient {
 	}
 
 	public static Vct toVct(final String vctString) {
-		Vct vct = null;
-		try {
-			final Unmarshaller unmarshaller = JAXBContext.newInstance(
-					TSSGVct.class).createUnmarshaller();
-			vct = (Vct) unmarshaller.unmarshal(new StringReader(vctString));
-		} catch (final JAXBException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		return vct;
+		XStream xs = newXstream();
+		xs.alias("vct", TSSGVct.class);
+		return (Vct) xs.fromXML(vctString); 
 	}
 	
 	public static Vct toVct(File file) throws FileNotFoundException, IOException {
