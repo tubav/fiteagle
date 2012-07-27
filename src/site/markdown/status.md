@@ -7,6 +7,7 @@ Current Implementation Status
     [WORKS   ] FITeagle :: Clients :: Repository
     [WORKS   ] FITeagle :: Core :: Model
     [WORKS   ] FITeagle :: Core :: Util
+    [COMPILES] FITeagle :: Core :: Framework (dummy ReqProc for now)
     [COMPILES] FITeagle :: Core :: Request Processor
     [COMPILES] FITeagle :: Core :: Gateway
     [COMPILES] FITeagle :: PTM
@@ -21,4 +22,3 @@ Current Implementation Status
     [TOBECONVERTED] Python :: Orchestration Engine (~360 lines of code)
     [TOBECONVERTED] Python :: Gateway (~150 lines of code)
     [TOBECONVERTED] Python :: ReqProc (~180 lines of code)
-
