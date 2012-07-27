@@ -19,7 +19,6 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.RepoClientConfig;
@@ -91,7 +90,7 @@ public class LegacyTeagleClient {
 			conn.setDoOutput(true);
 			conn.setRequestProperty("Content-Type", "text/plain");
 
-			final String req = this.genRequest(username, vctname, command);
+			final String req = LegacyTeagleClient.genRequest(username, vctname, command);
 			Util.debug("Sending to reqproc: " + req);
 			conn.getOutputStream().write(req.getBytes());
 			result[0] = Util.readStream(conn.getInputStream());
@@ -102,7 +101,7 @@ public class LegacyTeagleClient {
 		}
 	}
 
-	private String genRequest(final String username, final String vctname,
+	public static String genRequest(final String username, final String vctname,
 			final String command) {
 		final String req = "<string-array><string>VctRegistry</string><string>"
 				+ command + "</string><string>" + username
