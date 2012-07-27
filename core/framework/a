@@ -1,0 +1,145 @@
+<return>
+  <status>0</status>
+  <message>success</message>
+  <logbook>
+    <name>operation startVct with request: vct=4a user=root</name>
+    <component>Request Processor</component>
+    <entries>
+      <logentry>Entering Request Processor</logentry>
+      <logentry>refreshing cache</logentry>
+      <logentry>full refresh finished in 0.260139s (76 entries)</logentry>
+      <logentry>Processing operation startVct with request: vct=4a user=root</logentry>
+      <logentry>POST: /teagleoe/startVct ({'Connection': 'Keep-Alive', 'Content-Type': 'text/plain', 'Accept-Encoding': 'identity', 'Accept': '*/*'})
+&lt;?xml version="1.0" ?&gt;
+&lt;testbed&gt;&lt;name&gt;4a&lt;/name&gt;&lt;state&gt;BOOKED&lt;/state&gt;&lt;components&gt;&lt;SimpleTest&gt;&lt;configuration&gt;&lt;identifier type="string"&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;/configuration&gt;&lt;identifier&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;state&gt;PROVISIONED&lt;/state&gt;&lt;parent/&gt;&lt;id&gt;testptm./simpletest-2&lt;/id&gt;&lt;/SimpleTest&gt;&lt;/components&gt;&lt;connections/&gt;&lt;/testbed&gt;</logentry>
+      <logentry>POST /teagleoe/startVct result: 200</logentry>
+      <logentry>Parsing input: &lt;return&gt;
+  &lt;status&gt;0&lt;/status&gt;
+  &lt;message&gt;success&lt;/message&gt;
+  &lt;logbook&gt;
+    &lt;name&gt;Orchestration&lt;/name&gt;
+    &lt;component&gt;Orchestration Engine&lt;/component&gt;
+    &lt;entries&gt;
+      &lt;logentry&gt;Entering Orchestration&lt;/logentry&gt;
+      &lt;logentry&gt;.resources. not found in Id. Will try to go on with testptm./simpletest-2&lt;/logentry&gt;
+      &lt;logentry&gt;not . found in tagName SimpleTest&lt;/logentry&gt;
+      &lt;logentry&gt;testbed&lt;/logentry&gt;
+      &lt;logentry&gt;components&lt;/logentry&gt;
+      &lt;logentry&gt;  SimpleTest id=testptm./simpletest-2&lt;/logentry&gt;
+      &lt;logentry&gt;connections&lt;/logentry&gt;
+      &lt;logentry&gt;dependencies&lt;/logentry&gt;
+      &lt;logentry&gt;  SimpleTest id=testptm./simpletest-2 dependsOn: &lt;/logentry&gt;
+      &lt;logentry&gt;sorted components&lt;/logentry&gt;
+      &lt;logentry&gt;  SimpleTest id=testptm./simpletest-2&lt;/logentry&gt;
+      &lt;logentry&gt;Orchestrating...&lt;/logentry&gt;
+      &lt;logentry&gt;considering instance for starting: id=testptm./simpletest-2 config={'identifier': u'testptm./simpletest-2'}&lt;/logentry&gt;
+      &lt;logentry&gt;GET: /teaglegw/testptm/testptm./simpletest-2 ({'Connection': 'Keep-Alive', 'Content-Type': 'text/xml', 'Accept-Encoding': 'identity', 'Accept': '*/*'})&lt;/logentry&gt;
+      &lt;logentry&gt;GET /teaglegw/testptm/testptm./simpletest-2 result: 200&lt;/logentry&gt;
+      &lt;logentry&gt;Unserializing: &amp;lt;?xml version="1.0" ?&amp;gt;
+&amp;lt;simpletest&amp;gt;&amp;lt;configuration&amp;gt;&amp;lt;identifier type="string"&amp;gt;testptm./simpletest-2&amp;lt;/identifier&amp;gt;&amp;lt;identifier type="string"&amp;gt;testptm./simpletest-2&amp;lt;/identifier&amp;gt;&amp;lt;/configuration&amp;gt;&amp;lt;/simpletest&amp;gt;&lt;/logentry&gt;
+      &lt;logentry&gt;Creating T1Entity: testptm./simpletest-2 {'identifier': u'testptm./simpletest-2'}&lt;/logentry&gt;
+      &lt;logentry&gt;PUT: /teaglegw/testptm/testptm./simpletest-2#start ({'Connection': 'Keep-Alive', 'Content-Type': 'text/xml', 'Accept-Encoding': 'identity', 'Accept': '*/*'})
+&amp;lt;?xml version="1.0" encoding="utf-8"?&amp;gt;
+&amp;lt;simpletest action="methodcall"&amp;gt;&amp;lt;configuration&amp;gt;&amp;lt;identifier type="string"&amp;gt;testptm./simpletest-2&amp;lt;/identifier&amp;gt;&amp;lt;/configuration&amp;gt;&amp;lt;/simpletest&amp;gt;&lt;/logentry&gt;
+      &lt;logentry&gt;PUT /teaglegw/testptm/testptm./simpletest-2#start result: 200&lt;/logentry&gt;
+      &lt;logentry&gt;Unserializing: &amp;lt;?xml version="1.0" ?&amp;gt;
+&amp;lt;simpletest&amp;gt;&amp;lt;configuration&amp;gt;&amp;lt;identifier type="string"&amp;gt;testptm./simpletest-2&amp;lt;/identifier&amp;gt;&amp;lt;identifier type="string"&amp;gt;testptm./simpletest-2&amp;lt;/identifier&amp;gt;&amp;lt;/configuration&amp;gt;&amp;lt;/simpletest&amp;gt;&lt;/logentry&gt;
+      &lt;logentry&gt;Creating T1Entity: testptm./simpletest-2 {'identifier': u'testptm./simpletest-2'}&lt;/logentry&gt;
+      &lt;logentry&gt;Finished processing testptm./simpletest-2&lt;/logentry&gt;
+      &lt;logentry&gt;Orchestration finished.&lt;/logentry&gt;
+      &lt;logentry&gt;Orchestration finished&lt;/logentry&gt;
+    &lt;/entries&gt;
+  &lt;/logbook&gt;
+  &lt;log&gt;&lt;/log&gt;
+  &lt;result&gt;
+    &lt;idmapping&gt;
+      &lt;mapping designid="testptm./simpletest-2" runtimeid="testptm./simpletest-2"/&gt;
+    &lt;/idmapping&gt;
+  &lt;/result&gt;
+&lt;/return&gt;
+</logentry>
+      <logbook>
+        <name>Orchestration</name>
+        <component>Orchestration Engine</component>
+        <entries>
+          <logentry>Entering Orchestration</logentry>
+          <logentry>.resources. not found in Id. Will try to go on with testptm./simpletest-2</logentry>
+          <logentry>not . found in tagName SimpleTest</logentry>
+          <logentry>testbed</logentry>
+          <logentry>components</logentry>
+          <logentry>  SimpleTest id=testptm./simpletest-2</logentry>
+          <logentry>connections</logentry>
+          <logentry>dependencies</logentry>
+          <logentry>  SimpleTest id=testptm./simpletest-2 dependsOn: </logentry>
+          <logentry>sorted components</logentry>
+          <logentry>  SimpleTest id=testptm./simpletest-2</logentry>
+          <logentry>Orchestrating...</logentry>
+          <logentry>considering instance for starting: id=testptm./simpletest-2 config={'identifier': u'testptm./simpletest-2'}</logentry>
+          <logentry>GET: /teaglegw/testptm/testptm./simpletest-2 ({'Connection': 'Keep-Alive', 'Content-Type': 'text/xml', 'Accept-Encoding': 'identity', 'Accept': '*/*'})</logentry>
+          <logentry>GET /teaglegw/testptm/testptm./simpletest-2 result: 200</logentry>
+          <logentry>Unserializing: &lt;?xml version="1.0" ?&gt;
+&lt;simpletest&gt;&lt;configuration&gt;&lt;identifier type="string"&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;identifier type="string"&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;/configuration&gt;&lt;/simpletest&gt;</logentry>
+          <logentry>Creating T1Entity: testptm./simpletest-2 {'identifier': u'testptm./simpletest-2'}</logentry>
+          <logentry>PUT: /teaglegw/testptm/testptm./simpletest-2#start ({'Connection': 'Keep-Alive', 'Content-Type': 'text/xml', 'Accept-Encoding': 'identity', 'Accept': '*/*'})
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;simpletest action="methodcall"&gt;&lt;configuration&gt;&lt;identifier type="string"&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;/configuration&gt;&lt;/simpletest&gt;</logentry>
+          <logentry>PUT /teaglegw/testptm/testptm./simpletest-2#start result: 200</logentry>
+          <logentry>Unserializing: &lt;?xml version="1.0" ?&gt;
+&lt;simpletest&gt;&lt;configuration&gt;&lt;identifier type="string"&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;identifier type="string"&gt;testptm./simpletest-2&lt;/identifier&gt;&lt;/configuration&gt;&lt;/simpletest&gt;</logentry>
+          <logentry>Creating T1Entity: testptm./simpletest-2 {'identifier': u'testptm./simpletest-2'}</logentry>
+          <logentry>Finished processing testptm./simpletest-2</logentry>
+          <logentry>Orchestration finished.</logentry>
+          <logentry>Orchestration finished</logentry>
+        </entries>
+      </logbook>
+      <logentry>Orchestration succeeded</logentry>
+      <logentry>persist: set([Vct-13])</logentry>
+      <logentry>need persisting: [ResourceInstance-45, Vct-13]</logentry>
+      <logentry>executing persist for testptm./simpletest-2</logentry>
+      <logentry>Updating: testptm./simpletest-2</logentry>
+      <logentry>PUT: /repository/rest/resourceInstance/45 ({'Connection': 'Keep-Alive', 'Content-Type': 'text/xml', 'Accept-Encoding': 'identity', 'Accept': '*/*'})
+&lt;resourceInstanceInstance&gt;
+  &lt;resourceSpec&gt;
+    &lt;resourceSpec&gt;15&lt;/resourceSpec&gt;
+  &lt;/resourceSpec&gt;
+  &lt;description&gt;simpletest&lt;/description&gt;
+  &lt;configurationData/&gt;
+  &lt;commonName&gt;testptm./simpletest-2&lt;/commonName&gt;
+  &lt;state.id&gt;
+    &lt;resourceInstanceState&gt;4&lt;/resourceInstanceState&gt;
+  &lt;/state.id&gt;
+  &lt;parentInstance/&gt;
+&lt;/resourceInstanceInstance&gt;
+</logentry>
+      <logentry>PUT /repository/rest/resourceInstance/45 result: 200</logentry>
+      <logentry>executing persist for 4a</logentry>
+      <logentry>Updating: 4a</logentry>
+      <logentry>PUT: /repository/rest/vct/13 ({'Connection': 'Keep-Alive', 'Content-Type': 'text/xml', 'Accept-Encoding': 'identity', 'Accept': '*/*'})
+&lt;vctInstance&gt;
+  &lt;providesResources&gt;
+    &lt;resourceInstance&gt;45&lt;/resourceInstance&gt;
+  &lt;/providesResources&gt;
+  &lt;description/&gt;
+  &lt;commonName&gt;4a&lt;/commonName&gt;
+  &lt;state.id&gt;
+    &lt;vctState&gt;10&lt;/vctState&gt;
+  &lt;/state.id&gt;
+  &lt;user&gt;
+    &lt;person&gt;1&lt;/person&gt;
+  &lt;/user&gt;
+  &lt;shared&gt;False&lt;/shared&gt;
+&lt;/vctInstance&gt;
+</logentry>
+      <logentry>PUT /repository/rest/vct/13 result: 200</logentry>
+      <logentry>refreshing cache</logentry>
+      <logentry>full refresh finished in 0.208841s (76 entries)</logentry>
+      <logentry>Request Processor finished</logentry>
+    </entries>
+  </logbook>
+  <log></log>
+  <result>
+    <idmapping>
+      <mapping designid="testptm./simpletest-2" runtimeid="testptm./simpletest-2"/>
+    </idmapping>
+  </result>
+</return>

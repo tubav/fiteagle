@@ -1,0 +1,18 @@
+<return>
+  <status>0</status>
+  <message>From Java RP</message>
+  <log>Some log</log>
+  <logbook>
+    <outer-class defined-in="teagle.vct.util.OrchestrateReturn$AbstractLogEntry" reference="../.."/>
+    <name>Da Java RP</name>
+    <component>Java RP</component>
+    <entries>
+      <logentry>entry</logentry>
+    </entries>
+    <outer-class reference="../.."/>
+  </logbook>
+  <result>
+    <idmapping/>
+    <outer-class reference="../.."/>
+  </result>
+</return>
