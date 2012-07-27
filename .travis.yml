@@ -3,9 +3,5 @@ jdk:
   - openjdk6
 notifications:
   email:
-    recipients:
-      - alexander.willner@tu-berlin.de 
-      - teagle@av.tu-berlin.de
-    on_success: always
-    on_failure: always
-
+    - alexander.willner@tu-berlin.de
+    - teagle@fokus.fraunhofer.de
