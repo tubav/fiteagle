@@ -5,7 +5,7 @@
   <name>FITeagle :: Core :: Framework</name>
   <groupId>org.fiteagle.core</groupId>
   <artifactId>framework</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
  
   <parent>
     <groupId>org.fiteagle</groupId>
@@ -41,18 +41,13 @@
   		<version>3.0-alpha-1</version>
   	</dependency>
   </dependencies>
-<build>
-<plugins>
-<plugin>
+  <build>
+    <plugins>
+      <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.10</version>
-        <configuration>
-                <scanIntervalSeconds>10</scanIntervalSeconds>
-                <stopKey>foo</stopKey>
-                <stopPort>9999</stopPort>
-        </configuration>
-</plugin>
-</plugins>
-</build>
+      </plugin>
+    </plugins>
+  </build>
 </project>
