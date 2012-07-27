@@ -125,12 +125,7 @@ stubs and simple implementations as long as possible.
 Integrate into Eclipse
 ----------------------
 
-((maybe this should be changed / updated))
-
- * Eclipse: Install m2e plugin
- * CLI: mvn eclipse:eclipse
- * Eclipse: File > import > Git > Project from Git > Local >
-   ((add your local clone repo)) > Import existing projects > 
- * CLI: mvn eclipse:clean
- * Eclipse: right click on the project > Configure > Convert to Maven
- * Repeat this with all modules in order to be able to refactor code easily
+ * Install m2e plugin
+ * File > Import... > Maven > Existing Maven Projects > Browse for
+   Root Directory > Select all > Finish
+ * Select all > Team > Share > Git
