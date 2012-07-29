@@ -287,7 +287,7 @@ public class VctToolView implements IVctToolView {
 	private void initShell() {
 		final Display display = new Display();
 		this.shell = new Shell(display);
-		this.shell.setText("OpenTeagle Controller | VCTTool");
+		this.shell.setText("FITeagle VCTTool | Future Internet Technology Experimentation and Management Framework");
 		this.shell.setSize(900, 500);
 
 		final GridLayout layout = new GridLayout(1, false);

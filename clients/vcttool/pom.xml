@@ -7,12 +7,12 @@
 	<groupId>org.fiteagle.clients</groupId>
 	<artifactId>vcttool</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2</version>
+	<version>0.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.fiteagle</groupId>
 		<artifactId>clients</artifactId>
-		<version>0.1</version>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -92,23 +92,23 @@
 		<dependency>
 			<groupId>org.fiteagle.core</groupId>
 			<artifactId>model</artifactId>
-			<version>0.1</version>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fiteagle.core</groupId>
 			<artifactId>util</artifactId>
-			<version>0.1</version>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fiteagle.clients</groupId>
 			<artifactId>repository</artifactId>
-			<version>0.1</version>
+			<version>0.1-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.fiteagle.clients</groupId>
 			<artifactId>api</artifactId>
-			<version>0.1</version>
+			<version>0.1-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>

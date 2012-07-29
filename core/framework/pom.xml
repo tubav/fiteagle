@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.fiteagle</groupId>
     <artifactId>core</artifactId>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
   </parent>
 
   <repositories>
@@ -28,12 +28,12 @@
   	<dependency>
   		<groupId>org.fiteagle.clients</groupId>
   		<artifactId>api</artifactId>
-  		<version>0.1</version>
+  		<version>0.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.fiteagle.core</groupId>
   		<artifactId>util</artifactId>
-  		<version>0.1</version>
+  		<version>0.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>javax.servlet</groupId>
