@@ -19,6 +19,7 @@
       <item name="Introduction" href="intro.html"/>
       <item name="For Developers" href="developers.html"/>
       <item name="Current Status" href="status.html"/>
+      <item name="FAQ" href="faq.html"/>
     </menu>
 
     <menu ref="reports"/>
