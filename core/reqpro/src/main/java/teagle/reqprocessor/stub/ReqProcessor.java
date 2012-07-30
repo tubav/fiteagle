@@ -89,13 +89,13 @@ public class ReqProcessor extends HttpServlet {
 			
 			// load configuration during startup
 			properties = new Properties();
-			InputStream stream = Thread.currentThread().getContextClassLoader()
+			final InputStream stream = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream("reqprocessor.properties");
 			if (stream==null)
 				throw new ServletException("Could not open resource reqprocessor.properties");
 			properties.load(stream);
 			
-			String library = properties.getProperty("reqprocessor.library");
+			final String library = properties.getProperty("reqprocessor.library");
 			if (library==null)
 				throw new ServletException("could not read property reqprocessor.library");	
 			
@@ -113,7 +113,7 @@ public class ReqProcessor extends HttpServlet {
 			{
 				CachingTSSGClient.config(new URL(repoUrlString));
 			}
-			catch (MalformedURLException e)
+			catch (final MalformedURLException e)
 			{
 				throw new ServletException("repo.url (" + repoUrlString + ") is not a valid url", e);
 			}
@@ -134,33 +134,33 @@ public class ReqProcessor extends HttpServlet {
 			
 			validateActions = new ValidateActions(properties.getProperty("pe.endpoint"));
 			
-		} catch (IOException e) { throw new ServletException(e);
-		} catch (RepositoryException e) { throw new ServletException(e);
-		} catch (ParserConfigurationException e) { throw new ServletException(e);
+		} catch (final IOException e) { throw new ServletException(e);
+		} catch (final RepositoryException e) { throw new ServletException(e);
+		} catch (final ParserConfigurationException e) { throw new ServletException(e);
 		}
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException { 
 		resp.getWriter().write("Request Processor Prototype");
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	protected void doPost(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
 			// parse the incoming request (a list of strings) using xstream
-			String [] args = (String[])xs.fromXML(req.getInputStream());
+			final String [] args = (String[])xs.fromXML(req.getInputStream());
 			if (args.length < 2) 
 				throw new ServletException("operation missing");
 
-			String registry  = args[0];
-			String operation = args[1];
+			final String registry  = args[0];
+			final String operation = args[1];
 
 			Util.info("registry=" + registry + " operation=" + operation);
 
-			String [] opArgs = new String[args.length - 2];
+			final String [] opArgs = new String[args.length - 2];
 			for (int i=2; i<args.length; i++) opArgs[i-2] = args[i];
 			
 			// process the operations we're interested in 
@@ -168,7 +168,7 @@ public class ReqProcessor extends HttpServlet {
 				if (operation.equals("setVct") && opArgs.length == 2){
 					CachingTSSGClient.getInstance().clearCache();
 					Util.info("Start setVCT");
-					String response = setVct(opArgs[0], opArgs[1]);
+					final String response = setVct(opArgs[0], opArgs[1]);
 					Util.info("Done. Writing response: " + response);
 					resp.getOutputStream().write(response.getBytes());
 					Util.info("Wrote response. Bytes: " + response.length());
@@ -179,21 +179,21 @@ public class ReqProcessor extends HttpServlet {
 					throw new ServletException("Illegal operation");
 			//}
 		} 
-		catch (RepositoryException e) 
+		catch (final RepositoryException e) 
 		{ 
 			Util.error("RepositoryException: " + e.toString());
 			e.printStackTrace(); 
 			Util.error("throwing: " + e.toString());
 			throw new ServletException(e);
 		} 
-		catch (ServletException e) 
+		catch (final ServletException e) 
 		{ 
 			Util.error("ServletException: " + e.toString());
 			e.printStackTrace(); 
 			Util.error("throwing: " + e.toString());
 			throw e;
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			Util.error("RepositoryException: " + e.toString());
 			e.printStackTrace();
@@ -216,8 +216,8 @@ public class ReqProcessor extends HttpServlet {
 	// won't go back to "unprovisioned" (see stateIds below).
 	// Steps may be skipped.
 	
-	private void advanceResourceStates(VCT vct, String newState) throws ServletException, RepositoryException {
-		for (ResourceInstance instance: vct.testbed.components) {
+	private void advanceResourceStates(final VCT vct, final String newState) throws ServletException, RepositoryException {
+		for (final ResourceInstance instance: vct.testbed.components) {
 			//ResourceInstance instance;
 			
 			// Checking each instance (3 repo requests) may be a bottleneck.
@@ -234,8 +234,8 @@ public class ReqProcessor extends HttpServlet {
 //				instance.state = "new";
 	//		}
 			
-			Integer oldStateId = stateIds.get(instance.getState());
-			Integer newStateId = stateIds.get(newState);
+			final Integer oldStateId = stateIds.get(instance.getState());
+			final Integer newStateId = stateIds.get(newState);
 			
 			if (oldStateId==null || newStateId==null)
 				throw new ServletException(String.format("unknown states: %s -> %s", 
@@ -248,9 +248,9 @@ public class ReqProcessor extends HttpServlet {
 		}
 	}
 	
-	private String setVct(String userName, String name) throws ServletException, IOException, RepositoryException {
+	private String setVct(final String userName, final String name) throws ServletException, IOException, RepositoryException {
 		Util.info("userName=" + userName + " name=" + name);
-		VCT vct = vctManager.getVct(userName, name);
+		final VCT vct = vctManager.getVct(userName, name);
 		
 		Util.debug("state=" + vct.getState());
 		
@@ -267,11 +267,11 @@ public class ReqProcessor extends HttpServlet {
 			vct.getState().equals("inprogress_async") ||
 			vct.getState().equals("inprogress_direct")) {
 			try {
-				String booking = exportVctRequest(userName, name, vct.testbed);
+				final String booking = exportVctRequest(userName, name, vct.testbed);
 				String response;
 				OrchestrateReturn ret;
 
-				boolean asyncBooking = vct.getState().equals("inprogress_async");
+				final boolean asyncBooking = vct.getState().equals("inprogress_async");
 			//	boolean directBooking = vct.getState().equals("inprogress_direct");
 
 				try {
@@ -290,7 +290,7 @@ public class ReqProcessor extends HttpServlet {
 						response = xs.toXML(ret);						
 					}*/
 				}
-				catch (ConnectException e)
+				catch (final ConnectException e)
 				{
 					e.printStackTrace();
 					ret = new OrchestrateReturn(1, "RP was unable to contact the OE: " + e.getMessage());
@@ -324,11 +324,11 @@ public class ReqProcessor extends HttpServlet {
 				}
 				
 				return response;
-			} catch (SAXException e) { throw new ServletException(e);
-			} catch (ModelError e) { throw new ServletException(e);
-			} catch (TransformerException e) { throw new ServletException(e);
+			} catch (final SAXException e) { throw new ServletException(e);
+			} catch (final ModelError e) { throw new ServletException(e);
+			} catch (final TransformerException e) { throw new ServletException(e);
 			}
-			catch (Exception e) {
+			catch (final Exception e) {
 				e.printStackTrace();
 				return xs.toXML(new OrchestrateReturn(1, e.getMessage()));
 			}
@@ -340,10 +340,10 @@ public class ReqProcessor extends HttpServlet {
 	 * Replace both vct and resource instance ids (temp ones => permanent ones).
 	 * The idmapping parameter is usually just taken from an Orchestration Engine result.
 	 */
-	private void renameIds(String userName, String name, Mapping[] idmapping) throws RepositoryException {
-		for (Mapping m : idmapping)
+	private void renameIds(final String userName, final String name, final Mapping[] idmapping) throws RepositoryException {
+		for (final Mapping m : idmapping)
 		{
-			int i = m.designid.indexOf(".resources.");
+			final int i = m.designid.indexOf(".resources.");
 			if (i > 0)
 				m.designid = m.designid.substring(i + 11);
 		}
@@ -357,24 +357,24 @@ public class ReqProcessor extends HttpServlet {
 	
 	private static String logPattern = ".*Errors in execution</h2><pre>See <a href=\"(.+)\">logs</a>.*";
 	
-	private String regexFind(String regex, String text) {
-		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
-		Matcher matcher = pattern.matcher(text);
+	private String regexFind(final String regex, final String text) {
+		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Matcher matcher = pattern.matcher(text);
 		return matcher.matches() ? matcher.group(1) : null;
 	}
 
 	// First OE operation ... no "uninteractive" version exists so we have to scrape the html
 	// for the result afterwards. 
-	private String call_putVCTSpec(HttpClient client, String oe_url, String vctid, String booking) 
+	private String call_putVCTSpec(final HttpClient client, final String oe_url, final String vctid, final String booking) 
 			throws HttpException, IOException, ServletException {
 		Util.info("call_putVCTSpec vct=" + vctid + " oe_url: " + oe_url);
 		Util.info(booking);
-		PostMethod post = new PostMethod(oe_url);
+		final PostMethod post = new PostMethod(oe_url);
 		
-		HttpMethodRetryHandler rh = new HttpMethodRetryHandler() {
+		final HttpMethodRetryHandler rh = new HttpMethodRetryHandler() {
 			
 			@Override
-			public boolean retryMethod(HttpMethod arg0, IOException arg1, int arg2) {
+			public boolean retryMethod(final HttpMethod arg0, final IOException arg1, final int arg2) {
 				Util.error("Exception during method call: " + arg1);
 				return false;
 			}
@@ -383,7 +383,7 @@ public class ReqProcessor extends HttpServlet {
 		post.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, rh);
 		
 		try {
-			Part[] parts = {
+			final Part[] parts = {
 				new StringPart("step",		"xdocmd"),
 				new StringPart("op",		"putVCTSpec"),
 				new StringPart("siteid",	"teagle"),
@@ -402,8 +402,8 @@ public class ReqProcessor extends HttpServlet {
 			if (post.getStatusCode() != 200)
 				throw new IOException("Unexpected response from OE: " + post.getStatusLine());
 
-			String response = Util.readStream(post.getResponseBodyAsStream());
-			String result = regexFind(resultPattern, response);
+			final String response = Util.readStream(post.getResponseBodyAsStream());
+			final String result = regexFind(resultPattern, response);
 			if (result==null)
 				throw new ServletException("Could not find result tag, response=" + response);
 			
@@ -415,11 +415,11 @@ public class ReqProcessor extends HttpServlet {
 	}
 
 	// second OE operation ... again no uninteractive version exists
-	private String call_deployVCT(HttpClient client, String oe_url, String vctid) 
+	private String call_deployVCT(final HttpClient client, final String oe_url, final String vctid) 
 			throws HttpException, IOException, ServletException {
 		Util.info("call_deployVCT vct=" + vctid);
 	
-		String url = oe_url + 
+		final String url = oe_url + 
 			"?step=xdocmd" +
 			"&op=deployVCT" +
 			"&siteid=teagle" +
@@ -429,15 +429,15 @@ public class ReqProcessor extends HttpServlet {
 			"&v_vctid=" + URLEncoder.encode(vctid, "UTF-8") +
 			"&options=d0&userId=";
 
-		GetMethod get = new GetMethod(url);
+		final GetMethod get = new GetMethod(url);
 		
 		try {
 			client.executeMethod(get);			
 			if (get.getStatusCode() != 200)
 				throw new IOException("Unexpected response: " + get.getStatusLine());
 			
-			String response = Util.readStream(get.getResponseBodyAsStream());
-			String result = regexFind(resultPattern, response);
+			final String response = Util.readStream(get.getResponseBodyAsStream());
+			final String result = regexFind(resultPattern, response);
 			if (result==null)
 				//throw new ServletException("Could not find result tag, response=" + response);
 				return response;
@@ -452,11 +452,11 @@ public class ReqProcessor extends HttpServlet {
 	// Third OE operation (sync version) ... this actually sends requests to the PTMs. We use 
 	// an uninteractive version of the one available on the web site, that just returns the 
 	// OrchestrateReturn structure, which we parse using XStream.
-	private String call_orchestrateSync(HttpClient client, String oe_xml_url, String vctid) 
+	private String call_orchestrateSync(final HttpClient client, final String oe_xml_url, final String vctid) 
 			throws HttpException, IOException, ServletException {
 		Util.info("call_orchestrateSync vct=" + vctid);
 
-		String url = oe_xml_url +
+		final String url = oe_xml_url +
 			"?step=docmd" +
 			"&op=orchestrate" +
 			"&siteid=teagle" +
@@ -466,14 +466,14 @@ public class ReqProcessor extends HttpServlet {
 			"&options=d0" +
 			"&userId=";
 
-		GetMethod get = new GetMethod(url);
+		final GetMethod get = new GetMethod(url);
 		
 		try {
 			client.executeMethod(get);
 			if (get.getStatusCode() != 200)
 				throw new IOException("Unexpected response: " + get.getStatusLine());
 			
-			String response = Util.readStream(get.getResponseBodyAsStream());
+			final String response = Util.readStream(get.getResponseBodyAsStream());
 			Util.p(response);
 			
 			//return (OrchestrateReturn)xs.fromXML(response);
@@ -486,11 +486,11 @@ public class ReqProcessor extends HttpServlet {
 	// Third OE operation (async). Again, uninteractive version, and this unly returns a provisional
 	// success result, which contains an url that will contain the final result, once the booking
 	// completes.
-	private String call_orchestrateAsync(HttpClient client, String oe_xml_url, String vctid) 
+	private String call_orchestrateAsync(final HttpClient client, final String oe_xml_url, final String vctid) 
 			throws HttpException, IOException, ServletException {
 		Util.info("call_orchestrateAsync vct=" + vctid);
 
-		String url = oe_xml_url +
+		final String url = oe_xml_url +
 			"?step=docmd" +
 			"&op=executeVCT" +
 			"&siteid=teagle" +
@@ -501,14 +501,14 @@ public class ReqProcessor extends HttpServlet {
 			"&options=d0" +
 			"&userId=sebastian";
 
-		GetMethod get = new GetMethod(url);
+		final GetMethod get = new GetMethod(url);
 
 		try {
 			client.executeMethod(get);
 			if (get.getStatusCode() != 200)
 				throw new IOException("Unexpected response: " + get.getStatusLine());
 
-			String response = Util.readStream(get.getResponseBodyAsStream());
+			final String response = Util.readStream(get.getResponseBodyAsStream());
 			Util.p(response);
 
 			//return (OrchestrateReturn)xs.fromXML(response);
@@ -518,9 +518,9 @@ public class ReqProcessor extends HttpServlet {
 		}
 	}
 	
-	private OrchestrateReturn bookViaOE(boolean async, VCT vct, String booking) 
+	private OrchestrateReturn bookViaOE(final boolean async, final VCT vct, final String booking) 
 			throws IOException, ServletException {
-		String vctid = vct.user + "_" + vct.name;
+		final String vctid = vct.user + "_" + vct.name;
 		return doBookViaOE(async, vctid, booking);
 	}
 	
@@ -532,32 +532,32 @@ public class ReqProcessor extends HttpServlet {
 	 * @param booking a string that contains an xml request which will get sent to the OE
 	 * @return an OrchestrateReturn instance that is parsed from the xml produced by the OE
 	 */
-	private OrchestrateReturn doBookViaOE(boolean async, String vctid, String booking) 
+	private OrchestrateReturn doBookViaOE(final boolean async, final String vctid, final String booking) 
 			throws IOException, ServletException {
 		Util.info("doBookViaOE vctid=" + vctid);
 		Util.info(booking);
 		
-		String oe_url    = properties.getProperty("oe.url");
-		String oe_xml_url= properties.getProperty("oe.xml_url");
+		final String oe_url    = properties.getProperty("oe.url");
+		final String oe_xml_url= properties.getProperty("oe.xml_url");
 		
 		if (oe_url==null || oe_xml_url==null)
 			throw new ServletException("missing configuration item from reqprocessor.properties");
 		
-		HttpClient httpClient = OEHttpFactory.makeHttpClient(properties);
+		final HttpClient httpClient = OEHttpFactory.makeHttpClient(properties);
 		
-		String putVCTSpec_result = call_putVCTSpec(httpClient, oe_url, vctid, booking);
+		final String putVCTSpec_result = call_putVCTSpec(httpClient, oe_url, vctid, booking);
 		if (! putVCTSpec_result.equalsIgnoreCase("OK"))
 			throw new ServletException("Unexpected putVCTspec result: " + putVCTSpec_result);
 
 		//try { Thread.sleep(500); } catch (Exception e) { }
 		
-		String deployVCT_result = call_deployVCT(httpClient, oe_url, vctid);
+		final String deployVCT_result = call_deployVCT(httpClient, oe_url, vctid);
 		if (! deployVCT_result.equalsIgnoreCase("OK"))
 		{
-			String logUrl = regexFind(logPattern, deployVCT_result);
+			final String logUrl = regexFind(logPattern, deployVCT_result);
 			if (logUrl != null)
 			{
-				OrchestrateReturn r = new OrchestrateReturn(1, "Error in orchestration");
+				final OrchestrateReturn r = new OrchestrateReturn(1, "Error in orchestration");
 				r.log = logUrl;
 				return r;
 			}
@@ -566,7 +566,7 @@ public class ReqProcessor extends HttpServlet {
 
 		//try { Thread.sleep(500); } catch (Exception e) { }
 		
-		String oeRet = async ?
+		final String oeRet = async ?
 			call_orchestrateAsync(httpClient, oe_xml_url, vctid) :
 			call_orchestrateSync(httpClient, oe_xml_url, vctid);
 		
@@ -575,7 +575,7 @@ public class ReqProcessor extends HttpServlet {
 		{
 			return (OrchestrateReturn)xs.fromXML(oeRet);
 		}
-		catch (Error e)
+		catch (final Error e)
 		{
 			e.printStackTrace();
 			throw e;
@@ -592,8 +592,8 @@ public class ReqProcessor extends HttpServlet {
 	 * We cannot tell when a booking has failed. This will be fixed when we implement
 	 * receiving notifications from the OE.
 	 */
-	private void pollBooking(String userName, String name) throws ServletException, IOException, RepositoryException {
-		VCT vct = vctManager.getVct(userName, name);
+	private void pollBooking(final String userName, final String name) throws ServletException, IOException, RepositoryException {
+		final VCT vct = vctManager.getVct(userName, name);
 		
 		if (! vct.state.equals("inprogress_wait")) {
 			Util.warn(String.format("user=%s vct=%s: state=%s, returning", userName, name, vct.state));
@@ -601,22 +601,22 @@ public class ReqProcessor extends HttpServlet {
 		}
 		
 		//TODO: make this async stuff work again
-		OrchestrateReturn oeRet = null;//vct.orchestrateReturn;
+		final OrchestrateReturn oeRet = null;//vct.orchestrateReturn;
 		if (oeRet==null || oeRet.result==null || oeRet.result.return_==null ||
 				oeRet.result.return_.report==null) {
 			Util.warn(String.format("user=%s vct=%s: orchestrateReturn incomplete", userName, name));
 			return;
 		}
 		
-		HttpClient httpClient = OEHttpFactory.makeHttpClient(properties);
-		GetMethod get = new GetMethod(oeRet.result.return_.report);
+		final HttpClient httpClient = OEHttpFactory.makeHttpClient(properties);
+		final GetMethod get = new GetMethod(oeRet.result.return_.report);
 
 		try {
 			httpClient.executeMethod(get);
 			if (get.getStatusCode() != 200)
 				throw new IOException("Unexpected response: " + get.getStatusLine());
 
-			String mappingXml = Util.readStream(get.getResponseBodyAsStream());
+			final String mappingXml = Util.readStream(get.getResponseBodyAsStream());
 			Util.p(mappingXml);
 			
 			oeRet.result.idmapping = (OrchestrateReturn.Result.Mapping[])xs.fromXML(mappingXml);
@@ -640,7 +640,7 @@ public class ReqProcessor extends HttpServlet {
 				
 				renameIds(userName, name, oeRet.result.idmapping);
 			}
-		} catch (IOException e) { e.printStackTrace();
+		} catch (final IOException e) { e.printStackTrace();
 		} finally {
 			get.releaseConnection();
 		}
@@ -649,7 +649,7 @@ public class ReqProcessor extends HttpServlet {
 	/**
 	 * This is just for testing purposes.
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 		/*String res = 
 			"<pre><textarea name=\"result\" style=\"color:#000000; background: #FFFFFF\" rows=\"1\" " +
 			"cols=\"40\" readonly=\"true\">OK</textarea></pre>";
@@ -710,31 +710,31 @@ public class ReqProcessor extends HttpServlet {
 	 * Store a copy of the booking request in the repo.
 	 */
 	
-	private Element addAttr(Document doc, Node parent, String name, String value)
+	private Element addAttr(final Document doc, final Node parent, final String name, final String value)
 	{
-		Element child = (Element)parent.appendChild(doc.createElement(name));
+		final Element child = (Element)parent.appendChild(doc.createElement(name));
 		child.appendChild(doc.createTextNode(value));
 		return child;
 	}
 	
-	private String exportVctRequest(String userName, String name, Testbed testbed) throws IOException, RepositoryException, SAXException, ModelError, TransformerException {
-		Document doc = docBuilder.newDocument();
+	private String exportVctRequest(final String userName, final String name, final Testbed testbed) throws IOException, RepositoryException, SAXException, ModelError, TransformerException {
+		final Document doc = docBuilder.newDocument();
 		
-		Node testbedElement = doc.appendChild(doc.createElement("testbed"));
-		Node componentsElement = testbedElement.appendChild(doc.createElement("components"));
+		final Node testbedElement = doc.appendChild(doc.createElement("testbed"));
+		final Node componentsElement = testbedElement.appendChild(doc.createElement("components"));
 		Util.info("exportVCTRequest");
 		//HashMap<Resource, String> typeMap = new HashMap<Resource, String>();
-		HashMap<ResourceInstance, String> typeMap = new HashMap<ResourceInstance, String>();
-		HashMap<String, String> idMap = new HashMap<String, String>();
+		final HashMap<ResourceInstance, String> typeMap = new HashMap<ResourceInstance, String>();
+		final HashMap<String, String> idMap = new HashMap<String, String>();
 		
-		for (ResourceInstance i : testbed.components)
+		for (final ResourceInstance i : testbed.components)
 		{
-			int index = i.getId().indexOf('.');
+			final int index = i.getId().indexOf('.');
 			String type = "";
 			
 			if (index < 0)
 			{
-				PTM ptm = resourceInstanceManager.getPTMByResource(i.getType());
+				final PTM ptm = resourceInstanceManager.getPTMByResource(i.getType());
 				type = ptm.getId() + "____resources____";
 			}
 			
@@ -753,33 +753,33 @@ public class ReqProcessor extends HttpServlet {
 			}
 		}
 				
-		Node connectionsElement = testbedElement.appendChild(doc.createElement("connections"));
-		for (ResourceInstance i : testbed.components)
+		final Node connectionsElement = testbedElement.appendChild(doc.createElement("connections"));
+		for (final ResourceInstance i : testbed.components)
 		{
-			Node componentElement = componentsElement.appendChild(doc.createElement(typeMap.get(i)));
+			final Node componentElement = componentsElement.appendChild(doc.createElement(typeMap.get(i)));
 			addAttr(doc, componentElement, "id", idMap.get(i.getId()));
 			addAttr(doc, componentElement, "state", i.getState());
-			Node configElement = componentElement.appendChild(doc.createElement("configuration"));
-			for (Configlet c : i.getConfiguration())
+			final Node configElement = componentElement.appendChild(doc.createElement("configuration"));
+			for (final Configlet c : i.getConfiguration())
 				if (!c.isArray())
 				{
 					String val = c.getValueString();
 					if (c.isReference())
 					{
-						String ref = idMap.get(val);
+						final String ref = idMap.get(val);
 						if (ref != null)
 						{
 							val = dynId(ref);
 							
-							Node connectionElement = connectionsElement.appendChild(doc.createElement("connection"));
-							Node srcElement = connectionElement.appendChild(doc.createElement("src"));
+							final Node connectionElement = connectionsElement.appendChild(doc.createElement("connection"));
+							final Node srcElement = connectionElement.appendChild(doc.createElement("src"));
 							String srcId = i.getId(), tmp;
 							tmp = idMap.get(srcId);
 							if (tmp != null)
 								srcId = tmp;
 							addAttr(doc, srcElement, "id", srcId);
 					
-							Node dstElement = connectionElement.appendChild(doc.createElement("dst"));
+							final Node dstElement = connectionElement.appendChild(doc.createElement("dst"));
 							addAttr(doc, dstElement, "id", ref);
 							addAttr(doc, connectionElement, "type", "references");
 						}
@@ -788,18 +788,18 @@ public class ReqProcessor extends HttpServlet {
 				}
 				else
 				{
-					String[] array = c.getArrayValueStrings();
-					Node attrElement = configElement.appendChild(doc.createElement(c.getName()));
-					Node arrayElement = attrElement.appendChild(doc.createElement(c.getType()));
-					String elementName = c.getType().substring(c.getType().length() - 5);
-					for (String e : array)
+					final String[] array = c.getArrayValueStrings();
+					final Node attrElement = configElement.appendChild(doc.createElement(c.getName()));
+					final Node arrayElement = attrElement.appendChild(doc.createElement(c.getType()));
+					final String elementName = c.getType().substring(c.getType().length() - 5);
+					for (final String e : array)
 						addAttr(doc, arrayElement, elementName, c.isReference() ? dynId(idMap.containsKey(e) ? idMap.get(e) : e) : e);
 				}
 			
 			 if (i.getParentInstance() != null)
 			 {
-					Node connectionElement = connectionsElement.appendChild(doc.createElement("connection"));
-					Node srcElement = connectionElement.appendChild(doc.createElement("src"));
+					final Node connectionElement = connectionsElement.appendChild(doc.createElement("connection"));
+					final Node srcElement = connectionElement.appendChild(doc.createElement("src"));
 					
 					String srcId = i.getParentInstance().getId(), dstId = i.getId(), tmp;
 					tmp = idMap.get(srcId);
@@ -810,7 +810,7 @@ public class ReqProcessor extends HttpServlet {
 						dstId = tmp;
 					
 					addAttr(doc, srcElement, "id", srcId);
-					Node dstElement = connectionElement.appendChild(doc.createElement("dst"));
+					final Node dstElement = connectionElement.appendChild(doc.createElement("dst"));
 					addAttr(doc, dstElement, "id", dstId);
 					addAttr(doc, connectionElement, "type", "contains");
 			 }
@@ -818,7 +818,7 @@ public class ReqProcessor extends HttpServlet {
 		
 		//addResourceStates(testbed, doc);
 
-		StringWriter writer = new StringWriter();
+		final StringWriter writer = new StringWriter();
 		Util.writeXml(doc, writer);
 		
 		String booking = writer.toString();
@@ -828,7 +828,7 @@ public class ReqProcessor extends HttpServlet {
 		return booking;
 	}
 	
-	private String dynId(String id)
+	private String dynId(final String id)
 	{
 		if (id.length() == 0)
 			return "";
