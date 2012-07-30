@@ -80,6 +80,9 @@
                   <li class="none">
                           <a href="status.html" title="Current Status">Current Status</a>
             </li>
+                  <li class="none">
+                          <a href="faq.html" title="FAQ">FAQ</a>
+            </li>
           </ul>
                         <h3>Project Documentation</h3>
                   <ul>
@@ -140,15 +143,7 @@ open target/site/index.html
 &lt;/settings&gt;
 </pre></div><p>Then deploy the artifact:</p>
 <div class="source"><pre class="prettyprint">mvn deploy
-</pre></div></div><div class="section"><h2>Site Deployment<a name="Site_Deployment"></a></h2><p>This documentation can be found in the folder target/site after executing:</p>
-<div class="source"><pre class="prettyprint">mvn -N site
-</pre></div><p>Change information by editing one of the markdown files:</p>
-<div class="source"><pre class="prettyprint">nano src/site/markdown/xxx.md
-</pre></div><p>Adding a section by editing the menu item in the following file:</p>
-<div class="source"><pre class="prettyprint">nano src/site/site.xml
-</pre></div><p>The documentation can be uploaded/deployed to <a class="externalLink" href="http://teagle.org/doc">http://teagle.org/doc</a> by running:</p>
-<div class="source"><pre class="prettyprint">mvn -N clean site ghSite:site
-</pre></div><p>In order to upload the files you need write access to the according repository and configure the file .m2/settings.xml:</p>
+</pre></div></div><div class="section"><h2>Site Deployment<a name="Site_Deployment"></a></h2><p>Edit the file .m2/settings.xml:</p>
 <div class="source"><pre class="prettyprint">&lt;?xml version=&quot;1.0&quot;?&gt;
 &lt;settings&gt;
     &lt;servers&gt;
@@ -159,6 +154,8 @@ open target/site/index.html
           &lt;/server&gt;
     &lt;/servers&gt;
 &lt;/settings&gt;
+</pre></div><p>Then deploy the site:</p>
+<div class="source"><pre class="prettyprint">mvn -N clean site ghSite:site
 </pre></div></div><div class="section"><h2>Checkin new code<a name="Checkin_new_code"></a></h2>
 <div class="source"><pre class="prettyprint">cd path/to/project/root
 git pull &amp;&amp; mvn -U install
