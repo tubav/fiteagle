@@ -53,6 +53,19 @@
                     </execution>
                </executions>
            </plugin>
+          <plugin>
+              <groupId>com.github.github</groupId>
+              <artifactId>downloads-maven-plugin</artifactId>
+              <version>0.5</version>
+              <configuration>
+                <description>${project.version} release of ${project.name}</description>
+                <includes>
+                    <include>*-app.zip</include>
+                    <include>*-with-dependencies.jar</include>
+                </includes>
+                <override>true</override>
+              </configuration>
+           </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
