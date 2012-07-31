@@ -6,7 +6,7 @@ For users
 
 To download the VCTTool:
 
-    http://fiteagle.org/download
+    http://fiteagle.org/downloads
 
 To start the VCTTool on OS X:
 
@@ -25,6 +25,7 @@ For developers
 
 To start the VCTTool from the sources:
 
+    cd clients/vcttool
     ./src/main/scripts/startVCTTool.sh
 
 To upload the latest binary version:
