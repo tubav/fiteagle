@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice"
+            class="FederationOffice.FederationOfficePackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="federationoffice"
+            class="FederationOffice.util.FederationOfficeResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/users"
+            class="FederationOffice.users.UsersPackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="usersX"
+            class="FederationOffice.users.util.UsersResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/resources"
+            class="FederationOffice.resources.ResourcesPackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="resources"
+            class="FederationOffice.resources.util.ResourcesResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/networkelements"
+            class="FederationOffice.networkelements.NetworkelementsPackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="networkelements"
+            class="FederationOffice.networkelements.util.NetworkelementsResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/providersite"
+            class="FederationOffice.providersite.ProvidersitePackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="providersite"
+            class="FederationOffice.providersite.util.ProvidersiteResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/slareservations"
+            class="FederationOffice.slareservations.SlareservationsPackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="slareservations"
+            class="FederationOffice.slareservations.util.SlareservationsResourceFactoryImpl"/>
+   </extension>
+
+   
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/services"
+            class="FederationOffice.services.ServicesPackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="services"
+            class="FederationOffice.services.util.ServicesResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.panlab.org/FederationOffice/model/availabilitycontract"
+            class="FederationOffice.availabilityContract.AvailabilityContractPackage"
+            genModel="model/FederationOffice.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="availabilitycontract"
+            class="FederationOffice.availabilityContract.util.AvailabilityContractResourceFactoryImpl"/>
+   </extension>
+   
+
+</plugin>

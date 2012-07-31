@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.panlab.software.office.model/src"
+    modelPluginID="org.panlab.software.office.model" modelName="FederationOffice"
+    importerID="org.eclipse.emf.importer.ecore" containmentProxies="true" complianceLevel="6.0"
+    copyrightFields="false" language="" interfaceNamePattern="" classNamePattern="">
+  <foreignModel>FederationOffice.ecore</foreignModel>
+  <genPackages prefix="FederationOffice" resource="XML" disposableProviderFactory="true"
+      ecorePackage="FederationOffice.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="FederationOffice.ecore#//VTStatus">
+      <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//VTStatus/VT_NEW"/>
+      <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//VTStatus/VT_REQUESTED"/>
+      <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//VTStatus/VT_SCHEDULED"/>
+      <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//VTStatus/VT_MODIFIED"/>
+      <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//VTStatus/VT_REJECTED"/>
+      <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//VTStatus/VT_COMPLETED"/>
+    </genEnums>
+    <genClasses ecoreClass="FederationOffice.ecore#//Office">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/registeredUsers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/contributedTaxonomies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/offeredServices"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/availableFederationScenarios"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/offeredServiceCompositions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/ResourceServiceContracts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/SLAs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//Office/resourceURI"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//Office/runningScenarios"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="FederationOffice.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//NamedElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//NamedElement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//NamedElement/description"/>
+    </genClasses>
+    <genClasses ecoreClass="FederationOffice.ecore#//RunningScenario">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//RunningScenario/requestedScenario"/>
+    </genClasses>
+    <nestedGenPackages prefix="Users" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//users">
+      <genClasses ecoreClass="FederationOffice.ecore#//users/Account">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//users/Account/password"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//users/Account/username"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//users/ResourcesProvider">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//users/ResourcesProvider/offeredSiteList"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//users/TestbedDesigner">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//users/TestbedDesigner/designsVirtualTestbeds"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//users/Admin"/>
+      <genClasses ecoreClass="FederationOffice.ecore#//users/OfficeCustomer">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//users/OfficeCustomer/utilizesVirtualTestbed"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//users/OfficeCustomer/hasTestbedDesigner"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="FederationOffice.ecore#//users/OfficeUser">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//users/OfficeUser/hasAccount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//users/OfficeUser/organization"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//users/OfficeUser/address"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//users/OfficeUser/telephone"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//users/OfficePersonel"/>
+      <genClasses ecoreClass="FederationOffice.ecore#//users/OfficePartner"/>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Resources" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//resources">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="FederationOffice.ecore#//resources/ResourceType">
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//resources/ResourceType/SINGLETON"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//resources/ResourceType/MULTITON"/>
+      </genEnums>
+      <genClasses ecoreClass="FederationOffice.ecore#//resources/Resource">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/Resource/resourceSettings"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/Resource/contributesToCategories"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/Resource/requiresResources"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//resources/OfferedResource">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//resources/OfferedResource/resourceType"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//resources/OfferedResource/multitonMaxOccur"/>
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/OfferedResource/belongsToSite"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/OfferedResource/implOfferedService"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//resources/ResourceSetting">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/ResourceSetting/OnlyConfiguredByResources"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/ResourceSetting/implServiceSetting"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//resources/ResourceCategory">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//resources/ResourceCategory/resourcelist"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Networkelements" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//networkelements">
+      <genClasses ecoreClass="FederationOffice.ecore#//networkelements/Device"/>
+      <genClasses ecoreClass="FederationOffice.ecore#//networkelements/NetworkElement"/>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Providersite" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//providersite">
+      <genClasses ecoreClass="FederationOffice.ecore#//providersite/PTM">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//providersite/PTM/IP"/>
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/PTM/belongsToSite"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//providersite/IGW">
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/IGW/belongsToSite"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//providersite/IGW/IP"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//providersite/Site">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/Site/ptm"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/Site/igwlist"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/Site/locatedAt"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/Site/offeredResourcesList"/>
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference FederationOffice.ecore#//providersite/Site/belongsToProvider"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//providersite/SiteLocation">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//providersite/SiteLocation/address"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//providersite/SiteLocation/geocoords"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Slareservations" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//slareservations">
+      <genClasses ecoreClass="FederationOffice.ecore#//slareservations/SLA">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//slareservations/SLA/ReservedRsources"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//slareservations/SLA/forVT"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//slareservations/SLA/ValidFrom"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//slareservations/SLA/ValidUntil"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//slareservations/ReservedResourceContract">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//slareservations/ReservedResourceContract/ValidFrom"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//slareservations/ReservedResourceContract/forResource"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//slareservations/ReservedResourceContract/ValidUntil"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Federationscenarios" basePackage="FederationOffice"
+        resource="XML" disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//federationscenarios">
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/RequestedFederationScenario">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/isShared"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/status"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/VTCredentials"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/servicesRequest"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/infrastructureRequest"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/scheduledPlan"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/RequestedFederationScenario/imports"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ServiceRequest">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ServiceRequest/refService"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ServiceRequest/OfferedByProviders"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ServiceRequest/reqServiceSettings"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/ServiceRequest/numOfServices"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ResourceRequest">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ResourceRequest/refOfferedResource"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ResourceRequest/reqResourceSettings"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/SettingInstance">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/SettingInstance/staticValue"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/SettingInstance/assignSetting"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ServiceSettingInstance">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ServiceSettingInstance/refServiceSetting"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ResourceSettingInstance">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ResourceSettingInstance/refResourceSetting"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/Credentials">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/Credentials/username"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/Credentials/password"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ServicesRequest">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ServicesRequest/serviceRequestList"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/InfrastructureRequest">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/InfrastructureRequest/reqOfferedResources"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/InfrastructureRequest/resourceGroups"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ScheduledPlan">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/ScheduledPlan/ValidFrom"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/ScheduledPlan/ValidUntil"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/Import">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//federationscenarios/Import/importURI"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//federationscenarios/ResourceGroup">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//federationscenarios/ResourceGroup/groupedResources"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Services" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//services">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="FederationOffice.ecore#//services/ServiceResourceOperation">
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//services/ServiceResourceOperation/OP_CREATE"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//services/ServiceResourceOperation/OP_READ"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//services/ServiceResourceOperation/OP_UPDATE"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//services/ServiceResourceOperation/OP_DELETE"/>
+      </genEnums>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/Service">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//services/Service/serviceSettings"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/Service/requiresServices"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/ServiceSetting">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/ServiceSetting/mappedToResourceSettings"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/ServiceSetting/providedByResources"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/OfferedService"/>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/ServiceComposition">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/ServiceComposition/hasServices"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="FederationOffice.ecore#//services/SettingType"/>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/tideTypeString">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/tideTypeString/defaultValue"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/tideTypeEnum">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//services/tideTypeEnum/tideEnumlist"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/tideTypeEnum/defaultValue"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/tideTypeList">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/tideTypeList/ContainsElementsOf"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/tideTypeEnumItem">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/tideTypeEnumItem/value"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/tideTypeTideElement">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/tideTypeTideElement/ofTideElement"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/Taxonomy">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//services/Taxonomy/taxonomies"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//services/Taxonomy/categories"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/Taxonomy/hasScenarios"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/Taxonomy/hasServices"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/AbstractSetting">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//services/AbstractSetting/settingType"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/AbstractSetting/userExposed"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/AbstractSetting/userEditable"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/AbstractSetting/canBePublished"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/AbstractSetting/Readable"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/AbstractSetting/Writable"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//services/AbstractSetting/settingConstraints"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//services/AbstractSetting/requiresParams"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//services/SettingConstraint">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/SettingConstraint/ForOperation"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/SettingConstraint/AvailableAfterOperation"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//services/SettingConstraint/RequiredBeforeOperation"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Settingdependencies" basePackage="FederationOffice"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//settingdependencies"/>
+    <nestedGenPackages prefix="AvailabilityContract" basePackage="FederationOffice"
+        resource="XML" disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//availabilityContract">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="FederationOffice.ecore#//availabilityContract/costUnit">
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/costUnit/MIN"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/costUnit/HOUR"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/costUnit/DAY"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/costUnit/USAGE"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/costUnit/OTHER"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="FederationOffice.ecore#//availabilityContract/RepatabilityScheme">
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/RepatabilityScheme/DAILY"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/RepatabilityScheme/WEEKLY"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/RepatabilityScheme/MONTHLY"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//availabilityContract/RepatabilityScheme/YEARLY"/>
+      </genEnums>
+      <genClasses ecoreClass="FederationOffice.ecore#//availabilityContract/ResourceServiceContract">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//availabilityContract/ResourceServiceContract/forOfferedService"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//availabilityContract/ResourceServiceContract/forOfferedResource"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/ResourceServiceContract/StartDate"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/ResourceServiceContract/EndDate"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//availabilityContract/ResourceServiceContract/availability"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//availabilityContract/Availability">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/FromTime"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/ToTime"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//availabilityContract/Availability/cost"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/FromDate"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/ToDate"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/Repeatability"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/Repeat"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Availability/RepeatUntil"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//availabilityContract/Cost">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Cost/Amount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//availabilityContract/Cost/perUnit"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="UiObjects" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//uiObjects">
+      <genClasses ecoreClass="FederationOffice.ecore#//uiObjects/ui_TaxonomyTreeItem">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//uiObjects/ui_TaxonomyTreeItem/parentNode"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//uiObjects/ui_TaxonomyTreeItem/DisplayName"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FederationOffice.ecore#//uiObjects/ui_TaxonomyTreeItem/childNodes"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//uiObjects/ui_TaxonomyTreeItem/officeElement"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//uiObjects/OfficeManager">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//uiObjects/OfficeManager/officesRef"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="ExperimentRuntime" basePackage="FederationOffice" resource="XML"
+        disposableProviderFactory="true" ecorePackage="FederationOffice.ecore#//experimentRuntime">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus">
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/NOT_EXISTS"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/ONLINE"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/OFFLINE"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/STARTING"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/STOPPING"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/UPDATING"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/ERROR"/>
+        <genEnumLiterals ecoreEnumLiteral="FederationOffice.ecore#//experimentRuntime/RuntimeElementStatus/UNKNOWN"/>
+      </genEnums>
+      <genClasses image="false" ecoreClass="FederationOffice.ecore#//experimentRuntime/IRuntimeElement">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//experimentRuntime/IRuntimeElement/realizesScenarioElement"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FederationOffice.ecore#//experimentRuntime/IRuntimeElement/status"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//experimentRuntime/ProxyElement">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference FederationOffice.ecore#//experimentRuntime/ProxyElement/realScenarioElement"/>
+      </genClasses>
+      <genClasses ecoreClass="FederationOffice.ecore#//experimentRuntime/RealScenarioElement"/>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

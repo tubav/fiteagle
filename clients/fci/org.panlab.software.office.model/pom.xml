@@ -2,25 +2,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>FITeagle :: Clients</name>
-	<groupId>org.fiteagle</groupId>
-    <artifactId>clients</artifactId>
-    <packaging>pom</packaging>
+	<name>FITeagle :: Clients :: FCI :: Office Model</name>
+	<groupId>org.fiteagle.clients.fci</groupId>
+    <artifactId>model</artifactId>
+    <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
 	
 	<parent>
-		<groupId>org.fiteagle</groupId>
-		<artifactId>fiteagle</artifactId>
+		<groupId>org.fiteagle.clients</groupId>
+		<artifactId>fci</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<modules>
-		<module>vcttool</module>
-		<module>repository</module>
-		<module>cli</module>
-		<module>api</module>
-		<module>fci</module>
-	</modules>
+<dependencies>
+<dependency>
+	<groupId>org.eclipse.emf</groupId>
+	<artifactId>ecore-xmi</artifactId>
+	<version>2.2.3</version>
+</dependency>
+<dependency>
+   <groupId>org.ow2.orchestra.eclipse.emf</groupId>
+   <artifactId>org.ow2.orchestra.eclipse.emf.ecore</artifactId>
+   <version>2.7.0</version>
+</dependency> 
+</dependencies>
 
    <repositories>
     <repository>

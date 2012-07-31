@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.panlab.FederationOffice:Office xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.panlab.FederationOffice="http://www.panlab.org/FederationOffice" xmlns:org.panlab.FederationOffice.model.users="http://www.panlab.org/FederationOffice/model/users" xsi:schemaLocation="http://www.panlab.org/FederationOffice FederationOffice.ecore http://www.panlab.org/FederationOffice/model/users FederationOffice.ecore#//users" name="papa">
+  <registeredUsers xsi:type="org.panlab.FederationOffice.model.users:OfficePartner" name="lalalkis"/>
+</org.panlab.FederationOffice:Office>
