@@ -294,7 +294,7 @@ public class VctToolView implements IVctToolView {
 		this.shell.setLayout(layout);
 
 		this.shell.setImage(new Image(this.shell.getDisplay(), this.getClass()
-				.getResourceAsStream("/icons/openteagle.png")));
+				.getResourceAsStream("/icons/fiteagle.png")));
 
 		this.shell.addShellListener(new ShellAdapter() {
 			@Override
