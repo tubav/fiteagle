@@ -15,7 +15,8 @@
 	</parent>
 
 	<modules>
-		<module>model</module>
+		<module>org.panlab.software.office.model</module>
+<!--		<module>core</module>-->
 	</modules>
 
    <repositories>
