@@ -21,6 +21,7 @@
       <item name="For Users" href="users.html"/>
       <item name="Current Status" href="status.html"/>
       <item name="FAQ" href="faq.html"/>
+      <item name="Clients | VCTTool" href="vcttool.html"/>
     </menu>
 
     <menu ref="reports"/>
