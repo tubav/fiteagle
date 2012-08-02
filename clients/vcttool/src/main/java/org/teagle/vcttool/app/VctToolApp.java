@@ -33,7 +33,7 @@ public class VctToolApp {
 	private static final Logger log = LoggerFactory.getLogger(VctToolApp.class);
 
 	private static final String DEFAULT_REPO_URL = "http://fiteagle.org/api/legacy/repository";
-	private static final String DEFAULT_REQPROC_URL = "http://fiteagle.org/api/legacy/rp";
+	private static final String DEFAULT_REQPROC_URL = "http://fiteagle.org/api/legacy/reqproc";
 	private static final String DEFAULT_PE_Endpoint = "http://fiteagle.org/api/legacy/policy";
 	// private static final String DEFAULT_REPO_URL =
 	// "http://tefis1.inria.fr/repository/rest";//to be changed!!!
