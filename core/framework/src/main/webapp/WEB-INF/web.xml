@@ -5,23 +5,34 @@
      version="2.5">
 
         <display-name>FITeagle</display-name> 
- <description>
-Future Internet Testbed Experimentation and Management Framework    </description>
+        <description>Future Internet Testbed Experimentation and Management Framework    </description>
 
- <session-config>
+    <session-config>
       <session-timeout>15</session-timeout> 
     </session-config>
 
  <servlet>
    <display-name>FITeagleLegacy</display-name>
    <servlet-name>FITeagleLegacy</servlet-name>
-   <servlet-class>org.fiteagle.core.framework.deployment.FITeagleServlet</servlet-class>
+   <servlet-class>org.fiteagle.core.framework.deployment.FITeagleServlet</servlet-class> 
    <load-on-startup>1</load-on-startup>
  </servlet>
-
-<servlet-mapping>
+    <servlet-mapping>
       <servlet-name>FITeagleLegacy</servlet-name>
       <url-pattern>/reqproc</url-pattern>
     </servlet-mapping>
+<!--
+
+ <servlet>
+   <servlet-name>spring</servlet-name>
+   <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+   <load-on-startup>1</load-on-startup>
+ </servlet>
+
+    <servlet-mapping>
+      <servlet-name>spring</servlet-name>
+      <url-pattern>/reqproc</url-pattern>
+    </servlet-mapping>
+-->
 
 </web-app>
