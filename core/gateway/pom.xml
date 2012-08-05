@@ -14,7 +14,7 @@
 	<repositories>
 		<repository>
 			<id>fiteagle-repo</id>
-			<url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+			<url>http://fiteagle.org/maven</url>
 		</repository>
 <repository>
     <id>glassfish-maven2-repository.dev.java.net</id>

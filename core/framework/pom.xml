@@ -16,7 +16,7 @@
   <repositories>
     <repository>
       <id>fiteagle-repo</id>
-      <url>https://services.av.tu-berlin.de/nexus/content/repositories/fiteagle</url>
+      <url>http://fiteagle.org/maven</url>
     </repository>
   </repositories>
   <dependencies>
