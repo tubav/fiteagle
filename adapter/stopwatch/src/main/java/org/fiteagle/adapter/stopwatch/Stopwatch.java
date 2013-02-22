@@ -1,6 +1,8 @@
 package org.fiteagle.adapter.stopwatch;
 
-public class Stopwatch {
+import org.fiteagle.interfaces.frcp.IFRCP;
+
+public class Stopwatch implements IFRCP {
 
 	private boolean runningState = false;
 
@@ -15,4 +17,19 @@ public class Stopwatch {
 	public void stop() {
 		this.runningState = false;
 	}
+	
+	@Override
+	public void inform() {}
+
+	@Override
+	public void configure() {}
+
+	@Override
+	public void request() {}
+
+	@Override
+	public void create() {}
+
+	@Override
+	public void release() {}
 }
