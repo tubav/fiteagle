@@ -6,7 +6,7 @@
 	<name>FITeagle :: Adapter :: Stopwatch</name>
 	<groupId>org.fiteagle.adapter</groupId>
 	<artifactId>stopwatch</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>org.fiteagle</groupId>
