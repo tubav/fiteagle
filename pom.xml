@@ -14,6 +14,7 @@
 		<module>core</module>
 		<module>clients</module>
 		<module>ptm</module>
+		<module>adapter</module>
 	</modules>
 
 	<description>
@@ -47,11 +48,9 @@
 		</repository>
 		<repository>
 			<id>fiteagle-repo</id>
-<!--			<url>http://fiteagle.org/maven</url>-->
 			<url>http://fiteagle.org/maven</url>
 		</repository>
 	</repositories>
-
 
 	<dependencyManagement>
 		<dependencies>
