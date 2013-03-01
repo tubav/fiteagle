@@ -28,7 +28,8 @@ public class TestStopwatch {
 	//http://mytestbed.net/projects/omf/wiki/ArchitecturalFoundation2ProtocolInteractions
 	@Test
 	public void testFRCPInterface() throws Exception {
-		stopwatch.inform();
+		//stopwatch.inform();
+		Assert.assertTrue(stopwatch.inform());
 		stopwatch.configure();
 		stopwatch.request();
 		stopwatch.create();
