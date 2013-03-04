@@ -19,7 +19,8 @@ public class Stopwatch implements IFRCP {
 	}
 	
 	@Override
-	public void inform() {}
+	public boolean inform() {
+		return true;}
 
 	@Override
 	public void configure() {}

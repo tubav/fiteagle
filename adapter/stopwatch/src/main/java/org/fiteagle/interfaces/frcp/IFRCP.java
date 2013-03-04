@@ -1,7 +1,7 @@
 package org.fiteagle.interfaces.frcp;
 
 public interface IFRCP {
-	void inform();
+	boolean inform();
 
 	void configure();
 
