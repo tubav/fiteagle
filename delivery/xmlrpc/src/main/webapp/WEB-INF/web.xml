@@ -1,0 +1,29 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+<servlet>
+        <servlet-name>XmlRpcServlet</servlet-name>
+        <servlet-class>org.apache.xmlrpc.webserver.XmlRpcServlet</servlet-class>
+        <init-param>
+          <param-name>enabledForExtensions</param-name>
+          <param-value>true</param-value>
+          <description>
+            Sets, whether the servlet supports vendor extensions for XML-RPC.
+          </description>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>XmlRpcServlet</servlet-name>
+        <url-pattern>/xmlrpc</url-pattern>
+    </servlet-mapping>
+</web-app>
+<!--
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+        <servlet-name>sfa</servlet-name>
+        <servlet-class>org.fiteagle.delivery.xmlrpc.SFAServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>sfa</servlet-name>
+        <url-pattern>/api/sfa/*</url-pattern>
+    </servlet-mapping>
+</web-app>
+-->

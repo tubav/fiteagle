@@ -16,6 +16,7 @@
 		<module>ptm</module>
 		<module>adapter</module>
 		<module>interactors</module>
+		<module>delivery</module>
 	</modules>
 
 	<description>
