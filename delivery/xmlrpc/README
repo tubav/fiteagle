@@ -1,2 +1,5 @@
 To start:
 mvn jetty:run
+
+To test:
+./src/main/bin/testSFALocalhostGetVersion.sh
