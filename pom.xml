@@ -15,6 +15,7 @@
 		<module>clients</module>
 		<module>ptm</module>
 		<module>adapter</module>
+		<module>interactors</module>
 	</modules>
 
 	<description>
