@@ -1,5 +1,10 @@
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
-<servlet>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+  <servlet>
         <servlet-name>XmlRpcServlet</servlet-name>
         <servlet-class>org.apache.xmlrpc.webserver.XmlRpcServlet</servlet-class>
         <init-param>
@@ -9,21 +14,9 @@
             Sets, whether the servlet supports vendor extensions for XML-RPC.
           </description>
         </init-param>
-    </servlet>
-    <servlet-mapping>
+  </servlet>
+  <servlet-mapping>
         <servlet-name>XmlRpcServlet</servlet-name>
-        <url-pattern>/xmlrpc</url-pattern>
-    </servlet-mapping>
+        <url-pattern>/</url-pattern>
+  </servlet-mapping>
 </web-app>
-<!--
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
-    <servlet>
-        <servlet-name>sfa</servlet-name>
-        <servlet-class>org.fiteagle.delivery.xmlrpc.SFAServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>sfa</servlet-name>
-        <url-pattern>/api/sfa/*</url-pattern>
-    </servlet-mapping>
-</web-app>
--->
