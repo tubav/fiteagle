@@ -11,9 +11,20 @@ function sendRequest {
   echo " * Answer: "
   echo "-------------------------------"
   curl -k --data @${2} ${1}
+  result=$?
   echo "-------------------------------"
   echo ""
+  return $result
 }
 
 sendRequest ${_url_plain} ${_input}
+if [ "$?" != "0" ]; then
+  echo "FAILED. Expected a success."
+fi
+
 sendRequest ${_url_ssl} ${_input}
+if [ "$?" != "36" ]; then
+  echo "FAILED. Expected error 35 (client must authenticate)."
+fi
+
+exit 0
