@@ -32,13 +32,15 @@
     <configuration>
         <contextPath>/</contextPath>
         <scanIntervalSeconds>5</scanIntervalSeconds>
+        <stopKey>foo</stopKey>
+        <stopPort>9110</stopPort>
         <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                <port>8080</port>
+                <port>9111</port>
                 <maxIdleTime>60000</maxIdleTime>
             </connector>
             <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
-                <port>8443</port>
+                <port>9112</port>
                 <maxIdleTime>60000</maxIdleTime>
                 <keystore>${project.build.directory}/jetty-ssl.keystore</keystore>
                 <password>jetty6</password>
