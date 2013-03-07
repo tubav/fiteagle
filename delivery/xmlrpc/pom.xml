@@ -32,6 +32,8 @@
     <configuration>
         <contextPath>/</contextPath>
         <scanIntervalSeconds>5</scanIntervalSeconds>
+        <stopKey>foo</stopKey>
+        <stopPort>9999</stopPort>
         <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                 <port>8080</port>
