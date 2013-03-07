@@ -1,8 +1,8 @@
 #!/bin/bash
 
 _input="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa_getVersion.xml"
-_url_plain="http://localhost:8080/xmlrpc/"
-_url_ssl="https://localhost:8443/xmlrpc/"
+_url_plain="http://localhost:9111/xmlrpc/"
+_url_ssl="https://localhost:9112/xmlrpc/"
 
 function sendRequest {
   echo "Sending request to ${1}..."

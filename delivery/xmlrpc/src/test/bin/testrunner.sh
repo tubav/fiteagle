@@ -2,15 +2,18 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo "Stopping old/hung jetty server..."
-mvn jetty:stop
-sleep 3
-
 echo "Updating dependencies..."
-mvn -U install -DskipTests
+mvn -U -B install -DskipTests
+
+echo "Stopping old/hung jetty server..."
+mvn -B jetty:stop
+
+echo "Installing certificates..."
+./src/main/bin/ssl_create_server_cert.sh 
+#./src/main/bin/ssl_add_user_cert.sh to_be_defined testuser
 
 echo "Starting jetty server in background..."
-mvn jetty:run &
+mvn -B jetty:run &
 sleep 20
 
 echo "Running tests..."
@@ -18,7 +21,6 @@ $DIR/testSFALocalhostGetVersion.sh
 code=$?
 
 echo "Stopping jetty server..."
-mvn jetty:stop
-sleep 3
+mvn -B jetty:stop
 
 exit $code
