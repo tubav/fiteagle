@@ -3,6 +3,11 @@ package teagle.repository;
 public class NoEntityFoundException extends RepositoryException
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -238587468028435571L;
+
 	public NoEntityFoundException(Throwable cause)
 	{
 		super(cause);

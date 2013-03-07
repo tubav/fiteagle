@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import teagle.vct.model.Email;
-import teagle.vct.model.ModelManager;
 import teagle.vct.model.Person;
 import teagle.vct.model.RepositoryException;
 

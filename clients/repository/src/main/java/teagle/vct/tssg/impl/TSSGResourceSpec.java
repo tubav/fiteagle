@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import teagle.vct.model.ConfigParam;
 import teagle.vct.model.ConfigParamAtomic;
 import teagle.vct.model.ConfigParamComposite;
-import teagle.vct.model.Cost;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.Organisation;
 import teagle.vct.model.RepositoryException;

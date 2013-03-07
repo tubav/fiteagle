@@ -6,7 +6,6 @@
 	<groupId>org.fiteagle.clients</groupId>
     <artifactId>fci</artifactId>
     <packaging>pom</packaging>
-    <version>0.1-SNAPSHOT</version>
 	
 	<parent>
 		<groupId>org.fiteagle</groupId>

@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import teagle.vct.model.ConfigParamAtomic;
 import teagle.vct.model.ConfigParamComposite;
 import teagle.vct.model.Configuration;
-import teagle.vct.model.Connection;
-import teagle.vct.model.Destination;
 import teagle.vct.model.Email;
 import teagle.vct.model.Entity;
 import teagle.vct.model.EntityNotFound;
@@ -29,13 +27,12 @@ import teagle.vct.model.Organisation;
 import teagle.vct.model.Person;
 import teagle.vct.model.PersonRole;
 import teagle.vct.model.Ptm;
+import teagle.vct.model.RepoClientConfig;
 import teagle.vct.model.RepositoryException;
+import teagle.vct.model.ResourceInstance;
 import teagle.vct.model.ResourceInstanceState;
 import teagle.vct.model.ResourceInstanceState.State;
 import teagle.vct.model.ResourceSpec;
-import teagle.vct.model.ResourceInstance;
-import teagle.vct.model.Source;
-import teagle.vct.model.RepoClientConfig;
 import teagle.vct.model.Vct;
 
 /**

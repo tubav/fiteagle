@@ -10,16 +10,14 @@ import java.util.ListIterator;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 import teagle.vct.model.ConfigParamAtomic;
 import teagle.vct.model.ConfigParamComposite;
-import teagle.vct.model.ConstraintViolation;
 import teagle.vct.model.RepositoryException;
-import teagle.vct.tssg.impl.TSSGOrganisation.TSSGOrganisationInstance.PersonData;
 
 /**
  * @author sim

@@ -14,6 +14,11 @@ import teagle.repository.Util;
  * This is unused currently.
  */
 public class BookVctServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3103200345350417027L;
+
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 	}
