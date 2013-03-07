@@ -4,7 +4,6 @@
 package teagle.vct.tssg.impl;
 
 import java.net.URL;
-import java.util.Properties;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;

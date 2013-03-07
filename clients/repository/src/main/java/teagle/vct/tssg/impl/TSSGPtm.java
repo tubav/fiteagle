@@ -15,10 +15,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import teagle.vct.model.Configuration;
 import teagle.vct.model.ModelManager;
 import teagle.vct.model.Organisation;
-import teagle.vct.model.Person;
 import teagle.vct.model.Ptm;
 import teagle.vct.model.RepositoryException;
 import teagle.vct.model.ResourceSpec;

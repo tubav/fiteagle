@@ -39,6 +39,7 @@ public class FITeagleServlet extends HttpServlet {
 		out.write(result);
 	}
 
+	@SuppressWarnings("resource")
 	private String convertStreamToString(final ServletInputStream inputStream) {
 		return new java.util.Scanner(inputStream).useDelimiter("\\A").next();
 	}

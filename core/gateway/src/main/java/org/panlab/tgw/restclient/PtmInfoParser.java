@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -268,10 +269,11 @@ public class PtmInfoParser
         //if(App.ptm_indexes.containsKey(alias))
         //    return;
 
+    	Socket socket = null;
         try
         {
 
-            Socket socket = new Socket(url.getHost(), url.getPort());
+            socket = new Socket(url.getHost(), url.getPort());
 
             OutputStream os = socket.getOutputStream();
             os.write(getClientHello());
@@ -327,6 +329,14 @@ public class PtmInfoParser
         } catch (Exception error)
         {
             log.error(error.getMessage());
+        }
+        finally{
+        	if(socket!=null)
+				try {
+					socket.close();
+				} catch (IOException e) {
+					log.error(e.getMessage());
+				}
         }
 
     }

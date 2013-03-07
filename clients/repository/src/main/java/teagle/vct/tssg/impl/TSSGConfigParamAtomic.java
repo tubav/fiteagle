@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import teagle.vct.model.ConfigParamAtomic;
@@ -45,6 +44,7 @@ public class TSSGConfigParamAtomic extends TSSGConfigParam implements ConfigPara
 		flag = true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static TSSGConfigParamAtomic find(String id) {
 		return cache.find(id);
 	}
@@ -53,7 +53,6 @@ public class TSSGConfigParamAtomic extends TSSGConfigParam implements ConfigPara
 		return cache.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public TSSGConfigParamAtomic persist() {
 		return cache.persist(this);

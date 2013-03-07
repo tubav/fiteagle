@@ -13,12 +13,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import teagle.vct.model.Connection;
+import teagle.vct.model.Person;
 import teagle.vct.model.RepositoryException;
 import teagle.vct.model.ResourceInstance;
-import teagle.vct.model.VctState;
-import teagle.vct.model.Person;
 import teagle.vct.model.Vct;
+import teagle.vct.model.VctState;
 
 @XmlRootElement(name="vct")
 @XmlAccessorType(XmlAccessType.FIELD)

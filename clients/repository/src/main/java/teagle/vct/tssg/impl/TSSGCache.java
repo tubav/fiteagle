@@ -5,11 +5,8 @@ package teagle.vct.tssg.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.core.MediaType;
 
@@ -18,8 +15,6 @@ import teagle.vct.model.RepositoryException;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.AsyncWebResource.Builder;
 
 /**
  * @author sim
