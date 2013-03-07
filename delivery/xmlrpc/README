@@ -1,6 +1,6 @@
 To configure SSL:
-./src/main/bin/ssl_add_user_cert.sh
-./src/main/bin/ssl_create_server_cert.sh <YOUR CERT> <AN ALIAS>
+./src/main/bin/ssl_create_server_cert.sh 
+./src/main/bin/ssl_add_user_cert.sh <YOUR CERT> <AN ALIAS>
 
 To start:
 mvn jetty:run
