@@ -4,7 +4,6 @@ _input="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa_getVersion.xml"
 _url_plain="http://localhost:8080/xmlrpc/"
 _url_ssl="https://localhost:8443/xmlrpc/"
 
-
 function sendRequest {
   echo "Sending request to ${1}..."
   echo " * Content: ${2}"
@@ -17,14 +16,18 @@ function sendRequest {
   return $result
 }
 
+function assertEqual {
+  actual=$1; expected=$2;
+  if [ "$actual" != "$expected" ]; then
+    echo "FAILED. Expected error code $expected. I got: $actual."
+    exit 1
+  fi
+}
+
 sendRequest ${_url_plain} ${_input}
-if [ "$?" != "0" ]; then
-  echo "FAILED. Expected a success."
-fi
+actual=$?; expected="0"; assertEqual $actual $expected;
 
 sendRequest ${_url_ssl} ${_input}
-if [ "$?" != "36" ]; then
-  echo "FAILED. Expected error 35 (client must authenticate)."
-fi
+actual=$?; expected="35"; assertEqual $actual $expected;
 
 exit 0
