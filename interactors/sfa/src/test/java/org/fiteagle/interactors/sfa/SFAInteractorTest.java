@@ -22,18 +22,6 @@ public class SFAInteractorTest {
 	}
 
 	@Test
-	public void testGetVersionTemp() throws IOException {
-		final String getVersionResult = this.sfaInteractor.getVersionTemp(); 
-		Assert.assertNotNull(getVersionResult);
-	}
-
-	@Test
-	public void testListResourcesTemp() throws IOException {
-		final String listResourcesResult = this.sfaInteractor.listResourcesTemp(); 
-		Assert.assertNotNull(listResourcesResult);
-	}
-
-	@Test
 	public void testGetVersion() throws IOException {
 		final Map<String, Object> getVersionResult = this.getGeniVersion();
 		this.validateGeniCode(getVersionResult);
@@ -59,8 +47,8 @@ public class SFAInteractorTest {
 		final Map<String, Object> api_versions = (Map<String, Object>) value
 				.get(ISFA.KEY_API_VERSIONS);
 		Assert.assertNotNull(api_versions);
-		Assert.assertEquals(SFAInteractorTest.EXPECTED_API_URL,
-				api_versions.get(String.valueOf(SFAInteractorTest.EXPECTED_VERSION)));
+		Assert.assertEquals(SFAInteractorTest.EXPECTED_API_URL, api_versions
+				.get(String.valueOf(SFAInteractorTest.EXPECTED_VERSION)));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -72,11 +60,11 @@ public class SFAInteractorTest {
 
 	private void validateGeniValue(final Map<String, Object> value) {
 		Assert.assertNotNull(value);
-		
+
 		String resultedVersion = (String) value.get(ISFA.KEY_GENI_API);
-		
-		Assert.assertEquals(SFAInteractorTest.EXPECTED_VERSION,
-				Integer.valueOf(resultedVersion).intValue());
+
+		Assert.assertEquals(SFAInteractorTest.EXPECTED_VERSION, Integer
+				.valueOf(resultedVersion).intValue());
 	}
 
 	@SuppressWarnings("unchecked")

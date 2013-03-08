@@ -16,8 +16,5 @@ public interface ISFA {
 	public static final String KEY_TYPE = "type";
 
 	Map<String, Object> getVersion() throws IOException;
-	String getVersionTemp() throws IOException;
-	
 	Map<String, Object> listResources() throws IOException;
-	String listResourcesTemp() throws IOException;
 }
