@@ -1,8 +1,10 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.fiteagle.interactors.sfa.binding.GetVersionResult;
 
@@ -28,5 +30,16 @@ public class SFAInteractor implements ISFA {
 				Map.class);
 
 		return result;
+	}
+
+	@Override
+	public String getVersion2() throws IOException {
+		InputStream in = this.getClass().getResourceAsStream("/org/fiteagle/interactor/sfa/getversion_result.xml");
+		return convertStreamToString(in);
+	}
+	
+	private static String convertStreamToString(InputStream is) {
+		Scanner s = new Scanner(is).useDelimiter("\\A");
+		return s.hasNext() ? s.next() : "";
 	}
 }

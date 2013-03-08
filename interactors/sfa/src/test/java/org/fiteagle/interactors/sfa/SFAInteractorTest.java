@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class SFAInteractorTest {
 	public static final String EXPECTED_TYPE = "GENI";
-	public static final String EXPECTED_VERSION = "2";
+	public static final int EXPECTED_VERSION = 2;
 	public static final String EXPECTED_API_URL = "https://fiteagle.org/api/sfa/v2/xmlrpc/am";
 
 	private transient ISFA sfaInteractor;
@@ -19,6 +19,12 @@ public class SFAInteractorTest {
 	@Before
 	public void setUp() {
 		this.sfaInteractor = new SFAInteractor();
+	}
+
+	@Test
+	public void testGetVersion2() throws IOException {
+		final String getVersionResult = this.sfaInteractor.getVersion2(); 
+		Assert.assertNotNull(getVersionResult);
 	}
 
 	@Test
@@ -48,7 +54,7 @@ public class SFAInteractorTest {
 				.get(ISFA.KEY_API_VERSIONS);
 		Assert.assertNotNull(api_versions);
 		Assert.assertEquals(SFAInteractorTest.EXPECTED_API_URL,
-				api_versions.get(SFAInteractorTest.EXPECTED_VERSION));
+				api_versions.get(String.valueOf(SFAInteractorTest.EXPECTED_VERSION)));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -60,8 +66,11 @@ public class SFAInteractorTest {
 
 	private void validateGeniValue(final Map<String, Object> value) {
 		Assert.assertNotNull(value);
+		
+		String resultedVersion = (String) value.get(ISFA.KEY_GENI_API);
+		
 		Assert.assertEquals(SFAInteractorTest.EXPECTED_VERSION,
-				value.get(ISFA.KEY_GENI_API));
+				Integer.valueOf(resultedVersion).intValue());
 	}
 
 	@SuppressWarnings("unchecked")

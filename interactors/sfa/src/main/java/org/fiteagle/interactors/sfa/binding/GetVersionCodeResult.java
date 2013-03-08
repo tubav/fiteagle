@@ -1,7 +1,7 @@
 package org.fiteagle.interactors.sfa.binding;
 
 public class GetVersionCodeResult {
-	private String geni_code = "0";
+	private int geni_code = 0;
 	private String am_type = "";
 	private String am_code = "";
 
@@ -21,11 +21,11 @@ public class GetVersionCodeResult {
 		this.am_code = am_code;
 	}
 
-	public String getGeni_code() {
+	public int getGeni_code() {
 		return this.geni_code;
 	}
 
-	public void setGeni_code(final String geni_code) {
+	public void setGeni_code(final int geni_code) {
 		this.geni_code = geni_code;
 	}
 }
