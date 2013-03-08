@@ -10,7 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fiteagle.api.xmlrpc.util.MethodCall;
 import org.fiteagle.interactors.sfa.SFAInteractor;
+
+import com.thoughtworks.xstream.XStream;
 
 import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcServlet;
@@ -38,18 +41,26 @@ public class SFAXmlRpcServlet extends XmlRpcServlet {
 		XmlRpcInvocationHandler sfaWrap = getXmlRpcServer()
 				.getInvocationHandler("sfa");
 
+		XStream xstream = new XStream();
+		xstream.alias("methodCall", MethodCall.class);
+		MethodCall request = (MethodCall)xstream.fromXML(req.getInputStream());
+		String methodName = request.getMethodName();
+		methodName = Character.toLowerCase(
+				methodName.charAt(0)) + (methodName.length() > 1 ? methodName.substring(1) : "");
+
+		
 		try {
-//			Object ret = sfaWrap.invoke("getVersion", new LinkedList<String>());
-//			Writer writer = new OutputStreamWriter(resp.getOutputStream());
-//			this.getXmlRpcServer().getSerializer().writeEnvelopeHeader(ret, writer);
-//			this.getXmlRpcServer().getSerializer().serialize(ret, writer);
-//			this.getXmlRpcServer().getSerializer().writeEnvelopeFooter(ret, writer);
-//			writer.flush();
-			
-			String ret = (String)sfaWrap.invoke("getVersion2", new LinkedList<String>());
+			Object ret = sfaWrap.invoke(methodName, request.getParams());
 			Writer writer = new OutputStreamWriter(resp.getOutputStream());
-			writer.write(ret);
+			this.getXmlRpcServer().getSerializer().writeEnvelopeHeader(ret, writer);
+			this.getXmlRpcServer().getSerializer().serialize(ret, writer);
+			this.getXmlRpcServer().getSerializer().writeEnvelopeFooter(ret, writer);
 			writer.flush();
+//			
+//			String ret = (String)sfaWrap.invoke("getVersion2", new LinkedList<String>());
+//			Writer writer = new OutputStreamWriter(resp.getOutputStream());
+//			writer.write(ret);
+//			writer.flush();
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
