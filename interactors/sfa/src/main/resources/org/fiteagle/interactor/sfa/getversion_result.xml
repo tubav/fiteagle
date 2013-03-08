@@ -86,7 +86,7 @@
 									
 								</member>
 								
-								<memb " body: ' er>
+								<member>
 									
 									<name>geni_api_versions</name>
 									
@@ -197,7 +197,7 @@
 											
 											<member>
 												
-												<nam ' body: ' e>
+												<name>
 													schema
 												</name>
 													
@@ -300,8 +300,6 @@
 												
 												<value>
 													<string>1</string>
-													'
-													body: '
 												</value>
 												
 											</member>
@@ -413,7 +411,7 @@
 									</value>
 									
 									<value>
-										<stru ' body: ' ct>
+										<struct>
 											
 											<member>
 												
@@ -520,7 +518,7 @@
 						
 						<name>extensions</name>
 						
-						<value ' body: '>
+						<value>
 							<array>
 								<data></data>
 							</array>
@@ -628,8 +626,7 @@
 										<name>schema</name>
 										
 										<value>
-											<string>http://sorc'
-												body: 'h.netmode.ntua.gr/ws/RSpec/request.xsd</string>
+											<string>http://sorch.netmode.ntua.gr/ws/RSpec/request.xsd</string>
 										</value>
 										
 									</member>
@@ -733,7 +730,7 @@
 									
 									<member>
 										
-										<nam ' body: ' e>
+										<name>
 											type
 										</name>
 											
@@ -848,8 +845,7 @@
 									
 									<member>
 										
-										<name>namespac'
-											body: 'e
+										<name>namespace
 										</name>
 										
 										<value>
@@ -960,8 +956,6 @@
 										<value>
 											<array>
 												<data></data>
-												'
-												body: '
 											</array>
 										</value>
 										
