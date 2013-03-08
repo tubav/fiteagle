@@ -52,8 +52,7 @@
 <name>hrn</name>
 <value><string>fiteagle</string></value>
 </member>
-<memb"
-body: 'er>
+<member>
 <name>geni_api_versions</name>
 <value><struct>
 <member>
@@ -95,8 +94,7 @@ body: 'er>
 </data></array></value>
 </member>
 <member>
-<nam'
-body: 'e>schema</name>
+<name>schema</name>
 <value><string>http://sorch.netmode.ntua.gr/ws/RSpec/ad.xsd</string></value>
 </member>
 </struct></value>
@@ -132,8 +130,7 @@ body: 'e>schema</name>
 <value><nil/></value></member>
 <member>
 <name>version</name>
-<value><string>1</string>'
-body: '</value>
+<value><string>1</string></value>
 </member>
 <member>
 <name>type</name>
@@ -174,8 +171,7 @@ body: '</value>
 <value><string>http://www.geni.net/resources/rspec/3/ad.xsd</string></value>
 </member>
 </struct></value>
-<value><stru'
-body: 'ct>
+<value><struct>
 <member>
 <name>namespace</name>
 <value><string>http://www.protogeni.net/resources/rspec/2</string></value>
@@ -215,8 +211,7 @@ body: 'ct>
 </member>
 <member>
 <name>extensions</name>
-<value'
-body: '><array><data>
+<value><array><data>
 </data></array></value>
 </member>
 <member>
@@ -255,8 +250,7 @@ body: '><array><data>
 </member>
 <member>
 <name>schema</name>
-<value><string>http://sorc'
-body: 'h.netmode.ntua.gr/ws/RSpec/request.xsd</string></value>
+<value><string>http://sorch.netmode.ntua.gr/ws/RSpec/request.xsd</string></value>
 </member>
 </struct></value>
 <value><struct>
@@ -294,8 +288,7 @@ body: 'h.netmode.ntua.gr/ws/RSpec/request.xsd</string></value>
 <value><string>1</string></value>
 </member>
 <member>
-<nam'
-body: 'e>type</name>
+<name>type</name>
 <value><string>SFA</string></value>
 </member>
 <member>
@@ -335,8 +328,7 @@ body: 'e>type</name>
 </struct></value>
 <value><struct>
 <member>
-<name>namespac'
-body: 'e</name>
+<name>namespace</name>
 <value><string>http://www.protogeni.net/resources/rspec/2</string></value>
 </member>
 <member>
@@ -375,8 +367,7 @@ body: 'e</name>
 <member>
 <name>extensions</name>
 <value><array><data>
-</data>'
-body: '</array></value>
+</data></array></value>
 </member>
 <member>
 <name>schema</name>
