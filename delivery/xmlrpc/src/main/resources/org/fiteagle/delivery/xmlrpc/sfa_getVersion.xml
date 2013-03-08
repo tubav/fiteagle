@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
  <methodCall> 
- <methodName>interactor.getVersion</methodName>
+ <methodName>getVersion</methodName>
  <params>
  </params>
  </methodCall>

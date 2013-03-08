@@ -6,7 +6,7 @@
 
   <servlet>
         <servlet-name>XmlRpcServlet</servlet-name>
-        <servlet-class>org.apache.xmlrpc.webserver.XmlRpcServlet</servlet-class>
+        <servlet-class>org.fiteagle.api.xmlrpc.SFAXmlRpcServlet</servlet-class>
         <init-param>
           <param-name>enabledForExtensions</param-name>
           <param-value>true</param-value>

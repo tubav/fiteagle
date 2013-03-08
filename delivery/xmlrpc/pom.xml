@@ -19,70 +19,84 @@
 			<id>fiteagle-repo</id>
 			<url>http://fiteagle.org/maven</url>
 		</repository>
+		<repository>
+			<id>thirdparty-releases</id>
+			<name>JBoss Thirdparty Releases</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+		</repository>
 	</repositories>
 
 
-<build>
-<plugins>
+	<build>
+		<plugins>
 
-<plugin>
-    <groupId>org.mortbay.jetty</groupId>
-    <artifactId>maven-jetty-plugin</artifactId>
-    <version>6.1.10</version>
-    <configuration>
-        <contextPath>/</contextPath>
-        <scanIntervalSeconds>5</scanIntervalSeconds>
-        <stopKey>foo</stopKey>
-        <stopPort>9110</stopPort>
-        <connectors>
-            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                <port>9111</port>
-                <maxIdleTime>60000</maxIdleTime>
-            </connector>
-            <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
-                <port>9112</port>
-                <maxIdleTime>60000</maxIdleTime>
-                <keystore>${project.build.directory}/jetty-ssl.keystore</keystore>
-                <password>jetty6</password>
-                <keyPassword>jetty6</keyPassword>
-                <needClientAuth>true</needClientAuth>
-            </connector>
-        </connectors>
-    </configuration>
-</plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <webResources>
-            <resource>
-              <!-- this is relative to the pom.xml directory -->
-              <targetPath>WEB-INF/classes</targetPath>
-              <directory>src/main/resources</directory>
-            </resource>
-          </webResources>
-        </configuration>
-      </plugin>
-</plugins>
-</build> 
-<dependencies>
-<dependency>
-	<groupId>org.apache.xmlrpc</groupId>
-	<artifactId>xmlrpc-server</artifactId>
-	<version>3.1.3</version>
-</dependency>
-<dependency>
-	<groupId>org.fiteagle.interactors</groupId>
-	<artifactId>sfa</artifactId>
-    <version>0.1-SNAPSHOT</version>
-</dependency>
-           
-	<dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>javax.servlet-api</artifactId>
-		<version>3.1-b06</version>
-	</dependency>
-</dependencies>            
-      
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.10</version>
+				<configuration>
+					<contextPath>/</contextPath>
+					<scanIntervalSeconds>5</scanIntervalSeconds>
+					<stopKey>foo</stopKey>
+					        
+					<stopPort>9110</stopPort>
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>9111</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+						<connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+							<port>9112</port>
+							<maxIdleTime>60000</maxIdleTime>
+							<keystore>${project.build.directory}/jetty-ssl.keystore</keystore>
+							<password>jetty6</password>
+							<keyPassword>jetty6</keyPassword>
+							<truststore>${project.build.directory}/keystore.jks</truststore>
+							<trustPassword>jetty6</trustPassword>
+							<needClientAuth>true</needClientAuth>
+						</connector>
+					</connectors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<!-- this is relative to the pom.xml directory -->
+							<targetPath>WEB-INF/classes</targetPath>
+							<directory>src/main/resources</directory>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.xmlrpc</groupId>
+			<artifactId>xmlrpc-server</artifactId>
+			<version>3.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fiteagle.interactors</groupId>
+			<artifactId>sfa</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1-b06</version>
+		</dependency>
+
+		<dependency>
+			<groupId>redstone.xmlrpc</groupId>
+			<artifactId>xmlrpc</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+	</dependencies>
+
 </project>
