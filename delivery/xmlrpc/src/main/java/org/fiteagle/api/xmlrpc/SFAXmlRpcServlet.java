@@ -41,7 +41,9 @@ public class SFAXmlRpcServlet extends XmlRpcServlet {
 		try {
 			Object ret = sfaWrap.invoke("getVersion", new LinkedList<String>());
 			Writer writer = new OutputStreamWriter(resp.getOutputStream());
+			this.getXmlRpcServer().getSerializer().writeEnvelopeHeader(ret, writer);
 			this.getXmlRpcServer().getSerializer().serialize(ret, writer);
+			this.getXmlRpcServer().getSerializer().writeEnvelopeFooter(ret, writer);
 			writer.flush();
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
