@@ -22,17 +22,23 @@ public class SFAInteractorTest {
 	}
 
 	@Test
-	public void testGetVersion2() throws IOException {
-		final String getVersionResult = this.sfaInteractor.getVersion2(); 
+	public void testGetVersionTemp() throws IOException {
+		final String getVersionResult = this.sfaInteractor.getVersionTemp(); 
 		Assert.assertNotNull(getVersionResult);
 	}
 
 	@Test
-	public void testGetVersion() throws IOException {
-		final Map<String, Object> version = this.getGeniVersion();
-		this.validateGeniCode(version);
+	public void testListResourcesTemp() throws IOException {
+		final String listResourcesResult = this.sfaInteractor.listResourcesTemp(); 
+		Assert.assertNotNull(listResourcesResult);
+	}
 
-		final Map<String, Object> value = this.getGeniValue(version);
+	@Test
+	public void testGetVersion() throws IOException {
+		final Map<String, Object> getVersionResult = this.getGeniVersion();
+		this.validateGeniCode(getVersionResult);
+
+		final Map<String, Object> value = this.getGeniValue(getVersionResult);
 		this.validateGeniValue(value);
 		this.valudateGeniAPIs(value);
 		this.validateRSpecVersions(value);

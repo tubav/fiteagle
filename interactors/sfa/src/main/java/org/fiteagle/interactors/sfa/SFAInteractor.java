@@ -19,6 +19,25 @@ public class SFAInteractor implements ISFA {
 		return resultMap;
 	}
 
+	@Override
+	public String getVersionTemp() throws IOException {
+		InputStream in = this.getClass().getResourceAsStream(
+				"/org/fiteagle/interactor/sfa/getversion_response.xml");
+		return convertStreamToString(in);
+	}
+
+	@Override
+	public Map<String, Object> listResources() throws IOException {
+		return null;
+	}
+	
+	@Override
+	public String listResourcesTemp() throws IOException {
+		InputStream in = this.getClass().getResourceAsStream(
+				"/org/fiteagle/interactor/sfa/listresources_response.xml");
+		return convertStreamToString(in);
+	}
+
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> convertToMap(final Object getVersionResult)
 			throws IOException {
@@ -32,12 +51,7 @@ public class SFAInteractor implements ISFA {
 		return result;
 	}
 
-	@Override
-	public String getVersion2() throws IOException {
-		InputStream in = this.getClass().getResourceAsStream("/org/fiteagle/interactor/sfa/getversion_result.xml");
-		return convertStreamToString(in);
-	}
-	
+	@SuppressWarnings("resource")
 	private static String convertStreamToString(InputStream is) {
 		Scanner s = new Scanner(is).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
