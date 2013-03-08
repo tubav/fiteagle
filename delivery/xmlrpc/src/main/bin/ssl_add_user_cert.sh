@@ -7,4 +7,4 @@ if [ ! -f "$1" ] || [ "" == "$2" ]; then
 fi
 
 mkdir -p target
-keytool -importcert -noprompt -storepass jetty6 -file "${1}" -keystore target/keystore.jks -alias "${2}" 
+keytool -importcert -noprompt -storepass jetty6 -file "${1}" -keystore target/jetty-ssl.keystore -alias "${2}" 
