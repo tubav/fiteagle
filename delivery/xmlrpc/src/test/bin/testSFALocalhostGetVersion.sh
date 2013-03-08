@@ -7,14 +7,19 @@ _url_ssl="https://localhost:9112/xmlrpc/"
 function sendRequest {
   echo "Sending request to ${1}..."
   echo " * Content: ${2}"
-  echo " * Answer: "
-  echo "-------------------------------"
+  
   if [ "${3}" == "" ]; then
-    curl -k --data @${2} ${1}
+    content="`curl -ks --data @${2} ${1}`"
   else
-    curl -k --data @${2} --key ${3} ${1}
+    content="`curl -ks --data @${2} --key ${3} ${1}`"
   fi
   result=$?
+  if [ "$content" == "" ]; then
+    result="111"
+  fi
+  echo " * Answer: "
+  echo "-------------------------------"
+  echo $content
   echo "-------------------------------"
   echo ""
   return $result
