@@ -1,6 +1,7 @@
 #!/bin/bash
 
-_input="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa_getVersion.xml"
+_getversion="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa/getversion_request.xml"
+_listresources="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml"
 _url_plain="http://localhost:9111/xmlrpc/"
 _url_ssl="https://localhost:9112/xmlrpc/"
 
@@ -33,12 +34,13 @@ function assertEqual {
   fi
 }
 
-sendRequest ${_url_plain} ${_input}
+sendRequest ${_url_plain} ${_getversion}
 actual=$?; expected="0"; assertEqual $actual $expected;
 
-sendRequest ${_url_ssl} ${_input}
-actual=$?; expected="35"; assertEqual $actual $expected;
+sendRequest ${_url_plain} ${_listresources}
+actual=$?; expected="0"; assertEqual $actual $expected;
 
-#sendRequest ${_url_ssl} ${_input} ${_key} 
+sendRequest ${_url_ssl} ${_getversion}
+actual=$?; expected="35"; assertEqual $actual $expected;
 
 exit 0
