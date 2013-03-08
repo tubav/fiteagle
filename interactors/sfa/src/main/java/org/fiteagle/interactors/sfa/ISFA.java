@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface ISFA {
 	public static final String ERRORCODE_SUCCESS = "0";
-	
+
 	public static final String KEY_GENI_API = "geni_api";
 	public static final String KEY_CODE = "code";
 	public static final String KEY_GENI_CODE = "geni_code";

@@ -4,7 +4,7 @@ import org.fiteagle.interfaces.frcp.IFRCP;
 
 public class Stopwatch implements IFRCP {
 
-	private boolean runningState = false;
+	private transient boolean runningState = false;
 
 	public boolean isRunning() {
 		return runningState;
@@ -23,14 +23,22 @@ public class Stopwatch implements IFRCP {
 		return true;}
 
 	@Override
-	public void configure() {}
+	public void configure() {
+		// nothing yet
+	}
 
 	@Override
-	public void request() {}
+	public void request() {
+		// nothing yet
+	}
 
 	@Override
-	public void create() {}
+	public void create() {
+		// nothing yet
+	}
 
 	@Override
-	public void release() {}
+	public void release() {
+		// nothing yet
+	}
 }

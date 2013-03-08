@@ -14,36 +14,36 @@ public class GetVersionValueResult {
 	}
 
 	public List<GeniRequestRSpecVersions> getGeni_request_rspec_versions() {
-		return geni_request_rspec_versions;
+		return this.geni_request_rspec_versions;
 	}
 
 	public void setGeni_request_rspec_versions(
-			List<GeniRequestRSpecVersions> geni_request_rspec_versions) {
+			final List<GeniRequestRSpecVersions> geni_request_rspec_versions) {
 		this.geni_request_rspec_versions = geni_request_rspec_versions;
 	}
 
 	public List<GeniAdRSpecVersions> getGeni_ad_rspec_versions() {
-		return geni_ad_rspec_versions;
+		return this.geni_ad_rspec_versions;
 	}
 
 	public void setGeni_ad_rspec_versions(
-			List<GeniAdRSpecVersions> geni_ad_rspec_versions) {
+			final List<GeniAdRSpecVersions> geni_ad_rspec_versions) {
 		this.geni_ad_rspec_versions = geni_ad_rspec_versions;
 	}
 
 	public String getGeni_api() {
-		return geni_api;
+		return this.geni_api;
 	}
 
-	public void setGeni_api(String geni_api) {
+	public void setGeni_api(final String geni_api) {
 		this.geni_api = geni_api;
 	}
 
 	public GeniAPIVersions getApi_versions() {
-		return api_versions;
+		return this.api_versions;
 	}
 
-	public void setApi_versions(GeniAPIVersions api_versions) {
+	public void setApi_versions(final GeniAPIVersions api_versions) {
 		this.api_versions = api_versions;
 	}
 
