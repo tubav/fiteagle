@@ -9,7 +9,11 @@ function sendRequest {
   echo " * Content: ${2}"
   echo " * Answer: "
   echo "-------------------------------"
-  curl -k --data @${2} ${1}
+  if [ "${3}" == "" ]; then
+    curl -k --data @${2} ${1}
+  else
+    curl -k --data @${2} --key ${3} ${1}
+  fi
   result=$?
   echo "-------------------------------"
   echo ""
@@ -29,5 +33,7 @@ actual=$?; expected="0"; assertEqual $actual $expected;
 
 sendRequest ${_url_ssl} ${_input}
 actual=$?; expected="35"; assertEqual $actual $expected;
+
+//sendRequest ${_url_ssl} ${_input} ${_key} 
 
 exit 0
