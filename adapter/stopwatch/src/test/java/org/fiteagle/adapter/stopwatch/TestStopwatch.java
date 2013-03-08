@@ -7,16 +7,16 @@ import org.junit.Test;
 
 public class TestStopwatch {
 
-	private Stopwatch stopwatch;
+	private transient Stopwatch stopwatch;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		stopwatch = new Stopwatch();
 	}
 
 
 	@Test
-	public void testRunStopIsRunning() throws Exception {
+	public void testRunStopIsRunning() {
 		Assert.assertFalse(stopwatch.isRunning());
 		stopwatch.run();
 		Assert.assertTrue(stopwatch.isRunning());
@@ -27,7 +27,7 @@ public class TestStopwatch {
 	
 	//http://mytestbed.net/projects/omf/wiki/ArchitecturalFoundation2ProtocolInteractions
 	@Test
-	public void testFRCPInterface() throws Exception {
+	public void testFRCPInterface() {
 		//stopwatch.inform();
 		Assert.assertTrue(stopwatch.inform());
 		stopwatch.configure();

@@ -10,21 +10,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SFAInteractor implements ISFA {
 
+	@Override
 	public Map<String, Object> getVersion() throws IOException {
-		GetVersionResult resultObject = new GetVersionResult();
-		Map<String, Object> resultMap = convertToMap(resultObject);
+		final GetVersionResult resultObject = new GetVersionResult();
+		final Map<String, Object> resultMap = this.convertToMap(resultObject);
 		return resultMap;
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, Object> convertToMap(Object getVersionResult)
+	private Map<String, Object> convertToMap(final Object getVersionResult)
 			throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter writer = new StringWriter();
-		
+		final ObjectMapper mapper = new ObjectMapper();
+		final StringWriter writer = new StringWriter();
+
 		mapper.writeValue(writer, getVersionResult);
-		Map<String, Object> result = mapper.readValue(writer.toString(), Map.class);
-		
+		final Map<String, Object> result = mapper.readValue(writer.toString(),
+				Map.class);
+
 		return result;
 	}
 }
