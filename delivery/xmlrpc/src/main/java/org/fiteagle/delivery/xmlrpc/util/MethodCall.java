@@ -1,4 +1,4 @@
-package org.fiteagle.api.xmlrpc.util;
+package org.fiteagle.delivery.xmlrpc.util;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ public MethodCall() {
 	// TODO Auto-generated constructor stub
 }
 public String getMethodName() {
-	
-	return methodName;
+	return Character.toLowerCase(methodName.charAt(0))
+			+ (methodName.length() > 1 ? methodName.substring(1) : "");
 }
 public void setMethodName(String methodName) {
 	this.methodName = methodName;
