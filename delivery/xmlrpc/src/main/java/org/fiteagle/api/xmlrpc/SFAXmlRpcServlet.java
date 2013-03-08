@@ -1,10 +1,7 @@
 package org.fiteagle.api.xmlrpc;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 
@@ -21,41 +18,36 @@ import redstone.xmlrpc.handlers.ReflectiveInvocationHandler;
 
 public class SFAXmlRpcServlet extends XmlRpcServlet {
 
-	
-
-	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-			
-		XmlRpcInvocationHandler sfaWrap = getXmlRpcServer().getInvocationHandler("sfa");
-		
-		try {
-			Object ret = sfaWrap.invoke("getVersion",new LinkedList<String>());
-			Writer writer =new OutputStreamWriter(resp.getOutputStream());
-			this.getXmlRpcServer().getSerializer().serialize(ret, writer);
-			writer.flush();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4349365825732565723L;
 
 	@Override
 	public void init(ServletConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
 		super.init(arg0);
-		ReflectiveInvocationHandler recHandler = new ReflectiveInvocationHandler(new SFAInteractor());
-		
+		ReflectiveInvocationHandler recHandler = new ReflectiveInvocationHandler(
+				new SFAInteractor());
+
 		getXmlRpcServer().addInvocationHandler("sfa", recHandler);
-		
-		
+
 	}
-	
-	
-	
+
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		XmlRpcInvocationHandler sfaWrap = getXmlRpcServer()
+				.getInvocationHandler("sfa");
+
+		try {
+			Object ret = sfaWrap.invoke("getVersion", new LinkedList<String>());
+			Writer writer = new OutputStreamWriter(resp.getOutputStream());
+			this.getXmlRpcServer().getSerializer().serialize(ret, writer);
+			writer.flush();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 }

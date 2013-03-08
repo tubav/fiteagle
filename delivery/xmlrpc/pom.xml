@@ -51,8 +51,8 @@
 							<keystore>${project.build.directory}/jetty-ssl.keystore</keystore>
 							<password>jetty6</password>
 							<keyPassword>jetty6</keyPassword>
-							<truststore>${project.build.directory}/keystore.jks</truststore>
-							<trustPassword>jetty6</trustPassword>
+							<!-- <truststore>${project.build.directory}/keystore.jks</truststore>
+							<trustPassword>jetty6</trustPassword>-->
 							<needClientAuth>true</needClientAuth>
 						</connector>
 					</connectors>
