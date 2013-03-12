@@ -2,9 +2,6 @@ package org.fiteagle.delivery.xmlrpc;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.servlet.ServletConfig;
@@ -13,52 +10,66 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
-import org.fiteagle.delivery.xmlrpc.util.MethodCall;
+import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
 import org.fiteagle.interactors.sfa.SFAInteractor;
 
 import redstone.xmlrpc.XmlRpcInvocationHandler;
+import redstone.xmlrpc.XmlRpcServer;
 import redstone.xmlrpc.XmlRpcServlet;
 import redstone.xmlrpc.handlers.ReflectiveInvocationHandler;
 
-import com.thoughtworks.xstream.XStream;
+//import com.thoughtworks.xstream.XStream;
 
 public class FITeagleServlet extends XmlRpcServlet {
 
 	private static final String HANDLER = "handler";
 	private static final long serialVersionUID = -4349365825732565723L;
 	private XmlRpcInvocationHandler handler;
-	private final XStream xstream;
+	//private final XStream xstream;
 	private Object interactor;
 
+	private XmlRpcServer server;
+	
 	public FITeagleServlet() {
-		this.xstream = new XStream();
+		
+		
 		//TODO: choose dependency injection here (i.e. add a parameter to
 		// define the interactor here, use reflection to find one or use
 		// a config file)
 		this.interactor = new SFAInteractor();
+		this.server = new FixedXmlRpcServer();
 	}
 
 	@Override
-	public void init(final ServletConfig arg0) throws ServletException {
-		super.init(arg0);
+	public void init(final ServletConfig servletConfig) throws ServletException {
+		super.init(servletConfig);
+		this.server.setSerializer(new FixedSerializer());
 		final ReflectiveInvocationHandler sfaInteractor = new ReflectiveInvocationHandler(
 				this.interactor);
 
-		this.getXmlRpcServer().addInvocationHandler(FITeagleServlet.HANDLER,
+		this.server.addInvocationHandler("__default__",
 				sfaInteractor);
+		 
+		
+		XmlRpcController controller = new XmlRpcController();
+		this.server.addInvocationInterceptor(controller);
+		
 	}
 
 	@Override
 	public void doPost(final HttpServletRequest req,
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
-
-		this.handler = this.getXmlRpcServer().getInvocationHandler(
-				FITeagleServlet.HANDLER);
-
-		this.handleRequest(req.getInputStream(), resp.getOutputStream());
+//
+//		this.handler = this.getXmlRpcServer().getInvocationHandler(
+//				FITeagleServlet.HANDLER);
+//
+		this.handleRequest(req.getInputStream(), resp.getWriter());
+		
+		
 	}
 
+	
 	public String handleRequestGetVersionStatic() throws IOException {
 		return FITeagleUtils
 				.getFileAsString("/org/fiteagle/delivery/xmlrpc/sfa/getversion_response.xml");
@@ -70,22 +81,11 @@ public class FITeagleServlet extends XmlRpcServlet {
 	}
 
 	public void handleRequest(final InputStream inputStream,
-			final OutputStream outputStream) throws IOException {
-		final Writer writer = new OutputStreamWriter(outputStream);
-
-		final MethodCall request = this.parseInputXML(inputStream);
-
-		if ("getVersion".equals(request.getMethodName())) {
-			writer.write(this.handleRequestGetVersionStatic());
-		} else if ("listResources".equals(request.getMethodName())) {
-			writer.write(this.handleRequestListResourcesStatic());
-		} else {
-			writer.write(this.handleRequest(request));
-		}
-
-		writer.flush();
+			final Writer writer) throws IOException {
+		server.execute(inputStream, writer);
 	}
 
+	/**
 	private String handleRequest(final MethodCall request) throws IOException {
 		final StringWriter writer = new StringWriter();
 		final String methodName = request.getMethodName();
@@ -95,10 +95,11 @@ public class FITeagleServlet extends XmlRpcServlet {
 			// testing...
 			final Object ret = this.handler.invoke(methodName,
 					request.getParams());
-			this.getXmlRpcServer().getSerializer()
+			
+			this.server.getSerializer()
 					.writeEnvelopeHeader(ret, writer);
-			this.getXmlRpcServer().getSerializer().serialize(ret, writer);
-			this.getXmlRpcServer().getSerializer()
+			this.server.getSerializer().serialize(ret, writer);
+			this.server.getSerializer()
 					.writeEnvelopeFooter(ret, writer);
 			//
 			// String ret = (String)sfaWrap.invoke("getVersion2", new
@@ -115,9 +116,11 @@ public class FITeagleServlet extends XmlRpcServlet {
 	}
 
 	private MethodCall parseInputXML(final InputStream inputStream) {
-		this.xstream.alias("methodCall", MethodCall.class);
+		
 		final MethodCall request = (MethodCall) this.xstream
 				.fromXML(inputStream);
 		return request;
 	}
+	
+	*/
 }

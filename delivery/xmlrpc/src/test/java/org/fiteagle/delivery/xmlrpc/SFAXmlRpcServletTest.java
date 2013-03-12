@@ -1,13 +1,12 @@
 package org.fiteagle.delivery.xmlrpc;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import junit.framework.Assert;
 
-import org.fiteagle.delivery.xmlrpc.FITeagleServlet;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,22 +39,24 @@ public class SFAXmlRpcServletTest {
 	// @Test
 	// TODO: @Daniel: to be fixed
 	public void testCallListResources() throws IOException {
-		OutputStream outputStream = new ByteArrayOutputStream();
+		
+		Writer writer = new StringWriter();
 		InputStream inputStream = FITeagleUtils
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml");
-		this.servlet.handleRequest(inputStream, outputStream);
-		String resultXML = outputStream.toString();
+		this.servlet.handleRequest(inputStream, writer);
+		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
 		//TODO: add a more sophisticated assertion here
 	}
 
 	@Test
 	public void testCallGetVersion() throws IOException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		
+		Writer writer = new StringWriter();
 		InputStream inputStream = FITeagleUtils
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/getversion_request.xml");
-		this.servlet.handleRequest(inputStream, outputStream);
-		String resultXML = outputStream.toString();
+		this.servlet.handleRequest(inputStream, writer);
+		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
 		//TODO: add a more sophisticated assertion here
 	}
