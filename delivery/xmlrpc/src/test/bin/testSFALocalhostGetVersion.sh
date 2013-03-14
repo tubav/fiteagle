@@ -4,6 +4,8 @@ _getversion="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa/getversion_requ
 _listresources="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml"
 _url_plain="http://localhost:9111/xmlrpc/"
 _url_ssl="https://localhost:9112/xmlrpc/"
+_omni="/opt/gcf/current/src/omni.py"
+_omni_name="fiteagle"
 
 function sendRequest {
   echo "Sending request to ${1}..."
@@ -42,5 +44,12 @@ actual=$?; expected="0"; assertEqual $actual $expected;
 
 sendRequest ${_url_ssl} ${_getversion}
 actual=$?; expected="35"; assertEqual $actual $expected;
+
+if [ ! -f "${_omni}"]; then
+  echo "Skipped: ${_omni} not found";
+else
+  python ${_omni} getversion -a ${_omni_name}
+  actual=$?; expected="0"; assertEqual $actual $expected;
+fi
 
 exit 0
