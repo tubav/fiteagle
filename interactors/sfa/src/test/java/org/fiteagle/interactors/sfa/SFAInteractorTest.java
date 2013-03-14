@@ -6,6 +6,13 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.fiteagle.interactors.sfa.getversion.GeniAPIVersion;
+import org.fiteagle.interactors.sfa.getversion.GeniRequestRSpecVersions;
+import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
+import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
+import org.fiteagle.interactors.sfa.types.AMCode;
+import org.fiteagle.interactors.sfa.types.AMResult;
+import org.fiteagle.interactors.sfa.types.AMValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,69 +25,73 @@ public class SFAInteractorTest {
 
 	@Before
 	public void setUp() {
-		this.sfaInteractor = new SFAInteractor();
+		this.sfaInteractor = new SFAInteractor_v2();
 	}
 
 	@Test
 	public void testGetVersion() throws IOException {
-		final Map<String, Object> getVersionResult = this.getGeniVersion();
+		final GetVersionResult getVersionResult = this.getGeniVersion();
 		this.validateGeniCode(getVersionResult);
 
-		final Map<String, Object> value = this.getGeniValue(getVersionResult);
-		this.validateGeniValue(value);
-		this.valudateGeniAPIs(value);
+		final GetVersionValue value = (GetVersionValue) this.getGeniValue(getVersionResult);
+		
+		//TODO to be tested on delivery layer =>
+		//this.validateGetVersionGeniValue(value);
+		//TODO to be tested on delivery layer =>
+		//this.valudateGeniAPIs(value);
 		this.validateRSpecVersions(value);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void validateRSpecVersions(final Map<String, Object> value) {
-		final List<Map<String, Object>> rspec_versions = (List<Map<String, Object>>) value
-				.get(ISFA.KEY_RSPEC_VERSIONS);
-		Assert.assertNotNull(rspec_versions);
-		Assert.assertFalse(rspec_versions.isEmpty());
-		Assert.assertEquals(rspec_versions.get(0).get(ISFA.KEY_TYPE),
+	private void validateRSpecVersions(final GetVersionValue value) {
+		final List<GeniRequestRSpecVersions> request_rspec_versions =  value
+				.getGeni_request_rspec_versions();
+		Assert.assertNotNull(request_rspec_versions);
+		Assert.assertFalse(request_rspec_versions.isEmpty());
+		Assert.assertEquals(request_rspec_versions.get(0).getType(),
 				SFAInteractorTest.EXPECTED_TYPE);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void valudateGeniAPIs(final Map<String, Object> value) {
-		final Map<String, Object> api_versions = (Map<String, Object>) value
-				.get(ISFA.KEY_API_VERSIONS);
+	private void valudateGetVersionGeniAPIs(final GetVersionValue value ) {
+		final Map<String,GeniAPIVersion> api_versions =  value
+				.getGeni_api_versions();
 		Assert.assertNotNull(api_versions);
-		Assert.assertEquals(SFAInteractorTest.EXPECTED_API_URL, api_versions
-				.get(String.valueOf(SFAInteractorTest.EXPECTED_VERSION)));
+//		Assert.assertEquals(SFAInteractorTest.EXPECTED_API_URL, api_versions.
+//				.get(String.valueOf(SFAInteractorTest.EXPECTED_VERSION)));
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, Object> getGeniValue(final Map<String, Object> version) {
-		final Map<String, Object> value = (Map<String, Object>) version
-				.get(ISFA.KEY_VALUE);
+	private AMValue getGeniValue(final AMResult amResult) {
+		final AMValue value =  amResult
+				.getValue();
 		return value;
 	}
 
-	private void validateGeniValue(final Map<String, Object> value) {
+	private void validateGetVersionGeniValue(final GetVersionValue value) {
 		Assert.assertNotNull(value);
 
-		String resultedVersion = (String) value.get(ISFA.KEY_GENI_API);
+		int resultedVersion = value.getGeni_api();
 
 		Assert.assertEquals(SFAInteractorTest.EXPECTED_VERSION, Integer
 				.valueOf(resultedVersion).intValue());
 	}
 
 	@SuppressWarnings("unchecked")
-	private void validateGeniCode(final Map<String, Object> version) {
-		final Map<String, Object> code = (Map<String, Object>) version
-				.get(ISFA.KEY_CODE);
+	private void validateGeniCode(final GetVersionResult getVersionResult) {
+		final AMCode code = getVersionResult.getCode();
+				
 		Assert.assertNotNull(code);
 		Assert.assertEquals(ISFA.ERRORCODE_SUCCESS,
-				code.get(ISFA.KEY_GENI_CODE));
+				code.getGeni_code());
 	}
 
-	private Map<String, Object> getGeniVersion() throws IOException {
-		final Map<String, Object> version = this.sfaInteractor.getVersion();
+	private GetVersionResult getGeniVersion() throws IOException {
+		final GetVersionResult version = this.sfaInteractor.getVersion();
 		Assert.assertNotNull(version);
-		Assert.assertEquals(SFAInteractorTest.EXPECTED_VERSION,
-				version.get(ISFA.KEY_GENI_API));
+		//version is to be supplied by the according delivery mechanism
+//		Assert.assertEquals(SFAInteractorTest.EXPECTED_VERSION,
+//				version.getGeniApiVersion());
 		return version;
 	}
 }

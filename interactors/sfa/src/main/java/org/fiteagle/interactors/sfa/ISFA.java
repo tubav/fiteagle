@@ -2,6 +2,7 @@ package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
 import java.util.Map;
+import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 
 public interface ISFA {
 	public static final int ERRORCODE_SUCCESS = 0;
@@ -15,6 +16,6 @@ public interface ISFA {
 	public static final String KEY_VERSION = "version";
 	public static final String KEY_TYPE = "type";
 
-	Map<String, Object> getVersion() throws IOException;
+	GetVersionResult getVersion() throws IOException;
 	Map<String, Object> listResources() throws IOException;
 }

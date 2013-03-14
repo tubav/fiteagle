@@ -1,9 +1,9 @@
-package org.fiteagle.interactors.sfa.binding;
+package org.fiteagle.interactors.sfa.getversion;
 
-public class GeniAdRSpecVersions {
+public class GeniRequestRSpecVersions {
 	private String type = "GENI";
 	private String version = "2";
-	private String schema = "http://www.geni.net/resources/rspec/2/ad.xsd";
+	private String schema = "http://www.geni.net/resources/rspec/2/request.xsd";
 	private String namespace = "http://www.geni.net/resources/rspec/2";
 
 	public String getType() {
@@ -37,5 +37,4 @@ public class GeniAdRSpecVersions {
 	public void setNamespace(final String namespace) {
 		this.namespace = namespace;
 	}
-
 }

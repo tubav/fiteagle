@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
-import org.fiteagle.interactors.sfa.SFAInteractor;
+import org.fiteagle.delivery.xmlrpc.util.SFAHandler;
+import org.fiteagle.interactors.sfa.SFAInteractor_v2;
 
 import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcServer;
@@ -25,8 +26,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 	private static final String HANDLER = "handler";
 	private static final long serialVersionUID = -4349365825732565723L;
 	private XmlRpcInvocationHandler handler;
-	//private final XStream xstream;
-	private Object interactor;
+	
 
 	private XmlRpcServer server;
 	
@@ -36,19 +36,19 @@ public class FITeagleServlet extends XmlRpcServlet {
 		//TODO: choose dependency injection here (i.e. add a parameter to
 		// define the interactor here, use reflection to find one or use
 		// a config file)
-		this.interactor = new SFAInteractor();
+		
 		this.server = new FixedXmlRpcServer();
+		
 	}
 
 	@Override
 	public void init(final ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 		this.server.setSerializer(new FixedSerializer());
-		final ReflectiveInvocationHandler sfaInteractor = new ReflectiveInvocationHandler(
-				this.interactor);
+		final XmlRpcInvocationHandler sfaHandler = new SFAHandler();
 
 		this.server.addInvocationHandler("__default__",
-				sfaInteractor);
+				sfaHandler);
 		 
 		
 		XmlRpcController controller = new XmlRpcController();
@@ -64,7 +64,10 @@ public class FITeagleServlet extends XmlRpcServlet {
 //		this.handler = this.getXmlRpcServer().getInvocationHandler(
 //				FITeagleServlet.HANDLER);
 //
+		
+		
 		this.handleRequest(req.getInputStream(), resp.getWriter());
+		
 		
 		
 	}

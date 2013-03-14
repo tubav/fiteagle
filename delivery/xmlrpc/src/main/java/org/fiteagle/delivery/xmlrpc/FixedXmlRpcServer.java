@@ -9,10 +9,15 @@ import redstone.xmlrpc.XmlRpcServer;
 
 public class FixedXmlRpcServer extends XmlRpcServer {
 
+	XmlRpcDispatcher dispatcher = null;
+	
+	public FixedXmlRpcServer(){
+		this.dispatcher = new FixedXmlRpcDispatcher(this, "(unknown)");
+	}
+	
 	@Override
 	public void execute(InputStream paramInputStream, Writer paramWriter) throws XmlRpcException {
-		 XmlRpcDispatcher localXmlRpcDispatcher = new FixedXmlRpcDispatcher(this, "(unknown)");
-		 localXmlRpcDispatcher.dispatch(paramInputStream, paramWriter);
+		 dispatcher.dispatch(paramInputStream, paramWriter);
 	}
 	
 	

@@ -36,7 +36,7 @@ public class SFAXmlRpcServletTest {
 		Assert.assertFalse(listResourcesResult.isEmpty());
 	}
 
-	// @Test
+	@Test
 	// TODO: @Daniel: to be fixed
 	public void testCallListResources() throws IOException {
 		
@@ -45,8 +45,10 @@ public class SFAXmlRpcServletTest {
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml");
 		this.servlet.handleRequest(inputStream, writer);
 		String resultXML = writer.toString();
+		System.out.println(resultXML);
 		Assert.assertFalse(resultXML.isEmpty());
 		//TODO: add a more sophisticated assertion here
+		
 	}
 
 	@Test
