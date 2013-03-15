@@ -86,6 +86,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		} catch (IOException ioException) {
 
 			// TODO add logging
+			System.err.println(ioException.getStackTrace());
 		}
 
 		return response;
