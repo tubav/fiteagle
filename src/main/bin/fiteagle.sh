@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_log="`mktemp -t fiteagle`"
+_log="`mktemp -t fiteagle.XXXXX`"
 
 function testFITeagle {  
   echo "Testing FITeagle (this might take a while)..."
