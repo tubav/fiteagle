@@ -4,7 +4,7 @@ _log="`mktemp -t fiteagle.XXXXX`"
 
 function testFITeagle {  
   echo "Testing FITeagle (this might take a while)..."
-  mvn test > "${_log}" 2>&1
+  mvn -B test > "${_log}" 2>&1
   if [ "0" != "$?" ]; then
     echo >&2 "FAILED. Please have a look at '${_log}'."
     exit 3
@@ -17,7 +17,7 @@ function runFITeagle {
   cd "${main_dir}"
   [ -x ./src/main/bin/ssl_create_server_cert.sh ] || { echo "ERROR 5"; exit 5; }
   [ -f target/jetty-ssl.keystore ] || ./src/main/bin/ssl_create_server_cert.sh
-  mvn -q jetty:run
+  mvn -B -q jetty:run
   if [ "0" != "$?" ]; then
     echo >&2 "FAILED. Please have a look above."
     exit 3
