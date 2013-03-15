@@ -13,16 +13,12 @@ public class XmlRpcController implements XmlRpcInvocationInterceptor {
 	@Override
 	public boolean before(XmlRpcInvocation invocation) {
 		
-		System.out.println("Interceptor called, mehtod: "+invocation.getMethodName());
-		
 		String newmethodName =  Character.toLowerCase(invocation.getMethodName().charAt(0))
 				+ (invocation.getMethodName().length() > 1 ? invocation.getMethodName().substring(1) : "");
-		System.out.println("new methodName: " + newmethodName );
 		
 		
 		invocation.setMethodName(newmethodName);
 		
-		System.out.println("invocations new methodname: " + invocation.getMethodName()) ;
 		return true;
 		
 	}

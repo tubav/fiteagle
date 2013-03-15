@@ -7,7 +7,18 @@
 				<array>
 					<data>	
 						<value>
-							<string>&lt;?xml version="1.0"?&gt;
+						<struct>
+							<member>
+								<name>geni_type</name>
+								<value><string>something</string></value>
+							</member>
+							<member>
+								<name>geni_version</name>
+								<value><string>3</string></value>
+							</member>
+							<member>
+								<name>geni_value</name>
+								<value><string>&lt;?xml version="1.0"?&gt;
 									&lt;signed-credential xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.planet-lab.org/resources/sfa/credential.xsd" xsi:schemaLocation="http://www.planet-lab.org/resources/sfa/ext/policy/1 http://www.planet-lab.org/resources/sfa/ext/policy/1/policy.xsd"&gt;&lt;credential xml:id="ref0"&gt;&lt;type&gt;privilege&lt;/type&gt;&lt;serial&gt;8&lt;/serial&gt;&lt;owner_gid&gt;-----BEGIN CERTIFICATE-----
 									MIICnTCCAgagAwIBAgIBAzANBgkqhkiG9w0BAQQFADAWMRQwEgYDVQQDEwtmaXRl
 									YWdsZS5hdjAeFw0xMzAzMDYxNDU4NDRaFw0xODAzMDUxNDU4NDRaMBsxGTAXBgNV
@@ -167,7 +178,10 @@
 									&lt;/KeyValue&gt;
 									  &lt;/KeyInfo&gt;
 									&lt;/Signature&gt;&lt;/signatures&gt;&lt;/signed-credential&gt;			
-								</string>
+								</string></value>
+							</member>
+						</struct>
+							
 							</value>
 						</data>
 					</array>

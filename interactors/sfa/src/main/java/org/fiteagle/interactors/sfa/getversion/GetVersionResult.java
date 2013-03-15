@@ -1,6 +1,6 @@
 package org.fiteagle.interactors.sfa.getversion;
 
-import org.fiteagle.interactors.sfa.types.AMResult;
+import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
 
 public class GetVersionResult extends AMResult {

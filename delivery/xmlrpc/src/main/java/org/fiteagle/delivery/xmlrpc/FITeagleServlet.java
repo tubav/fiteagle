@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
 import org.fiteagle.delivery.xmlrpc.util.SFAHandler;
-import org.fiteagle.interactors.sfa.SFAInteractor_v2;
+import org.fiteagle.interactors.sfa.SFAInteractor_v3;
 
 import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcServer;

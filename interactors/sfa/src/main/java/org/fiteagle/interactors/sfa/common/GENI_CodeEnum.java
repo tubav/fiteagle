@@ -1,4 +1,4 @@
-package org.fiteagle.interactors.sfa.types;
+package org.fiteagle.interactors.sfa.common;
 
 public enum GENI_CodeEnum {
 

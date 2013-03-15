@@ -1,19 +1,18 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Map;
 
+import org.fiteagle.interactors.sfa.common.AMCode;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
-import org.fiteagle.interactors.sfa.types.AMCode;
-import org.fiteagle.interactors.sfa.types.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+public class SFAInteractor_v3 implements ISFA {
 
-public class SFAInteractor_v2 implements ISFA {
-
-	final static int GENI_API_VERSION = 2;
+	final static int GENI_API_VERSION = 3;
 	
 	@Override
 	public GetVersionResult getVersion() throws IOException {
@@ -22,7 +21,7 @@ public class SFAInteractor_v2 implements ISFA {
 		//TODO set Value according to version, etc...
 		
 		GetVersionValue value = new GetVersionValue();
-		value.setGeni_api(SFAInteractor_v2.GENI_API_VERSION);	
+		value.setGeni_api(SFAInteractor_v3.GENI_API_VERSION);	
 		getVersionResult.setValue(value);
 		
 		// TODO set Code according to occuring exceptions etc
@@ -38,8 +37,8 @@ public class SFAInteractor_v2 implements ISFA {
 	}
 
 	@Override
-	public Map<String, Object> listResources() throws IOException {
-		return null;
+	public ListResourcesResult listResources(ListCredentials credentials, ListResourceOptions listResourceOptions) throws IOException {
+		return new ListResourcesResult();
 	}
 
 	

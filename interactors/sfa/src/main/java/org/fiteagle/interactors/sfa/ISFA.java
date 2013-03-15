@@ -1,8 +1,11 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
-import java.util.Map;
+
+import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
+import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 
 public interface ISFA {
 	public static final int ERRORCODE_SUCCESS = 0;
@@ -17,5 +20,5 @@ public interface ISFA {
 	public static final String KEY_TYPE = "type";
 
 	GetVersionResult getVersion() throws IOException;
-	Map<String, Object> listResources() throws IOException;
+	ListResourcesResult listResources(ListCredentials credentials, ListResourceOptions listResourceOptions) throws IOException;
 }

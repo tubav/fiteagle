@@ -6,13 +6,13 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.fiteagle.interactors.sfa.common.AMCode;
+import org.fiteagle.interactors.sfa.common.AMResult;
+import org.fiteagle.interactors.sfa.common.AMValue;
 import org.fiteagle.interactors.sfa.getversion.GeniAPIVersion;
 import org.fiteagle.interactors.sfa.getversion.GeniRequestRSpecVersions;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
-import org.fiteagle.interactors.sfa.types.AMCode;
-import org.fiteagle.interactors.sfa.types.AMResult;
-import org.fiteagle.interactors.sfa.types.AMValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class SFAInteractorTest {
 
 	@Before
 	public void setUp() {
-		this.sfaInteractor = new SFAInteractor_v2();
+		this.sfaInteractor = new SFAInteractor_v3();
 	}
 
 	@Test
