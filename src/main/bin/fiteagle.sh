@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
+
+_log="`mktemp -t fiteagle`"
+
 function testFITeagle {  
-  echo -n "Testing FITeagle (this might take a while)..."
-  mvn -q test
+  echo "Testing FITeagle (this might take a while)..."
+  mvn test > "${_log}" 2>&1
   if [ "0" != "$?" ]; then
-    echo >&2 "FAILED. Please have a look above."
+    echo >&2 "FAILED. Please have a look at '${_log}'."
     exit 3
   fi
-  
-  echo "OK"
 }
 
 function runFITeagle {

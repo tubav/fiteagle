@@ -5,7 +5,6 @@ echo ""
 
 if [ -n "$1" ]; then _target="$1"; else _target="./fiteagle"; fi
 _target_base="`dirname ${_target}`"
-_log="`mktemp -t fiteagle`"
 
 function checkBinary {
   echo -n " * Checking for '$1'..."
