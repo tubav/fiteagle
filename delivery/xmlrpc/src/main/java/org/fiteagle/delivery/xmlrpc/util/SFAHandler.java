@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.fiteagle.interactors.sfa.ISFA;
 import org.fiteagle.interactors.sfa.SFAInteractor_v3;
 import org.fiteagle.interactors.sfa.common.AMCode;
@@ -20,31 +18,26 @@ import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
-
 import redstone.xmlrpc.XmlRpcArray;
 import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcStruct;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class SFAHandler implements XmlRpcInvocationHandler {
 
-	private Map<String, ISFA> interactorMap = new HashMap<>();
-	ISFA iv2;
+	ISFA interactor;
 
-	public SFAHandler() {
-		iv2 = new SFAInteractor_v3();
+	public SFAHandler(SFAInteractor_v3 sfaInteractor_v3) {
+		this.interactor = sfaInteractor_v3;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object invoke(String methodName, List parameters) throws Throwable {
 		Map<String, Object> response = new HashMap<>();
-		Method m = null;
-		Method[] methodsFromHandler = iv2.getClass().getMethods();
+		Method[] methodsFromHandler = interactor.getClass().getMethods();
 		Method knownMethod = null;
 		AMResult result = null;
 		for (int i = 0; i < methodsFromHandler.length; i++) {
@@ -58,12 +51,9 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		if (knownMethod != null) {
 
 			Class<?>[] parameterClasses = knownMethod.getParameterTypes();
-			// for (Object o : parameters) {
-			// parameterClasses.add(o.getClass());
-			// }
 			if (parameterClasses.length == 0) {
 				// Method takes no parameters => nothing to do
-				result = (AMResult) knownMethod.invoke(iv2, null);
+				result = (AMResult) knownMethod.invoke(interactor,(Object[]) null);
 			} else {
 				// identify classes & instantiate objects
 
@@ -75,7 +65,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 								methodParameters.get(i));
 					}
 				}
-				result = (AMResult) knownMethod.invoke(iv2, methodParameters.toArray());
+				result = (AMResult) knownMethod.invoke(interactor, methodParameters.toArray());
 				postProcess(result, methodName);
 			}
 
@@ -183,11 +173,16 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 	}
 
 	private AMCode processCode(AMCode code_result) {
-//		code_result.setAm_code(0);
-//		code_result.setAm_type("FITeagle");
+		if(code_result == null)
+			code_result = new AMCode();
+		
+		code_result.setAm_code(0);
+		code_result.setAm_type("FITeagle");
+		
 		return code_result;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> introspect(Object result) throws IOException {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);

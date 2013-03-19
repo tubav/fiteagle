@@ -17,15 +17,12 @@ import org.fiteagle.interactors.sfa.SFAInteractor_v3;
 import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcServer;
 import redstone.xmlrpc.XmlRpcServlet;
-import redstone.xmlrpc.handlers.ReflectiveInvocationHandler;
-
-//import com.thoughtworks.xstream.XStream;
 
 public class FITeagleServlet extends XmlRpcServlet {
 
-	private static final String HANDLER = "handler";
+//	private static final String HANDLER = "handler";
 	private static final long serialVersionUID = -4349365825732565723L;
-	private XmlRpcInvocationHandler handler;
+//	private XmlRpcInvocationHandler handler;
 	
 
 	private XmlRpcServer server;
@@ -45,7 +42,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 	public void init(final ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 		this.server.setSerializer(new FixedSerializer());
-		final XmlRpcInvocationHandler sfaHandler = new SFAHandler();
+		final XmlRpcInvocationHandler sfaHandler = new SFAHandler(new SFAInteractor_v3());
 
 		this.server.addInvocationHandler("__default__",
 				sfaHandler);
