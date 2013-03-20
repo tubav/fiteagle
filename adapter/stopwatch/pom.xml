@@ -21,13 +21,6 @@
 		</repository>
 	</repositories>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.fiteagle.core</groupId>
-			<artifactId>model</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
 
 	<build>
 
