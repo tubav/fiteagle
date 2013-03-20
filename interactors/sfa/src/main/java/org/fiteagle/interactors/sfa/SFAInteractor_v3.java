@@ -24,7 +24,7 @@ public class SFAInteractor_v3 implements ISFA {
 		value.setGeni_api(SFAInteractor_v3.GENI_API_VERSION);	
 		getVersionResult.setValue(value);
 		
-		// TODO set Code according to occuring exceptions etc
+		// TODO set Code according to occurring exceptions etc
 		AMCode code = new AMCode();
 		code.setGeni_code(GENI_CodeEnum.SUCCESS);
 		getVersionResult.setCode(code);
