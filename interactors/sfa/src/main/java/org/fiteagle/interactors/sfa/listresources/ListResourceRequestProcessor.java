@@ -28,12 +28,12 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 			goOn = false;
 		}
 		
-		if(!credentialService.isPermitted(SFAv3MethodsEnum.LIST_RESOURCES)){
+		if(goOn && !credentialService.isPermitted(SFAv3MethodsEnum.LIST_RESOURCES) ){
 			returnCode.setGeni_code(GENI_CodeEnum.FORBIDDEN);
 			goOn = false;
 		}
 		
-		if(!optionsService.checkRSpecVersion()){
+		if(goOn && !optionsService.checkRSpecVersion()){
 			returnCode.setGeni_code(GENI_CodeEnum.BADVERSION);
 		}
 		if(goOn){

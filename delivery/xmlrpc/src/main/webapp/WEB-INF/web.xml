@@ -17,6 +17,16 @@
   </servlet>
   <servlet-mapping>
         <servlet-name>XmlRpcServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/sfa/am/*</url-pattern>
   </servlet-mapping>
+  
+  <security-constraint>
+  <web-resource-collection>
+     <web-resource-name>XmlRpcServlet</web-resource-name>
+     <url-pattern>/sfa/am/*</url-pattern>
+  </web-resource-collection>
+  <user-data-constraint>
+     <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+  </user-data-constraint>
+</security-constraint>
 </web-app>
