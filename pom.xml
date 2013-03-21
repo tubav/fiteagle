@@ -10,9 +10,6 @@
 	<url>https://github.com/tubav/fiteagle</url>
 
 	<modules>
-		<module>core</module>
-		<module>clients</module>
-		<module>ptm</module>
 		<module>adapter</module>
 		<module>interactors</module>
 		<module>delivery</module>
