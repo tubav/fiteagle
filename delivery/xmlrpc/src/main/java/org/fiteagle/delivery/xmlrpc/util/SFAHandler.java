@@ -14,8 +14,10 @@ import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.AMValue;
 import org.fiteagle.interactors.sfa.common.Credentials;
+import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
+import org.fiteagle.interactors.sfa.listresources.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 
 import redstone.xmlrpc.XmlRpcArray;
@@ -90,10 +92,10 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 			// both booleans default to false if not set => no check for
 			// existence necessary
-			listResourceOptions.setGeni_available(listResourceOptionsStruct
-					.getBoolean("geni_available"));
-			listResourceOptions.setGeni_compressed(listResourceOptionsStruct
-					.getBoolean("geni_compressed"));
+			listResourceOptions.setGeni_available(new GeniAvailableOption(listResourceOptionsStruct
+					.getBoolean("geni_available")));
+			listResourceOptions.setGeni_compressed(new GeniCompressedOption(listResourceOptionsStruct
+					.getBoolean("geni_compressed")));
 
 			XmlRpcStruct geni_rspec_version_struct = listResourceOptionsStruct
 					.getStruct("geni_rspec_version");

@@ -6,8 +6,10 @@ public class ListCredentials {
 
 	private ArrayList<Credentials> credentialsList;
 	
+	int id ;
 	public ListCredentials() {
 		 this.credentialsList = new ArrayList<>();
+		 this.id = this.hashCode();
 	}
 	
 	public ArrayList<Credentials> getCredentialsList() {
@@ -26,5 +28,9 @@ public class ListCredentials {
 	
 	public Credentials getCredentials(int index){
 		return credentialsList.get(index);
+	}
+	
+	public int getId() {
+		return id;
 	}
 }

@@ -1,6 +1,6 @@
 package org.fiteagle.interactors.sfa.common;
 
-public class Geni_RSpec_Version {
+public class Geni_RSpec_Version extends SFAOption {
 
 	public String getType() {
 		return type;
@@ -16,6 +16,17 @@ public class Geni_RSpec_Version {
 	}
 	private String type;
 	private String version;
+	
+	public Geni_RSpec_Version(){
+		this.name = "geni_rspec_version";
+		this.isOptional = false;
+	}
+	@Override
+	public Geni_RSpec_Version getValue(){
+		return this;
+	}
+	
+	
 	
 	
 }
