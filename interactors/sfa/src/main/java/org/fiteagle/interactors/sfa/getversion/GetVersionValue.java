@@ -35,7 +35,7 @@ public class GetVersionValue extends AMValue {
 	private String geni_allocate;
 
 	public GetVersionValue() {
-		this.geni_request_rspec_versions.add(new GeniRequestRSpecVersions());
+		
 	}
 
 	public List<GeniRequestRSpecVersions> getGeni_request_rspec_versions() {

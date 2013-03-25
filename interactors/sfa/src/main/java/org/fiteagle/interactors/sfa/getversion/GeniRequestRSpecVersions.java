@@ -1,11 +1,12 @@
 package org.fiteagle.interactors.sfa.getversion;
 
 public class GeniRequestRSpecVersions {
-	private String type = "GENI";
-	private String version = "2";
-	private String schema = "http://www.geni.net/resources/rspec/2/request.xsd";
-	private String namespace = "http://www.geni.net/resources/rspec/2";
-
+	private String type;
+	private String version;
+	private String schema;
+	private String namespace;
+	private String[] extensions;
+	
 	public String getType() {
 		return this.type;
 	}
@@ -36,5 +37,13 @@ public class GeniRequestRSpecVersions {
 
 	public void setNamespace(final String namespace) {
 		this.namespace = namespace;
+	}
+
+	public String[] getExtensions() {
+		return extensions;
+	}
+
+	public void setExtensions(String[] extensions) {
+		this.extensions = extensions;
 	}
 }
