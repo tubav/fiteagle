@@ -35,12 +35,6 @@ public class FITeagleServlet extends XmlRpcServlet {
 		// a config file)
 		
 		this.server = new FixedXmlRpcServer();
-		
-	}
-
-	@Override
-	public void init(final ServletConfig servletConfig) throws ServletException {
-		super.init(servletConfig);
 		this.server.setSerializer(new FixedSerializer());
 		final XmlRpcInvocationHandler sfaHandler = new SFAHandler(new SFAInteractor_v3());
 
@@ -50,6 +44,12 @@ public class FITeagleServlet extends XmlRpcServlet {
 		
 		XmlRpcController controller = new XmlRpcController();
 		this.server.addInvocationInterceptor(controller);
+	}
+
+	@Override
+	public void init(final ServletConfig servletConfig) throws ServletException {
+		super.init(servletConfig);
+		
 		
 	}
 
@@ -82,7 +82,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 
 	public void handleRequest(final InputStream inputStream,
 			final Writer writer) throws IOException {
-		server.execute(inputStream, writer);
+		this.server.execute(inputStream, writer);
 	}
 
 	/**

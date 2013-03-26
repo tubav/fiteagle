@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import javax.servlet.ServletException;
+
 import junit.framework.Assert;
 
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
@@ -16,8 +18,9 @@ public class SFAXmlRpcServletTest {
 	private FITeagleServlet servlet;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws ServletException {
 		this.servlet = new FITeagleServlet();
+		
 	}
 
 	@Test
@@ -26,6 +29,7 @@ public class SFAXmlRpcServletTest {
 				.handleRequestGetVersionStatic();
 		Assert.assertNotNull(getVersionResult);
 		Assert.assertFalse(getVersionResult.isEmpty());
+		
 	}
 
 	@Test
@@ -47,6 +51,7 @@ public class SFAXmlRpcServletTest {
 		String resultXML = writer.toString();
 		System.out.println(resultXML);
 		Assert.assertFalse(resultXML.isEmpty());
+		
 		//TODO: add a more sophisticated assertion here
 		
 	}
@@ -60,6 +65,7 @@ public class SFAXmlRpcServletTest {
 		this.servlet.handleRequest(inputStream, writer);
 		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
+		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>0</int></value>"));
 		//TODO: add a more sophisticated assertion here
 	}
 }
