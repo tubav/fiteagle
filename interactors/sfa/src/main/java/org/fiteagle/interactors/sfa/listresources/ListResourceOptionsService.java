@@ -1,5 +1,6 @@
 package org.fiteagle.interactors.sfa.listresources;
 
+import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.SFAOptionsService;
 
 public class ListResourceOptionsService extends SFAOptionsService {
@@ -23,8 +24,7 @@ public class ListResourceOptionsService extends SFAOptionsService {
 	}
 
 	public boolean checkRSpecVersion() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.options.getGeni_respec_version().getVersion().compareTo("3")==0;
 	}
 
 	

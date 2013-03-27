@@ -23,7 +23,13 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		//not very elegant ....
 		boolean goOn = true;
 		AMCode returnCode = new AMCode();
-		if(!(optionsService.optionsAreValid() && optionsService.optionsComplete())){
+		
+		if(!optionsService.checkRSpecVersion()){
+			returnCode.setGeni_code(GENI_CodeEnum.BADVERSION);
+			goOn = false;
+		}
+		
+		if(goOn && !(optionsService.optionsAreValid() && optionsService.optionsComplete())){
 			returnCode.setGeni_code(GENI_CodeEnum.BADARGS);
 			goOn = false;
 		}
@@ -33,11 +39,8 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 			goOn = false;
 		}
 		
-		if(goOn && !optionsService.checkRSpecVersion()){
-			returnCode.setGeni_code(GENI_CodeEnum.BADVERSION);
-		}
 		if(goOn){
-			//
+			//TODO:
 			
 		}
 		result.setCode(returnCode);
