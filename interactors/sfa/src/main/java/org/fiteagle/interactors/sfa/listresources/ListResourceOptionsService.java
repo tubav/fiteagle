@@ -2,6 +2,7 @@ package org.fiteagle.interactors.sfa.listresources;
 
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.SFAOptionsService;
+import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceOptionsService extends SFAOptionsService {
 
@@ -24,7 +25,7 @@ public class ListResourceOptionsService extends SFAOptionsService {
 	}
 
 	public boolean checkRSpecVersion() {
-		return this.options.getGeni_respec_version().getVersion().compareTo("3")==0;
+		return this.options.getGeni_respec_version().getVersion().compareTo(new SFAv3RspecTranslator().getVersion())==0;
 	}
 
 	
