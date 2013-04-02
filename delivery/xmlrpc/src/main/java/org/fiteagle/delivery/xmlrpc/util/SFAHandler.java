@@ -68,7 +68,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 					}
 				}
 				result = (AMResult) knownMethod.invoke(interactor, methodParameters.toArray());
-				postProcess(result, methodName);
+//				postProcess(result, methodName);
 			}
 
 		}
@@ -161,28 +161,28 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		return returnList;
 	}
 
-	private void postProcess(AMResult result, String methodName) {
+//	private void postProcess(AMResult result, String methodName) {
+//
+//		processCode(result.getCode());
+//		processValue(result.getValue(), methodName);
+//
+//	}
 
-		processCode(result.getCode());
-		processValue(result.getValue(), methodName);
+//	private void processValue(AMValue value, String methodName) {
+//		// TODO set urn, set hostname, set hrn, set geni_api_versions (# from
+//		// interactor, url from server)
+//
+//	}
 
-	}
-
-	private void processValue(AMValue value, String methodName) {
-		// TODO set urn, set hostname, set hrn, set geni_api_versions (# from
-		// interactor, url from server)
-
-	}
-
-	private AMCode processCode(AMCode code_result) {
-		if(code_result == null)
-			code_result = new AMCode();
-		
-		code_result.setAm_code(0);
-		code_result.setAm_type("FITeagle");
-		
-		return code_result;
-	}
+//	private AMCode processCode(AMCode code_result) {
+//		if(code_result == null)
+//			code_result = new AMCode();
+//		
+//		code_result.setAm_code(0);
+//		code_result.setAm_type("FITeagle");
+//		
+//		return code_result;
+//	}
 
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> introspect(Object result) throws IOException {

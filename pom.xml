@@ -13,7 +13,8 @@
 		<module>adapter</module>
 		<module>interactors</module>
 		<module>delivery</module>
-  </modules>
+		<module>core</module>
+	</modules>
 
 	<description>
         FITeagle | Future Internet Testbed Experimentation and Management Framework

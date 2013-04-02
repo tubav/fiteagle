@@ -4,7 +4,7 @@ public abstract class AMResult {
 	
 	AMCode am_code;
 	String output;
-	AMValue am_value;
+	Object am_value;
 	
 	public void setCode(AMCode code){
 		this.am_code = code;
@@ -22,11 +22,11 @@ public abstract class AMResult {
 		this.output = output;
 	}
 
-	public AMValue getValue(){
+	public Object getValue(){
 		return this.am_value;
 	}
 
-	void setValue(AMValue value){
+	public void setValue(Object value){
 		this.am_value = value;
 	}
 	

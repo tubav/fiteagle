@@ -10,9 +10,6 @@
         <init-param>
           <param-name>enabledForExtensions</param-name>
           <param-value>true</param-value>
-          <description>
-            Sets, whether the servlet supports vendor extensions for XML-RPC.
-          </description>
         </init-param>
   </servlet>
   <servlet-mapping>

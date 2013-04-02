@@ -18,7 +18,7 @@ public class TestStopwatch {
 	@Test
 	public void testRunStopIsRunning() {
 		Assert.assertFalse(stopwatch.isRunning());
-		stopwatch.run();
+		stopwatch.start();
 		Assert.assertTrue(stopwatch.isRunning());
 		stopwatch.stop();
 		Assert.assertFalse(stopwatch.isRunning());
@@ -26,13 +26,13 @@ public class TestStopwatch {
 
 	
 	//http://mytestbed.net/projects/omf/wiki/ArchitecturalFoundation2ProtocolInteractions
-	@Test
-	public void testFRCPInterface() {
-		//stopwatch.inform();
-		Assert.assertTrue(stopwatch.inform());
-		stopwatch.configure();
-		stopwatch.request();
-		stopwatch.create();
-		stopwatch.release();
-	}
+//	@Test
+//	public void testFRCPInterface() {
+//		//stopwatch.inform();
+//		Assert.assertTrue(stopwatch.inform());
+//		stopwatch.configure();
+//		stopwatch.request();
+//		stopwatch.create();
+//		stopwatch.release();
+//	}
 }

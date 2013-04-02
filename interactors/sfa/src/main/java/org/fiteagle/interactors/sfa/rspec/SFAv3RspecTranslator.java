@@ -1,5 +1,7 @@
 package org.fiteagle.interactors.sfa.rspec;
 
+import org.fiteagle.adapter.common.Resource;
+
 public class SFAv3RspecTranslator {
 
 	private final String type = "GENI";
@@ -34,6 +36,17 @@ public class SFAv3RspecTranslator {
 	}
 	public String getVersion() {
 		return version;
+	}
+	public Object translateToAdvertisementRspec(Resource resource) {
+		//TODO identify node, link, interface etc??
+		//DUMMY IMPL ONLY VALID FOR SINGLE STOPWATCHRESOURCE!!!
+		NodeContents dummyNode = new NodeContents();
+		dummyNode.setComponentName(resource.getName());
+		dummyNode.setComponentManagerId("urn:publicid:IDN+fiteagle+authority+am"); // TODO generate URN based on dynamic information? 
+		dummyNode.setComponentId("urn:publicid:IDN+fiteagle+node+"+resource.getName());
+		return dummyNode;
+		
+		
 	}
 	
 	

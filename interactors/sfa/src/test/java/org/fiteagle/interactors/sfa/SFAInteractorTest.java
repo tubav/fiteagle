@@ -62,8 +62,8 @@ public class SFAInteractorTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	private AMValue getGeniValue(final AMResult amResult) {
-		final AMValue value =  amResult
+	private Object getGeniValue(final AMResult amResult) {
+		final Object value =  amResult
 				.getValue();
 		return value;
 	}

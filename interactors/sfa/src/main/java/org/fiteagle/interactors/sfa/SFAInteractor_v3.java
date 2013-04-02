@@ -26,6 +26,7 @@ public class SFAInteractor_v3 implements ISFA {
 
 	final static int GENI_API_VERSION = 3;
 	
+	
 	@Override
 	public GetVersionResult getVersion() throws IOException {
 		final GetVersionResult getVersionResult = new GetVersionResult();
