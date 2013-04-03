@@ -1,6 +1,12 @@
 package org.fiteagle.interactors.sfa.listresources;
 
+import java.io.StringWriter;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.Resource;
 import org.fiteagle.core.ResourceManager;
@@ -10,6 +16,7 @@ import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFACredentialsService;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
@@ -60,12 +67,39 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 			List<Object> rspecContentElements = advertisedRspec.getAnyOrNodeOrLink();
 			SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 			for(Resource resource: resources){
-				rspecContentElements.add(translator.translateToAdvertisementRspec(resource));
+				 Object node = translator.translateToAdvertisementRspec(resource);
+				rspecContentElements.add(node);
 			}
-			result.setValue(advertisedRspec);
+
+			returnCode.setGeni_code(GENI_CodeEnum.SUCCESS);
+			
+//			RSpecContents rspecContents = (RSpecContents) jaxbObject;
+			JAXBElement<RSpecContents> rspec = new ObjectFactory().createRspec(advertisedRspec);
+			String advertisedRspecSTR ="";
+			try {
+				advertisedRspecSTR = getString(rspec);
+			} catch (JAXBException e) {
+				returnCode.setGeni_code(GENI_CodeEnum.ERROR);
+				result.setOutput("Internal Server Error!");
+			}
+			
+			result.setValue(advertisedRspecSTR);
+			
 		}
+		
+		
 		result.setCode(returnCode);
 		return result;
+	}
+
+	private String getString(Object jaxbObject) throws JAXBException {
+		JAXBContext context = JAXBContext.newInstance("org.fiteagle.interactors.sfa.rspec");
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter stringWriter = new StringWriter();
+		marshaller.marshal(jaxbObject, stringWriter);
+
+		return stringWriter.toString();
+		
 	}
 
 }

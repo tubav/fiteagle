@@ -44,7 +44,7 @@ public class SFAv3RspecTranslator {
 		dummyNode.setComponentName(resource.getName());
 		dummyNode.setComponentManagerId("urn:publicid:IDN+fiteagle+authority+am"); // TODO generate URN based on dynamic information? 
 		dummyNode.setComponentId("urn:publicid:IDN+fiteagle+node+"+resource.getName());
-		return dummyNode;
+		return new ObjectFactory().createNode(dummyNode);
 		
 		
 	}

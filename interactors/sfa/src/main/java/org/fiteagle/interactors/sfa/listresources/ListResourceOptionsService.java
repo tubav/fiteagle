@@ -1,6 +1,5 @@
 package org.fiteagle.interactors.sfa.listresources;
 
-import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.SFAOptionsService;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
@@ -15,13 +14,13 @@ public class ListResourceOptionsService extends SFAOptionsService {
 	@Override
 	public boolean optionsAreValid() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean optionsComplete() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean checkRSpecVersion() {
