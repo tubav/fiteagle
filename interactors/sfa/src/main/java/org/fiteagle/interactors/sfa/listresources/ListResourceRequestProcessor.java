@@ -12,6 +12,7 @@ import org.fiteagle.adapter.common.Resource;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFACredentialsService;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
@@ -44,6 +45,14 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		
 		if(!optionsService.checkRSpecVersion()){
 			returnCode.setGeni_code(GENI_CodeEnum.BADVERSION);
+			goOn = false;
+		}
+		
+		//GENI available option is not supported
+		GeniAvailableOption availableOption = (GeniAvailableOption) options.getOptions().get(0);
+		if(goOn && availableOption.getValue()){
+			returnCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
+			result.setOutput("Geni available option is not supported yet!");
 			goOn = false;
 		}
 		
