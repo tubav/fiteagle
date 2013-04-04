@@ -52,6 +52,8 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		
 		//GENI available option is not supported
 		GeniAvailableOption availableOption = (GeniAvailableOption) options.getOptions().get(0);
+		if(availableOption == null)
+			availableOption = new GeniAvailableOption(false);
 		if(goOn && availableOption.getValue()){
 			returnCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
 			result.setOutput("Geni available option is not supported yet!");
