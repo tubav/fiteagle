@@ -1,31 +1,17 @@
 package org.fiteagle.adapter.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class ResourceDatabase {
+public interface ResourceDatabase {
 
-	private static Map<String, Resource> resourceDatabase = new HashMap<>();
 	
-	public static String addResource(Resource resource){
 	
-		//TODO dummy id generation
-		resourceDatabase.put(resource.getIdentifier(), resource);
-		return resource.getIdentifier();
-	}
+	public  void addResource(ResourceProperties resource);
 	
-	public static Resource getResource(String resourceId){
-		return resourceDatabase.get(resourceId);
-	}
+	public  ResourceProperties getResource(String resourceId);
 	
-	public static List<Resource> getResources(){
-		return new ArrayList<>(resourceDatabase.values());
-	}
-	public static void deleteResource(String resourceId){
-		resourceDatabase.remove(resourceId);
-	}
+	public  List<ResourceProperties> getResources();
+	public void deleteResource(String resourceId); 
 	
 	
 	

@@ -1,13 +1,23 @@
 package org.fiteagle.adapter.stopwatch;
 
+
+
+import java.util.List;
+
+import org.fiteagle.adapter.common.InMemoryResourceDatabase;
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.ResourceProperties;
 
 
-public class Stopwatch implements ResourceAdapter {
+public class Stopwatch extends ResourceAdapter {
 
 	
 	private transient boolean runningState = false;
 
+	public Stopwatch(){
+		this.resourceDatabase = new InMemoryResourceDatabase();
+		this.setId("StopWatchAdapter"); 
+	}
 	public boolean isRunning() {
 		return runningState;
 	}
@@ -25,7 +35,10 @@ public class Stopwatch implements ResourceAdapter {
 
 	@Override
 	public void create() {
-		// TODO Auto-generated method stub
+	
+		ResourceProperties props = new StopWatchInstanceProperties();
+		props.setIdentifier("my StopWatchInstance");
+		props.setName("StopWatch: "+ System.currentTimeMillis());
 		
 	}
 
@@ -45,6 +58,10 @@ public class Stopwatch implements ResourceAdapter {
 	@Override
 	public String getStatus() {
 		return "Is running: "+runningState;
+	}
+	@Override
+	public List<ResourceProperties> getAllResources() {
+		return resourceDatabase.getResources();
 	}
 	
 	

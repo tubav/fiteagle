@@ -28,25 +28,25 @@ public class ListResourceOptions extends SFAOptionsStruct{
 		this.geni_compressed = geni_compressed;
 	}
 
-	public Geni_RSpec_Version getGeni_respec_version() {
-		return geni_respec_version;
+	public Geni_RSpec_Version getGeni_rspec_version() {
+		return geni_rspec_version;
 	}
 
-	public void setGeni_respec_version(Geni_RSpec_Version geni_respec_version) {
-		this.geni_respec_version = geni_respec_version;
+	public void setGeni_rspec_version(Geni_RSpec_Version geni_rspec_version) {
+		this.geni_rspec_version = geni_rspec_version;
 	}
 
 	
 	private GeniCompressedOption geni_compressed;
 	
-	private Geni_RSpec_Version geni_respec_version;
+	private Geni_RSpec_Version geni_rspec_version;
 
 	@Override
 	public List<? extends SFAOption> getOptions() {
 		List<SFAOption> returnList = new ArrayList<>();
 		returnList.add(geni_available);
 		returnList.add(geni_compressed);
-		returnList.add(geni_respec_version);
+		returnList.add(geni_rspec_version);
 		return returnList;
 	}
 	

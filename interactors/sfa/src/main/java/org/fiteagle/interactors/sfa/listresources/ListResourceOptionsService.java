@@ -24,7 +24,7 @@ public class ListResourceOptionsService extends SFAOptionsService {
 	}
 
 	public boolean checkRSpecVersion() {
-		return this.options.getGeni_respec_version().getVersion().compareTo(new SFAv3RspecTranslator().getVersion())==0;
+		return this.options.getGeni_rspec_version().getVersion().compareTo(new SFAv3RspecTranslator().getVersion())==0;
 	}
 
 	

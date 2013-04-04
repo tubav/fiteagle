@@ -1,11 +1,11 @@
 package org.fiteagle.interactors.sfa.rspec;
 
-import org.fiteagle.adapter.common.Resource;
+import org.fiteagle.adapter.common.ResourceProperties;
+import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 
 public class SFAv3RspecTranslator {
 
-	private final String type = "GENI";
-	private final String version = "3";
+	private final Geni_RSpec_Version geni_rspec_version;
 	private final String adRspecNamespace = "http://www.geni.net/resources/rspec/3" ;
 	private final String adRspecSchema = "http://www.geni.net/resources/rspec/3/ad.xsd";
 	private final String[] adRspecExtensions = new String[]{""};
@@ -13,6 +13,12 @@ public class SFAv3RspecTranslator {
 	private final String requestRspecNamespace ="http://www.geni.net/resources/rspec/3";
 	private final String requestRspecSchema = "http://www.geni.net/resources/rspec/3/request.xsd";
 	private final String[] requestRspecExtensions = new String[]{""};
+	public SFAv3RspecTranslator() {
+		geni_rspec_version = new Geni_RSpec_Version();
+		geni_rspec_version.setType("GENI");
+		geni_rspec_version.setVersion("3");
+	}
+	
 	public String getAdRspecNamespace() {
 		return adRspecNamespace;
 	}
@@ -32,12 +38,12 @@ public class SFAv3RspecTranslator {
 		return requestRspecExtensions;
 	}
 	public String getType() {
-		return type;
+		return this.geni_rspec_version.getType();
 	}
 	public String getVersion() {
-		return version;
+		return this.geni_rspec_version.getVersion();
 	}
-	public Object translateToAdvertisementRspec(Resource resource) {
+	public Object translateToAdvertisementRspec(ResourceProperties resource) {
 		//TODO identify node, link, interface etc??
 		//DUMMY IMPL ONLY VALID FOR SINGLE STOPWATCHRESOURCE!!!
 		NodeContents dummyNode = new NodeContents();

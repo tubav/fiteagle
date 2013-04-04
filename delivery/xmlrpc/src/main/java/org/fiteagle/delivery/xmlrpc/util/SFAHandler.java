@@ -106,7 +106,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 				geni_RSpec_Version.setType(type);
 				geni_RSpec_Version.setVersion(version);
 
-				listResourceOptions.setGeni_respec_version(geni_RSpec_Version);
+				listResourceOptions.setGeni_rspec_version(geni_RSpec_Version);
 
 			} else {
 				// TODO error handling throw exception => set corresponding

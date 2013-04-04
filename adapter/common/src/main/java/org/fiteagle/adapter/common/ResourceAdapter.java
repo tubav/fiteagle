@@ -1,13 +1,45 @@
 package org.fiteagle.adapter.common;
 
-public interface ResourceAdapter {
+import java.util.HashMap;
+import java.util.List;
 
-	public void start();
-	public void stop();
-	public void create();
-	public void configure();
-	public void release();
-	public String getStatus();
+public abstract class ResourceAdapter {
+
+	public abstract void start();
+	public abstract void stop();
+	public abstract void create();
+	public abstract void configure();
+	public abstract void release();
+	public abstract String getStatus();
+	private HashMap<String, Object> properties;
+	protected ResourceDatabase resourceDatabase;
+	private String type;
+	private String id;
+	public abstract List<ResourceProperties> getAllResources();
+	public HashMap<String, Object> getProperties() {
+		return properties;
+	}
+	public void setProperties(HashMap<String, Object> properties) {
+		this.properties = properties;
+	}
+	public ResourceDatabase getResourceDatabase() {
+		return resourceDatabase;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getId() {
+		return this.id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
+	
 	
 	
 }

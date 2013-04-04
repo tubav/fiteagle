@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa.listresources;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -8,7 +9,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.fiteagle.adapter.common.Resource;
+import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.ResourceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -59,14 +61,18 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		
 		if(goOn){
 			//TODO evaluate available resources option & implement availability concept
-			List<Resource> resources = resourceManager.getResources();
+			List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
+			List<ResourceAdapter> resourceAdapters = resourceManager.getResourceAdapters();
+			for(ResourceAdapter adapter: resourceAdapters){
+				resources.addAll(adapter.getAllResources());
+			}
 			
 			RSpecContents advertisedRspec = new RSpecContents();
 			advertisedRspec.setType("advertisement");
 			
 			List<Object> rspecContentElements = advertisedRspec.getAnyOrNodeOrLink();
 			SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-			for(Resource resource: resources){
+			for(ResourceProperties resource: resources){
 				 Object node = translator.translateToAdvertisementRspec(resource);
 				rspecContentElements.add(node);
 			}

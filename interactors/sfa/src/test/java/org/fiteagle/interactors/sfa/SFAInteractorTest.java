@@ -9,10 +9,15 @@ import junit.framework.Assert;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.AMValue;
+import org.fiteagle.interactors.sfa.common.Credentials;
+import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
+import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.getversion.GeniAPIVersion;
 import org.fiteagle.interactors.sfa.getversion.GeniRequestRSpecVersions;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
+import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +32,7 @@ public class SFAInteractorTest {
 	public void setUp() {
 		this.sfaInteractor = new SFAInteractor_v3();
 	}
-
+	
 	@Test
 	public void testGetVersion() throws IOException {
 		final GetVersionResult getVersionResult = this.getGeniVersion();
@@ -40,6 +45,24 @@ public class SFAInteractorTest {
 		//TODO to be tested on delivery layer =>
 		//this.valudateGeniAPIs(value);
 		this.validateRSpecVersions(value);
+	}
+	
+	@Test
+	public void testListResources() throws IOException{
+		ListResourceOptions options = createValidListResourceOptions();
+		final ListResourcesResult listResourcesResult = this.sfaInteractor.listResources(new ListCredentials(), options);
+		
+		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
+		
+	}
+
+	private ListResourceOptions createValidListResourceOptions() {
+		ListResourceOptions options = new ListResourceOptions();
+		Geni_RSpec_Version geni_rspec_version = new Geni_RSpec_Version();
+		geni_rspec_version.setType("GENI");
+		geni_rspec_version.setVersion("3");
+		options.setGeni_rspec_version(geni_rspec_version);
+		return options;
 	}
 
 	@SuppressWarnings("unchecked")
