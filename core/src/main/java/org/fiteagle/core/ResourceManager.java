@@ -11,8 +11,8 @@ public class ResourceManager {
 	private ResourceAdapterDatabase adapterDatabase ;
 	
 	public ResourceManager(){
-		this.adapterDatabase = new InMemoryResourceAdapterDatabase();
-		Stopwatch dummyResourceAdapter = new Stopwatch();
+		adapterDatabase = new InMemoryResourceAdapterDatabase();
+		ResourceAdapter dummyResourceAdapter = new Stopwatch();
 	
 		adapterDatabase.addResourceAdapter(dummyResourceAdapter);
 	}
