@@ -51,8 +51,26 @@ public class SFAv3RspecTranslator {
 		dummyNode.setComponentManagerId("urn:publicid:IDN+fiteagle+authority+am"); // TODO generate URN based on dynamic information? 
 		dummyNode.setComponentId("urn:publicid:IDN+fiteagle+node+"+resource.getName());
 		return new ObjectFactory().createNode(dummyNode);
+	}
+	
+	public Object translateToFITeagleResource(ResourceProperties resource) {
+		//TODO identify node, link, interface etc??
+		//DUMMY IMPL ONLY VALID FOR SINGLE STOPWATCHRESOURCE!!!
+		Resource fiteagleSFSResource= new Resource();
+		fiteagleSFSResource.setName(resource.getName());
+		 Property componentManagerIdProperty = new Property();
+		 componentManagerIdProperty.setName("componentManagerId");
+		 componentManagerIdProperty.setType("urn");
+		 componentManagerIdProperty.setValue("urn:publicid:IDN+fiteagle+authority+am");
+		fiteagleSFSResource.setProperty(componentManagerIdProperty);
 		
-		
+		Property componentIdProperty = new Property();
+		 componentIdProperty.setName("componentId");
+		 componentIdProperty.setType("urn");
+		 componentIdProperty.setValue("urn:publicid:IDN+fiteagle+node+"+resource.getName());
+		 
+		 fiteagleSFSResource.setProperty(componentIdProperty);
+		return new ObjectFactory().createResource(fiteagleSFSResource);
 	}
 	
 	
