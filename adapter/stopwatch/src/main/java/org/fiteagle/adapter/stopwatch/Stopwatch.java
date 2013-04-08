@@ -39,6 +39,7 @@ public class Stopwatch extends ResourceAdapter {
 		ResourceProperties props = new StopWatchInstanceProperties();
 		props.setIdentifier("my StopWatchInstance");
 		props.setName("StopWatch: "+ System.currentTimeMillis());
+		resourceDatabase.addResource(props);
 		
 	}
 

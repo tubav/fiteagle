@@ -25,10 +25,12 @@ import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
-
 	private ResourceManager resourceManager;
-	
-	public ListResourceRequestProcessor(){
+	private ListResourceOptionsService optionsService;
+	private AMCode runTimeReturnCode;
+	private String outPutString;
+
+	public ListResourceRequestProcessor() {
 		resourceManager = new ResourceManager();
 	}
 
@@ -36,87 +38,148 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	public ListResourcesResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
 		ListResourceOptions options = (ListResourceOptions) specificArgs[0];
-		
-		ListResourcesResult result = new ListResourcesResult();
-		ListResourceOptionsService optionsService = new ListResourceOptionsService(options);
-		SFACredentialsService credentialService = new SFACredentialsService(credentials);
-		
-		//not very elegant ....
-		boolean goOn = true;
-		AMCode returnCode = new AMCode();
-		
-		if(!optionsService.checkRSpecVersion()){
-			returnCode.setGeni_code(GENI_CodeEnum.BADVERSION);
-			goOn = false;
-		}
-		
-		//GENI available option is not supported
-		GeniAvailableOption availableOption = (GeniAvailableOption) options.getOptions().get(0);
-		if(availableOption == null)
-			availableOption = new GeniAvailableOption(false);
-		if(goOn && availableOption.getValue()){
-			returnCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
-			result.setOutput("Geni available option is not supported yet!");
-			goOn = false;
-		}
-		
-		if(goOn && !(optionsService.optionsAreValid() && optionsService.optionsComplete())){
-			returnCode.setGeni_code(GENI_CodeEnum.BADARGS);
-			goOn = false;
-		}
-		
-		if(goOn && !credentialService.isPermitted(SFAv3MethodsEnum.LIST_RESOURCES) ){
-			returnCode.setGeni_code(GENI_CodeEnum.FORBIDDEN);
-			goOn = false;
-		}
-		
-		if(goOn){
-			//TODO evaluate available resources option & implement availability concept
-			List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
-			List<ResourceAdapter> resourceAdapters = resourceManager.getResourceAdapters();
-			for(ResourceAdapter adapter: resourceAdapters){
-				resources.addAll(adapter.getAllResources());
-			}
-			
-			RSpecContents advertisedRspec = new RSpecContents();
-			advertisedRspec.setType("advertisement");
-			
-			List<Object> rspecContentElements = advertisedRspec.getAnyOrNodeOrLink();
-			SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-			for(ResourceProperties resource: resources){
-				 Object node = translator.translateToAdvertisementRspec(resource);
-				rspecContentElements.add(node);
-			}
+		// has to be modified to check credentials
+		ListResourcesResult result = getResult(options);
+		return result;
 
-			returnCode.setGeni_code(GENI_CodeEnum.SUCCESS);
-			
-//			RSpecContents rspecContents = (RSpecContents) jaxbObject;
-			JAXBElement<RSpecContents> rspec = new ObjectFactory().createRspec(advertisedRspec);
-			String advertisedRspecSTR ="";
-			try {
-				advertisedRspecSTR = getString(rspec);
-			} catch (JAXBException e) {
-				returnCode.setGeni_code(GENI_CodeEnum.ERROR);
-				result.setOutput("Internal Server Error!");
-			}
-			
-			result.setValue(advertisedRspecSTR);
-			
+		// SFACredentialsService credentialService = new
+		// SFACredentialsService(credentials);
+
+		// if(goOn &&
+		// !credentialService.isPermitted(SFAv3MethodsEnum.LIST_RESOURCES) ){
+		// returnCode.setGeni_code(GENI_CodeEnum.FORBIDDEN);
+		// goOn = false;
+		// }
+	}
+
+	private ListResourcesResult getResult(ListResourceOptions options) {
+
+		checkOptions(options);
+		String value = "";
+		String output = "";
+		AMCode returnCode = null;
+		if (optionsAreValid()) {
+			value = getValue();
+			output = getOutput();
+			returnCode = getRuntimeReturnCode();
+		} else {
+			returnCode = getOptionsValidationReturnCode();
+			output = getOptionsValidationOutput();
 		}
-		
-		
+		ListResourcesResult result = new ListResourcesResult();
 		result.setCode(returnCode);
+		result.setOutput(output);
+		result.setValue(value);
 		return result;
 	}
 
+	private String getOptionsValidationOutput() {
+
+		return optionsService.getErrorOutput();
+	}
+
+	private AMCode getRuntimeReturnCode() {
+		if(runTimeReturnCode == null){
+			runTimeReturnCode =  new AMCode();
+			runTimeReturnCode.setGeni_code(GENI_CodeEnum.SUCCESS);
+		}
+		return runTimeReturnCode;
+	}
+
+	private void checkOptions(ListResourceOptions options) {
+		if (optionsService == null)
+			this.optionsService = new ListResourceOptionsService(options);
+
+		optionsService.checkOptions();
+
+	}
+
+	private String getOutput() {
+		return outPutString;
+	}
+
+	private String getValue() {
+	
+		List<ResourceProperties> resources = getResourceProperties();
+
+		RSpecContents advertisedRspec = getAdvertisedRSpec(resources);
+		String advertisedRspecSTR = getRSpecString(advertisedRspec);
+
+		return advertisedRspecSTR;
+	}
+
+	private String getRSpecString(RSpecContents advertisedRspec) {
+		String advertisedRspecSTR = "";
+		
+
+		JAXBElement<RSpecContents> rspec = new ObjectFactory()
+				.createRspec(advertisedRspec);
+
+		try {
+			advertisedRspecSTR = getString(rspec);
+		} catch (JAXBException e) {
+			 setRuntimeReturnCode(GENI_CodeEnum.ERROR);
+			 setOutput("Internal Server Error!");
+		}
+
+		// result.setValue(advertisedRspecSTR);
+		return advertisedRspecSTR;
+	}
+
+	private void setOutput(String string) {
+		this.outPutString = string;
+		
+	}
+
+	private void setRuntimeReturnCode(GENI_CodeEnum error) {
+		runTimeReturnCode = new AMCode();
+		runTimeReturnCode.setGeni_code(error);
+		
+	}
+
+	private RSpecContents getAdvertisedRSpec(List<ResourceProperties> resources) {
+		RSpecContents advertisedRspec = new RSpecContents();
+		advertisedRspec.setType("advertisement");
+
+		List<Object> rspecContentElements = advertisedRspec
+				.getAnyOrNodeOrLink();
+		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+		for (ResourceProperties resource : resources) {
+			Object node = translator.translateToAdvertisementRspec(resource);
+			rspecContentElements.add(node);
+		}
+		return advertisedRspec;
+	}
+
+	private List<ResourceProperties> getResourceProperties() {
+		List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
+		List<ResourceAdapter> resourceAdapters = resourceManager
+				.getResourceAdapters();
+		for (ResourceAdapter adapter : resourceAdapters) {
+			resources.addAll(adapter.getAllResources());
+		}
+		return resources;
+	}
+
+	private boolean optionsAreValid() {
+
+		return optionsService.areOptionsValid();
+	}
+
+	private AMCode getOptionsValidationReturnCode() {
+
+		return optionsService.getErrorCode();
+	}
+
 	private String getString(Object jaxbObject) throws JAXBException {
-		JAXBContext context = JAXBContext.newInstance("org.fiteagle.interactors.sfa.rspec");
+		JAXBContext context = JAXBContext
+				.newInstance("org.fiteagle.interactors.sfa.rspec");
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter stringWriter = new StringWriter();
 		marshaller.marshal(jaxbObject, stringWriter);
 
 		return stringWriter.toString();
-		
+
 	}
 
 }
