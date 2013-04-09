@@ -15,13 +15,11 @@ import org.fiteagle.adapter.stopwatch.StopWatchInstanceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
-import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
-import org.fiteagle.interactors.sfa.common.SFACredentialsService;
-import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
@@ -101,7 +99,8 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 	private String getValue() {
 	
-		List<ResourceProperties> resources = getResourceProperties();
+		List<ResourceAdapter> resources = getResources();
+		
 
 		RSpecContents advertisedRspec = getAdvertisedRSpec(resources);
 		String advertisedRspecSTR = getRSpecString(advertisedRspec);
@@ -138,37 +137,35 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		
 	}
 
-	private RSpecContents getAdvertisedRSpec(List<ResourceProperties> resources) {
+	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resources) {
 		RSpecContents advertisedRspec = new RSpecContents();
 		advertisedRspec.setType("advertisement");
 
 		List<Object> rspecContentElements = advertisedRspec
 				.getAnyOrNodeOrLink();
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-		
-		//TODO:!!!!TEST. just to test stop watch resource with static content. 
-		ResourceProperties props = new StopWatchInstanceProperties();
-		props.setIdentifier("myStopWatchInstance");
-		props.setName("StopWatch: "+ System.currentTimeMillis());
-		Object fiteagleResource1 = translator.translateToFITeagleResource(props);
-		rspecContentElements.add(fiteagleResource1);
-		//TEST!!!!!
-		
-		for(ResourceProperties resource: resources){
+//		
+//		//TODO:!!!!TEST. just to test stop watch resource with static content. 
+//		ResourceProperties props = new StopWatchInstanceProperties();
+//		props.setIdentifier("myStopWatchInstance");
+//		props.setName("StopWatch: "+ System.currentTimeMillis());
+//		Object fiteagleResource1 = translator.translateToFITeagleResource(props);
+//		rspecContentElements.add(fiteagleResource1);
+//		//TEST!!!!!
+//		
+		for(ResourceAdapter resource: resources){
 			Object fiteagleResource = translator.translateToFITeagleResource(resource);
 			rspecContentElements.add(fiteagleResource);
 		}
 		return advertisedRspec;
 	}
 
-	private List<ResourceProperties> getResourceProperties() {
+	private List<ResourceAdapter> getResources() {
 		List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
 		List<ResourceAdapter> resourceAdapters = resourceManager
 				.getResourceAdapters();
-		for (ResourceAdapter adapter : resourceAdapters) {
-			resources.addAll(adapter.getAllResources());
-		}
-		return resources;
+		
+		return resourceAdapters;
 	}
 
 	private boolean optionsAreValid() {

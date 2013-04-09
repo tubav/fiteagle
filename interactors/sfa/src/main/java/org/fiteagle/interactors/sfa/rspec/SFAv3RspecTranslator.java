@@ -1,5 +1,6 @@
 package org.fiteagle.interactors.sfa.rspec;
 
+import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceProperties;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 
@@ -53,11 +54,11 @@ public class SFAv3RspecTranslator {
 		return new ObjectFactory().createNode(dummyNode);
 	}
 	
-	public Object translateToFITeagleResource(ResourceProperties resource) {
+	public Object translateToFITeagleResource(ResourceAdapter resource) {
 		//TODO identify node, link, interface etc??
 		//DUMMY IMPL ONLY VALID FOR SINGLE STOPWATCHRESOURCE!!!
 		Resource fiteagleSFSResource= new Resource();
-		fiteagleSFSResource.setName(resource.getName());
+		fiteagleSFSResource.setName(resource.getType());
 		 Property componentManagerIdProperty = new Property();
 		 componentManagerIdProperty.setName("componentManagerId");
 		 componentManagerIdProperty.setType("urn");
@@ -67,7 +68,7 @@ public class SFAv3RspecTranslator {
 		Property componentIdProperty = new Property();
 		 componentIdProperty.setName("componentId");
 		 componentIdProperty.setType("urn");
-		 componentIdProperty.setValue("urn:publicid:IDN+fiteagle+node+"+resource.getName());
+		 componentIdProperty.setValue("urn:publicid:IDN+fiteagle+node+"+resource.getType());
 		 
 		 fiteagleSFSResource.setProperty(componentIdProperty);
 		return new ObjectFactory().createResource(fiteagleSFSResource);
