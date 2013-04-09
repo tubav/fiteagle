@@ -17,7 +17,7 @@ public abstract class ResourceAdapter {
 	private String id;
 	public abstract List<ResourceProperties> getAllResources();
 	public HashMap<String, Object> getProperties() {
-		return properties;
+		return (properties != null ? properties : (properties = new HashMap<String, Object>()));
 	}
 	public void setProperties(HashMap<String, Object> properties) {
 		this.properties = properties;

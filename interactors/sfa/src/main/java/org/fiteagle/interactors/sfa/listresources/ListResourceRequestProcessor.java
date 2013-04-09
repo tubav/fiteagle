@@ -29,7 +29,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	private ResourceManager resourceManager;
 	private ListResourceOptionsService optionsService;
 	private AMCode runTimeReturnCode;
-	private String outPutString;
+	private String outPutString = "";
 
 	public ListResourceRequestProcessor() {
 		resourceManager = new ResourceManager();
@@ -102,8 +102,11 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	private String getValue() {
 	
 		List<ResourceProperties> resources = getResourceProperties();
+		
+		List<ResourceAdapter> resourceAdapters = resourceManager
+				.getResourceAdapters();
 
-		RSpecContents advertisedRspec = getAdvertisedRSpec(resources);
+		RSpecContents advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 		String advertisedRspecSTR = getRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
@@ -138,24 +141,24 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		
 	}
 
-	private RSpecContents getAdvertisedRSpec(List<ResourceProperties> resources) {
+	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
 		RSpecContents advertisedRspec = new RSpecContents();
 		advertisedRspec.setType("advertisement");
 
 		List<Object> rspecContentElements = advertisedRspec
 				.getAnyOrNodeOrLink();
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+//		
+//		//TODO:!!!!TEST. just to test stop watch resource with static content. 
+//		ResourceProperties props = new StopWatchInstanceProperties();
+//		props.setIdentifier("myStopWatchInstance");
+//		props.setName("StopWatch");
+//		Object fiteagleResource1 = translator.translateToFITeagleResource(props);
+//		rspecContentElements.add(fiteagleResource1);
+//		//TEST!!!!!
 		
-		//TODO:!!!!TEST. just to test stop watch resource with static content. 
-		ResourceProperties props = new StopWatchInstanceProperties();
-		props.setIdentifier("myStopWatchInstance");
-		props.setName("StopWatch: "+ System.currentTimeMillis());
-		Object fiteagleResource1 = translator.translateToFITeagleResource(props);
-		rspecContentElements.add(fiteagleResource1);
-		//TEST!!!!!
-		
-		for(ResourceProperties resource: resources){
-			Object fiteagleResource = translator.translateToFITeagleResource(resource);
+		for(ResourceAdapter resourceAdapter: resourceAdapters){
+			Object fiteagleResource = translator.translateToFITeagleResource(resourceAdapter);
 			rspecContentElements.add(fiteagleResource);
 		}
 		return advertisedRspec;
