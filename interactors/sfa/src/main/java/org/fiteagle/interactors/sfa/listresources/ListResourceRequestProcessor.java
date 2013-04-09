@@ -28,7 +28,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	private ResourceManager resourceManager;
 	private ListResourceOptionsService optionsService;
 	private AMCode runTimeReturnCode;
-	private String outPutString;
+	private String outPutString = "";
 
 	public ListResourceRequestProcessor() {
 		resourceManager = new ResourceManager();
