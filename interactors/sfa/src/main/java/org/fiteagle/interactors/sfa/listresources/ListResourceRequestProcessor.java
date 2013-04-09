@@ -11,6 +11,7 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceProperties;
+import org.fiteagle.adapter.stopwatch.StopWatchInstanceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -144,9 +145,18 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		List<Object> rspecContentElements = advertisedRspec
 				.getAnyOrNodeOrLink();
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-		for (ResourceProperties resource : resources) {
-			Object node = translator.translateToAdvertisementRspec(resource);
-			rspecContentElements.add(node);
+		
+		//TODO:!!!!TEST. just to test stop watch resource with static content. 
+		ResourceProperties props = new StopWatchInstanceProperties();
+		props.setIdentifier("myStopWatchInstance");
+		props.setName("StopWatch: "+ System.currentTimeMillis());
+		Object fiteagleResource1 = translator.translateToFITeagleResource(props);
+		rspecContentElements.add(fiteagleResource1);
+		//TEST!!!!!
+		
+		for(ResourceProperties resource: resources){
+			Object fiteagleResource = translator.translateToFITeagleResource(resource);
+			rspecContentElements.add(fiteagleResource);
 		}
 		return advertisedRspec;
 	}

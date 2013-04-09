@@ -17,6 +17,7 @@ public class Stopwatch extends ResourceAdapter {
 	public Stopwatch(){
 		this.resourceDatabase = new InMemoryResourceDatabase();
 		this.setId("StopWatchAdapter"); 
+		this.create();
 	}
 	public boolean isRunning() {
 		return runningState;
@@ -37,9 +38,9 @@ public class Stopwatch extends ResourceAdapter {
 	public void create() {
 	
 		ResourceProperties props = new StopWatchInstanceProperties();
-		props.setIdentifier("my StopWatchInstance");
+		props.setIdentifier("myStopWatchInstance");
 		props.setName("StopWatch: "+ System.currentTimeMillis());
-		resourceDatabase.addResource(props);
+		this.resourceDatabase.addResource(props);
 		
 	}
 

@@ -52,6 +52,15 @@ public class ObjectFactory {
     private final static QName _NodeContentsSliverType_QNAME = new QName("http://www.geni.net/resources/rspec/3", "sliver_type");
     private final static QName _NodeContentsSliverTypeDiskImage_QNAME = new QName("http://www.geni.net/resources/rspec/3", "disk_image");
 
+    
+    //Additional QNames for FITeagle resource description
+    
+    private final static QName _Resource_QNAME = new QName("http://www.fiteagle.org/rspec/ext", "resource");
+    private final static QName _Property_QNAMEFITeagle = new QName("http://www.fiteagle.org/rspec/ext", "property");
+    private final static QName _Method_QNAME = new QName("http://www.fiteagle.org/rspec/ext", "method");
+    private final static QName _Parameter_QNAME = new QName("http://www.fiteagle.org/rspec/ext", "parameter");
+    
+    
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.fiteagle.interactors.sfa.rspec
      * 
@@ -463,6 +472,77 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://www.geni.net/resources/rspec/3", name = "disk_image", scope = TypeRelationContents.class)
     public JAXBElement<DiskImageContents> createTypeRelationContentsDiskImage(DiskImageContents value) {
         return new JAXBElement<DiskImageContents>(_NodeContentsSliverTypeDiskImage_QNAME, DiskImageContents.class, TypeRelationContents.class, value);
+    }
+    
+    
+    //FITeagle specific resource description
+    
+    /**
+     * Create an instance of {@link Parameter }
+     * 
+     */
+    public Parameter createParameter() {
+        return new Parameter();
+    }
+
+    /**
+     * Create an instance of {@link Resource }
+     * 
+     */
+    public Resource createResource() {
+        return new Resource();
+    }
+
+    /**
+     * Create an instance of {@link Method }
+     * 
+     */
+    public Method createMethod() {
+        return new Method();
+    }
+
+    /**
+     * Create an instance of {@link Property }
+     * 
+     */
+    public Property createProperty() {
+        return new Property();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Resource }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext", name = "resource")
+    public JAXBElement<Resource> createResource(Resource value) {
+        return new JAXBElement<Resource>(_Resource_QNAME, Resource.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Property }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext", name = "property")
+    public JAXBElement<Property> createProperty(Property value) {
+        return new JAXBElement<Property>(_Property_QNAMEFITeagle, Property.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Method }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext", name = "method")
+    public JAXBElement<Method> createMethod(Method value) {
+        return new JAXBElement<Method>(_Method_QNAME, Method.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Parameter }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext", name = "parameter")
+    public JAXBElement<Parameter> createParameter(Parameter value) {
+        return new JAXBElement<Parameter>(_Parameter_QNAME, Parameter.class, null, value);
     }
 
 }
