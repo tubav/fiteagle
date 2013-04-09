@@ -218,7 +218,7 @@
 					<member>
 						<name>geni_compressed</name>
 						<value>
-							<boolean>1</boolean>
+							<boolean>0</boolean>
 						</value>
 					</member>
 				</struct>
