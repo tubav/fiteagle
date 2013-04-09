@@ -22,6 +22,7 @@ import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
