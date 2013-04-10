@@ -14,6 +14,8 @@ import org.fiteagle.adapter.common.ResourceProperties;
 import org.fiteagle.adapter.stopwatch.StopWatchInstanceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
+import org.fiteagle.interactors.sfa.common.Authorization;
+import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -39,9 +41,11 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	@Override
 	public ListResourcesResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
+		
+		
 		ListResourceOptions options = (ListResourceOptions) specificArgs[0];
 		// has to be modified to check credentials
-		ListResourcesResult result = getResult(options);
+		ListResourcesResult result = getResult(credentials, options);
 		return result;
 
 		// SFACredentialsService credentialService = new
@@ -54,12 +58,28 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		// }
 	}
 
-	private ListResourcesResult getResult(ListResourceOptions options) {
+	private ListResourcesResult getResult(ListCredentials listCredentials, ListResourceOptions options) {
 
-		checkOptions(options);
 		String value = "";
 		String output = "";
 		AMCode returnCode = null;
+		
+		Authorization auth = new Authorization();
+		
+		auth.checkCredentialsList(listCredentials);
+		
+		if(!auth.areCredentialTypeAndVersionValid()){
+			returnCode=auth.getReturnCode();
+			output=auth.getAuthorizationFailMessage();
+			ListResourcesResult result = new ListResourcesResult();
+			result.setCode(returnCode);
+			result.setOutput(output);
+			return result;
+		}
+		
+		checkOptions(options);
+		
+		
 		if (optionsAreValid()) {
 			value = getValue();
 			output = getOutput();
@@ -102,8 +122,6 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 	private String getValue() {
 	
-		List<ResourceProperties> resources = getResourceProperties();
-		
 		List<ResourceAdapter> resourceAdapters = resourceManager
 				.getResourceAdapters();
 

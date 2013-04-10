@@ -10,7 +10,7 @@
 						<struct>
 							<member>
 								<name>geni_type</name>
-								<value><string>something</string></value>
+								<value><string>geni_sfa</string></value>
 							</member>
 							<member>
 								<name>geni_version</name>

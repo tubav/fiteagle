@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 
 public class SFAv3RspecTranslator {

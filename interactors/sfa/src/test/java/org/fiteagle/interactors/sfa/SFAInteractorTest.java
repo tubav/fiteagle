@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.AMValue;
+import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
@@ -54,7 +55,7 @@ public class SFAInteractorTest {
 		ListResourceOptions options = createMinimalListResourceOptions("GENI",
 				"3");
 		final ListResourcesResult listResourcesResult = this.sfaInteractor
-				.listResources(new ListCredentials(), options);
+				.listResources(getListCredentials(), options);
 
 	}
 
@@ -65,22 +66,26 @@ public class SFAInteractorTest {
 				getVersionResult.getValue().getGeni_ad_rspec_versions().get(0)
 						.getType(), getVersionResult.getValue()
 						.getGeni_ad_rspec_versions().get(0).getVersion());
+
 		final ListResourcesResult listResourcesResult = this.sfaInteractor
-				.listResources(new ListCredentials(), options);
+				.listResources(getListCredentials(), options);
 		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 
 	}
 
 	@Test
 	public void testInvalidListResourcesVersion() throws IOException {
-		
-		ListResourceOptions options = createMinimalListResourceOptions("GENI", "2");
-		ListCredentials credentials = new ListCredentials();
-		ListResourcesResult listResourcesResult = this.sfaInteractor.listResources(credentials, options);
-		Assert.assertEquals(listResourcesResult.getCode().retrieveGeni_code(), GENI_CodeEnum.BADVERSION);
-		
-		
+
+		ListResourceOptions options = createMinimalListResourceOptions("GENI",
+				"2");
+
+		ListResourcesResult listResourcesResult = this.sfaInteractor
+				.listResources(getListCredentials(), options);
+		Assert.assertEquals(listResourcesResult.getCode().retrieveGeni_code(),
+				GENI_CodeEnum.BADVERSION);
+
 	}
+
 	private ListResourceOptions createMinimalListResourceOptions(String type,
 			String version) {
 		ListResourceOptions options = new ListResourceOptions();
@@ -141,4 +146,14 @@ public class SFAInteractorTest {
 		// version.getGeniApiVersion());
 		return version;
 	}
+
+	private ListCredentials getListCredentials() {
+		Credentials credentials = new Credentials();
+		credentials.setGeni_type(Authorization.GENI_TYPE);
+		credentials.setGeni_version(Authorization.GENI_VERSION);
+		ListCredentials listCredentials = new ListCredentials();
+		listCredentials.getCredentialsList().add(credentials);
+		return listCredentials;
+	}
+
 }

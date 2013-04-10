@@ -13,7 +13,7 @@ public class ResourceManager {
 	public ResourceManager(){
 		adapterDatabase = new InMemoryResourceAdapterDatabase();
 		ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
-	
+	   
 		adapterDatabase.addResourceAdapter(dummyResourceAdapter);
 	}
 	
