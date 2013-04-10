@@ -11,20 +11,15 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceProperties;
-import org.fiteagle.adapter.stopwatch.StopWatchInstanceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
-import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
-import org.fiteagle.interactors.sfa.common.SFACredentialsService;
-import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
-import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
