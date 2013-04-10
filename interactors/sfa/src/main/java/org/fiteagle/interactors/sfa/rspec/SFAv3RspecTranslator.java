@@ -83,8 +83,6 @@ public class SFAv3RspecTranslator {
 				tmpProperty.setValue(resourceAdapterProperties.get(key)
 						.toString());
 				fiteagleSFAResource.getProperty().add(tmpProperty);
-				System.out.println("adding the property: "
-						+ tmpProperty.getName());
 			}
 
 		}

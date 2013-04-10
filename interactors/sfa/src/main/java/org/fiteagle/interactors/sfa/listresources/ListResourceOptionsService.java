@@ -33,7 +33,7 @@ public class ListResourceOptionsService extends SFAOptionsService {
 		return this.options.getGeni_rspec_version().getVersion().compareTo(new SFAv3RspecTranslator().getVersion())==0;
 	}
 
-	private boolean areOptionsSupported(){
+	private boolean IsAvailableOptionSupported(){
 		GeniAvailableOption availableOption = (GeniAvailableOption) options.getOptions().get(0);
 		boolean returnValue = true;
 		if(availableOption != null)
@@ -57,11 +57,18 @@ public class ListResourceOptionsService extends SFAOptionsService {
 			optionsValid = false;
 			errorOutput = GENI_CodeEnum.BADVERSION.getDescription();
 		}
-		if(!areOptionsSupported()){
+		if(!IsAvailableOptionSupported()){
 			amCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
 			optionsValid = false;
 			errorOutput = "Geni available option is not supported yet!";
 		}
+		
+		if(!IsGeniCompressedOptionSupported()){
+			amCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
+			optionsValid = false;
+			errorOutput = "Geni compressed option is not supported yet!";
+		}
+		
 		if(!optionsAreValid() && !optionsComplete()){
 			amCode.setGeni_code(GENI_CodeEnum.BADARGS);
 			optionsValid = false;
@@ -71,6 +78,15 @@ public class ListResourceOptionsService extends SFAOptionsService {
 		
 	}
 	
+	private boolean IsGeniCompressedOptionSupported() {
+		GeniCompressedOption compressOption = (GeniCompressedOption) options.getOptions().get(1);
+		boolean response = true;
+		if(compressOption != null)
+			response = !compressOption.getValue();
+		return response;
+	}
+
+
 	public AMCode getErrorCode(){
 		return this.amCode;
 	}
