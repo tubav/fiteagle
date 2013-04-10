@@ -19,11 +19,11 @@ public class GetVersionResult extends AMResult {
 
 	
 
-	@Override
-	public boolean checkValid() {
-		//TODO implement validation
-		return false;
-	}
+//	@Override
+//	public boolean checkValid() {
+//		//TODO implement validation
+//		return false;
+//	}
 
 
 	public int getGeni_api() {

@@ -2,6 +2,7 @@ package org.fiteagle.delivery.xmlrpc.util;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,8 +13,8 @@ import org.fiteagle.interactors.sfa.ISFA;
 import org.fiteagle.interactors.sfa.SFAInteractor_v3;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
-import org.fiteagle.interactors.sfa.common.AMValue;
 import org.fiteagle.interactors.sfa.common.Credentials;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -38,10 +39,83 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object invoke(String methodName, List parameters) throws Throwable {
+
+		Map<String, Object> response = null;
+
+		try {
+			Method knownMethod = getMethod(methodName);
+			AMResult result = getMethodCallResult(knownMethod, parameters);
+			response = createResponse(result);
+		} catch (ParsingException e) {
+			response = createErrorResponse(e);
+		}
+		return response;
+
+	}
+
+	private Map<String, Object> createErrorResponse(ParsingException e) throws IOException {
+		AMResult errorResult = getErrorResult(e);
+		Map<String, Object> errorResponse = introspect(errorResult);
+		return errorResponse;
+	}
+
+	private AMResult getErrorResult(ParsingException e) {
+		AMResult result = new AMResult();
+		result.setOutput(e.getMessage());
+		AMCode errorCode = getErrorCode(e);
+		result.setCode(errorCode);
+		return result;
+		
+	}
+
+	private AMCode getErrorCode(ParsingException e) {
+		AMCode code = new AMCode();
+		code.setGeni_code(e.getErrorCode());
+		return code;
+	}
+
+	private Map<String, Object> createResponse(AMResult result) {
 		Map<String, Object> response = new HashMap<>();
-		Method[] methodsFromHandler = interactor.getClass().getMethods();
-		Method knownMethod = null;
+		try {
+			response = introspect(result);
+		} catch (IOException ioException) {
+
+			System.err.println(ioException.getStackTrace());
+		}
+		return response;
+	}
+
+	private AMResult getMethodCallResult(Method knownMethod, List parameters)
+			throws IllegalAccessException, InvocationTargetException,
+			InstantiationException {
 		AMResult result = null;
+
+		Class<?>[] parameterClasses = knownMethod.getParameterTypes();
+		if (parameterClasses.length == 0) {
+			// Method takes no parameters => nothing to do
+			result = (AMResult) knownMethod.invoke(interactor, (Object[]) null);
+		} else {
+			// identify classes & instantiate objects
+
+			List<Object> methodParameters = createEmptyMethodParameters(parameterClasses);
+
+			// should be, otherwise something is wrong
+
+			for (int i = 0; i < parameterClasses.length; i++) {
+				xmlStructToObject(parameters.get(i), methodParameters.get(i));
+			}
+
+			result = (AMResult) knownMethod.invoke(interactor,
+					methodParameters.toArray());
+
+		}
+		return result;
+	}
+
+	private Method getMethod(String methodName) {
+		Method knownMethod = null;
+		Method[] methodsFromHandler = interactor.getClass().getMethods();
+
 		for (int i = 0; i < methodsFromHandler.length; i++) {
 			if (methodsFromHandler[i].getName().equals(methodName)) {
 				// Critical assumption !!! Only one method which equals the
@@ -50,39 +124,11 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 				knownMethod = methodsFromHandler[i];
 			}
 		}
-		if (knownMethod != null) {
-
-			Class<?>[] parameterClasses = knownMethod.getParameterTypes();
-			if (parameterClasses.length == 0) {
-				// Method takes no parameters => nothing to do
-				result = (AMResult) knownMethod.invoke(interactor,(Object[]) null);
-			} else {
-				// identify classes & instantiate objects
-
-				List<Object> methodParameters = createEmptyMethodParameters(parameterClasses);
-				if (methodParameters.size() == parameterClasses.length) {
-					// should be, otherwise something is wrong
-					for (int i = 0; i < parameterClasses.length; i++) {
-						xmlStructToObject(parameters.get(i),
-								methodParameters.get(i));
-					}
-				}
-				result = (AMResult) knownMethod.invoke(interactor, methodParameters.toArray());
-//				postProcess(result, methodName);
-			}
-
+		if (knownMethod == null){
+			ParsingException e = new MethodNotFound(methodName);
+			throw e;
 		}
-
-		try {
-			response = introspect(result);
-		} catch (IOException ioException) {
-
-			// TODO add logging
-			System.err.println(ioException.getStackTrace());
-		}
-
-		return response;
-
+		return knownMethod;
 	}
 
 	private void xmlStructToObject(Object from, Object to) {
@@ -92,10 +138,10 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 			// both booleans default to false if not set => no check for
 			// existence necessary
-			listResourceOptions.setGeni_available(new GeniAvailableOption(listResourceOptionsStruct
-					.getBoolean("geni_available")));
-			listResourceOptions.setGeni_compressed(new GeniCompressedOption(listResourceOptionsStruct
-					.getBoolean("geni_compressed")));
+			listResourceOptions.setGeni_available(new GeniAvailableOption(
+					listResourceOptionsStruct.getBoolean("geni_available")));
+			listResourceOptions.setGeni_compressed(new GeniCompressedOption(
+					listResourceOptionsStruct.getBoolean("geni_compressed")));
 
 			XmlRpcStruct geni_rspec_version_struct = listResourceOptionsStruct
 					.getStruct("geni_rspec_version");
@@ -115,35 +161,39 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 		}
 		if (to.getClass().isAssignableFrom(ListCredentials.class)) {
-			XmlRpcArray listCredentialsArray = (XmlRpcArray) from;
-			ListCredentials listCredentials = (ListCredentials) to;
-			if (listCredentialsArray.size() > 0) {
-				for (int i = 0; i < listCredentialsArray.size(); i++) {
-					XmlRpcStruct credentialsStruct = (XmlRpcStruct) listCredentialsArray
-							.get(i);
-					Credentials credentials = new Credentials();
-					if (credentialsStruct.getString("geni_type") != null) {
-						credentials.setGeni_type(credentialsStruct
-								.getString("geni_type"));
-					} else {
-						// TODO error handling
-					}
-					if (credentialsStruct.getString("geni_version") != null) {
-						credentials.setGeni_version(credentialsStruct
-								.getString("geni_version"));
-					} else {
-						// TODO error handling
-					}
-					if (credentialsStruct.getString("geni_value") != null) {
-						credentials.setGeni_value(credentialsStruct
-								.getString("geni_value"));
-					} else {
-						// TODO error handling
-					}
+			try {
+				XmlRpcArray listCredentialsArray = (XmlRpcArray) from;
+				ListCredentials listCredentials = (ListCredentials) to;
+				if (listCredentialsArray.size() > 0) {
+					for (int i = 0; i < listCredentialsArray.size(); i++) {
+						XmlRpcStruct credentialsStruct = (XmlRpcStruct) listCredentialsArray
+								.get(i);
+						Credentials credentials = new Credentials();
+						if (credentialsStruct.getString("geni_type") != null) {
+							credentials.setGeni_type(credentialsStruct
+									.getString("geni_type"));
+						} else {
+							// TODO error handling
+						}
+						if (credentialsStruct.getString("geni_version") != null) {
+							credentials.setGeni_version(credentialsStruct
+									.getString("geni_version"));
+						} else {
+							// TODO error handling
+						}
+						if (credentialsStruct.getString("geni_value") != null) {
+							credentials.setGeni_value(credentialsStruct
+									.getString("geni_value"));
+						} else {
+							// TODO error handling
+						}
 
-					listCredentials.addCredentials(credentials);
+						listCredentials.addCredentials(credentials);
 
+					}
 				}
+			} catch (ClassCastException e) {
+				throw new CredentialsNotValid();
 			}
 		}
 
@@ -161,28 +211,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		return returnList;
 	}
 
-//	private void postProcess(AMResult result, String methodName) {
-//
-//		processCode(result.getCode());
-//		processValue(result.getValue(), methodName);
-//
-//	}
 
-//	private void processValue(AMValue value, String methodName) {
-//		// TODO set urn, set hostname, set hrn, set geni_api_versions (# from
-//		// interactor, url from server)
-//
-//	}
-
-//	private AMCode processCode(AMCode code_result) {
-//		if(code_result == null)
-//			code_result = new AMCode();
-//		
-//		code_result.setAm_code(0);
-//		code_result.setAm_type("FITeagle");
-//		
-//		return code_result;
-//	}
 
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> introspect(Object result) throws IOException {
@@ -197,4 +226,45 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		return response;
 	}
 
+	private class ParsingException extends RuntimeException {
+		private GENI_CodeEnum errorCode = GENI_CodeEnum.ERROR;
+		private String errorMessage = "Error";
+		private static final long serialVersionUID = 1L;
+		public void setErrorCode(GENI_CodeEnum errorCode) {
+			this.errorCode = errorCode;
+		}
+		
+		public GENI_CodeEnum getErrorCode() {
+			return errorCode;
+		}
+		
+		public String getMessage(){
+			return this.errorMessage;
+		}
+		
+		public void setMessage(String message){
+			this.errorMessage = message;
+		}
+	}
+
+	private class CredentialsNotValid extends ParsingException {
+
+		private static final long serialVersionUID = 1L;
+		public CredentialsNotValid() {
+			setErrorCode(GENI_CodeEnum.BADARGS);
+			setMessage("Credentials not Valid");
+		}
+
+	}
+
+	private class MethodNotFound extends ParsingException {
+
+		private static final long serialVersionUID = 2409993059634896770L;
+
+		public MethodNotFound(String methodName) {
+			setErrorCode(GENI_CodeEnum.RPCERROR);
+			setMessage("Method "+methodName +" not found");
+		}
+
+	}
 }
