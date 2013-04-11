@@ -14,16 +14,19 @@ public class SFAv3RspecTranslator {
 	private final Geni_RSpec_Version geni_rspec_version;
 	private final String adRspecNamespace = "http://www.geni.net/resources/rspec/3";
 	private final String adRspecSchema = "http://www.geni.net/resources/rspec/3/ad.xsd";
-	private final String[] adRspecExtensions = new String[] { "" };
+	private final ArrayList<String> adRspecExtensions = new ArrayList<String>();
 
 	private final String requestRspecNamespace = "http://www.geni.net/resources/rspec/3";
 	private final String requestRspecSchema = "http://www.geni.net/resources/rspec/3/request.xsd";
-	private final String[] requestRspecExtensions = new String[] { "" };
+	private final ArrayList<String> requestRspecExtensions = new ArrayList<String>();
 
+	private final String RSPEC_EXTENSION = "http://www.fiteagle.org/rspec/ext/1";
 	public SFAv3RspecTranslator() {
 		geni_rspec_version = new Geni_RSpec_Version();
 		geni_rspec_version.setType("GENI");
 		geni_rspec_version.setVersion("3");
+		addAdRspecExtension(this.RSPEC_EXTENSION);
+		addRequestRspecExtension(RSPEC_EXTENSION);
 	}
 
 	public String getAdRspecNamespace() {
@@ -35,7 +38,7 @@ public class SFAv3RspecTranslator {
 	}
 
 	public String[] getAdRspecExtensions() {
-		return adRspecExtensions;
+		return adRspecExtensions.toArray(new String[adRspecExtensions.size()]);
 	}
 
 	public String getRequestRspecNamespace() {
@@ -47,7 +50,7 @@ public class SFAv3RspecTranslator {
 	}
 
 	public String[] getRequestRspecExtensions() {
-		return requestRspecExtensions;
+		return requestRspecExtensions.toArray(new String[requestRspecExtensions.size()]);
 	}
 
 	public String getType() {
@@ -58,6 +61,14 @@ public class SFAv3RspecTranslator {
 		return this.geni_rspec_version.getVersion();
 	}
 
+	private void addRequestRspecExtension(String extension){
+		requestRspecExtensions.add(extension);
+	}
+	
+	private void addAdRspecExtension(String extension){
+		adRspecExtensions.add(extension);
+	}
+	
 	public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 
 		Resource fiteagleSFAResource = new Resource();
@@ -98,18 +109,6 @@ public class SFAv3RspecTranslator {
 		statusProperty.setType("string");
 		statusProperty.setValue(resourceAdapter.getStatus());
 		fiteagleSFAResource.getProperty().add(statusProperty);
-
-		// Property componentManagerIdProperty = new Property();
-		// componentManagerIdProperty.setName("componentManagerId");
-		// componentManagerIdProperty.setType("urn");
-		// componentManagerIdProperty.setValue("urn:publicid:IDN+fiteagle+authority+am");
-		// fiteagleSFSResource.setProperty(componentManagerIdProperty);
-		//
-		// Property componentIdProperty = new Property();
-		// componentIdProperty.setName("componentId");
-		// componentIdProperty.setType("urn");
-		// componentIdProperty.setValue("urn:publicid:IDN+fiteagle+node+"+resourceAdapter.getName());
-		// fiteagleSFSResource.setProperty(componentIdProperty);
 
 		return new ObjectFactory().createResource(fiteagleSFAResource);
 	}
