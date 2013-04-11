@@ -1,25 +1,31 @@
 package org.fiteagle.core.userdatabase;
 
+import java.sql.SQLException;
+
+
+
 public interface PersonDB {
 
-	public abstract void add(Person p) throws DuplicateUID;
+	public void add(Person p) throws DuplicateUIDException, SQLException;
 	
-	public void delete(String UID);
-	public void delete(Person p);
+	public void delete(String UID) throws SQLException;
+	public void delete(Person p) throws SQLException;
 	
-	public void update(Person p) throws RecordNotFound;
-	public void addKey(Person p, String key) throws RecordNotFound;
+	public void update(Person p) throws RecordNotFoundException, SQLException;
+	public void addKey(Person p, String key) throws RecordNotFoundException, SQLException;
 	
-	public Person get(String UID) throws RecordNotFound;
-	public Person get(Person p) throws RecordNotFound;
+	public Person get(String UID) throws RecordNotFoundException, SQLException;
+	public Person get(Person p) throws RecordNotFoundException, SQLException;
 	
+	public int getSize() throws SQLException;
 
 	
 	
-	public static class RecordNotFound extends RuntimeException {
+	public static class RecordNotFoundException extends RuntimeException {
 	}
 	
-	public class DuplicateUID extends RuntimeException {
+	public class DuplicateUIDException extends RuntimeException {
 		
 	}
+
 }

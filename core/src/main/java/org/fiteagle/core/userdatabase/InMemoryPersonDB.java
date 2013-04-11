@@ -16,9 +16,9 @@ public class InMemoryPersonDB implements PersonDB {
 	}
 	
 	@Override
-	public void add(Person p) throws DuplicateUID {
+	public void add(Person p) throws DuplicateUIDException {
 		if(persons.get(p.getUID()) != null){
-			throw new DuplicateUID();
+			throw new DuplicateUIDException();
 		}
 		else{
 			persons.put(p.getUID(), p);
@@ -36,29 +36,29 @@ public class InMemoryPersonDB implements PersonDB {
 	}
 
 	@Override
-	public void update(Person p) throws RecordNotFound {
+	public void update(Person p) throws RecordNotFoundException {
 		if(persons.get(p.getUID()) == null)
-			throw new RecordNotFound();
+			throw new RecordNotFoundException();
 		else
 			persons.put(p.getUID(), p);		
 	}
 
 	@Override
-	public Person get(String UID) throws RecordNotFound {
+	public Person get(String UID) throws RecordNotFoundException {
 		if(persons.get(UID) == null)
-			throw new RecordNotFound();
+			throw new RecordNotFoundException();
 		return persons.get(UID);		
 	}
 
 	@Override
-	public Person get(Person p) throws RecordNotFound {
+	public Person get(Person p) throws RecordNotFoundException {
 		return get(p.getUID());		
 	}
 
 	@Override
-	public void addKey(Person p, String key) throws RecordNotFound {
+	public void addKey(Person p, String key) throws RecordNotFoundException {
 		if((p=persons.get(p.getUID())) == null)
-			throw new RecordNotFound();
+			throw new RecordNotFoundException();
 		p.addPublicKey(key);
 		update(p);
 	}
