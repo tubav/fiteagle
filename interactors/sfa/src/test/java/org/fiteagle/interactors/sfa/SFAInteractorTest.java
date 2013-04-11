@@ -86,6 +86,7 @@ public class SFAInteractorTest {
 
 	}
 
+	
 	private ListResourceOptions createMinimalListResourceOptions(String type,
 			String version) {
 		ListResourceOptions options = new ListResourceOptions();
