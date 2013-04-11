@@ -1,21 +1,23 @@
 package org.fiteagle.core.userdatabase;
 
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
+import java.sql.SQLException;
+
+
 
 public interface PersonDB {
 
-	public void add(Person p) throws DuplicateUIDException;
+	public void add(Person p) throws DuplicateUIDException, SQLException;
 	
-	public void delete(String UID);
-	public void delete(Person p);
+	public void delete(String UID) throws SQLException;
+	public void delete(Person p) throws SQLException;
 	
-	public void update(Person p) throws RecordNotFoundException;
-	public void addKey(Person p, String key) throws RecordNotFoundException;
+	public void update(Person p) throws RecordNotFoundException, SQLException;
+	public void addKey(Person p, String key) throws RecordNotFoundException, SQLException;
 	
-	public Person get(String UID) throws RecordNotFoundException;
-	public Person get(Person p) throws RecordNotFoundException;
+	public Person get(String UID) throws RecordNotFoundException, SQLException;
+	public Person get(Person p) throws RecordNotFoundException, SQLException;
 	
-	public int getSize();
+	public int getSize() throws SQLException;
 
 	
 	

@@ -1,7 +1,11 @@
 package org.fiteagle.core.userdatabase;
 
 import static org.junit.Assert.*;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import org.fiteagle.core.userdatabase.PersonDB.DuplicateUIDException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,39 +27,39 @@ public class InMemoryPersonDBTest {
 	}
 		
 	@Test
-	public void testAdd(){	
+	public void testAdd() throws Exception{	
 		assertTrue(database.getSize() == 0);
 		database.add(PERSON1);
 		assertTrue(database.getSize() == 1);
 	}
 	
 	@Test(expected=PersonDB.DuplicateUIDException.class)
-	public void testAddFails(){
+	public void testAddFails() throws Exception{
 		database.add(PERSON2);
 		database.add(PERSON3);
 	}
 		
 	@Test
-	public void testGet(){		
+	public void testGet() throws Exception{		
 		database.add(PERSON1);	
 		assertEquals(PERSON1, database.get(PERSON1));		
 	}
 	
 	@Test(expected=PersonDB.RecordNotFoundException.class)
-	public void testGetFails() throws PersonDB.RecordNotFoundException{
+	public void testGetFails() throws Exception{
 		database.add(PERSON1);
 		database.get(PERSON2);
 	}
 
 	@Test(expected=PersonDB.RecordNotFoundException.class)
-	public void testDelete() throws PersonDB.RecordNotFoundException{
+	public void testDelete() throws Exception{
 		database.add(PERSON1);
 		database.delete(PERSON1);
 		database.get(PERSON1);
 	}
 		
 	@Test
-	public void testUpdate(){
+	public void testUpdate() throws Exception{
 		database.add(PERSON2);
 		assertEquals("hans", database.get(PERSON2).getFirstName());
 		database.update(PERSON3);
@@ -63,12 +67,12 @@ public class InMemoryPersonDBTest {
 	}
 	
 	@Test(expected=PersonDB.RecordNotFoundException.class)
-	public void testUpdateFails() throws PersonDB.RecordNotFoundException{
+	public void testUpdateFails() throws Exception{
 		database.update(PERSON3);
 	}
 	
 	@Test
-	public void testAddKey(){
+	public void testAddKey() throws Exception{
 		database.add(PERSON1);
 		assertEquals(0, database.get(PERSON1).getPublicKeys().size());
 		database.addKey(PERSON1, KEY);
