@@ -82,8 +82,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		try {
 			response = introspect(result);
 		} catch (IOException ioException) {
-
-			System.err.println(ioException.getStackTrace());
+			log.error(ioException.getMessage(),ioException);
 		}
 		return response;
 	}
@@ -95,14 +94,10 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 		Class<?>[] parameterClasses = knownMethod.getParameterTypes();
 		if (parameterClasses.length == 0) {
-			// Method takes no parameters => nothing to do
 			result = (AMResult) knownMethod.invoke(interactor, (Object[]) null);
 		} else {
-			// identify classes & instantiate objects
-
+			
 			List<Object> methodParameters = createEmptyMethodParameters(parameterClasses);
-
-			// should be, otherwise something is wrong
 
 			for (int i = 0; i < parameterClasses.length; i++) {
 				xmlStructToObject(parameters.get(i), methodParameters.get(i));
@@ -138,9 +133,6 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		if (to.getClass().isAssignableFrom(ListResourceOptions.class)) {
 			XmlRpcStruct listResourceOptionsStruct = (XmlRpcStruct) from;
 			ListResourceOptions listResourceOptions = (ListResourceOptions) to;
-
-			// both booleans default to false if not set => no check for
-			// existence necessary
 			listResourceOptions.setGeni_available(new GeniAvailableOption(
 					listResourceOptionsStruct.getBoolean("geni_available")));
 			listResourceOptions.setGeni_compressed(new GeniCompressedOption(

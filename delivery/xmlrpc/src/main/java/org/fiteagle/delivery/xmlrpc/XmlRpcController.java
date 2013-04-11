@@ -1,10 +1,14 @@
 package org.fiteagle.delivery.xmlrpc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import redstone.xmlrpc.XmlRpcInvocation;
 import redstone.xmlrpc.XmlRpcInvocationInterceptor;
 
 public class XmlRpcController implements XmlRpcInvocationInterceptor {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Override
 	public Object after(XmlRpcInvocation arg0, Object arg1) {
 		return arg1;
@@ -25,8 +29,7 @@ public class XmlRpcController implements XmlRpcInvocationInterceptor {
 
 	@Override
 	public void onException(XmlRpcInvocation arg0, Throwable arg1) {
-		// TODO Auto-generated method stub
-
+		log.error("Error on XmlRPCInvocation "+ arg0.getMethodName(), arg1);
 	}
 
 }
