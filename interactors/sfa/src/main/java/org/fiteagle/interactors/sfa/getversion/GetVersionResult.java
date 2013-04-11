@@ -17,14 +17,6 @@ public class GetVersionResult extends AMResult {
 		this.value = value;
 	}
 
-	
-
-//	@Override
-//	public boolean checkValid() {
-//		//TODO implement validation
-//		return false;
-//	}
-
 
 	public int getGeni_api() {
 		return this.value.getGeni_api();
