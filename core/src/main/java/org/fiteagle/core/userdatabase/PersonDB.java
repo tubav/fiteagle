@@ -19,8 +19,7 @@ public interface PersonDB {
 	
 	public int getSize() throws SQLException;
 
-	
-	
+		
 	public static class RecordNotFoundException extends RuntimeException {
 	}
 	
