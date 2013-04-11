@@ -29,9 +29,8 @@ public class FITeagleUtils {
 
 	public static InputStream getFileAsInputStream(String filePath)
 			throws IOException {
-		//final InputStream resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
-		//final InputStream resourceAsStream = FITeagleUtils.class.getClassLoader().getResourceAsStream(filePath);
-		final InputStream resourceAsStream = FITeagleUtils.class.getResourceAsStream(filePath);
+		final InputStream resourceAsStream = FITeagleUtils.class
+				.getResourceAsStream(filePath);
 
 		if (null == resourceAsStream)
 			throw new IOException("File not found in classpath: " + filePath);
