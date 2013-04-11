@@ -25,7 +25,7 @@ public class InMemoryPersonDBTest {
 	public void setUp(){
 		this.database = new InMemoryPersonDB();
 	}
-		
+	
 	@Test
 	public void testAdd() throws Exception{	
 		assertTrue(database.getSize() == 0);

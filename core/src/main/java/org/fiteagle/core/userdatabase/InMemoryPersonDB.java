@@ -3,7 +3,6 @@ package org.fiteagle.core.userdatabase;
 import java.util.HashMap;
 
 public class InMemoryPersonDB implements PersonDB {
-
 	
 	private HashMap<String, Person> persons;
 	
