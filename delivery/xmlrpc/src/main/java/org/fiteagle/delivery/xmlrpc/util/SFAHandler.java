@@ -33,7 +33,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 	ISFA interactor;
 
-	Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+	private final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
 	
 	public SFAHandler(SFAInteractor_v3 sfaInteractor_v3) {
 		this.interactor = sfaInteractor_v3;
