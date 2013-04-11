@@ -20,6 +20,7 @@ import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.listresources.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.slf4j.Logger;
 
 import redstone.xmlrpc.XmlRpcArray;
 import redstone.xmlrpc.XmlRpcInvocationHandler;
@@ -32,6 +33,8 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 	ISFA interactor;
 
+	Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+	
 	public SFAHandler(SFAInteractor_v3 sfaInteractor_v3) {
 		this.interactor = sfaInteractor_v3;
 	}
@@ -39,7 +42,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object invoke(String methodName, List parameters) throws Throwable {
-
+		
 		Map<String, Object> response = null;
 
 		try {
