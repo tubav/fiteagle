@@ -34,8 +34,6 @@ public class GetVersionValue extends AMValue {
 	private boolean geni_single_allocation;
 	private String geni_allocate;
 
-	private Map<String,Object> genericAttributes = new HashMap<>();
-	
 	public GetVersionValue() {
 		
 	}

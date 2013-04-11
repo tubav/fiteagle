@@ -11,15 +11,15 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceProperties;
-import org.fiteagle.adapter.stopwatch.StopWatchInstanceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
+import org.fiteagle.interactors.sfa.common.Authorization;
+import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
-import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
@@ -36,9 +36,11 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	@Override
 	public ListResourcesResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
+		
+		
 		ListResourceOptions options = (ListResourceOptions) specificArgs[0];
 		// has to be modified to check credentials
-		ListResourcesResult result = getResult(options);
+		ListResourcesResult result = getResult(credentials, options);
 		return result;
 
 		// SFACredentialsService credentialService = new
@@ -51,12 +53,28 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		// }
 	}
 
-	private ListResourcesResult getResult(ListResourceOptions options) {
+	private ListResourcesResult getResult(ListCredentials listCredentials, ListResourceOptions options) {
 
-		checkOptions(options);
 		String value = "";
 		String output = "";
 		AMCode returnCode = null;
+		
+		Authorization auth = new Authorization();
+		
+		auth.checkCredentialsList(listCredentials);
+		
+		if(!auth.areCredentialTypeAndVersionValid()){
+			returnCode=auth.getReturnCode();
+			output=auth.getAuthorizationFailMessage();
+			ListResourcesResult result = new ListResourcesResult();
+			result.setCode(returnCode);
+			result.setOutput(output);
+			return result;
+		}
+		
+		checkOptions(options);
+		
+		
 		if (optionsAreValid()) {
 			value = getValue();
 			output = getOutput();
@@ -99,10 +117,10 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 	private String getValue() {
 	
-		List<ResourceAdapter> resources = getResources();
-		
+		List<ResourceAdapter> resourceAdapters = resourceManager
+				.getResourceAdapters();
 
-		RSpecContents advertisedRspec = getAdvertisedRSpec(resources);
+		RSpecContents advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 		String advertisedRspecSTR = getRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
@@ -137,7 +155,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		
 	}
 
-	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resources) {
+	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
 		RSpecContents advertisedRspec = new RSpecContents();
 		advertisedRspec.setType("advertisement");
 
@@ -148,24 +166,26 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 //		//TODO:!!!!TEST. just to test stop watch resource with static content. 
 //		ResourceProperties props = new StopWatchInstanceProperties();
 //		props.setIdentifier("myStopWatchInstance");
-//		props.setName("StopWatch: "+ System.currentTimeMillis());
+//		props.setName("StopWatch");
 //		Object fiteagleResource1 = translator.translateToFITeagleResource(props);
 //		rspecContentElements.add(fiteagleResource1);
 //		//TEST!!!!!
-//		
-		for(ResourceAdapter resource: resources){
-			Object fiteagleResource = translator.translateToFITeagleResource(resource);
+		
+		for(ResourceAdapter resourceAdapter: resourceAdapters){
+			Object fiteagleResource = translator.translateToFITeagleResource(resourceAdapter);
 			rspecContentElements.add(fiteagleResource);
 		}
 		return advertisedRspec;
 	}
 
-	private List<ResourceAdapter> getResources() {
+	private List<ResourceProperties> getResourceProperties() {
 		List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
 		List<ResourceAdapter> resourceAdapters = resourceManager
 				.getResourceAdapters();
-		
-		return resourceAdapters;
+		for (ResourceAdapter adapter : resourceAdapters) {
+			resources.addAll(adapter.getAllResources());
+		}
+		return resources;
 	}
 
 	private boolean optionsAreValid() {

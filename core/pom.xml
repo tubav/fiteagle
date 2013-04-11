@@ -5,6 +5,7 @@
     <artifactId>fiteagle</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
+  <name>FITeagle :: Core</name>
   <artifactId>core</artifactId>
   <dependencies>
   	<dependency>

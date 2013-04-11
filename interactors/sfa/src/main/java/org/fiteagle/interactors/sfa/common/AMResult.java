@@ -1,6 +1,6 @@
 package org.fiteagle.interactors.sfa.common;
 
-public abstract class AMResult {
+public  class AMResult {
 	
 	AMCode am_code;
 	String output;
@@ -31,6 +31,6 @@ public abstract class AMResult {
 	}
 	
 	
-	public abstract boolean checkValid();
+	//public abstract boolean checkValid();
 
 }

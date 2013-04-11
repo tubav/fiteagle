@@ -8,7 +8,6 @@ import java.io.Writer;
 import javax.servlet.ServletException;
 
 import junit.framework.Assert;
-
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +48,6 @@ public class SFAXmlRpcServletTest {
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml");
 		this.servlet.handleRequest(inputStream, writer);
 		String resultXML = writer.toString();
-		System.out.println(resultXML);
 		Assert.assertFalse(resultXML.isEmpty());
 		
 		//TODO: add a more sophisticated assertion here
@@ -66,6 +64,17 @@ public class SFAXmlRpcServletTest {
 		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
 		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>0</int></value>"));
-		//TODO: add a more sophisticated assertion here
+		
+	}
+	
+	@Test
+	public void testCredentialsEmpty() throws IOException{
+		Writer writer = new StringWriter();
+		InputStream inputStream = FITeagleUtils
+				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/credentialsNotValid_listresources_request.xml");
+		this.servlet.handleRequest(inputStream, writer);
+		String resultXML = writer.toString();
+		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>1</int></value>"));
+		
 	}
 }

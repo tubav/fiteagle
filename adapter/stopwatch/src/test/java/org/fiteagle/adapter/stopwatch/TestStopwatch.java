@@ -7,11 +7,11 @@ import org.junit.Test;
 
 public class TestStopwatch {
 
-	private transient Stopwatch stopwatch;
+	private transient StopwatchAdapter stopwatch;
 
 	@Before
 	public void setUp() {
-		stopwatch = new Stopwatch();
+		stopwatch = new StopwatchAdapter();
 	}
 
 

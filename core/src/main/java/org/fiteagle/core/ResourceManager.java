@@ -3,7 +3,7 @@ package org.fiteagle.core;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.stopwatch.Stopwatch;
+import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 
 
 public class ResourceManager {
@@ -12,8 +12,8 @@ public class ResourceManager {
 	
 	public ResourceManager(){
 		adapterDatabase = new InMemoryResourceAdapterDatabase();
-		ResourceAdapter dummyResourceAdapter = new Stopwatch();
-		dummyResourceAdapter.setType("StopWatch");
+		ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
+	   
 		adapterDatabase.addResourceAdapter(dummyResourceAdapter);
 	}
 	

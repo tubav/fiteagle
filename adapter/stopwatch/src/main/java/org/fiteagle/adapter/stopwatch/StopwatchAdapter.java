@@ -9,12 +9,12 @@ import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceProperties;
 
 
-public class Stopwatch extends ResourceAdapter {
+public class StopwatchAdapter extends ResourceAdapter {
 
 	
 	private transient boolean runningState = false;
 
-	public Stopwatch(){
+	public StopwatchAdapter(){
 		this.resourceDatabase = new InMemoryResourceDatabase();
 		this.setId("StopWatchAdapter"); 
 		this.create();
@@ -39,7 +39,7 @@ public class Stopwatch extends ResourceAdapter {
 	
 		ResourceProperties props = new StopWatchInstanceProperties();
 		props.setIdentifier("myStopWatchInstance");
-		props.setName("StopWatch: "+ System.currentTimeMillis());
+		props.setName("StopWatch");
 		this.resourceDatabase.addResource(props);
 		
 	}
