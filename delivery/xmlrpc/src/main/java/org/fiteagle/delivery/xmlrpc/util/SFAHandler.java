@@ -168,19 +168,19 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 							credentials.setGeni_type(credentialsStruct
 									.getString("geni_type"));
 						} else {
-							// TODO error handling
+							throw new CredentialsNotValid();
 						}
 						if (credentialsStruct.getString("geni_version") != null) {
 							credentials.setGeni_version(credentialsStruct
 									.getString("geni_version"));
 						} else {
-							// TODO error handling
+							throw new CredentialsNotValid();
 						}
 						if (credentialsStruct.getString("geni_value") != null) {
 							credentials.setGeni_value(credentialsStruct
 									.getString("geni_value"));
 						} else {
-							// TODO error handling
+							throw new CredentialsNotValid();
 						}
 
 						listCredentials.addCredentials(credentials);
