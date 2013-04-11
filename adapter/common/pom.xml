@@ -5,6 +5,7 @@
     <artifactId>adapter</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
+  <name>FITeagle :: Adapter :: Common</name>
   <artifactId>common</artifactId>
   <packaging>jar</packaging>
   <repositories>
