@@ -85,9 +85,9 @@ public class SFAv3RspecTranslator {
 
 			Set<String> propKeys = resourceAdapterProperties.keySet();
 
-			for (Iterator iterator = propKeys.iterator(); iterator.hasNext();) {
+			for (Iterator<String> iterator = propKeys.iterator(); iterator.hasNext();) {
 				Property tmpProperty = new Property();
-				String key = (String) iterator.next();
+				String key = iterator.next();
 				tmpProperty.setName(key);
 				// The resource adaptor properties must have a string
 				// representation.

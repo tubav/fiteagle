@@ -21,9 +21,19 @@ public interface PersonDB {
 
 		
 	public static class RecordNotFoundException extends RuntimeException {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2315125279537534064L;
 	}
 	
 	public class DuplicateUIDException extends RuntimeException {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7242105025265481986L;
 		
 	}
 

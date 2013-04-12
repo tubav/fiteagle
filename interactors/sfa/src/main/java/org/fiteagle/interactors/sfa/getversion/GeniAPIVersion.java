@@ -8,7 +8,7 @@ public class GeniAPIVersion {
 		return this.url;
 	}
 
-	public void setUrl(final String url_2) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 	

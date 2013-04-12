@@ -87,7 +87,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		return response;
 	}
 
-	private AMResult getMethodCallResult(Method knownMethod, List parameters)
+	private AMResult getMethodCallResult(Method knownMethod, @SuppressWarnings("rawtypes") List parameters)
 			throws IllegalAccessException, InvocationTargetException,
 			InstantiationException {
 		AMResult result = null;
