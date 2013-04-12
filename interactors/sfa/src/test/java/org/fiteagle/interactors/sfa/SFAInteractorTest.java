@@ -130,7 +130,6 @@ public class SFAInteractorTest {
 				.valueOf(resultedVersion).intValue());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void validateGeniCode(final GetVersionResult getVersionResult) {
 		final AMCode code = getVersionResult.getCode();
 

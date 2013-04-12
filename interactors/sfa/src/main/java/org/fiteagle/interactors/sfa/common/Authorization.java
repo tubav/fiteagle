@@ -33,7 +33,9 @@ public class Authorization {
 		
 		ArrayList<Credentials> credentialList = listCredentials.getCredentialsList();
 		for (Iterator<Credentials> iterator = credentialList.iterator(); iterator.hasNext();) {
+
 			Credentials credentials =  iterator.next();
+
 			this.checkCredentialTypeAndVersion(credentials);
 			if (!this.areCredentialTypeAndVersionValid()) {
 				return;
