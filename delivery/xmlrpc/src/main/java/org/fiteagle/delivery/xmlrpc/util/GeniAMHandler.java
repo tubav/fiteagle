@@ -43,7 +43,7 @@ public class GeniAMHandler extends SFAHandler {
 	@Override
 	public Object invoke(String methodName, List parameters) throws Throwable {
 		
-		Map<String, Object> response = null;
+	Object response = null;
 
 		try {
 			Method knownMethod = getMethod(methodName);
@@ -56,9 +56,9 @@ public class GeniAMHandler extends SFAHandler {
 
 	}
 
-	private Map<String, Object> createErrorResponse(ParsingException e) throws IOException {
+	private Object createErrorResponse(ParsingException e) throws IOException {
 		AMResult errorResult = getErrorResult(e);
-		Map<String, Object> errorResponse = introspect(errorResult);
+		Object errorResponse = introspect(errorResult);
 		return errorResponse;
 	}
 
@@ -77,8 +77,8 @@ public class GeniAMHandler extends SFAHandler {
 		return code;
 	}
 
-	private Map<String, Object> createResponse(AMResult result) {
-		Map<String, Object> response = new HashMap<>();
+	private Object createResponse(AMResult result) {
+		Object response = new HashMap<>();
 		try {
 			response = introspect(result);
 		} catch (IOException ioException) {
@@ -184,16 +184,7 @@ public class GeniAMHandler extends SFAHandler {
 			setMessage("Credentials not Valid");
 		}
 
-	}
 
-	private class MethodNotFound extends ParsingException {
+	}}
 
-		private static final long serialVersionUID = 2409993059634896770L;
 
-		public MethodNotFound(String methodName) {
-			setErrorCode(GENI_CodeEnum.RPCERROR);
-			setMessage("Method "+methodName +" not found");
-		}
-
-	}
-}

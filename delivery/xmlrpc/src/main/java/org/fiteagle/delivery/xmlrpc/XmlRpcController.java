@@ -20,9 +20,7 @@ public class XmlRpcController implements XmlRpcInvocationInterceptor {
 		String newmethodName =  Character.toLowerCase(invocation.getMethodName().charAt(0))
 				+ (invocation.getMethodName().length() > 1 ? invocation.getMethodName().substring(1) : "");
 		
-		
 		invocation.setMethodName(newmethodName);
-		
 		return true;
 		
 	}

@@ -15,9 +15,9 @@ public class FixedXmlRpcServer extends XmlRpcServer {
 		
 	}
 	
-	@Override
-	public void execute(InputStream paramInputStream, Writer paramWriter) throws XmlRpcException {
-		XmlRpcDispatcher dispatcher = new FixedXmlRpcDispatcher(this, "(unknown)");
+	
+	public void execute(InputStream paramInputStream, Writer paramWriter, String path) throws XmlRpcException {
+		XmlRpcDispatcher dispatcher = new FixedXmlRpcDispatcher(this, path);
 		dispatcher.dispatch(paramInputStream, paramWriter);
 	}
 	

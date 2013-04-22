@@ -61,7 +61,10 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
   }
   
   @SuppressWarnings("unchecked")
-  Map<String, Object> introspect(Object result) throws IOException {
+ Object introspect(Object result) throws IOException {
+    if(result.getClass().equals(String.class)){
+      return result;
+    }
     final ObjectMapper mapper = new ObjectMapper();
     mapper.setSerializationInclusion(Include.NON_NULL);
     final StringWriter writer = new StringWriter();
@@ -94,8 +97,8 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
     return result;
   }
   
-  Map<String, Object> createResponse(Object result) {
-    Map<String, Object> response = new HashMap<>();
+  Object createResponse(Object result) {
+    Object response = new Object();
     try {
       response = introspect(result);
     } catch (IOException ioException) {

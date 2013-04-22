@@ -15,7 +15,9 @@ import org.junit.Test;
 public class SFAXmlRpcServletTest {
 
 	private FITeagleServlet servlet;
-
+	private String AM_PATH = "/am/v3";;
+	private String REGISTRY_PATH = "/registry/v1";
+	
 	@Before
 	public void setUp() throws ServletException {
 		this.servlet = new FITeagleServlet();
@@ -46,7 +48,7 @@ public class SFAXmlRpcServletTest {
 		Writer writer = new StringWriter();
 		InputStream inputStream = FITeagleUtils
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml");
-		this.servlet.handleRequest(inputStream, writer);
+		this.servlet.handleRequest(inputStream, writer, AM_PATH);
 		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
 		
@@ -60,10 +62,9 @@ public class SFAXmlRpcServletTest {
 		Writer writer = new StringWriter();
 		InputStream inputStream = FITeagleUtils
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/getversion_request.xml");
-		this.servlet.handleRequest(inputStream, writer);
+		this.servlet.handleRequest(inputStream, writer, AM_PATH);
 		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
-		System.out.println(resultXML);
 		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>0</int></value>"));
 		
 	}
@@ -73,10 +74,20 @@ public class SFAXmlRpcServletTest {
 		Writer writer = new StringWriter();
 		InputStream inputStream = FITeagleUtils
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/credentialsNotValid_listresources_request.xml");
-		this.servlet.handleRequest(inputStream, writer);
+		this.servlet.handleRequest(inputStream, writer, AM_PATH);
 		String resultXML = writer.toString();
-		System.out.println(resultXML);
 		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>1</int></value>"));
 		
+	}
+	
+	@Test
+	public void testGetSelfCredential() throws IOException{
+	  Writer writer = new StringWriter();
+	  InputStream inputStream = FITeagleUtils.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/getSelfCredential_request.xml");
+	  this.servlet.handleRequest(inputStream, writer, REGISTRY_PATH);
+	  String resultXML = writer.toString();
+	  System.out.println(resultXML);
+	  Assert.assertFalse(resultXML.isEmpty());
+	  
 	}
 }

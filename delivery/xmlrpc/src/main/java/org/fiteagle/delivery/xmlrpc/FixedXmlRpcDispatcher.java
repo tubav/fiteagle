@@ -19,29 +19,31 @@ import redstone.xmlrpc.XmlRpcServer;
 
 public class FixedXmlRpcDispatcher extends XmlRpcDispatcher {
 
-	public static String DEFAULT_HANDLER_NAME = "__default__";
+	
 	private Writer writer;
 	XmlRpcServer server;
 	private int callSequence;
 	@SuppressWarnings("rawtypes")
 	private List arguments = new ArrayList<>(6);
 	String methodName;
+  private String path;
 
-	public FixedXmlRpcDispatcher(XmlRpcServer server, String client_ip) {
-		super(server, client_ip);
+	public FixedXmlRpcDispatcher(XmlRpcServer server, String path) {
+		super(server, "(unknown)");
 		this.server = server;
-
+		this.path = path;
 	}
 
 	@Override
 	public void dispatch(InputStream xmlInput, Writer xmlOutput)
 			throws XmlRpcException {
 		// Parse the inbound XML-RPC message. May throw an exception.
+	  
 		parse(xmlInput);
 		this.writer = xmlOutput;
 		int i = this.methodName.lastIndexOf(".");
 		if (i == -1) {
-			this.methodName = DEFAULT_HANDLER_NAME + "." + this.methodName;
+			this.methodName = path + "." + this.methodName;
 			i = this.methodName.lastIndexOf(".");
 		}
 		if (i > -1) {
