@@ -18,8 +18,9 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
-import org.fiteagle.interactors.sfa.listresources.GeniCompressedOption;
+import org.fiteagle.interactors.sfa.common.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.slf4j.Logger;
 
 import redstone.xmlrpc.XmlRpcArray;
 import redstone.xmlrpc.XmlRpcInvocationHandler;
@@ -32,6 +33,8 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 
 	ISFA interactor;
 
+	private final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+	
 	public SFAHandler(SFAInteractor_v3 sfaInteractor_v3) {
 		this.interactor = sfaInteractor_v3;
 	}
@@ -39,7 +42,7 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object invoke(String methodName, List parameters) throws Throwable {
-
+		
 		Map<String, Object> response = null;
 
 		try {
@@ -79,27 +82,22 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		try {
 			response = introspect(result);
 		} catch (IOException ioException) {
-
-			System.err.println(ioException.getStackTrace());
+			log.error(ioException.getMessage(),ioException);
 		}
 		return response;
 	}
 
-	private AMResult getMethodCallResult(Method knownMethod, List parameters)
+	private AMResult getMethodCallResult(Method knownMethod, @SuppressWarnings("rawtypes") List parameters)
 			throws IllegalAccessException, InvocationTargetException,
 			InstantiationException {
 		AMResult result = null;
 
 		Class<?>[] parameterClasses = knownMethod.getParameterTypes();
 		if (parameterClasses.length == 0) {
-			// Method takes no parameters => nothing to do
 			result = (AMResult) knownMethod.invoke(interactor, (Object[]) null);
 		} else {
-			// identify classes & instantiate objects
-
+			
 			List<Object> methodParameters = createEmptyMethodParameters(parameterClasses);
-
-			// should be, otherwise something is wrong
 
 			for (int i = 0; i < parameterClasses.length; i++) {
 				xmlStructToObject(parameters.get(i), methodParameters.get(i));
@@ -135,9 +133,6 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 		if (to.getClass().isAssignableFrom(ListResourceOptions.class)) {
 			XmlRpcStruct listResourceOptionsStruct = (XmlRpcStruct) from;
 			ListResourceOptions listResourceOptions = (ListResourceOptions) to;
-
-			// both booleans default to false if not set => no check for
-			// existence necessary
 			listResourceOptions.setGeni_available(new GeniAvailableOption(
 					listResourceOptionsStruct.getBoolean("geni_available")));
 			listResourceOptions.setGeni_compressed(new GeniCompressedOption(
@@ -173,19 +168,19 @@ public class SFAHandler implements XmlRpcInvocationHandler {
 							credentials.setGeni_type(credentialsStruct
 									.getString("geni_type"));
 						} else {
-							// TODO error handling
+							throw new CredentialsNotValid();
 						}
 						if (credentialsStruct.getString("geni_version") != null) {
 							credentials.setGeni_version(credentialsStruct
 									.getString("geni_version"));
 						} else {
-							// TODO error handling
+							throw new CredentialsNotValid();
 						}
 						if (credentialsStruct.getString("geni_value") != null) {
 							credentials.setGeni_value(credentialsStruct
 									.getString("geni_value"));
 						} else {
-							// TODO error handling
+							throw new CredentialsNotValid();
 						}
 
 						listCredentials.addCredentials(credentials);

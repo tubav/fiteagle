@@ -53,7 +53,7 @@
 							<keyPassword>jetty6</keyPassword>
 <!--  							<truststore>${project.build.directory}/keystore.jks</truststore> -->
 <!-- 							<trustPassword>jetty6</trustPassword> -->
-							<needClientAuth>true</needClientAuth>
+							<needClientAuth>true</needClientAuth>		
 						</connector>
 					</connectors>
 				</configuration>

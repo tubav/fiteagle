@@ -8,7 +8,38 @@ import java.util.Map;
 import org.fiteagle.interactors.sfa.common.AMValue;
 import org.fiteagle.interactors.sfa.common.GeniCredentialType;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+
 public class GetVersionValue extends AMValue {
+
+	private Map<String, GeniAPIVersion> geni_api_versions = new HashMap<>();
+	private List<GeniRequestRSpecVersions> geni_request_rspec_versions = new ArrayList<>();
+	private List<GeniAdRSpecVersions> geni_ad_rspec_versions = new ArrayList<>();
+	// add in GAPI_AM_API_V3
+	private List<GeniCredentialType> geni_credential_types = new ArrayList<>();
+	private boolean geni_single_allocation;
+	private String geni_allocate;
+
+	private int geni_api;
+	private Map<String, Object> genericAttributes;
+
+	public GetVersionValue() {
+
+	}
+
+	public void addGenericAttribute(String name, Object value) {
+		if (genericAttributes == null) {
+			genericAttributes = new HashMap<>();
+		}
+		
+		genericAttributes.put(name, value);
+	}
+
+
+	@JsonAnyGetter
+	public Map<String, Object> any(){
+		return genericAttributes;
+	}
 	public boolean isGeni_single_allocation() {
 		return geni_single_allocation;
 	}
@@ -23,19 +54,6 @@ public class GetVersionValue extends AMValue {
 
 	public void setGeni_allocate(String geni_allocate) {
 		this.geni_allocate = geni_allocate;
-	}
-
-	private int geni_api;
-	private Map<String, GeniAPIVersion> geni_api_versions = new HashMap<>();
-	private List<GeniRequestRSpecVersions> geni_request_rspec_versions = new ArrayList<>();
-	private List<GeniAdRSpecVersions> geni_ad_rspec_versions = new ArrayList<>();
-	// add in GAPI_AM_API_V3
-	private List<GeniCredentialType> geni_credential_types = new ArrayList<>();
-	private boolean geni_single_allocation;
-	private String geni_allocate;
-
-	public GetVersionValue() {
-		
 	}
 
 	public List<GeniRequestRSpecVersions> getGeni_request_rspec_versions() {

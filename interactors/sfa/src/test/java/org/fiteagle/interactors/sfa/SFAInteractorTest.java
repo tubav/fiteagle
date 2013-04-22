@@ -9,7 +9,6 @@ import junit.framework.Assert;
 
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
-import org.fiteagle.interactors.sfa.common.AMValue;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -87,7 +86,6 @@ public class SFAInteractorTest {
 		Assert.assertEquals(0, describeResult.getCode().getGeni_code());
 	}
 
-
 	@Test
 	public void testInvalidListResourcesVersion() throws IOException {
 
@@ -116,6 +114,7 @@ public class SFAInteractorTest {
 		return options;
 	}
 
+	
 	private ListResourceOptions createMinimalListResourceOptions(String type,
 			String version) {
 		ListResourceOptions options = new ListResourceOptions();
@@ -160,7 +159,6 @@ public class SFAInteractorTest {
 				.valueOf(resultedVersion).intValue());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void validateGeniCode(final GetVersionResult getVersionResult) {
 		final AMCode code = getVersionResult.getCode();
 
