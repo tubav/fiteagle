@@ -3,6 +3,7 @@ package org.fiteagle.interactors.sfa.listresources;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
+import org.fiteagle.interactors.sfa.common.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.common.SFAOptionsService;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
@@ -63,7 +64,9 @@ public class ListResourceOptionsService extends SFAOptionsService {
 			errorOutput = "Geni available option is not supported yet!";
 		}
 		
-		if(!IsGeniCompressedOptionSupported()){
+		GeniCompressedOption compressOption = (GeniCompressedOption) options.getOptions().get(1);
+		
+		if(compressOption!=null && compressOption.getValue() && !this.isGeniCompressedOptionSupported()){
 			amCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
 			optionsValid = false;
 			errorOutput = "Geni compressed option is not supported yet!";
@@ -78,13 +81,13 @@ public class ListResourceOptionsService extends SFAOptionsService {
 		
 	}
 	
-	private boolean IsGeniCompressedOptionSupported() {
-		GeniCompressedOption compressOption = (GeniCompressedOption) options.getOptions().get(1);
-		boolean response = true;
-		if(compressOption != null)
-			response = !compressOption.getValue();
-		return response;
-	}
+//	private boolean IsGeniCompressedOptionSupported() {
+//		GeniCompressedOption compressOption = (GeniCompressedOption) options.getOptions().get(1);
+//		boolean response = true;
+//		if(compressOption != null)
+//			response = !compressOption.getValue();
+//		return response;
+//	}
 
 
 	public AMCode getErrorCode(){

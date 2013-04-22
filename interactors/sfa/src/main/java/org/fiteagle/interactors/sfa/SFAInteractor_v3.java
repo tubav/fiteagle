@@ -13,6 +13,9 @@ import org.fiteagle.interactors.sfa.common.SFACredentialsService;
 import org.fiteagle.interactors.sfa.common.SFAOptionsService;
 import org.fiteagle.interactors.sfa.common.SFARequestProcessorFactory;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
+import org.fiteagle.interactors.sfa.describe.DescribeOptions;
+import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
+import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getversion.GeniAdRSpecVersions;
 import org.fiteagle.interactors.sfa.getversion.GeniRequestRSpecVersions;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
@@ -99,6 +102,21 @@ public class SFAInteractor_v3 implements ISFA {
 		return result;
 		
 	}
+	
+	@Override
+	public DescribeResult describe(List<String> urns, ListCredentials credentials,
+			DescribeOptions describeOptions) throws IOException {
+		
+		SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+		DescribeRequestProcessor describeRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.DESCRIBE);
+		DescribeResult result = describeRequestProcessor.processRequest(urns, credentials, describeOptions);
+		
+		AMCode returnCode = result.getCode();
+		
+		return result;
+		
+	}
+	
 
 }
 	

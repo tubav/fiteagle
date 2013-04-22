@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +13,11 @@ import org.fiteagle.interactors.sfa.common.AMValue;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
+import org.fiteagle.interactors.sfa.describe.DescribeOptions;
+import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getversion.GeniAPIVersion;
 import org.fiteagle.interactors.sfa.getversion.GeniRequestRSpecVersions;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
@@ -72,6 +76,17 @@ public class SFAInteractorTest {
 		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 
 	}
+	
+	@Test
+	public void testdescribe() throws IOException {
+		DescribeOptions options;// = createMinimalListResourceOptions("GENI", "3");
+		ArrayList<String> urns = new ArrayList<String>();
+		urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+		
+		DescribeResult describeResult = this.sfaInteractor.describe(urns, getListCredentials(), createTestDescribeOptions("GENI", "3", false));
+		Assert.assertEquals(0, describeResult.getCode().getGeni_code());
+	}
+
 
 	@Test
 	public void testInvalidListResourcesVersion() throws IOException {
@@ -84,6 +99,21 @@ public class SFAInteractorTest {
 		Assert.assertEquals(listResourcesResult.getCode().retrieveGeni_code(),
 				GENI_CodeEnum.BADVERSION);
 
+	}
+	
+	
+	
+	
+	private DescribeOptions createTestDescribeOptions(String type, String version, boolean compressed) {
+		DescribeOptions options = new DescribeOptions();
+		GeniCompressedOption geni_compressed = new GeniCompressedOption(compressed);
+		options.setGeni_compressed(geni_compressed);
+		
+		Geni_RSpec_Version geni_rspec_version = new Geni_RSpec_Version();
+		geni_rspec_version.setType(type);
+		geni_rspec_version.setVersion(version);
+		options.setGeni_rspec_version(geni_rspec_version);
+		return options;
 	}
 
 	private ListResourceOptions createMinimalListResourceOptions(String type,
