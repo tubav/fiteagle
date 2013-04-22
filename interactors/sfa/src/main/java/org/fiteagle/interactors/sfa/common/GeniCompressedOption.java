@@ -1,6 +1,5 @@
-package org.fiteagle.interactors.sfa.listresources;
+package org.fiteagle.interactors.sfa.common;
 
-import org.fiteagle.interactors.sfa.common.SFAOption;
 
 public class GeniCompressedOption extends SFAOption {
 

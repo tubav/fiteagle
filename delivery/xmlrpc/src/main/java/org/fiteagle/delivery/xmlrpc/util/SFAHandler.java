@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +12,10 @@ import org.fiteagle.interactors.sfa.ISFA;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.slf4j.Logger;
 
+import redstone.xmlrpc.XmlRpcInvocationHandler;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import redstone.xmlrpc.XmlRpcInvocationHandler;
 
 public abstract class SFAHandler implements XmlRpcInvocationHandler {
   

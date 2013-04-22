@@ -1,13 +1,9 @@
 package org.fiteagle.delivery.xmlrpc.util;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.fiteagle.interactors.sfa.ISFA;
 import org.fiteagle.interactors.sfa.SFAInteractor_v3;
@@ -18,16 +14,11 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
-import org.fiteagle.interactors.sfa.listresources.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.slf4j.Logger;
 
 import redstone.xmlrpc.XmlRpcArray;
-import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcStruct;
-
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GeniAMHandler extends SFAHandler {
 
@@ -95,7 +86,7 @@ public class GeniAMHandler extends SFAHandler {
 			ListResourceOptions listResourceOptions = (ListResourceOptions) to;
 			listResourceOptions.setGeni_available(new GeniAvailableOption(
 					listResourceOptionsStruct.getBoolean("geni_available")));
-			listResourceOptions.setGeni_compressed(new GeniCompressedOption(
+			listResourceOptions.setGeni_compressed(new org.fiteagle.interactors.sfa.common.GeniCompressedOption(
 					listResourceOptionsStruct.getBoolean("geni_compressed")));
 
 			XmlRpcStruct geni_rspec_version_struct = listResourceOptionsStruct

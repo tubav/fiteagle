@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
+import org.fiteagle.interactors.sfa.common.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.SFAOption;
 import org.fiteagle.interactors.sfa.common.SFAOptionsStruct;

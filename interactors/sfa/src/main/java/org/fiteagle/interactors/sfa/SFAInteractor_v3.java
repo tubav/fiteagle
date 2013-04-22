@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
@@ -8,6 +9,9 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFARequestProcessorFactory;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
+import org.fiteagle.interactors.sfa.describe.DescribeOptions;
+import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
+import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
@@ -44,17 +48,35 @@ public class SFAInteractor_v3 implements ISFA {
 		return result;
 		
 	}
-
+	
 	@Override
-	public String resolve(Object o1, Object o2) {
-		log.info("Method Resolve was called, you want to me to show you something");
-		return "";
+	public DescribeResult describe(List<String> urns, ListCredentials credentials,
+			DescribeOptions describeOptions) throws IOException {
+		
+		SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+		DescribeRequestProcessor describeRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.DESCRIBE);
+		DescribeResult result = describeRequestProcessor.processRequest(urns, credentials, describeOptions);
+		
+		AMCode returnCode = result.getCode();
+		
+		return result;
+		
 	}
 
-	@Override
-	public String getSelfCredential(Object o1, Object o2, Object o3) {
-		log.info("Method getSelfCredential was called, you want to me to give you something");
-		return "some cert";
-	}
+  @Override
+  public String resolve(Object o1, Object o2) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getSelfCredential(String certificate, String xrn, String type) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+
+
 
 }

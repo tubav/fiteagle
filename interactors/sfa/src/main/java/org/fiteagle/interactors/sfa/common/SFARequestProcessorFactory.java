@@ -1,5 +1,7 @@
 package org.fiteagle.interactors.sfa.common;
 
+import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
+
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 
@@ -21,6 +23,7 @@ public class SFARequestProcessorFactory {
 		case DELETE:
 			break;
 		case DESCRIBE:
+			result = (E) new DescribeRequestProcessor();
 			break;
 		case LIST_RESOURCES:
 			result = (E) new ListResourceRequestProcessor();

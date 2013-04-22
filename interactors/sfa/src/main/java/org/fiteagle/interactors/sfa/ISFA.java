@@ -1,9 +1,12 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
+import org.fiteagle.interactors.sfa.describe.DescribeOptions;
+import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
@@ -22,6 +25,11 @@ public interface ISFA {
 
 	GetVersionResult getVersion() throws IOException;
 	ListResourcesResult listResources(ListCredentials credentials, ListResourceOptions listResourceOptions) throws IOException;
+
 	String resolve(Object o1, Object o2);
-	String getSelfCredential(Object o1, Object o2, Object o3);
+	String getSelfCredential(String certificate, String xrn, String type);
+
+	DescribeResult describe(List<String> urns, ListCredentials credentials,
+			DescribeOptions describeOptions) throws IOException;
+
 }
