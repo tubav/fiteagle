@@ -23,13 +23,15 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
   ISFA interactor;
   
   final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
-  
+  void setInteractor(ISFA interactor){
+    this.interactor = interactor;
+  }
   @Override
   public abstract Object invoke(String method, List arguments) throws Throwable;
   
   Method getMethod(String methodName) {
     Method knownMethod = null;
-    Method[] methodsFromHandler = interactor.getClass().getMethods();
+    Method[] methodsFromHandler = this.interactor.getClass().getMethods();
     
     for (int i = 0; i < methodsFromHandler.length; i++) {
       if (methodsFromHandler[i].getName().equals(methodName)) {

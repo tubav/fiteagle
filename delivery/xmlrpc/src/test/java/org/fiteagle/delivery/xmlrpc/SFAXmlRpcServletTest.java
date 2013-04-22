@@ -63,6 +63,7 @@ public class SFAXmlRpcServletTest {
 		this.servlet.handleRequest(inputStream, writer);
 		String resultXML = writer.toString();
 		Assert.assertFalse(resultXML.isEmpty());
+		System.out.println(resultXML);
 		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>0</int></value>"));
 		
 	}
@@ -74,6 +75,7 @@ public class SFAXmlRpcServletTest {
 				.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/credentialsNotValid_listresources_request.xml");
 		this.servlet.handleRequest(inputStream, writer);
 		String resultXML = writer.toString();
+		System.out.println(resultXML);
 		Assert.assertTrue(resultXML.contains("<name>geni_code</name><value><int>1</int></value>"));
 		
 	}

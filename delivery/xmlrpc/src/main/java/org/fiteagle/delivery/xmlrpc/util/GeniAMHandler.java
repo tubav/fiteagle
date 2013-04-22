@@ -36,7 +36,7 @@ public class GeniAMHandler extends SFAHandler {
 	private final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
 	
 	public GeniAMHandler(SFAInteractor_v3 sfaInteractor_v3) {
-		this.interactor = sfaInteractor_v3;
+		setInteractor(sfaInteractor_v3);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -47,7 +47,7 @@ public class GeniAMHandler extends SFAHandler {
 
 		try {
 			Method knownMethod = getMethod(methodName);
-			AMResult result = getMethodCallResult(knownMethod, parameters);
+			AMResult result =(AMResult) getMethodCallResult(knownMethod, parameters);
 			response = createResponse(result);
 		} catch (ParsingException e) {
 			response = createErrorResponse(e);
@@ -87,49 +87,9 @@ public class GeniAMHandler extends SFAHandler {
 		return response;
 	}
 
-	private AMResult getMethodCallResult(Method knownMethod, @SuppressWarnings("rawtypes") List parameters)
-			throws IllegalAccessException, InvocationTargetException,
-			InstantiationException {
-		AMResult result = null;
 
-		Class<?>[] parameterClasses = knownMethod.getParameterTypes();
-		if (parameterClasses.length == 0) {
-			result = (AMResult) knownMethod.invoke(interactor, (Object[]) null);
-		} else {
-			
-			List<Object> methodParameters = createEmptyMethodParameters(parameterClasses);
 
-			for (int i = 0; i < parameterClasses.length; i++) {
-				xmlStructToObject(parameters.get(i), methodParameters.get(i));
-			}
-
-			result = (AMResult) knownMethod.invoke(interactor,
-					methodParameters.toArray());
-
-		}
-		return result;
-	}
-
-	private Method getMethod(String methodName) {
-		Method knownMethod = null;
-		Method[] methodsFromHandler = interactor.getClass().getMethods();
-
-		for (int i = 0; i < methodsFromHandler.length; i++) {
-			if (methodsFromHandler[i].getName().equals(methodName)) {
-				// Critical assumption !!! Only one method which equals the
-				// methodname exists!
-				// failure prone
-				knownMethod = methodsFromHandler[i];
-			}
-		}
-		if (knownMethod == null){
-			ParsingException e = new MethodNotFound(methodName);
-			throw e;
-		}
-		return knownMethod;
-	}
-
-	private void xmlStructToObject(Object from, Object to) {
+	protected void xmlStructToObject(Object from, Object to) {
 		if (to.getClass().isAssignableFrom(ListResourceOptions.class)) {
 			XmlRpcStruct listResourceOptionsStruct = (XmlRpcStruct) from;
 			ListResourceOptions listResourceOptions = (ListResourceOptions) to;
@@ -194,32 +154,6 @@ public class GeniAMHandler extends SFAHandler {
 
 	}
 
-	private List<Object> createEmptyMethodParameters(Class<?>[] parameterClasses)
-			throws InstantiationException, IllegalAccessException {
-
-		List<Object> returnList = new ArrayList<>();
-		for (int i = 0; i < parameterClasses.length; i++) {
-			Object o = parameterClasses[i].newInstance();
-			returnList.add(o);
-		}
-
-		return returnList;
-	}
-
-
-
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> introspect(Object result) throws IOException {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(Include.NON_NULL);
-		final StringWriter writer = new StringWriter();
-
-		mapper.writeValue(writer, result);
-		final Map<String, Object> response = mapper.readValue(
-				writer.toString(), Map.class);
-
-		return response;
-	}
 
 	private class ParsingException extends RuntimeException {
 		private GENI_CodeEnum errorCode = GENI_CodeEnum.ERROR;
