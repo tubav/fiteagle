@@ -3,7 +3,9 @@ package org.fiteagle.delivery.xmlrpc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.security.cert.X509Certificate;
 
+import javax.security.auth.x500.X500Principal;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
-import org.fiteagle.delivery.xmlrpc.util.SFAHandler;
+import org.fiteagle.delivery.xmlrpc.util.GeniAMHandler;
 import org.fiteagle.interactors.sfa.SFAInteractor_v3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import redstone.xmlrpc.XmlRpcInvocationHandler;
 import redstone.xmlrpc.XmlRpcServer;
@@ -23,6 +27,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 	private static final long serialVersionUID = -4349365825732565723L;
 
 	private XmlRpcServer server;
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public FITeagleServlet() {
 
@@ -32,7 +37,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 
 		this.server = new FixedXmlRpcServer();
 		this.server.setSerializer(new FixedSerializer());
-		final XmlRpcInvocationHandler sfaHandler = new SFAHandler(
+		final XmlRpcInvocationHandler sfaHandler = new GeniAMHandler(
 				new SFAInteractor_v3());
 
 		this.server.addInvocationHandler("__default__", sfaHandler);
@@ -52,6 +57,10 @@ public class FITeagleServlet extends XmlRpcServlet {
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
 
+	  X509Certificate cert = extractCertificate(req);
+	  X500Principal prince = cert.getSubjectX500Principal();
+	
+	  log.info("subject: "+ prince.getName());
 		this.handleRequest(req.getInputStream(), resp.getWriter());
 
 	}
@@ -70,5 +79,13 @@ public class FITeagleServlet extends XmlRpcServlet {
 			throws IOException {
 		this.server.execute(inputStream, writer);
 	}
+
+	protected X509Certificate extractCertificate(HttpServletRequest req) {
+    X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
+    if (null != certs && certs.length > 0) {
+        return certs[0];
+    }
+    throw new RuntimeException("No X.509 client certificate found in request");
+}
 
 }

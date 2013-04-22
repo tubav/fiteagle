@@ -29,13 +29,13 @@ import redstone.xmlrpc.XmlRpcStruct;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class SFAHandler implements XmlRpcInvocationHandler {
+public class GeniAMHandler extends SFAHandler {
 
 	ISFA interactor;
 
 	private final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
 	
-	public SFAHandler(SFAInteractor_v3 sfaInteractor_v3) {
+	public GeniAMHandler(SFAInteractor_v3 sfaInteractor_v3) {
 		this.interactor = sfaInteractor_v3;
 	}
 
