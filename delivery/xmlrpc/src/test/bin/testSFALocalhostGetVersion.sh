@@ -3,7 +3,7 @@
 _getversion="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa/getversion_request.xml"
 _listresources="src/main/resources/org/fiteagle/delivery/xmlrpc/sfa/listresources_request.xml"
 _url_plain="http://localhost:9111/xmlrpc/"
-_url_ssl="https://localhost:9112/xmlrpc/"
+_url_ssl="https://localhost:9112/xmlrpc/sfa/am/v3"
 _omni="/opt/gcf/current/src/omni.py"
 _omni_name="fiteagle"
 
@@ -36,11 +36,11 @@ function assertEqual {
   fi
 }
 
-sendRequest ${_url_plain} ${_getversion}
-actual=$?; expected="0"; assertEqual $actual $expected;
+#sendRequest ${_url_plain} ${_getversion}
+#actual=$?; expected="0"; assertEqual $actual $expected;
 
-sendRequest ${_url_plain} ${_listresources}
-actual=$?; expected="0"; assertEqual $actual $expected;
+#sendRequest ${_url_plain} ${_listresources}
+#actual=$?; expected="0"; assertEqual $actual $expected;
 
 sendRequest ${_url_ssl} ${_getversion}
 actual=$?; expected="35"; assertEqual $actual $expected;
