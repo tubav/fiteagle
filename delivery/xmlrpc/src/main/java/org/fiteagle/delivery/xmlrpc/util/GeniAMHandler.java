@@ -93,7 +93,7 @@ public class GeniAMHandler extends SFAHandler {
 			
 		}
 		
-		if (to.getClass().isAssignableFrom((Class<List<String>>) new ArrayList<String>().getClass())){
+		if (to.getClass().isAssignableFrom(List.class)){
 			return parseUrns(from);
 			
 		}
