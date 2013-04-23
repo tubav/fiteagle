@@ -93,41 +93,48 @@ public class GeniAMHandler extends SFAHandler {
 			
 		}
 		
-		//List<String> urns, ListCredentials credentials, DescribeOptions options = (DescribeOptions) specificArgs[0]
 		if (to.getClass().isAssignableFrom((Class<List<String>>) new ArrayList<String>().getClass())){
-			XmlRpcArray urnsArray = (XmlRpcArray) from;
-			ArrayList<String> urns = new ArrayList<String>();
-			
-			for (int i = 0; i < urnsArray.size(); i++) {
-				urns.add(urnsArray.getString(i));
-			}
-			return urns;
+			return parseUrns(from);
 			
 		}
 		
 		if (to.getClass().isAssignableFrom(DescribeOptions.class)){
-			XmlRpcStruct describeOptionsStruct = (XmlRpcStruct) from;
-			DescribeOptions describeOptions = (DescribeOptions) to;
-			describeOptions.setGeni_compressed(new org.fiteagle.interactors.sfa.common.GeniCompressedOption(describeOptionsStruct.getBoolean("geni_compressed")));
-			
-			XmlRpcStruct geni_rspec_version_struct = describeOptionsStruct.getStruct("geni_rspec_version");
-			
-			if (geni_rspec_version_struct != null) {
-				String type = geni_rspec_version_struct.getString("type");
-				String version = geni_rspec_version_struct.getString("version");
-				Geni_RSpec_Version geni_RSpec_Version = new Geni_RSpec_Version();
-				geni_RSpec_Version.setType(type);
-				geni_RSpec_Version.setVersion(version);
-				describeOptions.setGeni_rspec_version(geni_RSpec_Version);
-			}
-			
-			return describeOptions;
+			return parseDescribeOptions(from);
 			
 		}
 		
 		
 		throw new ParsingException();
 
+	}
+
+	private Object parseUrns(Object from) {
+		XmlRpcArray urnsArray = (XmlRpcArray) from;
+		ArrayList<String> urns = new ArrayList<String>();
+		
+		for (int i = 0; i < urnsArray.size(); i++) {
+			urns.add(urnsArray.getString(i));
+		}
+		return urns;
+	}
+
+	private Object parseDescribeOptions(Object from) {
+		XmlRpcStruct describeOptionsStruct = (XmlRpcStruct) from;
+		DescribeOptions describeOptions = new DescribeOptions();
+		describeOptions.setGeni_compressed(new org.fiteagle.interactors.sfa.common.GeniCompressedOption(describeOptionsStruct.getBoolean("geni_compressed")));
+		
+		XmlRpcStruct geni_rspec_version_struct = describeOptionsStruct.getStruct("geni_rspec_version");
+		
+		if (geni_rspec_version_struct != null) {
+			String type = geni_rspec_version_struct.getString("type");
+			String version = geni_rspec_version_struct.getString("version");
+			Geni_RSpec_Version geni_RSpec_Version = new Geni_RSpec_Version();
+			geni_RSpec_Version.setType(type);
+			geni_RSpec_Version.setVersion(version);
+			describeOptions.setGeni_rspec_version(geni_RSpec_Version);
+		}
+		
+		return describeOptions;
 	}
 
 	private Object parseListCredentials(Object from, Object to) {
