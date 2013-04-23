@@ -27,7 +27,8 @@ Logger log =  LoggerFactory.getLogger(this.getClass());
 
 
 	@Override
-	protected void xmlStructToObject(Object object, Object object2) {
+	protected Object xmlStructToObject(Object object, Object object2) {
+		return object2;
 		// TODO Auto-generated method stub
 		
 	}
