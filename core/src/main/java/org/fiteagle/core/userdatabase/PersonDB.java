@@ -2,8 +2,6 @@ package org.fiteagle.core.userdatabase;
 
 import java.sql.SQLException;
 
-
-
 public interface PersonDB {
 
 	public void add(Person p) throws DuplicateUIDException, SQLException;
@@ -17,7 +15,9 @@ public interface PersonDB {
 	public Person get(String UID) throws RecordNotFoundException, SQLException;
 	public Person get(Person p) throws RecordNotFoundException, SQLException;
 	
-	public int getSize() throws SQLException;
+	public int getNumberOfUsers() throws SQLException;
+	
+	public void deleteAllEntries() throws SQLException;
 
 		
 	public static class RecordNotFoundException extends RuntimeException {
@@ -36,5 +36,4 @@ public interface PersonDB {
 		private static final long serialVersionUID = -7242105025265481986L;
 		
 	}
-
 }

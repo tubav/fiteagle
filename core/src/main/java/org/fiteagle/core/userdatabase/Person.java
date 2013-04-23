@@ -9,7 +9,7 @@ public class Person {
 	private String lastName;
 	private ArrayList<String> publicKeys;
 
-	public Person(String UID, String firstName, String lastName, ArrayList<String> publicKeys) {
+	public Person(String UID, String firstName, String lastName, ArrayList<String> publicKeys){
 		this.UID = UID;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -49,7 +49,40 @@ public class Person {
 	}
 	
 	public void addPublicKey(String publicKey){
-		this.publicKeys.add(publicKey);
+		if(!this.publicKeys.contains(publicKey)){
+			this.publicKeys.add(publicKey);
+		}
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (UID == null) {
+			if (other.UID != null)
+				return false;
+		} else if (!UID.equals(other.UID))
+			return false;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (publicKeys == null) {
+			if (other.publicKeys != null)
+				return false;
+		} else if (!publicKeys.equals(other.publicKeys))
+			return false;
+		return true;
+	}
 }

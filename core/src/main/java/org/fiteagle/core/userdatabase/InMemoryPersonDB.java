@@ -3,17 +3,17 @@ package org.fiteagle.core.userdatabase;
 import java.util.HashMap;
 
 public class InMemoryPersonDB implements PersonDB {
-	
+
 	private HashMap<String, Person> persons;
-	
+
 	public InMemoryPersonDB(){
 		persons = new HashMap<String, Person>();
 	}
-		
-	public int getSize(){
+
+	public int getNumberOfUsers(){
 		return persons.size();
 	}
-	
+
 	@Override
 	public void add(Person p) throws DuplicateUIDException {
 		if(persons.get(p.getUID()) != null){
@@ -61,5 +61,9 @@ public class InMemoryPersonDB implements PersonDB {
 		p.addPublicKey(key);
 		update(p);
 	}
-
+	
+	@Override
+	public void deleteAllEntries(){
+		persons = new HashMap<String, Person>();
+	}
 }
