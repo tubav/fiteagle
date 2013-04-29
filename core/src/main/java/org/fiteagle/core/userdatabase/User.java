@@ -2,14 +2,14 @@ package org.fiteagle.core.userdatabase;
 
 import java.util.ArrayList;
 
-public class Person {
-
+public class User {
+	
 	private String UID;
 	private String firstName;
 	private String lastName;
 	private ArrayList<String> publicKeys;
 
-	public Person(String UID, String firstName, String lastName, ArrayList<String> publicKeys){
+	public User(String UID, String firstName, String lastName, ArrayList<String> publicKeys){
 		this.UID = UID;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -62,7 +62,7 @@ public class Person {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Person other = (Person) obj;
+		User other = (User) obj;
 		if (UID == null) {
 			if (other.UID != null)
 				return false;
