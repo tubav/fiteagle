@@ -24,7 +24,7 @@ public class InMemoryUserDBTest {
 	
 	@BeforeClass
 	public static void setUp() throws SQLException{
-		database = new SQLiteUserDB();
+		database = new InMemoryUserDB();
 	}
 	
 	@Test
