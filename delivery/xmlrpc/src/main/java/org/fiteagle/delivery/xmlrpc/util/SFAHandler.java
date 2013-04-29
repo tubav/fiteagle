@@ -86,8 +86,8 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
       List<Object> methodParameters = createEmptyMethodParameters(parameterClasses);
       
       for (int i = 0; i < parameterClasses.length; i++) {
-        
-        xmlStructToObject(parameters.get(i), methodParameters.get(i));
+    	  Object tmpParam = methodParameters.get(i);
+    	  tmpParam = xmlStructToObject(parameters.get(i), methodParameters.get(i));
       }
       
       result = knownMethod.invoke(interactor, methodParameters.toArray());
@@ -106,7 +106,7 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
     return response;
   }
   
-  protected abstract void xmlStructToObject(Object object, Object object2);
+  protected abstract Object xmlStructToObject(Object object, Object object2);
   
   class ParsingException extends RuntimeException {
     private GENI_CodeEnum errorCode = GENI_CodeEnum.ERROR;
