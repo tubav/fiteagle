@@ -31,7 +31,7 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-import org.fiteagle.core.userdatabase.Person;
+import org.fiteagle.core.userdatabase.User;
 
 public class CertificateAuthority {
 
@@ -40,7 +40,7 @@ public class CertificateAuthority {
  
   private final String caCertPath =  "/org/fiteagle/core/certificates/jettycacert.pem";
   private final String caPrivateKey = "/org/fiteagle/core/certificates/jettyprkey.pem";
-  public X509Certificate createCertificate(Person newUser) throws Exception{
+  public X509Certificate createCertificate(User newUser) throws Exception{
     X509Certificate caCert = readCACert();
     issuer = new JcaX509CertificateHolder(caCert).getSubject();
     PrivateKey caPrivateKey = readCAPrivateKey();
@@ -54,14 +54,14 @@ public class CertificateAuthority {
     return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(holder.getEncoded()));
   }
 
-  private SubjectPublicKeyInfo getPublicKey(Person newUser) throws Exception {
+  private SubjectPublicKeyInfo getPublicKey(User newUser) throws Exception {
     KeyDecoder keyDecoder = new KeyDecoder();
     PublicKey key =keyDecoder.decodePublicKey(newUser.getPublicKeys().get(0));
     SubjectPublicKeyInfo subPubInfo = new SubjectPublicKeyInfo((ASN1Sequence) ASN1Sequence.fromByteArray(key.getEncoded()));
     return subPubInfo;
   }
 
-  private X500Name createX500Name(Person newUser) {
+  private X500Name createX500Name(User newUser) {
     X500Principal prince = new X500Principal("CN="+newUser.getUID());
     X500Name x500Name = new X500Name(prince.getName());
     return x500Name;
