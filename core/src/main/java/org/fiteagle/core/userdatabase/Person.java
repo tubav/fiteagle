@@ -1,15 +1,15 @@
 package org.fiteagle.core.userdatabase;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Person {
 
 	private String UID;
 	private String firstName;
 	private String lastName;
-	private ArrayList<String> publicKeys;
+	private List<String> publicKeys;
 
-	public Person(String UID, String firstName, String lastName, ArrayList<String> publicKeys) {
+	public Person(String UID, String firstName, String lastName, List<String> publicKeys) {
 		this.UID = UID;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -40,11 +40,11 @@ public class Person {
 		this.lastName = lastName;
 	}
 	
-	public ArrayList<String> getPublicKeys() {
+	public List<String> getPublicKeys() {
 		return publicKeys;
 	}
 
-	public void setPublicKeys(ArrayList<String> publicKeys) {
+	public void setPublicKeys(List<String> publicKeys) {
 		this.publicKeys = publicKeys;
 	}
 	
