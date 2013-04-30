@@ -29,7 +29,13 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
-  
+  <login-config>
+    <auth-method>CLIENT-CERT</auth-method>
+    <realm-name>FITeagleRealm</realm-name>
+  </login-config>  
+  <security-role>
+    <role-name>fed4fire-user</role-name>
+  </security-role>
   <welcome-file-list>
     <welcome-file>gui/index.html</welcome-file>
   </welcome-file-list>
