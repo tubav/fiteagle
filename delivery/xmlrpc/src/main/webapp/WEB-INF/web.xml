@@ -26,4 +26,7 @@
      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
   </user-data-constraint>
 </security-constraint>
+<welcome-file-list>
+  <welcome-file>gui/index.html</welcome-file>
+</welcome-file-list>
 </web-app>
