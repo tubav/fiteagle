@@ -18,15 +18,19 @@
   </servlet-mapping>
   
   <security-constraint>
-  <web-resource-collection>
-     <web-resource-name>XmlRpcServlet</web-resource-name>
-     <url-pattern>/api/sfa/*</url-pattern>
-  </web-resource-collection>
-  <user-data-constraint>
-     <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-  </user-data-constraint>
-</security-constraint>
-<welcome-file-list>
-  <welcome-file>gui/index.html</welcome-file>
-</welcome-file-list>
+    <web-resource-collection>
+      <web-resource-name>XmlRpcServlet</web-resource-name>
+      <url-pattern>/api/sfa/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>fed4fire-user</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  
+  <welcome-file-list>
+    <welcome-file>gui/index.html</welcome-file>
+  </welcome-file-list>
 </web-app>
