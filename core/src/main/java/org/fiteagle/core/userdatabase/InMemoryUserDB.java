@@ -15,12 +15,12 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void add(User p) throws DuplicateUIDException {
-		if(users.get(p.getUID()) != null){
+	public void add(User u) throws DuplicateUIDException {
+		if(users.get(u.getUID()) != null){
 			throw new DuplicateUIDException();
 		}
 		else{
-			users.put(p.getUID(), p);
+			users.put(u.getUID(), u);
 		}
 	}	
 
@@ -30,16 +30,16 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void delete(User p){
-		delete(p.getUID());
+	public void delete(User u){
+		delete(u.getUID());
 	}
 
 	@Override
-	public void update(User p) throws RecordNotFoundException {
-		if(users.get(p.getUID()) == null)
+	public void update(User u) throws RecordNotFoundException {
+		if(users.get(u.getUID()) == null)
 			throw new RecordNotFoundException();
 		else
-			users.put(p.getUID(), p);		
+			users.put(u.getUID(), u);		
 	}
 
 	@Override
@@ -50,16 +50,16 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public User get(User p) throws RecordNotFoundException {
-		return get(p.getUID());		
+	public User get(User u) throws RecordNotFoundException {
+		return get(u.getUID());		
 	}
 
 	@Override
-	public void addKey(User p, String key) throws RecordNotFoundException {
-		if((p=users.get(p.getUID())) == null)
+	public void addKey(User u, String key) throws RecordNotFoundException {
+		if((u=users.get(u.getUID())) == null)
 			throw new RecordNotFoundException();
-		p.addPublicKey(key);
-		update(p);
+		u.addPublicKey(key);
+		update(u);
 	}
 	
 	@Override

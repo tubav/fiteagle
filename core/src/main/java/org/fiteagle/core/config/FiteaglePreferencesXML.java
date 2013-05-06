@@ -8,7 +8,7 @@ public class FiteaglePreferencesXML extends FiteaglePreferences {
   private Preferences preferences;
 
   public FiteaglePreferencesXML(Class<?> prefix) {
-    this.preferences = Preferences.userNodeForPackage(prefix);    
+    this.preferences = Preferences.userNodeForPackage(prefix);
   }
   
   @Override

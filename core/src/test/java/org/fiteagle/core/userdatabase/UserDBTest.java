@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class InMemoryUserDBTest {
+public class UserDBTest {
 
 	private static UserDB database;
 	

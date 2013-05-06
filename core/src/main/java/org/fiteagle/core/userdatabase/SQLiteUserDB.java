@@ -9,11 +9,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fiteagle.core.config.FiteaglePreferences;
+import org.fiteagle.core.config.FiteaglePreferencesXML;
+
 public class SQLiteUserDB implements UserDB {
-	
+  
+  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.dir")+"/.fiteagle/db/";
+
 	private Connection connection = null;	
-	private static final String DATABASE_PATH = System.getProperty("user.dir")+"/src/main/java/org/fiteagle/core/userdatabase/userdatabase.db";
-			
+	
+	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
+	
 	static {
         try {
             Class.forName("org.sqlite.JDBC"); 
@@ -24,14 +30,14 @@ public class SQLiteUserDB implements UserDB {
         }
     }
 	
-	public SQLiteUserDB() throws SQLException{
+	public SQLiteUserDB() throws SQLException{	 
 		getConnection();
 		createTableUsers();
 		createTableKeys();
 		connection.commit();
-	}
+	}				
 
-	private void createTableKeys() throws SQLException {
+  private void createTableKeys() throws SQLException {
 		Statement st = connection.createStatement();
 		try{
 			st.executeUpdate("CREATE TABLE Keys (UID, key)");
@@ -58,24 +64,32 @@ public class SQLiteUserDB implements UserDB {
 	}
 	
 	private void getConnection() throws SQLException{
-		if(connection == null){
-			connection = DriverManager.getConnection("jdbc:sqlite:"+DATABASE_PATH);
+		if(connection!=null){
+		  connection.close();
 		}
+		connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabase());
 		connection.setAutoCommit(false);
 	}
 	
+	private String getDatabase(){
+	  if(preferences.get("userdatabasePath") == null){
+	    preferences.put("userdatabasePath", DEFAULT_DATABASE_PATH);
+	  }
+	  return preferences.get("userdatabasePath") + "userdatabase.db";
+	}
+	
 	@Override
-	public void add(User p) throws DuplicateUIDException, SQLException {			
-		addUserToDatabase(p);		
-		addKeysToDatabase(p.getUID(),p.getPublicKeys());
+	public void add(User u) throws DuplicateUIDException, SQLException {			
+		addUserToDatabase(u);		
+		addKeysToDatabase(u.getUID(),u.getPublicKeys());
 		connection.commit();
 	}
 
-	private void addUserToDatabase(User p) throws SQLException {
+	private void addUserToDatabase(User u) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?)");
-		ps.setString(1, p.getUID());
-		ps.setString(2, p.getFirstName());
-		ps.setString(3, p.getLastName());
+		ps.setString(1, u.getUID());
+		ps.setString(2, u.getFirstName());
+		ps.setString(3, u.getLastName());
 		try{
 			ps.execute();
 		} catch(SQLException e){
@@ -97,8 +111,8 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void delete(User p) throws SQLException {
-		delete(p.getUID());
+	public void delete(User u) throws SQLException {
+		delete(u.getUID());
 	}
 	
 	@Override
@@ -123,18 +137,18 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void update(User p) throws RecordNotFoundException, SQLException {
-		updateUserInDatabase(p);
-		deleteKeysFromDatabase(p.getUID());		
-		addKeysToDatabase(p.getUID(), p.getPublicKeys());
+	public void update(User u) throws RecordNotFoundException, SQLException {
+		updateUserInDatabase(u);
+		deleteKeysFromDatabase(u.getUID());		
+		addKeysToDatabase(u.getUID(), u.getPublicKeys());
 		connection.commit();
 	}
 
-	private void updateUserInDatabase(User p) throws SQLException {
+	private void updateUserInDatabase(User u) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=? WHERE UID=?");
-		ps.setString(1, p.getFirstName());
-		ps.setString(2, p.getLastName());
-		ps.setString(3, p.getUID());
+		ps.setString(1, u.getFirstName());
+		ps.setString(2, u.getLastName());
+		ps.setString(3, u.getUID());
 		if(ps.executeUpdate() == 0){
 			ps.close();
 			throw new RecordNotFoundException();
@@ -143,34 +157,34 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(User p, String key) throws SQLException {
-		if(!get(p).getPublicKeys().contains(key)){
+	public void addKey(User u, String key) throws SQLException {
+		if(!get(u).getPublicKeys().contains(key)){
 			ArrayList<String> keys = new ArrayList<String>();			
 			keys.add(key);
-			addKeysToDatabase(p.getUID(),keys);
+			addKeysToDatabase(u.getUID(),keys);
 			connection.commit();
 		}		
 	}
 
 	@Override
 	public User get(String UID) throws RecordNotFoundException, SQLException {		
-		User p = getUserFromDatabase(UID);
-		if(p == null){
+		User u = getUserFromDatabase(UID);
+		if(u == null){
 			throw new UserDB.RecordNotFoundException();
 		}
-		return p;
+		return u;
 	}
 	
 	private User getUserFromDatabase(String UID) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("SELECT Users.UID, Users.firstname, Users.lastname, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.UID=Keys.UID WHERE Users.UID=?");
 		ps.setString(1, UID);
 		ResultSet rs = ps.executeQuery();		
-		User p = null;
+		User u = null;
 		if(rs.next()){
-			p = evaluateResultSet(rs);
+			u = evaluateResultSet(rs);
 		}
 		ps.close();
-		return p;
+		return u;
 	}
 
 	private User evaluateResultSet(ResultSet rs) throws SQLException {
@@ -189,8 +203,8 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public User get(User p) throws RecordNotFoundException, SQLException {		
-		return get(p.getUID());
+	public User get(User u) throws RecordNotFoundException, SQLException {		
+		return get(u.getUID());
 	}
 
 	@Override
