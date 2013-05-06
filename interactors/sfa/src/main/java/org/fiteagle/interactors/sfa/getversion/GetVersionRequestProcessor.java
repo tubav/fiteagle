@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.fiteagle.core.config.Configurator;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -16,11 +17,17 @@ import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 
 	final static int GENI_API_VERSION = 3;
+	
+	Configurator configurator = new Configurator();
+	
+	
+	
 	public GetVersionResult processRequest() {
 		GetVersionResult getVersionResult = new GetVersionResult();
 		GetVersionValue value = getVersionValue();
 		value.addGenericAttribute("urn", "urn:publicid:IDN+fiteagle+authority+sa");
 		value.addGenericAttribute("hostname", "fiteagle.org");
+		value.addGenericAttribute("fiteagle version", configurator.getCommitVersion());
 		Map<String, String> peers = new HashMap<>();
 		peers.put("fiteagle", "https://fiteagle.org:9112/api/sfa/v3/am");
 		value.addGenericAttribute("peers", peers);
