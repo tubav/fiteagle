@@ -1,5 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -67,15 +68,18 @@ public class SQLiteUserDB implements UserDB {
 		if(connection!=null){
 		  connection.close();
 		}
-		connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabase());
+		connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
 		connection.setAutoCommit(false);
 	}
 	
-	private String getDatabase(){
+	private String getDatabasePath(){
 	  if(preferences.get("userdatabasePath") == null){
 	    preferences.put("userdatabasePath", DEFAULT_DATABASE_PATH);
 	  }
-	  return preferences.get("userdatabasePath") + "userdatabase.db";
+	  String path = preferences.get("userdatabasePath");
+	  File dir = new File(path);
+	  dir.mkdirs();
+	  return path + "userdatabase.db";
 	}
 	
 	@Override
