@@ -5,6 +5,6 @@ public abstract class SFAOptionsService {
 	public abstract boolean areOptionsValid();
 	
 	public boolean isGeniCompressedOptionSupported(){
-		return false;
+		return true;
 	}
 }

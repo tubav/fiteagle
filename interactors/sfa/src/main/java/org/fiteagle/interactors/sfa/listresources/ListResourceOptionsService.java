@@ -12,6 +12,7 @@ public class ListResourceOptionsService extends SFAOptionsService {
 	private ListResourceOptions options;
 	private boolean optionsValid = true;
 	private String errorOutput = "";
+	private boolean compressed = false;
 	
 	private AMCode amCode;
 	public ListResourceOptionsService(ListResourceOptions options) {
@@ -72,6 +73,10 @@ public class ListResourceOptionsService extends SFAOptionsService {
 			errorOutput = "Geni compressed option is not supported yet!";
 		}
 		
+		if(compressOption!=null && compressOption.getValue() && this.isGeniCompressedOptionSupported()){
+			this.setCompressed(true);
+		}
+		
 		if(!optionsAreValid() && !optionsComplete()){
 			amCode.setGeni_code(GENI_CodeEnum.BADARGS);
 			optionsValid = false;
@@ -98,6 +103,16 @@ public class ListResourceOptionsService extends SFAOptionsService {
 	public String getErrorOutput() {
 		
 		return errorOutput;
+	}
+
+
+	public boolean isCompressed() {
+		return compressed;
+	}
+
+
+	public void setCompressed(boolean compressed) {
+		this.compressed = compressed;
 	}
 
 	

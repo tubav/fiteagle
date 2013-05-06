@@ -1,8 +1,10 @@
 package org.fiteagle.interactors.sfa.listresources;
 
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Deflater;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -13,7 +15,6 @@ import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceProperties;
 import org.fiteagle.core.ResourceManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
-import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
@@ -57,35 +58,43 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		String value = "";
 		String output = "";
 		AMCode returnCode = null;
+		//TODO: Ignoring credentials
 		
-		Authorization auth = new Authorization();
-		
-		auth.checkCredentialsList(listCredentials);
-		
-		if(!auth.areCredentialTypeAndVersionValid()){
-			returnCode=auth.getReturnCode();
-			output=auth.getAuthorizationFailMessage();
-			ListResourcesResult result = new ListResourcesResult();
-			result.setCode(returnCode);
-			result.setOutput(output);
-			return result;
-		}
+//		Authorization auth = new Authorization();
+//		
+//		auth.checkCredentialsList(listCredentials);
+//		
+//		if(!auth.areCredentialTypeAndVersionValid()){
+//			returnCode=auth.getReturnCode();
+//			output=auth.getAuthorizationFailMessage();
+//			ListResourcesResult result = new ListResourcesResult();
+//			result.setCode(returnCode);
+//			result.setOutput(output);
+//			return result;
+//		}
 		
 		checkOptions(options);
 		
 		
+		ListResourcesResult result = new ListResourcesResult();
 		if (optionsAreValid()) {
 			value = getValue();
+			
+			if(this.optionsService.isCompressed()){
+				result.setValue(this.compress(value));
+			}else {
+				result.setValue(value);
+			}
+			
 			output = getOutput();
 			returnCode = getRuntimeReturnCode();
 		} else {
 			returnCode = getOptionsValidationReturnCode();
 			output = getOptionsValidationOutput();
 		}
-		ListResourcesResult result = new ListResourcesResult();
 		result.setCode(returnCode);
 		result.setOutput(output);
-		result.setValue(value);
+//		result.setValue(value);
 		return result;
 	}
 
@@ -122,8 +131,34 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		RSpecContents advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 		String advertisedRspecSTR = getRSpecString(advertisedRspec);
 
+//		if(this.optionsService.isCompressed())
+//			return this.compress(advertisedRspecSTR);
+		
 		return advertisedRspecSTR;
 	}
+
+//	private String compress(String strToCompress) {
+//		byte[] strToCompressBytes = strToCompress.getBytes();
+//		Deflater deflater = new Deflater();
+//		deflater.setInput(strToCompressBytes);
+//		deflater.finish();
+//		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(strToCompressBytes.length);
+//		byte[] buffer = new byte[1024];
+//		
+//		while (!deflater.finished()) {
+//			int compressedBytes = deflater.deflate(buffer);
+//			byteArrayOutputStream.write(buffer, 0, compressedBytes);
+//		}
+//		
+//		try {
+//			byteArrayOutputStream.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return byteArrayOutputStream.toString();
+//	}
 
 	private String getRSpecString(RSpecContents advertisedRspec) {
 		String advertisedRspecSTR = "";
