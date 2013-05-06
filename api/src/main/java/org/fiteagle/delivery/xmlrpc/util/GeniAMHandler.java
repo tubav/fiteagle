@@ -83,7 +83,7 @@ public class GeniAMHandler extends SFAHandler {
 
 
 
-	protected Object xmlStructToObject(Object from, Object to) {
+	public Object xmlStructToObject(Object from, Object to) {
 		if (to.getClass().isAssignableFrom(ListResourceOptions.class)) {
 			return parseListResourcesOptions(from, to);
 
@@ -93,7 +93,7 @@ public class GeniAMHandler extends SFAHandler {
 			
 		}
 		
-		if (to.getClass().isAssignableFrom(List.class)){
+		if (to.getClass().isAssignableFrom(ArrayList.class)){
 			return parseUrns(from);
 			
 		}
@@ -102,7 +102,6 @@ public class GeniAMHandler extends SFAHandler {
 			return parseDescribeOptions(from);
 			
 		}
-		
 		
 		throw new ParsingException();
 
@@ -141,34 +140,36 @@ public class GeniAMHandler extends SFAHandler {
 		try {
 			XmlRpcArray listCredentialsArray = (XmlRpcArray) from;
 			ListCredentials listCredentials = (ListCredentials) to;
-			if (listCredentialsArray.size() > 0) {
-				for (int i = 0; i < listCredentialsArray.size(); i++) {
-					XmlRpcStruct credentialsStruct = (XmlRpcStruct) listCredentialsArray
-							.get(i);
-					Credentials credentials = new Credentials();
-					if (credentialsStruct.getString("geni_type") != null) {
-						credentials.setGeni_type(credentialsStruct
-								.getString("geni_type"));
-					} else {
-						throw new CredentialsNotValid();
-					}
-					if (credentialsStruct.getString("geni_version") != null) {
-						credentials.setGeni_version(credentialsStruct
-								.getString("geni_version"));
-					} else {
-						throw new CredentialsNotValid();
-					}
-					if (credentialsStruct.getString("geni_value") != null) {
-						credentials.setGeni_value(credentialsStruct
-								.getString("geni_value"));
-					} else {
-						throw new CredentialsNotValid();
-					}
-
-					listCredentials.addCredentials(credentials);
-
-				}
-			}
+//			if (listCredentialsArray.size() > 0) {
+//				for (int i = 0; i < listCredentialsArray.size(); i++) {
+//					Object tmptest = listCredentialsArray.get(i);
+//					Class<? extends Object> tmttestClass = tmptest.getClass();
+//					XmlRpcStruct credentialsStruct = (XmlRpcStruct) listCredentialsArray
+//							.get(i);
+//					Credentials credentials = new Credentials();
+//					if (credentialsStruct.getString("geni_type") != null) {
+//						credentials.setGeni_type(credentialsStruct
+//								.getString("geni_type"));
+//					} else {
+////						throw new CredentialsNotValid();
+//					}
+//					if (credentialsStruct.getString("geni_version") != null) {
+//						credentials.setGeni_version(credentialsStruct
+//								.getString("geni_version"));
+//					} else {
+////						throw new CredentialsNotValid();
+//					}
+//					if (credentialsStruct.getString("geni_value") != null) {
+//						credentials.setGeni_value(credentialsStruct
+//								.getString("geni_value"));
+//					} else {
+////						throw new CredentialsNotValid();
+//					}
+//
+//					listCredentials.addCredentials(credentials);
+//
+//				}
+//			}
 			
 			return listCredentials;
 		} catch (ClassCastException e) {

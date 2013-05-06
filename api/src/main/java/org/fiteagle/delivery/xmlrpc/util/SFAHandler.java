@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.fiteagle.interactors.sfa.ISFA;
+import org.fiteagle.interactors.sfa.common.AMCode;
+import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.slf4j.Logger;
 
@@ -88,6 +90,7 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
       for (int i = 0; i < parameterClasses.length; i++) {
     	  Object tmpParam = methodParameters.get(i);
     	  tmpParam = xmlStructToObject(parameters.get(i), methodParameters.get(i));
+    	  methodParameters.set(i, tmpParam);
       }
       
       result = knownMethod.invoke(interactor, methodParameters.toArray());
@@ -106,7 +109,7 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
     return response;
   }
   
-  protected abstract Object xmlStructToObject(Object object, Object object2);
+  public abstract Object xmlStructToObject(Object object, Object object2);
   
   class ParsingException extends RuntimeException {
     private GENI_CodeEnum errorCode = GENI_CodeEnum.ERROR;
