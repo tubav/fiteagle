@@ -14,6 +14,7 @@
 		<module>interactors</module>
 		<module>delivery</module>
 		<module>core</module>
+		<module>serverDependencies</module>
 	</modules>
 
 	<description>

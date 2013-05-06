@@ -7,8 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
-public class InMemoryPersonDBSQLite implements PersonDB {
+public class SQLiteUserDB implements UserDB {
 	
 	private Connection connection = null;	
 	private static final String DATABASE_PATH = System.getProperty("user.dir")+"/src/main/java/org/fiteagle/core/userdatabase/userdatabase.db";
@@ -23,7 +24,7 @@ public class InMemoryPersonDBSQLite implements PersonDB {
         }
     }
 	
-	public InMemoryPersonDBSQLite() throws SQLException{
+	public SQLiteUserDB() throws SQLException{
 		getConnection();
 		createTableUsers();
 		createTableKeys();
@@ -64,13 +65,13 @@ public class InMemoryPersonDBSQLite implements PersonDB {
 	}
 	
 	@Override
-	public void add(Person p) throws DuplicateUIDException, SQLException {			
+	public void add(User p) throws DuplicateUIDException, SQLException {			
 		addUserToDatabase(p);		
 		addKeysToDatabase(p.getUID(),p.getPublicKeys());
 		connection.commit();
 	}
 
-	private void addUserToDatabase(Person p) throws SQLException {
+	private void addUserToDatabase(User p) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?)");
 		ps.setString(1, p.getUID());
 		ps.setString(2, p.getFirstName());
@@ -84,8 +85,7 @@ public class InMemoryPersonDBSQLite implements PersonDB {
 		}
 	}
 
-	private void addKeysToDatabase(String UID, ArrayList<String> Keys) throws SQLException {
-		removeDuplicateKeys(UID, Keys);
+	private void addKeysToDatabase(String UID,List<String> Keys) throws SQLException {		
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?)");
 		for(String key: Keys){
 			ps.setString(1, UID);
@@ -96,13 +96,8 @@ public class InMemoryPersonDBSQLite implements PersonDB {
 		ps.close();
 	}
 
-	private void removeDuplicateKeys(String UID, ArrayList<String> Keys) throws SQLException {
-		Person p = get(UID);
-		Keys.removeAll(p.getPublicKeys());
-	}
-
 	@Override
-	public void delete(Person p) throws SQLException {
+	public void delete(User p) throws SQLException {
 		delete(p.getUID());
 	}
 	
@@ -128,14 +123,14 @@ public class InMemoryPersonDBSQLite implements PersonDB {
 	}
 
 	@Override
-	public void update(Person p) throws RecordNotFoundException, SQLException {
+	public void update(User p) throws RecordNotFoundException, SQLException {
 		updateUserInDatabase(p);
 		deleteKeysFromDatabase(p.getUID());		
 		addKeysToDatabase(p.getUID(), p.getPublicKeys());
 		connection.commit();
 	}
 
-	private void updateUserInDatabase(Person p) throws SQLException {
+	private void updateUserInDatabase(User p) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=? WHERE UID=?");
 		ps.setString(1, p.getFirstName());
 		ps.setString(2, p.getLastName());
@@ -148,49 +143,53 @@ public class InMemoryPersonDBSQLite implements PersonDB {
 	}
 
 	@Override
-	public void addKey(Person p, String key) throws SQLException {
-		ArrayList<String> keys = new ArrayList<String>();
-		keys.add(key);
-		addKeysToDatabase(p.getUID(),keys);
-		connection.commit();
+	public void addKey(User p, String key) throws SQLException {
+		if(!get(p).getPublicKeys().contains(key)){
+			ArrayList<String> keys = new ArrayList<String>();			
+			keys.add(key);
+			addKeysToDatabase(p.getUID(),keys);
+			connection.commit();
+		}		
 	}
 
 	@Override
-	public Person get(String UID) throws RecordNotFoundException, SQLException {		
-		ArrayList<String> keys = getKeysFromDatabase(UID);		
-		Person person = getUserFromDatabase(UID, keys);
-		return person;
+	public User get(String UID) throws RecordNotFoundException, SQLException {		
+		User p = getUserFromDatabase(UID);
+		if(p == null){
+			throw new UserDB.RecordNotFoundException();
+		}
+		return p;
 	}
-
-	private Person getUserFromDatabase(String UID, ArrayList<String> keys) throws SQLException {				
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM Users WHERE UID=?");
+	
+	private User getUserFromDatabase(String UID) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT Users.UID, Users.firstname, Users.lastname, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.UID=Keys.UID WHERE Users.UID=?");
 		ps.setString(1, UID);
-		ResultSet rs = ps.executeQuery();
+		ResultSet rs = ps.executeQuery();		
+		User p = null;
 		if(rs.next()){
-			Person p = new Person(rs.getString(1), rs.getString(2), rs.getString(3), keys);
-			ps.close();
-			return p;
-		}
-		else{
-			ps.close();
-			throw new PersonDB.RecordNotFoundException();	
-		}
-	}
-
-	private ArrayList<String> getKeysFromDatabase(String UID) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM Keys WHERE UID=?");
-		ps.setString(1, UID);
-		ResultSet rs = ps.executeQuery();
-		ArrayList<String> keys = new ArrayList<String>();
-		while(rs.next()){
-			keys.add(rs.getString(2));
+			p = evaluateResultSet(rs);
 		}
 		ps.close();
-		return keys;
+		return p;
+	}
+
+	private User evaluateResultSet(ResultSet rs) throws SQLException {
+		ArrayList<String> keys = new ArrayList<String>();
+		String UID = rs.getString(1);
+		String firstname = rs.getString(2);
+		String lastname = rs.getString(3);
+		String key1 = rs.getString(4);
+		if(key1 != null){
+			keys.add(key1);
+		}
+		while(rs.next()){		
+			keys.add(rs.getString(4));
+		}			
+		return new User(UID, firstname, lastname, keys);
 	}
 
 	@Override
-	public Person get(Person p) throws RecordNotFoundException, SQLException {		
+	public User get(User p) throws RecordNotFoundException, SQLException {		
 		return get(p.getUID());
 	}
 

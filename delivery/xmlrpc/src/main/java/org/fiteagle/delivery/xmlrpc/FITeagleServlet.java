@@ -5,12 +5,12 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.security.cert.X509Certificate;
 
-import javax.security.auth.x500.X500Principal;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fiteagle.core.aaa.AuthenticationHandler;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
 import org.fiteagle.delivery.xmlrpc.util.GeniAMHandler;
@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import redstone.xmlrpc.XmlRpcInvocationHandler;
-import redstone.xmlrpc.XmlRpcServer;
 import redstone.xmlrpc.XmlRpcServlet;
+
 
 public class FITeagleServlet extends XmlRpcServlet {
 
@@ -29,12 +29,14 @@ public class FITeagleServlet extends XmlRpcServlet {
 
 	private FixedXmlRpcServer server;
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-
+	
 	//TODO make this configurable
 	private final String AM_PATH = "/am/v3";
 	private final String REGISTRY_PATH = "/registry/v1";
 	
-	public FITeagleServlet() {
+
+
+	public FITeagleServlet()  {
 
 		// TODO: choose dependency injection here (i.e. add a parameter to
 		// define the interactor here, use reflection to find one or use
@@ -52,7 +54,9 @@ public class FITeagleServlet extends XmlRpcServlet {
 		this.server.addInvocationHandler(REGISTRY_PATH, registryHandler);
 
 		XmlRpcController controller = new XmlRpcController();
-		this.server.addInvocationInterceptor(controller);
+		this.server.addInvocationInterceptor(controller);	
+	
+	
 	}
 
 	@Override
@@ -65,19 +69,16 @@ public class FITeagleServlet extends XmlRpcServlet {
 	public void doPost(final HttpServletRequest req,
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
+	  
 
-	  X509Certificate cert = extractCertificate(req);
-	  X500Principal prince = cert.getSubjectX500Principal();
+	  
+	  this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo());
 	
-	  log.info("subject: "+ prince.getName());
-
-	;
-	
-		this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo());
-
+	 
+		
 	}
 
-	public String handleRequestGetVersionStatic() throws IOException {
+  public String handleRequestGetVersionStatic() throws IOException {
 		return FITeagleUtils
 				.getFileAsString("/org/fiteagle/delivery/xmlrpc/sfa/getversion_response.xml");
 	}
@@ -92,12 +93,6 @@ public class FITeagleServlet extends XmlRpcServlet {
 		this.server.execute(inputStream, writer, path);
 	}
 
-	protected X509Certificate extractCertificate(HttpServletRequest req) {
-    X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
-    if (null != certs && certs.length > 0) {
-        return certs[0];
-    }
-    throw new RuntimeException("No X.509 client certificate found in request");
-}
-
+	
+	
 }
