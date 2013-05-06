@@ -24,19 +24,8 @@ Logger log =  LoggerFactory.getLogger(this.getClass());
 		
 		ArrayList<String> argumentsList = new ArrayList<String>();
 		
-//		for (Iterator iterator = arguments.iterator(); iterator.hasNext();) {
-//			String tmp = (String) iterator.next();
-//			if (tmp!=null) {
-//				argumentsList.add(tmp);
-//			}
-//			
-//		}
-		
 		
 		Method calledMethod = getMethod(methodName);
-	//	Object result = 
-//		log.info("nearly done");
-//		String cert = "this is a cert";
 		Object response = calledMethod.invoke(this.interactor, arguments.toArray());
 		return response;
 	}

@@ -96,14 +96,6 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
       result = knownMethod.invoke(interactor, methodParameters.toArray());
       
     }
-    //TODO: fake
-    if (result==null) {
-		AMResult amResult = new AMResult();
-		AMCode code=new AMCode();
-		code.setAm_code(-1);
-		amResult.setCode(code);
-		result=amResult;
-	}
     return result;
   }
   
