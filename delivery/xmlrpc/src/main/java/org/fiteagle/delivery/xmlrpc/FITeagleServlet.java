@@ -36,7 +36,6 @@ public class FITeagleServlet extends XmlRpcServlet {
 	
 
 
-  private AuthenticationHandler authenticationHandler;
 	public FITeagleServlet()  {
 
 		// TODO: choose dependency injection here (i.e. add a parameter to
@@ -56,7 +55,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 
 		XmlRpcController controller = new XmlRpcController();
 		this.server.addInvocationInterceptor(controller);	
-		authenticationHandler = new AuthenticationHandler();
+	
 	
 	}
 
@@ -71,7 +70,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
 	  
-	  authenticationHandler.authenticateCertificates(extractCertificates(req));
+
 	  
 	  this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo());
 	
@@ -94,15 +93,6 @@ public class FITeagleServlet extends XmlRpcServlet {
 		this.server.execute(inputStream, writer, path);
 	}
 
-	
-  
-  protected X509Certificate[] extractCertificates(HttpServletRequest req) {
-    X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
-    if (null != certs && certs.length > 0) {
-        return certs;
-    }
-    throw new RuntimeException("No X.509 client certificate found in request");
-}
 	
 	
 }
