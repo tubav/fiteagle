@@ -3,9 +3,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>FITeagle :: Delivery Mechanisms :: XML RPC</name>
+	<name>FITeagle :: Delivery Mechanisms :: API</name>
 	<groupId>org.fiteagle.delivery</groupId>
-	<artifactId>xmlrpc</artifactId>
+	<artifactId>api</artifactId>
 	<packaging>war</packaging>
 
 	<parent>
