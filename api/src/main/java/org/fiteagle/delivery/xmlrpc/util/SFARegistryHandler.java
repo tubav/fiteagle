@@ -20,9 +20,8 @@ Logger log =  LoggerFactory.getLogger(this.getClass());
 	public Object invoke(String method, List arguments) throws Throwable {
 		Method calledMethod = getMethod(method);
 	//	Object result = 
-		log.info("nearly done");
-		String cert = "this is a cert";
-		return introspect(cert);
+		Object result = getMethodCallResult(calledMethod, arguments);
+		return introspect(result);
 	}
 
 

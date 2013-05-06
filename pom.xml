@@ -12,7 +12,7 @@
 	<modules>
 		<module>adapter</module>
 		<module>interactors</module>
-		<module>delivery</module>
+		<module>api</module>
 		<module>core</module>
 		<module>serverDependencies</module>
 	</modules>
