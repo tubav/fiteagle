@@ -29,9 +29,9 @@ public interface ISFA {
 	ListResourcesResult listResources(ListCredentials credentials, ListResourceOptions listResourceOptions) throws IOException;
 
 	String resolve(Object o1, Object o2);
-	SignedCredential getSelfCredential(String certificate, String xrn, String type);
+	String getSelfCredential(String certificate, String xrn, String type);
 //	String getCredential(SignedCredential credential, String xrn, String type);
-	SignedCredential getCredential(String credential, String xrn, String type);
+	String getCredential(String credential, String xrn, String type);
 
 	DescribeResult describe(ArrayList<String> urns, ListCredentials credentials,
 			DescribeOptions describeOptions) throws IOException;
