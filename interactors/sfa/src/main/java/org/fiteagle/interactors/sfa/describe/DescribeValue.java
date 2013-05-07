@@ -7,15 +7,15 @@ import org.fiteagle.interactors.sfa.common.AMValue;
 
 public class DescribeValue extends AMValue {
 
-	private String geni_rspec;
+	private Object geni_rspec;
 	private String geni_urn;
 	private List<GeniSlivers> geni_slivers = new ArrayList<>();
 
-	public String getGeni_rspec() {
+	public Object getGeni_rspec() {
 		return geni_rspec;
 	}
 
-	public void setGeni_rspec(String geni_rspec) {
+	public void setGeni_rspec(Object geni_rspec) {
 		this.geni_rspec = geni_rspec;
 	}
 

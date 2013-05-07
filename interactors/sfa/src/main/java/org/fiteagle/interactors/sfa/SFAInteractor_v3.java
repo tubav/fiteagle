@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fiteagle.interactors.sfa.common.AMCode;
@@ -12,6 +13,8 @@ import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeResult;
+import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
+import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
@@ -50,14 +53,12 @@ public class SFAInteractor_v3 implements ISFA {
 	}
 	
 	@Override
-	public DescribeResult describe(List<String> urns, ListCredentials credentials,
+	public DescribeResult describe(ArrayList<String> urns, ListCredentials credentials,
 			DescribeOptions describeOptions) throws IOException {
 		
 		SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
 		DescribeRequestProcessor describeRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.DESCRIBE);
 		DescribeResult result = describeRequestProcessor.processRequest(urns, credentials, describeOptions);
-		
-		AMCode returnCode = result.getCode();
 		
 		return result;
 		
@@ -70,11 +71,21 @@ public class SFAInteractor_v3 implements ISFA {
   }
 
   @Override
-  public String getSelfCredential(String certificate, String xrn, String type) {
-    // TODO Auto-generated method stub
-    return null;
+  public SignedCredential getSelfCredential(String certificate, String xrn, String type) {
+	  SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+	  GetSelfCredentialRequestProcessor getSelfCredentialRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.GET_SELF_CREDENTIAL);
+	  SignedCredential result = getSelfCredentialRequestProcessor.processRequest(certificate, xrn, type);
+//	  String str= result.toString();
+	  return result;
   }
 
+  @Override
+  public SignedCredential getCredential(String credential, String xrn, String type) {
+	  // TODO implement the get credentials. check access rights etc for the type.
+	  return this.getSelfCredential("", xrn, type);
+  }
+
+  
 
 
 

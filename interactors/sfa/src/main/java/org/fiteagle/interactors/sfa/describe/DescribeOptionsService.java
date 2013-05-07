@@ -13,6 +13,7 @@ public class DescribeOptionsService extends SFAOptionsService {
 	private boolean optionsValid = true;
 	private String errorOutput = "";
 	private AMCode amCode;
+	private boolean compressed = false;
 
 	public DescribeOptionsService(DescribeOptions options) {
 		this.options = options;
@@ -36,11 +37,16 @@ public class DescribeOptionsService extends SFAOptionsService {
 		GeniCompressedOption compressOption = (GeniCompressedOption) options
 				.getOptions().get(0);
 
-		if (compressOption.getValue()
+		if (compressOption!=null && compressOption.getValue()
 				&& !this.isGeniCompressedOptionSupported()) {
 			amCode.setGeni_code(GENI_CodeEnum.UNSUPPORTED);
 			optionsValid = false;
 			errorOutput = "Geni compressed option is not supported yet!";
+		}
+		
+		if (compressOption!=null && compressOption.getValue()
+				&& this.isGeniCompressedOptionSupported()) {
+			this.setCompressed(true);
 		}
 
 		if (areOptionsValid() && !isRspecVersionValid()) {
@@ -64,6 +70,14 @@ public class DescribeOptionsService extends SFAOptionsService {
 	@Override
 	public boolean areOptionsValid() {
 		return optionsValid;
+	}
+
+	public boolean isCompressed() {
+		return compressed;
+	}
+
+	public void setCompressed(boolean compressed) {
+		this.compressed = compressed;
 	}
 
 }

@@ -44,19 +44,19 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 		String output = "";
 		AMCode returnCode = null;
 		
-		Authorization auth = new Authorization();
-		
-		auth.checkCredentialsList(credentials);
-		
+//		Authorization auth = new Authorization();
+//		
+//		auth.checkCredentialsList(credentials);
+//		
 		DescribeResult result = new DescribeResult();
-		
-		if(!auth.areCredentialTypeAndVersionValid()){
-			returnCode=auth.getReturnCode();
-			output=auth.getAuthorizationFailMessage();
-			result.setCode(returnCode);
-			result.setOutput(output);
-			return result;
-		}
+//		
+//		if(!auth.areCredentialTypeAndVersionValid()){
+//			returnCode=auth.getReturnCode();
+//			output=auth.getAuthorizationFailMessage();
+//			result.setCode(returnCode);
+//			result.setOutput(output);
+//			return result;
+//		}
 		
 		this.optionsService=new DescribeOptionsService(options);
 		
@@ -86,9 +86,13 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	private DescribeValue getResultValue(List<String> urns) {
 		//TODO: static test values only.
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+		DescribeValue describeValue = translator.getDescription(urns);
+		String rspecStr = (String) describeValue.getGeni_rspec();
+		if(this.optionsService.isCompressed()){
+			describeValue.setGeni_rspec(this.compress(rspecStr));
+		}
 		
-		
-		return translator.getDescription(urns);
+		return describeValue;
 		
 	}
 

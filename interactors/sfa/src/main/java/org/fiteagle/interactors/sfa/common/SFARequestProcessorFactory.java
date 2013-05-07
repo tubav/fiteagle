@@ -2,6 +2,8 @@ package org.fiteagle.interactors.sfa.common;
 
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 
+import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialOptions;
+import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 
@@ -35,6 +37,9 @@ public class SFARequestProcessorFactory {
 		case RENEW:
 			break;
 		case SHUTDOWN:
+			break;
+		case GET_SELF_CREDENTIAL:
+			result = (E) new GetSelfCredentialRequestProcessor();
 			break;
 		case STATUS:
 			break;

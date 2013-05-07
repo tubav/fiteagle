@@ -4,16 +4,16 @@ import java.sql.SQLException;
 
 public interface UserDB {
 
-	public void add(User p) throws DuplicateUIDException, SQLException;
+	public void add(User u) throws DuplicateUIDException, SQLException;
 	
 	public void delete(String UID) throws SQLException;
-	public void delete(User p) throws SQLException;
+	public void delete(User u) throws SQLException;
 	
-	public void update(User p) throws RecordNotFoundException, SQLException;
-	public void addKey(User p, String key) throws RecordNotFoundException, SQLException;
+	public void update(User u) throws RecordNotFoundException, SQLException;
+	public void addKey(User u, String key) throws RecordNotFoundException, SQLException;
 	
 	public User get(String UID) throws RecordNotFoundException, SQLException;
-	public User get(User p) throws RecordNotFoundException, SQLException;
+	public User get(User u) throws RecordNotFoundException, SQLException;
 	
 	public int getNumberOfUsers() throws SQLException;
 	

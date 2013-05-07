@@ -1,9 +1,12 @@
 package org.fiteagle.delivery.xmlrpc.util;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.interactors.sfa.ISFA;
+import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,18 +20,20 @@ Logger log =  LoggerFactory.getLogger(this.getClass());
 	
 	
 	@Override
-	public Object invoke(String method, List arguments) throws Throwable {
-		Method calledMethod = getMethod(method);
-	//	Object result = 
-		Object result = getMethodCallResult(calledMethod, arguments);
-		return introspect(result);
+	public Object invoke(String methodName, List arguments) throws Throwable {
+		
+		ArrayList<String> argumentsList = new ArrayList<String>();
+		
+		
+		Method calledMethod = getMethod(methodName);
+		Object response = calledMethod.invoke(this.interactor, arguments.toArray());
+		return response;
 	}
 
 
 	@Override
-	protected Object xmlStructToObject(Object object, Object object2) {
+	public Object xmlStructToObject(Object object, Object object2) {
 		return object2;
-		// TODO Auto-generated method stub
 		
 	}
 
