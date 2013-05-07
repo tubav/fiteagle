@@ -26,10 +26,17 @@ public class AuthenticationHandler {
   public void authenticateCertificates(X509Certificate[] certificates) {
     X509Certificate userCert = getUserCert(certificates);
     User identifiedUser = getUserFromCert(userCert);
-   
-    verifyCertificateForUser(identifiedUser, userCert);
+    if(userCert.getSubjectX500Principal().equals(userCert.getIssuerX500Principal())){
+      log.info("self signed certificate");
+      log.info(userCert.toString());
+      verifyUserSignedCertificate(identifiedUser, userCert);
+      
+    }else{
+      log.info("someone else signed this");
+      log.info(userCert.getIssuerX500Principal().getName());
+    }
   }
-  private void verifyCertificateForUser(User identifiedUser, X509Certificate certificate)  {
+  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate)  {
     boolean verified = false;
     for(String pubKeyString: identifiedUser.getPublicKeys()){
       
