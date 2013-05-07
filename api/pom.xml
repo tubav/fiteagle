@@ -43,7 +43,7 @@
 					<dependency>
 						<groupId>org.fiteagle.server</groupId>
 
-						<artifactId>ServerDependencies</artifactId>
+						<artifactId>serverDependencies</artifactId>
 						<version>0.1-SNAPSHOT</version>
 					</dependency>  
 					   <dependency>
