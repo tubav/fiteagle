@@ -38,6 +38,7 @@ public class CertificateAuthority {
  
   private X500Name issuer;
  
+  //TODO: get private key and ca-cert from config
   private final String caCertPath =  "/org/fiteagle/core/certificates/jettycacert.pem";
   private final String caPrivateKey = "/org/fiteagle/core/certificates/jettyprkey.pem";
   public X509Certificate createCertificate(User newUser) throws Exception{
