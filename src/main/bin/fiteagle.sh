@@ -3,8 +3,8 @@
 _log="`mktemp -t fiteagle.XXXXX`"
 
 function testFITeagle {  
-  echo "Testing FITeagle (this might take a while)..."
-  mvn -B test > "${_log}" 2>&1
+  echo "Testing and bootstraping FITeagle (this might take a while - have a look at '${_log}')..."
+  mvn -B install > "${_log}" 2>&1
   if [ "0" != "$?" ]; then
     echo >&2 "FAILED. Please have a look at '${_log}'."
     exit 3
