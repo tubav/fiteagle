@@ -12,7 +12,7 @@ function testFITeagle {
 }
 
 function runFITeagle {
-  main_dir="./delivery/xmlrpc"  
+  main_dir="./delivery/interfaces"  
   echo "Starting FITeagle..."
   cd "${main_dir}"
   [ -x ./src/main/bin/ssl_create_server_cert.sh ] || { echo "ERROR 5"; exit 5; }
