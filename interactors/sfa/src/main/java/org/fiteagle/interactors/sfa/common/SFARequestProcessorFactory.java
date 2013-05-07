@@ -2,7 +2,6 @@ package org.fiteagle.interactors.sfa.common;
 
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 
-import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialOptions;
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
