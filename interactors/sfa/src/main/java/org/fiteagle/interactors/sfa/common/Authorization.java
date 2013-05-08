@@ -52,10 +52,18 @@ public class Authorization {
 	}
 
 	private void checkCredentialTypeAndVersion(Credentials credentials) {
-		if (credentials.getGeni_type().compareToIgnoreCase(GENI_TYPE)==0&&credentials.getGeni_version().compareToIgnoreCase(GENI_VERSION)==0){
-			this.setCredentialTypesAndVersionValid(true);
-			return;
-		}
+	  //TODO: delete this one and enable other if check. This one is used to test with omni client(omni sends the geni version 2!).
+	  if (credentials.getGeni_type().compareToIgnoreCase(GENI_TYPE)==0){
+      this.setCredentialTypesAndVersionValid(true);
+      return;
+    }
+	  
+//		if (credentials.getGeni_type().compareToIgnoreCase(GENI_TYPE)==0&&credentials.getGeni_version().compareToIgnoreCase(GENI_VERSION)==0){
+//			this.setCredentialTypesAndVersionValid(true);
+//			return;
+//		}
+		
+		
 		
 		if(credentials.getGeni_type().compareToIgnoreCase(GENI_TYPE)!=0)
 			this.setAuthorizationFailMessage("The GENI_TYPE: "+credentials.getGeni_type()+" is not supported, please use another one (e. g. "+this.GENI_TYPE+"). ");

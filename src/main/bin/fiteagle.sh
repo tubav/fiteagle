@@ -3,8 +3,8 @@
 _log="`mktemp -t fiteagle.XXXXX`"
 
 function testFITeagle {  
-  echo "Testing FITeagle (this might take a while)..."
-  mvn -B test > "${_log}" 2>&1
+  echo "Testing and bootstraping FITeagle (this might take a while - have a look at '${_log}')..."
+  mvn -B install > "${_log}" 2>&1
   if [ "0" != "$?" ]; then
     echo >&2 "FAILED. Please have a look at '${_log}'."
     exit 3
@@ -12,7 +12,7 @@ function testFITeagle {
 }
 
 function runFITeagle {
-  main_dir="./delivery/xmlrpc"  
+  main_dir="./delivery/interfaces"  
   echo "Starting FITeagle..."
   cd "${main_dir}"
   [ -x ./src/main/bin/ssl_create_server_cert.sh ] || { echo "ERROR 5"; exit 5; }
