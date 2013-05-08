@@ -3,9 +3,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>FITeagle :: Delivery Mechanisms :: API</name>
+	<name>FITeagle :: Delivery Mechanisms :: Interfaces</name>
 	<groupId>org.fiteagle.delivery</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>interfaces</artifactId>
 	<packaging>war</packaging>
 
 	<parent>
@@ -26,10 +26,9 @@
 		</repository>
 	</repositories>
 
-
 	<build>
 		<plugins>
-
+		
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
@@ -41,9 +40,8 @@
 						<version>6.1.25</version>
 					</dependency>
 					<dependency>
-						<groupId>org.fiteagle.server</groupId>
-
-						<artifactId>serverDependencies</artifactId>
+						<groupId>org.fiteagle.delivery</groupId>
+						<artifactId>ssl</artifactId>
 						<version>0.1-SNAPSHOT</version>
 					</dependency>  
 					   <dependency>

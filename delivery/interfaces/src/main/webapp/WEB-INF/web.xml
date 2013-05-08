@@ -29,4 +29,9 @@
   <welcome-file-list>
     <welcome-file>gui/index.html</welcome-file>
   </welcome-file-list>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/gui/*</url-pattern>
+  </servlet-mapping>
 </web-app>

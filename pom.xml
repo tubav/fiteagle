@@ -12,9 +12,8 @@
 	<modules>
 		<module>adapter</module>
 		<module>interactors</module>
-		<module>api</module>
+		<module>delivery</module>
 		<module>core</module>
-		<module>serverDependencies</module>
 	</modules>
 
 	<description>
@@ -150,15 +149,18 @@
   <artifactId>jacoco-maven-plugin</artifactId>
   <version>0.6.2.201302030002</version>
   <configuration>
-   <destfile>${basedir}/target/coverage-reports/jacoco-unit.exec</destfile>
-   <datafile>${basedir}/target/coverage-reports/jacoco-unit.exec</datafile>
+    <includes>
+      <include>org/fiteagle/**/*</include>
+    </includes>
+    <destfile>${basedir}/target/coverage-reports/jacoco-unit.exec</destfile>
+    <datafile>${basedir}/target/coverage-reports/jacoco-unit.exec</datafile>
   </configuration>
   <executions>
    <execution>
-    <id>jacoco-initialize</id>
-    <goals>
-     <goal>prepare-agent</goal>
-    </goals>
+     <id>jacoco-initialize</id>
+     <goals>
+       <goal>prepare-agent</goal>
+     </goals>
    </execution>
    <execution>
     <id>jacoco-site</id>
@@ -259,8 +261,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>2.3.2</version>
 					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
+						<source>1.7</source>
+						<target>1.7</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -425,7 +427,7 @@
 				<configuration>
 					<sourceEncoding>utf-8</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
-					<targetJdk>1.6</targetJdk>
+					<targetJdk>1.7</targetJdk>
 					<aggregate>true</aggregate>
 				</configuration>
 			</plugin>
