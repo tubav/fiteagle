@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
+import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
@@ -12,6 +14,7 @@ import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredenti
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 
 public interface ISFA {
 	public static final int ERRORCODE_SUCCESS = 0;
@@ -35,5 +38,7 @@ public interface ISFA {
 
 	DescribeResult describe(ArrayList<String> urns, ListCredentials credentials,
 			DescribeOptions describeOptions) throws IOException;
+  AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec,
+      AllocateOptions allocateOptions) throws IOException;
 
 }

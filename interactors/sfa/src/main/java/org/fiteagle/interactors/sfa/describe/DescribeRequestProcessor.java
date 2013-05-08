@@ -44,19 +44,19 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 		String output = "";
 		AMCode returnCode = null;
 		
-//		Authorization auth = new Authorization();
-//		
-//		auth.checkCredentialsList(credentials);
-//		
+		Authorization auth = new Authorization();
+		
+		auth.checkCredentialsList(credentials);
+		
 		DescribeResult result = new DescribeResult();
-//		
-//		if(!auth.areCredentialTypeAndVersionValid()){
-//			returnCode=auth.getReturnCode();
-//			output=auth.getAuthorizationFailMessage();
-//			result.setCode(returnCode);
-//			result.setOutput(output);
-//			return result;
-//		}
+		
+		if(!auth.areCredentialTypeAndVersionValid()){
+			returnCode=auth.getReturnCode();
+			output=auth.getAuthorizationFailMessage();
+			result.setCode(returnCode);
+			result.setOutput(output);
+			return result;
+		}
 		
 		this.optionsService=new DescribeOptionsService(options);
 		
@@ -75,7 +75,6 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 		returnCode = getSuccessReturnCode();
 		
 		result.setCode(returnCode);
-//		result.setOutput(output);
 		result.setValue(getResultValue(urns));
 		return result;
 		
@@ -98,11 +97,6 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 
 
 
-	private AMCode getSuccessReturnCode() {
-		AMCode succesReturnCode = new AMCode();
-		succesReturnCode.setGeni_code(GENI_CodeEnum.SUCCESS);
-		return succesReturnCode;
-	}
 
 
 

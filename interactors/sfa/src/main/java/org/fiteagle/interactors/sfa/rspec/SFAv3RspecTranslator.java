@@ -14,9 +14,9 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
+import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.describe.DescribeValue;
-import org.fiteagle.interactors.sfa.describe.GeniSlivers;
 
 public class SFAv3RspecTranslator {
 

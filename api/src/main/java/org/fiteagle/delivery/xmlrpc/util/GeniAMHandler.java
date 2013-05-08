@@ -1,23 +1,33 @@
 package org.fiteagle.delivery.xmlrpc.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import org.fiteagle.interactors.sfa.ISFA;
 import org.fiteagle.interactors.sfa.SFAInteractor_v3;
+import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
+import org.fiteagle.interactors.sfa.common.GeniEndTimeoption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.slf4j.Logger;
 
 import redstone.xmlrpc.XmlRpcArray;
@@ -84,6 +94,12 @@ public class GeniAMHandler extends SFAHandler {
 
 
 	public Object xmlStructToObject(Object from, Object to) {
+	  
+	  if (to.getClass().isAssignableFrom(String.class)) {
+      return from;
+
+    }
+	  
 		if (to.getClass().isAssignableFrom(ListResourceOptions.class)) {
 			return parseListResourcesOptions(from, to);
 
@@ -103,11 +119,48 @@ public class GeniAMHandler extends SFAHandler {
 			
 		}
 		
+		if (to.getClass().isAssignableFrom(RSpecContents.class)){
+      return parseRspecContents(from);
+      
+    }
+		
+		if (to.getClass().isAssignableFrom(AllocateOptions.class)){
+      return parseAllocateOptions(from);
+      
+    }
+		
 		throw new ParsingException();
 
 	}
 
-	private Object parseUrns(Object from) {
+	private Object parseAllocateOptions(Object from) {
+	  XmlRpcStruct allocateOptionsStruct = (XmlRpcStruct) from;
+    AllocateOptions allocateOptions = new AllocateOptions();
+    if(allocateOptionsStruct.getString("geni_end_time")!=null && allocateOptionsStruct.getString("geni_end_time").compareTo("")!=0){
+      GeniEndTimeoption geni_end_time = new GeniEndTimeoption(allocateOptionsStruct.getString("geni_end_time"));
+      allocateOptions.setGeni_end_time(geni_end_time);
+    }
+    return allocateOptions;
+  }
+
+  private Object parseRspecContents(Object from) {
+    String fromStr = (String)from;
+    InputStream fromIs = new ByteArrayInputStream(fromStr.getBytes());
+    RSpecContents rSpec = new RSpecContents();
+    JAXBContext jc;
+    try {
+//      jc = JAXBContext.newInstance( "org.fiteagle.interactors.sfa.rspec" );
+      jc = JAXBContext.newInstance(RSpecContents.class);
+      Unmarshaller u = jc.createUnmarshaller();
+      JAXBElement obj = (JAXBElement) u.unmarshal(fromIs);
+      rSpec=(RSpecContents)obj.getValue();
+    } catch (JAXBException e) {
+      throw new ParsingException();
+    }
+    return rSpec;
+  }
+
+  private Object parseUrns(Object from) {
 		XmlRpcArray urnsArray = (XmlRpcArray) from;
 		ArrayList<String> urns = new ArrayList<String>();
 		

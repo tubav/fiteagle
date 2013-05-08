@@ -1,4 +1,4 @@
-package org.fiteagle.interactors.sfa.describe;
+package org.fiteagle.interactors.sfa.common;
 
 public class GeniSlivers {
 

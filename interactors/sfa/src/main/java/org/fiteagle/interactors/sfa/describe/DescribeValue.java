@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fiteagle.interactors.sfa.common.AMValue;
+import org.fiteagle.interactors.sfa.common.GeniSlivers;
 
 public class DescribeValue extends AMValue {
 

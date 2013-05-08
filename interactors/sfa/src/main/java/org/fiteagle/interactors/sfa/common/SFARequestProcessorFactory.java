@@ -1,5 +1,6 @@
 package org.fiteagle.interactors.sfa.common;
 
+import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
@@ -20,6 +21,7 @@ public class SFARequestProcessorFactory {
 		E result = null;
 		switch(method){
 		case ALLOCATE:
+		  result = (E) new AllocateRequestProcessor();
 			break;
 		case DELETE:
 			break;
