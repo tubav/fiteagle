@@ -1,6 +1,13 @@
 package org.fiteagle.core.aaa;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 
@@ -9,32 +16,99 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
+import org.fiteagle.core.config.FiteaglePreferences;
+import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserManager;
+import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AuthenticationHandler {
 
-  private UserManager userManager;
+  private UserDBManager userManager;
   
   Logger log = LoggerFactory.getLogger(this.getClass());
 
+  FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   public AuthenticationHandler(){
-    this.userManager = new UserManager();
+    try {
+      this.userManager = new UserDBManager();
+    } catch (SQLException e) {
+     log.error(e.getMessage(),e);
+    }
   }
   public void authenticateCertificates(X509Certificate[] certificates) {
-    X509Certificate userCert = getUserCert(certificates);
-    User identifiedUser = getUserFromCert(userCert);
-    if(userCert.getSubjectX500Principal().equals(userCert.getIssuerX500Principal())){
-      log.info("self signed certificate");
-      log.info(userCert.toString());
-      verifyUserSignedCertificate(identifiedUser, userCert);
+    
+      if(certificates.length == 1){
+        X509Certificate cert= certificates[0];
+        if(cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())){
+          //self signed cert
+          User identifiedUser = getUserFromCert(cert);
+          verifyUserSignedCertificate(identifiedUser, cert);
+          
+        }else{
+          String issuerPublicKey = getPublicKeyForIssuer(cert.getIssuerX500Principal());
+          
+          //Caveeats :
+          //Identify issuer, getIssuerCert from keystore, issuerCert = ca? or chained aswell ? make this recursive?? 
+          verifyCertificateWithPublicKey(cert, issuerPublicKey);
+        }
+      }else{
+        
+      }
+//    
+//    X509Certificate userCert = getUserCert(certificates);
+//    User identifiedUser = getUserFromCert(userCert);
+//    if(userCert.getSubjectX500Principal().equals(userCert.getIssuerX500Principal())){
+//      log.info("self signed certificate");
+//      log.info(userCert.toString());
+//      verifyUserSignedCertificate(identifiedUser, userCert);
+//      
+//    }else{
+//      log.info("someone else signed this");
+//      KeyStore keystore = getKeyStore();
+//      log.info(userCert.getIssuerX500Principal().getName());
+//     // keystore.
+//    }
+  }
+  
+  
+  //TODO runtime exceptions 
+  
+  private String getPublicKeyForIssuer(X500Principal issuerX500Principal) {
+    X509Certificate issuerCert = getIssuerCert(issuerX500Principal);
+   return null;
+  }
+  private X509Certificate getIssuerCert(X500Principal issuerX500Principal) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  private KeyStore getKeyStore() {
+      KeyStore ks = null;
+      try {
+        ks = KeyStore.getInstance(KeyStore.getDefaultType());
+        char[] password = preferences.get("keystore_pass").toCharArray();
+        
+        FileInputStream fis = fis = new java.io.FileInputStream(preferences.get("keystore"));
+        ks.load(fis, password);
+      } catch (KeyStoreException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (FileNotFoundException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (NoSuchAlgorithmException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (CertificateException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return ks;
       
-    }else{
-      log.info("someone else signed this");
-      log.info(userCert.getIssuerX500Principal().getName());
-    }
   }
   private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate)  {
     boolean verified = false;
@@ -67,7 +141,7 @@ public class AuthenticationHandler {
     X500Principal prince = userCert.getSubjectX500Principal();
     String userName = getCN(prince);
     try {
-      User identifiedUser = userManager.getUserById(userName);
+      User identifiedUser = userManager.get(userName);
       return identifiedUser;
     } catch (SQLException e) {
       throw new UserNotFound();

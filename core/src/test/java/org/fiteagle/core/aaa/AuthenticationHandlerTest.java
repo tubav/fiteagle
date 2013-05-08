@@ -2,9 +2,12 @@ package org.fiteagle.core.aaa;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -51,5 +54,6 @@ public class AuthenticationHandlerTest {
     authHandler.authenticateCertificates(testCertificateArray);
     
   }
+  
   
 }

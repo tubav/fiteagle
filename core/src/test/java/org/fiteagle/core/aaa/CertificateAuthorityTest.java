@@ -9,19 +9,19 @@ import java.security.cert.X509Certificate;
 import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserManager;
+import org.fiteagle.core.userdatabase.UserDBManager;
 import org.junit.Before;
 import org.junit.Test;
 
 public class CertificateAuthorityTest {
   CertificateAuthority CA ;
-  UserManager um;
+  UserDBManager um;
   User dummyUser ;
   @Before
   public void setUp() throws Exception {
     CA = new CertificateAuthority();
-    um = new UserManager();
-    dummyUser = um.getUserById("fiteagle.av.test");
+    um = new UserDBManager();
+    dummyUser = um.get("fiteagle.av.test");
   }
   
   
