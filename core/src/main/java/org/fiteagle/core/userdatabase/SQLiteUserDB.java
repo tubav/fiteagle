@@ -53,6 +53,7 @@ public class SQLiteUserDB implements UserDB {
 
 	private void createTableUsers() throws SQLException {
 		Statement st = connection.createStatement();
+		//todo @mitja: use "CREATE TABLE IF NOT EXISTS" instead
 		try{
 			st.executeUpdate("CREATE TABLE Users (UID, firstName, lastName, PRIMARY KEY (UID))");
 		}catch(SQLException e){
