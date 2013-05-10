@@ -188,6 +188,9 @@ public class SFAv3RspecTranslator {
 		testGeniSlivers1.setGeni_allocation_status("geni_provisioned");
 		testGeniSlivers1.setGeni_operational_status("geni_ready");
 		
+		result.add(testGeniSlivers1);
+		result.add(testGeniSlivers2);
+		
 		return result;
 	}
 

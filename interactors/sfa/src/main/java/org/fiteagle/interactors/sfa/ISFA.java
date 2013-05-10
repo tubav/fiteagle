@@ -14,6 +14,8 @@ import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredenti
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
+import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 
 public interface ISFA {
@@ -40,5 +42,7 @@ public interface ISFA {
 			DescribeOptions describeOptions) throws IOException;
   AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec,
       AllocateOptions allocateOptions) throws IOException;
+  ProvisionResult provision(ArrayList<String> urns, ListCredentials credentials, ProvisionOptions provisionOptions)
+      throws IOException;
 
 }

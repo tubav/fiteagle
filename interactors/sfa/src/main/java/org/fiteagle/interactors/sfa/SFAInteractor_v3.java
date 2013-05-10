@@ -23,6 +23,9 @@ import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
+import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
+import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +98,16 @@ public class SFAInteractor_v3 implements ISFA {
     SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
     AllocateRequestProcessor allocateRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.ALLOCATE);
     AllocateResult result = allocateRequestProcessor.processRequest(urn, credentials, requestRspec, allocateOptions);
+    return result;
+    
+  }
+  
+  @Override
+  public ProvisionResult provision(ArrayList<String> urns, ListCredentials credentials, ProvisionOptions provisionOptions) throws IOException {
+    
+    SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    ProvisionRequestProcessor provisionRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.PROVISION);
+    ProvisionResult result = provisionRequestProcessor.processRequest(urns, credentials, provisionOptions);
     return result;
     
   }

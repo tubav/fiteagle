@@ -21,11 +21,15 @@ import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
+import org.fiteagle.interactors.sfa.common.GeniBestEffortOption;
 import org.fiteagle.interactors.sfa.common.GeniEndTimeoption;
+import org.fiteagle.interactors.sfa.common.GeniUser;
+import org.fiteagle.interactors.sfa.common.GeniUserList;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.slf4j.Logger;
 
@@ -128,8 +132,87 @@ public class GeniAMHandler extends SFAHandler {
       
     }
     
+    if (to.getClass().isAssignableFrom(ProvisionOptions.class)){
+      return parseprovisionOptions(from);
+      
+    }
+    
     throw new ParsingException();
 
+  }
+
+  private Object parseprovisionOptions(Object from) {
+    XmlRpcStruct provisionOptionsStruct = (XmlRpcStruct) from;
+    ProvisionOptions provisionOptions = new ProvisionOptions();
+    if(provisionOptionsStruct.getString("geni_end_time")!=null && provisionOptionsStruct.getString("geni_end_time").compareTo("")!=0){
+      GeniEndTimeoption geni_end_time = new GeniEndTimeoption(provisionOptionsStruct.getString("geni_end_time"));
+      provisionOptions.setGeni_end_time(geni_end_time);
+    }
+    if(provisionOptionsStruct.getString("geni_best_effort")!=null && provisionOptionsStruct.getString("geni_best_effort").compareTo("")!=0){
+      GeniBestEffortOption geni_best_effort = new GeniBestEffortOption(provisionOptionsStruct.getBoolean("geni_best_effort"));
+      provisionOptions.setGeni_best_effort(geni_best_effort);
+    }
+    
+    if(provisionOptionsStruct.getString("geni_end_time")!=null && provisionOptionsStruct.getString("geni_end_time").compareTo("")!=0){
+      GeniEndTimeoption geni_end_time = new GeniEndTimeoption(provisionOptionsStruct.getString("geni_end_time"));
+      provisionOptions.setGeni_end_time(geni_end_time);
+    }
+    
+    XmlRpcStruct geni_rspec_version_struct = provisionOptionsStruct.getStruct("geni_rspec_version");
+    if (geni_rspec_version_struct != null) {
+      Geni_RSpec_Version geni_RSpec_Version = getGeniRspecVersionFromStruct(geni_rspec_version_struct);
+      provisionOptions.setGeni_rspec_version(geni_RSpec_Version);
+    }
+    
+    if(provisionOptionsStruct.getArray("geni_users")!=null){
+      GeniUserList geni_users = getGeniUsers(provisionOptionsStruct.getArray("geni_users"));
+      provisionOptions.setGeni_users(geni_users);
+    }
+    
+    
+    
+    return provisionOptions;
+  }
+
+  private GeniUserList getGeniUsers(XmlRpcArray array) {
+    
+    GeniUserList geniUSers= new GeniUserList();
+    
+    if (array.size() > 0) {
+      for (int i = 0; i < array.size(); i++) {
+        Object tmptest = array.get(i);
+        Class<? extends Object> tmttestClass = tmptest.getClass();
+        XmlRpcStruct userStruct = (XmlRpcStruct) array
+            .get(i);
+        GeniUser geniUser = new GeniUser();
+        if (userStruct.getString("urn") != null) {
+          geniUser.setUrn(userStruct.getString("urn"));
+        }
+        
+        if (userStruct.getArray("keys") != null) {
+          
+          
+          XmlRpcArray keysInStruct = userStruct.getArray("keys");
+          ArrayList<String> keys = new ArrayList<String>();
+          
+          for (int j = 0; j < keysInStruct.size(); j++) {
+            String key = keysInStruct
+                .getString(j);
+            
+            keys.add(key);
+
+          }
+          geniUser.setKeys(keys);
+        }
+        
+        
+        
+        geniUSers.addUser(geniUser);
+
+      }
+    }
+    
+    return geniUSers;
   }
 
   private Object parseAllocateOptions(Object from) {
@@ -177,15 +260,22 @@ public class GeniAMHandler extends SFAHandler {
     XmlRpcStruct geni_rspec_version_struct = describeOptionsStruct.getStruct("geni_rspec_version");
     
     if (geni_rspec_version_struct != null) {
-      String type = geni_rspec_version_struct.getString("type");
-      String version = geni_rspec_version_struct.getString("version");
-      Geni_RSpec_Version geni_RSpec_Version = new Geni_RSpec_Version();
-      geni_RSpec_Version.setType(type);
-      geni_RSpec_Version.setVersion(version);
+      Geni_RSpec_Version geni_RSpec_Version = getGeniRspecVersionFromStruct(geni_rspec_version_struct);
       describeOptions.setGeni_rspec_version(geni_RSpec_Version);
     }
     
     return describeOptions;
+  }
+  
+  
+  private Geni_RSpec_Version getGeniRspecVersionFromStruct(XmlRpcStruct geni_rspec_version_struct){
+    String type = geni_rspec_version_struct.getString("type");
+    String version = geni_rspec_version_struct.getString("version");
+    Geni_RSpec_Version geni_RSpec_Version = new Geni_RSpec_Version();
+    geni_RSpec_Version.setType(type);
+    geni_RSpec_Version.setVersion(version);
+    
+    return geni_RSpec_Version;
   }
 
   private Object parseListCredentials(Object from, Object to) {
