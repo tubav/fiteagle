@@ -40,29 +40,14 @@ public class SQLiteUserDB implements UserDB {
 
   private void createTableKeys() throws SQLException {
 		Statement st = connection.createStatement();
-		try{
-			st.executeUpdate("CREATE TABLE Keys (UID, key)");
-		}catch(SQLException e){
-			if(!e.getMessage().equals("table Keys already exists")){
-				throw e;
-			}
-		}finally{
-			st.close();
-		}
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Keys (UID, key)");
+		st.close();
 	}
 
 	private void createTableUsers() throws SQLException {
 		Statement st = connection.createStatement();
-		//todo @mitja: use "CREATE TABLE IF NOT EXISTS" instead
-		try{
-			st.executeUpdate("CREATE TABLE Users (UID, firstName, lastName, PRIMARY KEY (UID))");
-		}catch(SQLException e){
-			if(!e.getMessage().equals("table Users already exists")){
-				throw e;
-			}
-		} finally{
-			st.close();
-		}
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName, PRIMARY KEY (UID))");
+		st.close();
 	}
 	
 	private void getConnection() throws SQLException{
