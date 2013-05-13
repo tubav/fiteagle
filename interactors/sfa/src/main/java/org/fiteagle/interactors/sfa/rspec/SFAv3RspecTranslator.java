@@ -14,9 +14,9 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
+import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.describe.DescribeValue;
-import org.fiteagle.interactors.sfa.describe.GeniSlivers;
 
 public class SFAv3RspecTranslator {
 
@@ -187,6 +187,9 @@ public class SFAv3RspecTranslator {
 		testGeniSlivers1.setGeni_expires("2019-09-22T12:00:00Z");
 		testGeniSlivers1.setGeni_allocation_status("geni_provisioned");
 		testGeniSlivers1.setGeni_operational_status("geni_ready");
+		
+		result.add(testGeniSlivers1);
+		result.add(testGeniSlivers2);
 		
 		return result;
 	}

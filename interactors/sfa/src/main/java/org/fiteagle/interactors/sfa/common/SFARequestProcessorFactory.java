@@ -1,10 +1,12 @@
 package org.fiteagle.interactors.sfa.common;
 
+import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
+import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 
 public class SFARequestProcessorFactory {
 
@@ -20,6 +22,7 @@ public class SFARequestProcessorFactory {
 		E result = null;
 		switch(method){
 		case ALLOCATE:
+		  result = (E) new AllocateRequestProcessor();
 			break;
 		case DELETE:
 			break;
@@ -32,6 +35,7 @@ public class SFARequestProcessorFactory {
 		case PERFORM_OPERATIONAL_ACTION:
 			break;
 		case PROVISION:
+		  result = (E) new ProvisionRequestProcessor();
 			break;
 		case RENEW:
 			break;

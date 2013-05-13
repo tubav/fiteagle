@@ -30,6 +30,15 @@ public abstract class SFAv3RequestProcessor {
 		
 		return output;
 	}
+	
+	protected AMCode getSuccessReturnCode() {
+    AMCode succesReturnCode = new AMCode();
+    succesReturnCode.setGeni_code(GENI_CodeEnum.SUCCESS);
+    return succesReturnCode;
+  }
+	
+	
+	
 
 	
 }

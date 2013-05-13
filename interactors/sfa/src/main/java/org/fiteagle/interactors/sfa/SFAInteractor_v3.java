@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
+import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
+import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -20,6 +23,10 @@ import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
+import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
+import org.fiteagle.interactors.sfa.provision.ProvisionResult;
+import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +90,26 @@ public class SFAInteractor_v3 implements ISFA {
   public String getCredential(String credential, String xrn, String type) {
 	  // TODO implement the get credentials. check access rights etc for the type.
 	  return this.getSelfCredential("", xrn, type);
+  }
+  
+  @Override
+  public AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec, AllocateOptions allocateOptions) throws IOException {
+    
+    SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    AllocateRequestProcessor allocateRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.ALLOCATE);
+    AllocateResult result = allocateRequestProcessor.processRequest(urn, credentials, requestRspec, allocateOptions);
+    return result;
+    
+  }
+  
+  @Override
+  public ProvisionResult provision(ArrayList<String> urns, ListCredentials credentials, ProvisionOptions provisionOptions) throws IOException {
+    
+    SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    ProvisionRequestProcessor provisionRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.PROVISION);
+    ProvisionResult result = provisionRequestProcessor.processRequest(urns, credentials, provisionOptions);
+    return result;
+    
   }
 
   
