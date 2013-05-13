@@ -15,7 +15,7 @@ import org.fiteagle.core.config.FiteaglePreferencesXML;
 
 public class SQLiteUserDB implements UserDB {
   
-  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.dir")+"/.fiteagle/db/";
+  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
 
 	private Connection connection = null;	
 	
