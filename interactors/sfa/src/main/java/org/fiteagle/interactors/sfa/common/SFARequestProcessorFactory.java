@@ -1,12 +1,14 @@
 package org.fiteagle.interactors.sfa.common;
 
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
+import org.fiteagle.interactors.sfa.delete.DeleteRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
+import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
 
 public class SFARequestProcessorFactory {
 
@@ -25,6 +27,7 @@ public class SFARequestProcessorFactory {
 		  result = (E) new AllocateRequestProcessor();
 			break;
 		case DELETE:
+		  result = (E) new DeleteRequestProcessor();
 			break;
 		case DESCRIBE:
 			result = (E) new DescribeRequestProcessor();
@@ -45,6 +48,7 @@ public class SFARequestProcessorFactory {
 			result = (E) new GetSelfCredentialRequestProcessor();
 			break;
 		case STATUS:
+		  result = (E) new StatusRequestProcessor();
 			break;
 		case GET_VERSION:
 			result = (E) new GetVersionRequestProcessor();

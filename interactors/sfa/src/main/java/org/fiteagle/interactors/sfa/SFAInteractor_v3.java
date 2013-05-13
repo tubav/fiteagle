@@ -2,22 +2,21 @@ package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMCode;
-import org.fiteagle.interactors.sfa.common.AMResult;
-import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFARequestProcessorFactory;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
+import org.fiteagle.interactors.sfa.delete.DeleteOptions;
+import org.fiteagle.interactors.sfa.delete.DeleteRequestProcessor;
+import org.fiteagle.interactors.sfa.delete.DeleteResult;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
-import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
@@ -27,6 +26,9 @@ import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.status.StatusOptions;
+import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
+import org.fiteagle.interactors.sfa.status.StatusResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,8 +113,30 @@ public class SFAInteractor_v3 implements ISFA {
     return result;
     
   }
-
   
+  @Override
+  public StatusResult status(ArrayList<String> urns, ListCredentials credentials,
+      StatusOptions statusOptions) throws IOException {
+    
+    SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    StatusRequestProcessor statusRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.STATUS);
+    StatusResult result = statusRequestProcessor.processRequest(urns, credentials, statusOptions);
+    
+    return result;
+    
+  }
+
+  @Override
+  public DeleteResult delete(ArrayList<String> urns, ListCredentials credentials,
+      DeleteOptions deleteOptions) throws IOException {
+    
+    SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    DeleteRequestProcessor deleteRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.DELETE);
+    DeleteResult result = deleteRequestProcessor.processRequest(urns, credentials, deleteOptions);
+    
+    return result;
+    
+  }
 
 
 
