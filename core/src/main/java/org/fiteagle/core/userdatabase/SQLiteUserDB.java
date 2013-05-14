@@ -147,11 +147,11 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(User u, String key) throws SQLException {
-		if(!get(u).getPublicKeys().contains(key)){
+	public void addKey(String UID, String key) throws SQLException {
+		if(!get(UID).getPublicKeys().contains(key)){
 			ArrayList<String> keys = new ArrayList<String>();			
 			keys.add(key);
-			addKeysToDatabase(u.getUID(),keys);
+			addKeysToDatabase(UID,keys);
 			connection.commit();
 		}		
 	}

@@ -81,14 +81,14 @@ public class UserDBTest {
 	@Test
 	public void testAddKey() throws SQLException{
 		database.add(USER1);		
-		database.addKey(USER1, KEYS2.get(0));
+		database.addKey(USER1.getUID(), KEYS2.get(0));
 		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(2));
 	}
 		
 	@Test
 	public void testAddDuplicateKeys() throws SQLException{
 		database.add(USER1);		
-		database.addKey(USER1, KEYS1.get(0));
+		database.addKey(USER1.getUID(), KEYS1.get(0));
 		assertTrue(USER1.equals(database.get(USER1)));
 	}
 	
