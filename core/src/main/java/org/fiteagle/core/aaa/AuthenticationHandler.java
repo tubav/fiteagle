@@ -1,15 +1,24 @@
 package org.fiteagle.core.aaa;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.KeyStore;
+import java.lang.reflect.Array;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertPathValidatorResult;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.PKIXCertPathValidatorResult;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
@@ -26,18 +35,19 @@ import org.slf4j.LoggerFactory;
 public class AuthenticationHandler {
 
   private UserDBManager userManager;
-  
+  private KeyStoreManagement keyStoreManagement;
   Logger log = LoggerFactory.getLogger(this.getClass());
 
   FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   public AuthenticationHandler(){
     try {
       this.userManager = new UserDBManager();
+      this.keyStoreManagement = new KeyStoreManagement();
     } catch (SQLException e) {
      log.error(e.getMessage(),e);
     }
   }
-  public void authenticateCertificates(X509Certificate[] certificates) {
+  public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException {
     
       if(certificates.length == 1){
         X509Certificate cert= certificates[0];
@@ -45,31 +55,57 @@ public class AuthenticationHandler {
           //self signed cert
           User identifiedUser = getUserFromCert(cert);
           verifyUserSignedCertificate(identifiedUser, cert);
+          signAndStoreCertificate(identifiedUser);
           
         }else{
-          String issuerPublicKey = getPublicKeyForIssuer(cert.getIssuerX500Principal());
-          
-          //Caveeats :
-          //Identify issuer, getIssuerCert from keystore, issuerCert = ca? or chained aswell ? make this recursive?? 
-          verifyCertificateWithPublicKey(cert, issuerPublicKey);
-        }
+            X500Principal issuerX500Principal = cert.getIssuerX500Principal();
+            PublicKey issuerPublicKey = getTrustedIssuerPublicKey(issuerX500Principal);
+            
+            verifyCertificateWithPublicKey(cert, issuerPublicKey);
+          }
+ 
+         
+        
       }else{
         
       }
-//    
-//    X509Certificate userCert = getUserCert(certificates);
-//    User identifiedUser = getUserFromCert(userCert);
-//    if(userCert.getSubjectX500Principal().equals(userCert.getIssuerX500Principal())){
-//      log.info("self signed certificate");
-//      log.info(userCert.toString());
-//      verifyUserSignedCertificate(identifiedUser, userCert);
-//      
-//    }else{
-//      log.info("someone else signed this");
-//      KeyStore keystore = getKeyStore();
-//      log.info(userCert.getIssuerX500Principal().getName());
-//     // keystore.
-//    }
+    
+//    PKIXParameters params = new PKIXParameters(keyStoreManagement.loadKeyStore());
+//
+//    params.setRevocationEnabled(false);
+//
+//    CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator
+//        .getDefaultType());
+//    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+//    CertPath certPath = cf.generateCertPath(Arrays.asList(certificates));
+//    CertPathValidatorResult result = certPathValidator.validate(certPath, params);
+//
+//    PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
+//    TrustAnchor ta = pkixResult.getTrustAnchor();
+//    X509Certificate cert = ta.getTrustedCert();
+  }
+  private PublicKey getTrustedIssuerPublicKey(X500Principal issuerX500Principal) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+      List<X509Certificate> storedCerts = keyStoreManagement.getTrustedCerts();
+      for(X509Certificate cert : storedCerts){
+        if(!isUserCertificate(cert)){
+            if(cert.getSubjectX500Principal().equals(issuerX500Principal)){
+              return cert.getPublicKey();
+            }
+        } 
+      }
+      throw new CertificateNotTrustedException();
+  }
+ 
+  private void signAndStoreCertificate(User identifiedUser) {
+    CertificateAuthority ca = new CertificateAuthority();
+    X509Certificate saveCert;
+    try {
+      saveCert = ca.createCertificate(identifiedUser);
+      keyStoreManagement.storeCertificate(identifiedUser.getUID(),saveCert);
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
   }
   
   
@@ -83,55 +119,35 @@ public class AuthenticationHandler {
     // TODO Auto-generated method stub
     return null;
   }
-  private KeyStore getKeyStore() {
-      KeyStore ks = null;
-      try {
-        ks = KeyStore.getInstance(KeyStore.getDefaultType());
-        char[] password = preferences.get("keystore_pass").toCharArray();
-        
-        FileInputStream fis = fis = new java.io.FileInputStream(preferences.get("keystore"));
-        ks.load(fis, password);
-      } catch (KeyStoreException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (FileNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (NoSuchAlgorithmException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (CertificateException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      return ks;
-      
-  }
+//  
   private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate)  {
     boolean verified = false;
     for(String pubKeyString: identifiedUser.getPublicKeys()){
-      
-      verified = verifyCertificateWithPublicKey(certificate,pubKeyString);
+      KeyDecoder keydecoder = new KeyDecoder();
+      PublicKey pubKey = null;
+      try {
+        pubKey = keydecoder.decodePublicKey(pubKeyString);
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      verified = verifyCertificateWithPublicKey(certificate,pubKey);
       if(verified){
         return ;
       }
     }
-    throw new RuntimeException();
+    throw new KeyDoesNotMatchException();
   }
   
   //method made public for unittesting
-  public boolean verifyCertificateWithPublicKey(X509Certificate certificate, String pubKeyString) {
-    KeyDecoder keyDecoder = new KeyDecoder();
+  public boolean verifyCertificateWithPublicKey(X509Certificate certificate, PublicKey pubKey) {
    
     try {
-      PublicKey key =keyDecoder.decodePublicKey(pubKeyString);
-      certificate.verify(key);
+      
+      certificate.verify(pubKey);
       return true;
     } catch (Exception e){
-        return false;
+        throw new KeyDoesNotMatchException();
     }
   
   }
@@ -144,7 +160,7 @@ public class AuthenticationHandler {
       User identifiedUser = userManager.get(userName);
       return identifiedUser;
     } catch (SQLException e) {
-      throw new UserNotFound();
+      throw new DatabaseException();
     }
   }
 
@@ -180,7 +196,8 @@ public class AuthenticationHandler {
   }
 
   private boolean isUserCertificate(X509Certificate x509Certificate) {
-     if(x509Certificate.getBasicConstraints() == -1){
+     
+    if(x509Certificate.getBasicConstraints() == -1){
        return true;
      }
      else{
@@ -201,9 +218,22 @@ public class AuthenticationHandler {
     
   }
   
-  private class UserNotFound extends RuntimeException {
+  public class DatabaseException extends RuntimeException {
 
     private static final long serialVersionUID = -8002909402748409082L;
+    
+  }
+  
+  public class KeyDoesNotMatchException extends RuntimeException{
+    
+    private static final long serialVersionUID = -6825126254061827637L;
+    
+  }
+  
+  public class CertificateNotTrustedException extends RuntimeException {
+
+   
+    private static final long serialVersionUID = 6120670655966336971L;
     
   }
   

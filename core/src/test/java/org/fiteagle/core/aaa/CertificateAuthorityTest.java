@@ -1,9 +1,5 @@
 package org.fiteagle.core.aaa;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.PrivateKey;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import junit.framework.Assert;
@@ -24,20 +20,7 @@ public class CertificateAuthorityTest {
     dummyUser = um.get("fiteagle.av.test");
   }
   
-  
-  @Test
-  public void testReadCACert() throws IOException, CertificateException{
-    X509Certificate caCert = CA.readCACert();
-    System.out.println(caCert.toString());
-    Assert.assertNotNull(caCert);
-  }
-  
-  @Test 
-  public void testReadPrivateKey() throws IOException, GeneralSecurityException{
-    PrivateKey pkey = CA.readCAPrivateKey();
-    System.out.println(pkey.toString());
-    Assert.assertNotNull(pkey);
-   }
+ 
   @Test
   public void testCreateCertificateForDummyUser() throws Exception {
     X509Certificate userCert =   CA.createCertificate(dummyUser);
