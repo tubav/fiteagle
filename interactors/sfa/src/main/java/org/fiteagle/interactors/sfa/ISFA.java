@@ -8,6 +8,8 @@ import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
+import org.fiteagle.interactors.sfa.delete.DeleteOptions;
+import org.fiteagle.interactors.sfa.delete.DeleteResult;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
@@ -17,6 +19,8 @@ import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.status.StatusOptions;
+import org.fiteagle.interactors.sfa.status.StatusResult;
 
 public interface ISFA {
 	public static final int ERRORCODE_SUCCESS = 0;
@@ -43,6 +47,10 @@ public interface ISFA {
   AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec,
       AllocateOptions allocateOptions) throws IOException;
   ProvisionResult provision(ArrayList<String> urns, ListCredentials credentials, ProvisionOptions provisionOptions)
+      throws IOException;
+  StatusResult status(ArrayList<String> urns, ListCredentials credentials, StatusOptions statusOptions)
+      throws IOException;
+  DeleteResult delete(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions)
       throws IOException;
 
 }

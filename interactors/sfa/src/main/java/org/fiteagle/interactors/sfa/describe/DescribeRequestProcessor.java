@@ -83,7 +83,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 
 
 	private DescribeValue getResultValue(List<String> urns) {
-		//TODO: static test values only.
+		//TODO: static test values only. Slice management is missing
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 		DescribeValue describeValue = translator.getDescription(urns);
 		String rspecStr = (String) describeValue.getGeni_rspec();

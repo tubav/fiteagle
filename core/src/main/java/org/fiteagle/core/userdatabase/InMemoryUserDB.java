@@ -55,8 +55,9 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(User u, String key) throws RecordNotFoundException {
-		if((u=users.get(u.getUID())) == null)
+	public void addKey(String UID, String key) throws RecordNotFoundException {
+	  User u;
+		if((u=users.get(UID)) == null)
 			throw new RecordNotFoundException();
 		u.addPublicKey(key);
 		update(u);

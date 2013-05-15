@@ -183,10 +183,10 @@ public class SFAv3RspecTranslator {
 		testGeniSlivers1.setGeni_operational_status("geni_pending_allocation");
 
 		GeniSlivers testGeniSlivers2 = new GeniSlivers();
-		testGeniSlivers1.setGeni_sliver_urn("urn:publicid:IDN+fiteagletest+sliver+123457");
-		testGeniSlivers1.setGeni_expires("2019-09-22T12:00:00Z");
-		testGeniSlivers1.setGeni_allocation_status("geni_provisioned");
-		testGeniSlivers1.setGeni_operational_status("geni_ready");
+		testGeniSlivers2.setGeni_sliver_urn("urn:publicid:IDN+fiteagletest+sliver+123457");
+		testGeniSlivers2.setGeni_expires("2019-09-22T12:00:00Z");
+		testGeniSlivers2.setGeni_allocation_status("geni_provisioned");
+		testGeniSlivers2.setGeni_operational_status("geni_ready");
 		
 		result.add(testGeniSlivers1);
 		result.add(testGeniSlivers2);

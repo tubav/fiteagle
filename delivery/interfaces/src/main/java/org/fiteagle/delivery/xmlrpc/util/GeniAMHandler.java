@@ -27,10 +27,12 @@ import org.fiteagle.interactors.sfa.common.GeniUser;
 import org.fiteagle.interactors.sfa.common.GeniUserList;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
+import org.fiteagle.interactors.sfa.delete.DeleteOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.slf4j.Logger;
 
 import redstone.xmlrpc.XmlRpcArray;
@@ -137,8 +139,32 @@ public class GeniAMHandler extends SFAHandler {
       
     }
     
+    if (to.getClass().isAssignableFrom(StatusOptions.class)){
+      return parseStatusOptions(from);
+      
+    }
+    
+    if (to.getClass().isAssignableFrom(DeleteOptions.class)){
+      return parseDeleteOptions(from);
+      
+    }
+    
     throw new ParsingException();
 
+  }
+
+  private Object parseDeleteOptions(Object from) {
+    XmlRpcStruct deleteOptionsStruct = (XmlRpcStruct) from;
+    DeleteOptions deleteOptions = new DeleteOptions();
+    if(deleteOptionsStruct.getString("geni_best_effort")!=null && deleteOptionsStruct.getString("geni_best_effort").compareTo("")!=0){
+      GeniBestEffortOption geni_best_effort = new GeniBestEffortOption(deleteOptionsStruct.getBoolean("geni_best_effort"));
+      deleteOptions.setGeni_best_effort(geni_best_effort);
+    }
+    return deleteOptions;
+  }
+
+  private Object parseStatusOptions(Object from) {
+    return new StatusOptions();
   }
 
   private Object parseprovisionOptions(Object from) {

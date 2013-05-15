@@ -46,8 +46,8 @@ public class UserDBManager {
     database.update(u);
   }
   
-  public void addKey(User u, String key) throws RecordNotFoundException, SQLException{
-    database.addKey(u, key);
+  public void addKey(String UID, String key) throws RecordNotFoundException, SQLException{
+    database.addKey(UID, key);
   }
   
   public User get(String UID) throws RecordNotFoundException, SQLException{
