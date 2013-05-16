@@ -24,3 +24,11 @@ The Framework (a dummy ReqProc for now):
 
     cd core/framework
     ./src/main/scripts/startFramework.sh
+
+Installing init script to start fiteagle automatically on server reboot
+---------------------
+
+    cd core/framework
+    sudo ./src/main/bin/installInitStartScript.sh
+    
+    
