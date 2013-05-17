@@ -80,7 +80,7 @@ public class SFAXmlRpcServletTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testGetSelfCredential() throws IOException{
 	  Writer writer = new StringWriter();
 	  InputStream inputStream = FITeagleUtils.getFileAsInputStream("/org/fiteagle/delivery/xmlrpc/sfa/getSelfCredential_request.xml");
