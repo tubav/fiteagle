@@ -150,5 +150,10 @@
 			<artifactId>not-yet-commons-ssl</artifactId>
 			<version>0.3.11</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.santuario</groupId>
+			<artifactId>xmlsec</artifactId>
+			<version>1.5.4</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -109,7 +109,19 @@ protected KeyStore loadKeyStore() throws KeyStoreException, NoSuchAlgorithmExcep
     private static final long serialVersionUID = 2842186524464171483L;
     
   }
+  public X509Certificate getStoredCertificate(String alias) {
+    try {
+      KeyStore ks = loadKeyStore();
+      return (X509Certificate) ks.getCertificate(alias);
+    } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+      throw new CertificateNotFoundException();
+    }
+  }
  
+  public class CertificateNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = -3514307715237455008L;
+    
+  }
   
   
 }

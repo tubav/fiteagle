@@ -47,13 +47,14 @@ public class AuthenticationHandler {
      log.error(e.getMessage(),e);
     }
   }
-  public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException {
+  public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException {
     
       if(certificates.length == 1){
         X509Certificate cert= certificates[0];
         if(cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())){
           //self signed cert
-          User identifiedUser = getUserFromCert(cert);
+          UserDBManager userDBManager = new UserDBManager();
+          User identifiedUser = userDBManager.getUserFromCert(cert);
           verifyUserSignedCertificate(identifiedUser, cert);
           signAndStoreCertificate(identifiedUser);
           
@@ -67,22 +68,9 @@ public class AuthenticationHandler {
          
         
       }else{
-        
+        //TODO verifyCertificateChain
       }
-    
-//    PKIXParameters params = new PKIXParameters(keyStoreManagement.loadKeyStore());
-//
-//    params.setRevocationEnabled(false);
-//
-//    CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator
-//        .getDefaultType());
-//    CertificateFactory cf = CertificateFactory.getInstance("X.509");
-//    CertPath certPath = cf.generateCertPath(Arrays.asList(certificates));
-//    CertPathValidatorResult result = certPathValidator.validate(certPath, params);
-//
-//    PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
-//    TrustAnchor ta = pkixResult.getTrustAnchor();
-//    X509Certificate cert = ta.getTrustedCert();
+
   }
   private PublicKey getTrustedIssuerPublicKey(X500Principal issuerX500Principal) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
       List<X509Certificate> storedCerts = keyStoreManagement.getTrustedCerts();
@@ -152,40 +140,7 @@ public class AuthenticationHandler {
   
   }
 
-  private User getUserFromCert(X509Certificate userCert) {
-   
-    X500Principal prince = userCert.getSubjectX500Principal();
-    String userName = getCN(prince);
-    try {
-      User identifiedUser = userManager.get(userName);
-      return identifiedUser;
-    } catch (SQLException e) {
-      throw new DatabaseException();
-    }
-  }
 
-  private String getCN(X500Principal prince) {
-    String uuid = prince.getName();
-    LdapName ldapDN = getLdapName(uuid);
-   
-    for(Rdn rdn: ldapDN.getRdns()) {
-        if(rdn.getType().equals("CN")){
-          return (String) rdn.getValue();
-        }
-    }
-    throw new NonParsableNamingFormat();
-  }
-
-  private LdapName getLdapName(String uuid) {
-    try {
-      LdapName ldapDN = new LdapName(uuid);
-      return ldapDN;
-    } catch (InvalidNameException e) {
-  
-       throw new NonParsableNamingFormat();
-    }
-   
-  }
 
   private X509Certificate getUserCert(X509Certificate[] certificates) {
     for(int i = 0 ; i< certificates.length; i++){
@@ -210,18 +165,6 @@ public class AuthenticationHandler {
     
     private static final long serialVersionUID = 6847089692886665544L;
    
-  }
-  
-  private class NonParsableNamingFormat extends RuntimeException{
-    
-    private static final long serialVersionUID = -3819932831236493248L;
-    
-  }
-  
-  public class DatabaseException extends RuntimeException {
-
-    private static final long serialVersionUID = -8002909402748409082L;
-    
   }
   
   public class KeyDoesNotMatchException extends RuntimeException{

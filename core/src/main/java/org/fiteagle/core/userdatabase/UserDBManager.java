@@ -1,8 +1,18 @@
 package org.fiteagle.core.userdatabase;
 
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
+import javax.security.auth.x500.X500Principal;
+
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
@@ -58,6 +68,59 @@ public class UserDBManager {
     return database.get(u);
   }
   
+  public User getUserFromCert(X509Certificate userCert) {
+   try {
+    String username = "";
+    Collection<List<?>> alternativeNames =  userCert.getSubjectAlternativeNames();
+    if(alternativeNames == null){
+      X500Principal prince = userCert.getSubjectX500Principal();
+      username = getCN(prince);
+    }else{
+      Iterator it = alternativeNames.iterator();
+      while(it.hasNext()){
+        List<?> altName = (List<?>) it.next();
+        if(altName.get(0).equals(Integer.valueOf(0))){
+          username = new String((byte[])altName.get(1));
+        }
+      }
+    }
+      
+    User identifiedUser = get(username);
+    return identifiedUser;
+   } catch (CertificateParsingException e1) {
+    
+   throw new NonParsableNamingFormat();
+  }
+   
+    catch (SQLException e) {
+      throw new DatabaseException();
+    }
+  }
+
+  private String getCN(X500Principal prince) {
+    String uuid = prince.getName();
+    LdapName ldapDN = getLdapName(uuid);
+   
+    for(Rdn rdn: ldapDN.getRdns()) {
+        if(rdn.getType().equals("CN")){
+          return (String) rdn.getValue();
+        }
+    }
+    throw new NonParsableNamingFormat();
+  }
+
+  private LdapName getLdapName(String uuid) {
+    try {
+      LdapName ldapDN = new LdapName(uuid);
+      return ldapDN;
+    } catch (InvalidNameException e) {
+  
+       throw new NonParsableNamingFormat();
+    }
+   
+  }
+  
+  
   private void createDummyUser() throws DuplicateUIDException, SQLException{
     
     
@@ -68,4 +131,18 @@ public class UserDBManager {
     add(dummyUser);
   }
     
+  
+
+  
+  private class NonParsableNamingFormat extends RuntimeException{
+    
+    private static final long serialVersionUID = -3819932831236493248L;
+    
+  }
+  
+  public class DatabaseException extends RuntimeException {
+
+    private static final long serialVersionUID = -8002909402748409082L;
+    
+  }
 }
