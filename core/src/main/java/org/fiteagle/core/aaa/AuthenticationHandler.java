@@ -33,84 +33,72 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AuthenticationHandler {
-
-  private UserDBManager userManager;
+  
   private KeyStoreManagement keyStoreManagement;
   Logger log = LoggerFactory.getLogger(this.getClass());
-
+  
   FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
-  public AuthenticationHandler(){
-    try {
-      this.userManager = new UserDBManager();
-      this.keyStoreManagement = new KeyStoreManagement();
-    } catch (SQLException e) {
-     log.error(e.getMessage(),e);
-    }
-  }
-  public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException {
+  
+  public AuthenticationHandler() {
     
-      if(certificates.length == 1){
-        X509Certificate cert= certificates[0];
-        if(cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())){
-          //self signed cert
-          UserDBManager userDBManager = new UserDBManager();
-          User identifiedUser = userDBManager.getUserFromCert(cert);
-          verifyUserSignedCertificate(identifiedUser, cert);
-          signAndStoreCertificate(identifiedUser);
-          
-        }else{
-            X500Principal issuerX500Principal = cert.getIssuerX500Principal();
-            PublicKey issuerPublicKey = getTrustedIssuerPublicKey(issuerX500Principal);
-            
-            verifyCertificateWithPublicKey(cert, issuerPublicKey);
-          }
- 
-         
+    this.keyStoreManagement = new KeyStoreManagement();
+    
+  }
+  
+  public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException,
+      NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException,
+      CertPathValidatorException, SQLException {
+    
+    if (certificates.length == 1) {
+      X509Certificate cert = certificates[0];
+      if (cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())) {
+        // self signed cert
+        UserDBManager userDBManager = new UserDBManager();
+        User identifiedUser = userDBManager.getUserFromCert(cert);
+        verifyUserSignedCertificate(identifiedUser, cert);
+        signAndStoreCertificate(identifiedUser);
         
-      }else{
-        //TODO verifyCertificateChain
+      } else {
+        X500Principal issuerX500Principal = cert.getIssuerX500Principal();
+        PublicKey issuerPublicKey = getTrustedIssuerPublicKey(issuerX500Principal);
+        
+        verifyCertificateWithPublicKey(cert, issuerPublicKey);
       }
-
+      
+    } else {
+      // TODO verifyCertificateChain
+    }
+    
   }
-  private PublicKey getTrustedIssuerPublicKey(X500Principal issuerX500Principal) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-      List<X509Certificate> storedCerts = keyStoreManagement.getTrustedCerts();
-      for(X509Certificate cert : storedCerts){
-        if(!isUserCertificate(cert)){
-            if(cert.getSubjectX500Principal().equals(issuerX500Principal)){
-              return cert.getPublicKey();
-            }
-        } 
+  
+  private PublicKey getTrustedIssuerPublicKey(X500Principal issuerX500Principal) throws KeyStoreException,
+      NoSuchAlgorithmException, CertificateException, IOException {
+    List<X509Certificate> storedCerts = keyStoreManagement.getTrustedCerts();
+    for (X509Certificate cert : storedCerts) {
+      if (!isUserCertificate(cert)) {
+        if (cert.getSubjectX500Principal().equals(issuerX500Principal)) {
+          return cert.getPublicKey();
+        }
       }
-      throw new CertificateNotTrustedException();
+    }
+    throw new CertificateNotTrustedException();
   }
- 
+  
   private void signAndStoreCertificate(User identifiedUser) {
     CertificateAuthority ca = new CertificateAuthority();
     X509Certificate saveCert;
     try {
       saveCert = ca.createCertificate(identifiedUser);
-      keyStoreManagement.storeCertificate(identifiedUser.getUID(),saveCert);
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      keyStoreManagement.storeCertificate(identifiedUser.getUID(), saveCert);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
   
-  
-  //TODO runtime exceptions 
-  
-  private String getPublicKeyForIssuer(X500Principal issuerX500Principal) {
-    X509Certificate issuerCert = getIssuerCert(issuerX500Principal);
-   return null;
-  }
-  private X509Certificate getIssuerCert(X500Principal issuerX500Principal) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-//  
-  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate)  {
+  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) {
     boolean verified = false;
-    for(String pubKeyString: identifiedUser.getPublicKeys()){
+    for (String pubKeyString : identifiedUser.getPublicKeys()) {
       KeyDecoder keydecoder = new KeyDecoder();
       PublicKey pubKey = null;
       try {
@@ -119,66 +107,46 @@ public class AuthenticationHandler {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      verified = verifyCertificateWithPublicKey(certificate,pubKey);
-      if(verified){
-        return ;
+      verified = verifyCertificateWithPublicKey(certificate, pubKey);
+      if (verified) {
+        return;
       }
     }
     throw new KeyDoesNotMatchException();
   }
   
-  //method made public for unittesting
+  // method made public for unittesting
   public boolean verifyCertificateWithPublicKey(X509Certificate certificate, PublicKey pubKey) {
-   
+    
     try {
       
       certificate.verify(pubKey);
       return true;
-    } catch (Exception e){
-        throw new KeyDoesNotMatchException();
+    } catch (Exception e) {
+      throw new KeyDoesNotMatchException();
     }
-  
-  }
-
-
-
-  private X509Certificate getUserCert(X509Certificate[] certificates) {
-    for(int i = 0 ; i< certificates.length; i++){
-      if(isUserCertificate(certificates[i]))
-        return certificates[i];
-    }
-    throw new NoUserCertificateProvided();
-  }
-
-  private boolean isUserCertificate(X509Certificate x509Certificate) {
-     
-    if(x509Certificate.getBasicConstraints() == -1){
-       return true;
-     }
-     else{
-       return false;
-     }
-  }
-  
-
-  private class NoUserCertificateProvided extends RuntimeException{
     
-    private static final long serialVersionUID = 6847089692886665544L;
-   
   }
   
-  public class KeyDoesNotMatchException extends RuntimeException{
+  private boolean isUserCertificate(X509Certificate x509Certificate) {
+    
+    if (x509Certificate.getBasicConstraints() == -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public class KeyDoesNotMatchException extends RuntimeException {
     
     private static final long serialVersionUID = -6825126254061827637L;
     
   }
   
   public class CertificateNotTrustedException extends RuntimeException {
-
-   
+    
     private static final long serialVersionUID = 6120670655966336971L;
     
   }
-  
   
 }

@@ -97,6 +97,13 @@ public class CertificateAuthority {
     return encodedCert;
   }
   
+  private String getCertificateBodyEncoded(X509Certificate cert) throws Exception{
+    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(),0,cert.getEncoded().length,Base64.DO_BREAK_LINES));
+    String encodedCert = new String(bout.toByteArray());
+    bout.close();
+    return encodedCert;
+  }
   
   public String getUserCertificateAsString(String certString) {
       CertificateFactory cf = getCertifcateFactory();
@@ -108,7 +115,7 @@ public class CertificateAuthority {
       X509Certificate storedCertificate = getStoredCertificate( alias);
       
       try {
-        return getCertficateEncoded(storedCertificate);
+        return getCertificateBodyEncoded(storedCertificate);
       } catch (Exception e) {
         throw new EncodeCertificateException();
       }
