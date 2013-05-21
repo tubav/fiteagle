@@ -46,7 +46,7 @@ public class SQLiteUserDB implements UserDB {
 
 	private void createTableUsers() throws SQLException {
 		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName, PRIMARY KEY (UID))");
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName,passwordHash,passwordSalt, PRIMARY KEY (UID))");
 		st.close();
 	}
 	
@@ -76,10 +76,12 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?)");
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?)");
 		ps.setString(1, u.getUID());
 		ps.setString(2, u.getFirstName());
 		ps.setString(3, u.getLastName());
+		ps.setString(4, u.getPasswordHash());
+		ps.setString(5,u.getPasswordSalt());
 		try{
 			ps.execute();
 		} catch(SQLException e){
@@ -135,10 +137,12 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=? WHERE UID=?");
+		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, passwordHash=?, passwordSalt=? WHERE UID=?");
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
-		ps.setString(3, u.getUID());
+		ps.setString(3, u.getPasswordHash());
+		ps.setString(4, u.getPasswordSalt());
+		ps.setString(5, u.getUID());
 		if(ps.executeUpdate() == 0){
 			ps.close();
 			throw new RecordNotFoundException();
@@ -166,7 +170,7 @@ public class SQLiteUserDB implements UserDB {
 	}
 	
 	private User getUserFromDatabase(String UID) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT Users.UID, Users.firstname, Users.lastname, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.UID=Keys.UID WHERE Users.UID=?");
+		PreparedStatement ps = connection.prepareStatement("SELECT Users.UID, Users.firstname, Users.lastname, Users.passwordHash, Users.passwordSalt, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.UID=Keys.UID WHERE Users.UID=?");
 		ps.setString(1, UID);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
@@ -182,14 +186,16 @@ public class SQLiteUserDB implements UserDB {
 		String UID = rs.getString(1);
 		String firstname = rs.getString(2);
 		String lastname = rs.getString(3);
-		String key1 = rs.getString(4);
+		String passwordHash = rs.getString(4);
+		String passwordSalt = rs.getString(5);
+		String key1 = rs.getString(6);
 		if(key1 != null){
 			keys.add(key1);
 		}
 		while(rs.next()){		
 			keys.add(rs.getString(4));
 		}			
-		return new User(UID, firstname, lastname, keys);
+		return new User(UID, firstname, lastname,passwordHash,passwordSalt, keys);
 	}
 
 	@Override

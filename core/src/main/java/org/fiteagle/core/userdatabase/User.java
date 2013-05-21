@@ -8,13 +8,17 @@ public class User {
 	private String UID;
 	private String firstName;
 	private String lastName;
+	private String passwordHash;
+	private String passwordSalt;
 	private List<String> publicKeys;
 
-	public User(String UID, String firstName, String lastName, List<String> publicKeys){
+	public User(String UID, String firstName, String lastName, String passwordHash, String passwordSalt, List<String> publicKeys){
 		this.UID = UID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.publicKeys = publicKeys;
+		this.passwordHash = passwordHash;
+		this.passwordSalt =  passwordSalt;
 	}
 	
 	public User(String UID, String firstName, String lastName, String publicKey){
@@ -100,5 +104,13 @@ public class User {
   public String toString() {
     return "User [UID=" + UID + ", firstName=" + firstName + ", lastName="
         + lastName + ", publicKeys=" + publicKeys + "]";
+  }
+
+  public String getPasswordHash() {
+    return passwordHash;
+  }
+
+  public String getPasswordSalt() {
+    return passwordSalt;
   }
 }
