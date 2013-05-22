@@ -25,15 +25,26 @@ import org.slf4j.LoggerFactory;
 public class KeyStoreManagement {
 private FiteaglePreferences preferences;
 private Logger log = LoggerFactory.getLogger(getClass()); 
+private final String DEFAULT_KEYSTORE_LOCATION=System.getProperty("user.home")+System.getProperty("file.separator")+"fiteagle"+System.getProperty("file.separator")+"jetty-ssl.keystore";
+private final String DEFAULT_KEYSTORE_PASSWORD = "jetty6";
+private final String DEFAULT_CA_ALIAS ="root";
 public KeyStoreManagement(){
   this.preferences = new FiteaglePreferencesXML(this.getClass());
+  if(preferences.get("CAAlias") == null){
+    preferences.put("CAAlias", DEFAULT_CA_ALIAS);
+  }
+  if(preferences.get("keystore_pass") == null){
+    preferences.put("keystore_pass", DEFAULT_KEYSTORE_PASSWORD);
+  }
+  if(preferences.get("keystore") == null){
+    preferences.put("keystore", DEFAULT_KEYSTORE_LOCATION);
+  }
+  
 }
   
 
 protected KeyStore loadKeyStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{
-    if(preferences == null)
-      createPreferences();
-    
+   
     KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
     FileInputStream fis = new FileInputStream(getKeyStorePath());
     char[] pass = getPassword();
@@ -41,10 +52,7 @@ protected KeyStore loadKeyStore() throws KeyStoreException, NoSuchAlgorithmExcep
     return ks;
   }
   
-  void createPreferences() {
-    preferences = new FiteaglePreferencesXML(getClass());
-    
-  }
+  
 
 
   protected void storeCertificate(String alias, X509Certificate cert) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -58,9 +66,7 @@ protected KeyStore loadKeyStore() throws KeyStoreException, NoSuchAlgorithmExcep
   }
   
   private String getCAAlias() {
-    if(preferences == null)
-         createPreferences();
-  
+   
     String alias = preferences.get("CAAlias");
     return alias;
   }

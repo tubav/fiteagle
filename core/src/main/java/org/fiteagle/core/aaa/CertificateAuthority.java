@@ -41,7 +41,7 @@ public class CertificateAuthority {
 
  
   
-  FiteaglePreferences preferences = null;
+ 
   private KeyStoreManagement keyStoreManagement = new KeyStoreManagement();
   
   public X509Certificate createCertificate(User newUser) throws Exception{

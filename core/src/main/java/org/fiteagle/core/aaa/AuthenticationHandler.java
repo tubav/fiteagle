@@ -37,7 +37,6 @@ public class AuthenticationHandler {
   private KeyStoreManagement keyStoreManagement;
   Logger log = LoggerFactory.getLogger(this.getClass());
   
-  FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   
   public AuthenticationHandler() {
     
