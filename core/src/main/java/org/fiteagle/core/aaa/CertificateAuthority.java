@@ -34,6 +34,7 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.userdatabase.User;
+import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 
@@ -140,7 +141,7 @@ public class CertificateAuthority {
     try {
       UserDBManager userDBManager; userDBManager = new UserDBManager();
       return userDBManager.getUserFromCert(userCert);
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
       throw new RecordNotFoundException();
     }
     
