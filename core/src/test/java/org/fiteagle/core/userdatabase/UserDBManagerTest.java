@@ -1,7 +1,5 @@
 package org.fiteagle.core.userdatabase;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -14,7 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class UserDBManagerTest {
+  
   UserDBManager userDBManager ;
+  
   @Before
   public void setUp() throws Exception {
     userDBManager = new UserDBManager();
@@ -32,9 +32,8 @@ public class UserDBManagerTest {
   
   @Test 
   public void testVerifyPassword() throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, IOException{
-    User  u = userDBManager.createUser("test", "test", "testName", "password", new ArrayList<String>());
-    Assert.assertTrue(userDBManager.verifyPassword("password",u.getPasswordHash(),u.getPasswordSalt()));
-    
+    User u = userDBManager.createUser("test", "test", "testName", "password", new ArrayList<String>());
+    Assert.assertTrue(userDBManager.verifyPassword("password",u.getPasswordHash(),u.getPasswordSalt()));    
   }
   
 }

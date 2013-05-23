@@ -93,9 +93,9 @@ public class UserDBManager {
       X500Principal prince = userCert.getSubjectX500Principal();
       username = getCN(prince);
     }else{
-      Iterator it = alternativeNames.iterator();
+      Iterator<List<?>> it = alternativeNames.iterator();
       while(it.hasNext()){
-        List<?> altName = (List<?>) it.next();
+        List<?> altName = it.next();
         if(altName.get(0).equals(Integer.valueOf(0))){
           username = new String((byte[])altName.get(1));
         }
@@ -105,13 +105,10 @@ public class UserDBManager {
     User identifiedUser = get(username);
     return identifiedUser;
    } catch (CertificateParsingException e1) {
-    
-   throw new NonParsableNamingFormat();
-  }
-   
-    catch (SQLException e) {
-      throw new DatabaseException();
-    }
+       throw new NonParsableNamingFormat();
+   } catch (SQLException e) {
+       throw new DatabaseException();
+   }
   }
 
   private String getCN(X500Principal prince) {
@@ -138,7 +135,7 @@ public class UserDBManager {
   }
   
   
-  public User createUser(String uuid, String firstName, String lastName,String password, List<String> keys) throws DuplicateUIDException, SQLException, NoSuchAlgorithmException{
+  public User createUser(String uuid, String firstName, String lastName, String password, List<String> keys) throws DuplicateUIDException, SQLException, NoSuchAlgorithmException{
     
    
     SecureRandom random = new SecureRandom();
@@ -152,7 +149,7 @@ public class UserDBManager {
    
   }
     
-  private byte[] createHash(byte[] salt,String password) throws NoSuchAlgorithmException{
+  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException{
     MessageDigest  digest = MessageDigest.getInstance("SHA-256");
     digest.reset();
     digest.update(salt);

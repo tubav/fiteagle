@@ -1,6 +1,8 @@
 package org.fiteagle.delivery.rest;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -52,13 +54,19 @@ public class RestUserManager implements RestUserManagement{
   @Path("{UID}")
   public Response addUser(@PathParam("UID") String UID, 
                           @QueryParam("firstName") String firstName, 
-                          @QueryParam("lastName") String lastName, 
-                          @QueryParam("key") String key){   
+                          @QueryParam("lastName") String lastName,
+                          @QueryParam("password") String password,
+                          @QueryParam("key") String key){
+    ArrayList<String> keys = new ArrayList<String>();
+    keys.add(key);
     try {
-      manager.add(new User(UID, firstName, lastName, key));
+      manager.add(manager.createUser(UID, firstName, lastName, password, keys));
     } catch (DuplicateUIDException e) {
       throw new WebApplicationException(Response.Status.CONFLICT);    
     } catch (SQLException e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
+    } catch (NoSuchAlgorithmException e) {
+      //TODO: Not sure
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
     }
     return Response.status(201).build();
@@ -69,19 +77,30 @@ public class RestUserManager implements RestUserManagement{
   @Path("{UID}")
   public Response updateUser(@PathParam("UID") String UID, 
                              @QueryParam("firstName") String firstName, 
-                             @QueryParam("lastName") String lastName, 
-                             @QueryParam("key") String key){   
+                             @QueryParam("lastName") String lastName,
+                             @QueryParam("password") String password,
+                             @QueryParam("key") String key){
+    ArrayList<String> keys = new ArrayList<String>();
+    keys.add(key);
     try {
-      manager.update(new User(UID, firstName, lastName, key));
+      manager.update(manager.createUser(UID, firstName, lastName, password, keys));
     } catch (RecordNotFoundException e) {
       try {
-        manager.add(new User(UID, firstName, lastName, key));
+        manager.add(manager.createUser(UID, firstName, lastName, password, keys));;
       } catch (DuplicateUIDException | SQLException e1) {
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+      } catch (NoSuchAlgorithmException e1) {
+        //TODO: Not sure
+        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
       }
       return Response.status(201).build();
     } catch (SQLException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    } catch (DuplicateUIDException e) {
+      throw new WebApplicationException(Response.Status.CONFLICT);
+    } catch (NoSuchAlgorithmException e) {
+      //TODO: Not sure
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
     }
     return Response.status(200).build();
   }

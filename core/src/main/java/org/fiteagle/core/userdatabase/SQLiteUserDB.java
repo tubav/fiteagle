@@ -46,7 +46,7 @@ public class SQLiteUserDB implements UserDB {
 
 	private void createTableUsers() throws SQLException {
 		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName,passwordHash,passwordSalt, PRIMARY KEY (UID))");
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName, passwordHash, passwordSalt, PRIMARY KEY (UID))");
 		st.close();
 	}
 	
@@ -81,11 +81,16 @@ public class SQLiteUserDB implements UserDB {
 		ps.setString(2, u.getFirstName());
 		ps.setString(3, u.getLastName());
 		ps.setString(4, u.getPasswordHash());
-		ps.setString(5,u.getPasswordSalt());
+		ps.setString(5, u.getPasswordSalt());
 		try{
 			ps.execute();
 		} catch(SQLException e){
-			throw new DuplicateUIDException();
+		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column UID is not unique)")){
+		      throw new DuplicateUIDException();
+		    }
+		    else{
+		      throw e;
+		    }
 		} finally{
 			ps.close();
 		}
@@ -193,9 +198,9 @@ public class SQLiteUserDB implements UserDB {
 			keys.add(key1);
 		}
 		while(rs.next()){		
-			keys.add(rs.getString(4));
+			keys.add(rs.getString(6));
 		}			
-		return new User(UID, firstname, lastname,passwordHash,passwordSalt, keys);
+		return new User(UID, firstname, lastname, passwordHash, passwordSalt, keys);
 	}
 
 	@Override

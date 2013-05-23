@@ -15,24 +15,29 @@ import org.junit.Test;
 public class UserDBTest {
 
 	private static UserDB database;
-	private UserDBManager userDBManager;
+	private static UserDBManager userDBManager;
+	
 	private static final ArrayList<String> KEYS1 = new ArrayList<String>();
-	private static final ArrayList<String> KEYS2 = new ArrayList<String>();
-	static{
-		KEYS1.add("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-		KEYS1.add("ssh-rsa AAAAB3NzaC1yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-		KEYS2.add("ssh-rsa AAAAB3NzaC1yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+	private static final ArrayList<String> KEYS2 = new ArrayList<String>();	
+	private static User USER1;
+	private static User USER2;
+	private static User USER3;
+	private static User USER4;
+	
+	@BeforeClass
+	public static void createUsers() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException{
+	  KEYS1.add("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+    KEYS1.add("ssh-rsa AAAAB3NzaC1yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+    KEYS2.add("ssh-rsa AAAAB3NzaC1yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+	  userDBManager = new UserDBManager();
+    USER1 = userDBManager.createUser("mnikolaus", "mitja", "nikolaus", "mitja", KEYS1);
+    USER2 = userDBManager.createUser("hschmidt", "herbert", "schmidt", "herbert", KEYS2);
+    USER3 = userDBManager.createUser("hschmidt", "herbert", "schmidt", "herbert", KEYS1);
+    USER4 = userDBManager.createUser("mnikolaus", "mitja", "nikolaus","mitja", new ArrayList<String>());
 	}
-	private   User USER1;
-	private   User USER2; 
-	private   User USER3; 
 	
 	@Before
-	public void setUp() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException{
-	  userDBManager = new UserDBManager();
-	  USER1 = userDBManager.createUser("mnikolaus", "mitja", "nikolaus", "mitja", KEYS1);
-	  USER2 = userDBManager.createUser("hschmidt", "herbert", "schmidt", "herbert", KEYS2);
-	  USER3 = userDBManager.createUser("hschmidt", "herbert", "schmidt", "herbert", KEYS1);
+	public void setUp() throws SQLException{	  
 		database = new InMemoryUserDB();
 	}
 	
@@ -57,10 +62,8 @@ public class UserDBTest {
 
 	@Test
 	public void testGetUserWhoHasNoKeys() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException{
-		//User p = new User("mnikolaus", "mitja", "nikolaus","mitja", new ArrayList<String>());
-	  User p = userDBManager.createUser("mnikolaus", "mitja", "nikolaus","mitja", new ArrayList<String>());
-		database.add(p);
-		assertTrue(p.equals(database.get(p)));
+		database.add(USER4);
+		assertTrue(USER4.equals(database.get(USER4)));
 	}
 	
 	@Test(expected=UserDB.RecordNotFoundException.class)
