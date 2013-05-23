@@ -39,7 +39,7 @@ public class UserDBTest {
 	
 	@Before
 	public void setUp() throws DatabaseException{	  
-		database = new SQLiteUserDB();
+		database = new InMemoryUserDB();
 	}
 	
 	@Test
