@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
 import org.junit.After;
 import org.junit.Before;
@@ -37,76 +38,76 @@ public class UserDBTest {
 	}
 	
 	@Before
-	public void setUp() throws SQLException{	  
-		database = new InMemoryUserDB();
+	public void setUp() throws DatabaseException{	  
+		database = new SQLiteUserDB();
 	}
 	
 	@Test
-	public void testAdd() throws SQLException{
+	public void testAdd() throws DatabaseException{
 		assertEquals(0,database.getNumberOfUsers());
 		database.add(USER1);
 		assertEquals(1,database.getNumberOfUsers());
 	}
 	
 	@Test(expected=UserDB.DuplicateUIDException.class)
-	public void testAddFails() throws SQLException{
+	public void testAddFails() throws DatabaseException{
 		database.add(USER2);
 		database.add(USER3);
 	}
 	
 	@Test
-	public void testGet() throws SQLException{		
+	public void testGet() throws DatabaseException{		
 		database.add(USER1);
 		assertTrue(USER1.equals(database.get(USER1)));
 	}
 
 	@Test
-	public void testGetUserWhoHasNoKeys() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException{
+	public void testGetUserWhoHasNoKeys() throws DatabaseException, DuplicateUIDException, NoSuchAlgorithmException{
 		database.add(USER4);
 		assertTrue(USER4.equals(database.get(USER4)));
 	}
 	
 	@Test(expected=UserDB.RecordNotFoundException.class)
-	public void testGetFails() throws Exception{
+	public void testGetFails() throws DatabaseException{
 		database.add(USER1);
 		database.get(USER2);
 	}
 	
 	@Test(expected=UserDB.RecordNotFoundException.class)
-	public void testDelete() throws SQLException{
+	public void testDelete() throws DatabaseException{
 		database.add(USER1);
 		database.delete(USER1);
 		database.get(USER1);
 	}
 		
 	@Test
-	public void testUpdate() throws SQLException{
+	public void testUpdate() throws DatabaseException{
 		database.add(USER2);
 		database.update(USER3);
 		assertTrue(USER3.equals(database.get(USER3)));
 	}
 	
 	@Test(expected=UserDB.RecordNotFoundException.class)
-	public void testUpdateFails() throws SQLException{
+	public void testUpdateFails() throws DatabaseException{
 		database.update(USER3);
 	}
 	
 	@Test
-	public void testAddKey() throws SQLException{
+	public void testAddKey() throws DatabaseException{
 		database.add(USER1);		
 		database.addKey(USER1.getUID(), KEYS2.get(0));
 		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(2));
 	}
 		
 	@Test
-	public void testAddDuplicateKeys() throws SQLException{
+	public void testAddDuplicateKeys() throws DatabaseException{
 		database.add(USER1);		
 		database.addKey(USER1.getUID(), KEYS1.get(0));
 		assertTrue(USER1.equals(database.get(USER1)));
 	}
 	
 	@After
-	public void cleanUp() throws SQLException{
+	public void cleanUp() throws DatabaseException{
 		database.deleteAllEntries();
 	}	
 }
