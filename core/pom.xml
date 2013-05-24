@@ -112,20 +112,24 @@
 					</execution>
 					<execution>
 						<phase>generate-resources</phase>
-						<id>generateKeyPair</id>
+						<id>importKeystore</id>
 						<goals>
-							<goal>generateKeyPair</goal>
+							<goal>importKeystore</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
-					<dname>cn=fiteagle, ou=av, o=tub, L=Berlin, ST=Berlin, c=DE</dname>
-					<keypass>jetty6</keypass>
-					<storepass>jetty6</storepass>
-					<alias>root</alias>
-					<ext>bc:true</ext>
-					<keyalg>RSA</keyalg>
+				   <srckeystore>src/main/resources/org/fiteagle/core/certificates/testCA.p12</srckeystore>
+				   <keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
+				   <srcstoretype>PKCS12</srcstoretype>
+			       <srcstorepass>jetty6</srcstorepass>
+				   <srckeypass>jetty6</srckeypass>
+			       <srcalias>1</srcalias>
+				   <destkeystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</destkeystore>
+		           <destkeypass>jetty6</destkeypass>
+		           <deststorepass>jetty6</deststorepass>	
+		           <destalias>root</destalias>
+
 				</configuration>
 			</plugin>
 
@@ -153,7 +157,8 @@
 											[1.2,)
 										</versionRange>
 										<goals>
-											<goal>generateKeyPair</goal>
+											<goal>clean</goal>
+											<goal>importKeystore</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

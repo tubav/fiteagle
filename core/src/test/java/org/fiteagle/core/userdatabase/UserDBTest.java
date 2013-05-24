@@ -99,7 +99,7 @@ public class UserDBTest {
 	public void testAddKey() throws DatabaseException{
 		database.add(USER1);		
 		database.addKey(USER1.getUID(), KEYS2.get(0));
-		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(3));
+		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(2));
 	}
 		
 	@Test
