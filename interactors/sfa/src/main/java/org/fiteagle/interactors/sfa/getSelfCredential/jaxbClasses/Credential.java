@@ -60,6 +60,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "type",
     "serial",
     "ownerGid",
+    "ownerURN",
+    "targetURN",
     "targetGid",
     "uuid",
     "expires",
@@ -79,8 +81,12 @@ public class Credential {
     protected String serial;
     @XmlElement(name = "owner_gid", required = true)
     protected String ownerGid;
+    @XmlElement(name = "owner_urn", required = true)
+    protected String ownerURN;
     @XmlElement(name = "target_gid", required = true)
     protected String targetGid;
+    @XmlElement(name = "target_urn", required = true)
+    protected String targetURN;
     @XmlElement(required = true)
     protected String uuid;
     @XmlElement(required = true)
@@ -390,4 +396,21 @@ public class Credential {
         this.id = value;
     }
 
+    public String getOwnerURN() {
+      return ownerURN;
+    }
+
+    public void setOwnerURN(String ownerURN) {
+      this.ownerURN = ownerURN;
+    }
+
+    public String getTargetURN() {
+      return targetURN;
+    }
+
+    public void setTargetURN(String targetURN) {
+      this.targetURN = targetURN;
+    }
+
+    
 }

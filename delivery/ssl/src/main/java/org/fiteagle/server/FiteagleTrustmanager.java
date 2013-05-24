@@ -1,8 +1,15 @@
 package org.fiteagle.server;
 
+
+import java.io.IOException;
 import java.net.Socket;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.sql.SQLException;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509ExtendedTrustManager;
@@ -38,8 +45,11 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
     Log.info("checkClientTrusted 2");
-    authenticationHandler.authenticateCertificates(chain);
-   
+    try{
+      authenticationHandler.authenticateCertificates(chain);
+    }catch(IOException | KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | CertPathValidatorException | SQLException  e){
+      throw new ServerException();
+    }
     
   }
 
@@ -63,5 +73,10 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
     
   }
 
+  public class ServerException extends RuntimeException {
+
+    private static final long serialVersionUID = 3696231034900651182L;
+    
+  }
   
 }

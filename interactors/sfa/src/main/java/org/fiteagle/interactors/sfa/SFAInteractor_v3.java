@@ -84,14 +84,17 @@ public class SFAInteractor_v3 implements ISFA {
 	  SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
 	  GetSelfCredentialRequestProcessor getSelfCredentialRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.GET_SELF_CREDENTIAL);
 	  String result = getSelfCredentialRequestProcessor.processRequest(certificate, xrn, type);
-//	  String str= result.toString();
+	  log.info(result);
 	  return result;
   }
 
   @Override
   public String getCredential(String credential, String xrn, String type) {
-	  // TODO implement the get credentials. check access rights etc for the type.
-	  return this.getSelfCredential("", xrn, type);
+    log.info("GetCredential");
+    log.info(credential);
+    log.info("target: " + xrn);
+    log.info("type: "+ type);
+    return "";
   }
   
   @Override
