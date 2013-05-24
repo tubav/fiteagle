@@ -1,8 +1,10 @@
 package org.fiteagle.core.userdatabase;
 
 import java.io.IOException;
+import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
@@ -18,13 +20,15 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
-
 import net.iharder.Base64;
 
+import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserDBManager {
   
@@ -33,7 +37,7 @@ public class UserDBManager {
   
   private static enum databaseType {InMemory, SQLite} 
   private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
-  
+  Logger log = LoggerFactory.getLogger(getClass());
   public UserDBManager() throws SQLException{
     if(preferences.get("databaseType") == null){
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
@@ -45,12 +49,9 @@ public class UserDBManager {
       database = new InMemoryUserDB();
       try {
         
-        String dummyPublicKey = "AAAAB3NzaC1yc2EAAAADAQABAAABAQDFrEGAjMHYsmOeRmBaILZ6IbVW6v5bxYK24o45DTXBW/fxmP8quGiIlGY8Q4g50t5OR+tUTn0G4XMue5ahyyMVwLFhIC5JT2E3g9E1t5QlCOUmFOYzElcOlRUipAFRoRRgY4Te+JdcF+ZTwrHMYGPwPlnTsj8e3i/l1tLeb0nzsADn8oLdnps2XPVFFTF3hTPv7du/w1ewOBfVeWdkm3ugetGs8upq/g4ijxxAcaE+iyuqNxUvq0FzvcMi+Tmr9wGQXRcK50suh2ENLjl+pTLnfJNsBLkV3zgJpAJPm2cP4AkLZhFZqHNdK2Do9wLS9hsNbnogJtNqO6qxziKyP+LH";
-        List<String> dummyPubKeys = new ArrayList<>(); 
-        dummyPubKeys.add(dummyPublicKey);
-        User u = createUser("fiteagle.av.test","test","testUser","test", dummyPubKeys);
+        User u = createUser("fiteagle.av.test","test","testUser","test");
         add(u);
-      } catch (DuplicateUIDException | NoSuchAlgorithmException e) {
+      } catch (DuplicateUIDException | NoSuchAlgorithmException | IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
@@ -138,7 +139,7 @@ public class UserDBManager {
   }
   
   
-  public User createUser(String uuid, String firstName, String lastName,String password, List<String> keys) throws DuplicateUIDException, SQLException, NoSuchAlgorithmException{
+  public User createUser(String uuid, String firstName, String lastName,String password) throws DuplicateUIDException, SQLException, NoSuchAlgorithmException, IOException{
     
    
     SecureRandom random = new SecureRandom();
@@ -147,11 +148,50 @@ public class UserDBManager {
    
     byte[] passwordBytes = createHash(salt, password);
     String passwordHash =  Base64.encodeBytes(passwordBytes);
-   
+    KeyManagement keyManagement = new KeyManagement();
+    KeyPair keypair =keyManagement.generateKeyPair();
+    PublicKey pubKey =  keypair.getPublic();
+    List<String> keys = new ArrayList<>();
+    keys.add(keyManagement.encodePublicKey(pubKey));
     return new User(uuid, firstName, lastName,passwordHash,passwordSalt,keys );
    
   }
+  public User createUser(String uuid, String firstName, String lastName,String password, List<String> keys) throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, IOException{
+    User u = createUser(uuid, firstName, lastName, password);
+    for(String key:keys){
+      u.addPublicKey(key);
+    }
+    return u;
+  }
     
+  public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException, NoSuchAlgorithmException {
+    byte[] passwordHashBytes = Base64.decode(passwordHash);
+    byte[] passwordSaltBytes = Base64.decode(passwordSalt);
+    byte[] proposedDigest = createHash(passwordSaltBytes, password);
+    return Arrays.equals(passwordHashBytes, proposedDigest);
+  }
+
+ 
+  public String getOwnerURN(User u) {
+    
+    String[] split = u.getUID().split("\\.");
+    String user = split[split.length-1];
+    String returnString = "urn:publicid:IDN"; 
+    String domain = "";
+    for(int i = 0; i< split.length-1;i++){
+      if(i>0){
+        domain+= ":"+split[i];
+      }
+      else{
+        domain+=split[i];
+      }
+    }
+    
+    String plus = domain.length()>0 ? "+" :"";
+    returnString = returnString + plus + domain + "+user+" +user;
+    return returnString;
+  }
+  
   private byte[] createHash(byte[] salt,String password) throws NoSuchAlgorithmException{
     MessageDigest  digest = MessageDigest.getInstance("SHA-256");
     digest.reset();
@@ -159,6 +199,7 @@ public class UserDBManager {
     return digest.digest(password.getBytes());
   }
 
+ 
   
   private class NonParsableNamingFormat extends RuntimeException{
     
@@ -172,10 +213,9 @@ public class UserDBManager {
     
   }
 
-  public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException, NoSuchAlgorithmException {
-    byte[] passwordHashBytes = Base64.decode(passwordHash);
-    byte[] passwordSaltBytes = Base64.decode(passwordSalt);
-    byte[] proposedDigest = createHash(passwordSaltBytes, password);
-    return Arrays.equals(passwordHashBytes, proposedDigest);
-  }
+ 
+
+ 
+
+ 
 }

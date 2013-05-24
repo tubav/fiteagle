@@ -39,9 +39,18 @@ import org.fiteagle.core.userdatabase.UserDBManager;
 
 public class CertificateAuthority {
 
- 
+  private  UserDBManager userDBManager ;
   
  
+  public CertificateAuthority(){
+     try {
+      userDBManager = new UserDBManager();
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  
   private KeyStoreManagement keyStoreManagement = new KeyStoreManagement();
   
   public X509Certificate createCertificate(User newUser) throws Exception{
@@ -56,7 +65,7 @@ public class CertificateAuthority {
     BasicConstraints ca_constraint = new BasicConstraints(false);
     ca_gen.addExtension(X509Extension.basicConstraints, true, ca_constraint);
     GeneralNames subjectAltName = new GeneralNames(
-        new GeneralName(GeneralName.uniformResourceIdentifier, "urn:publicid:IDN+emulab.net+user+stoller"));
+        new GeneralName(GeneralName.uniformResourceIdentifier, userDBManager.getOwnerURN(newUser)));
 
     X509Extension extension = new X509Extension(false, new DEROctetString(subjectAltName));
     ca_gen.addExtension(X509Extension.subjectAlternativeName, false, extension.getParsedValue()); 
@@ -65,27 +74,14 @@ public class CertificateAuthority {
     return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(holder.getEncoded()));
   }
 
-  private SubjectPublicKeyInfo getPublicKey(User newUser) throws Exception {
-    KeyDecoder keyDecoder = new KeyDecoder();
-    PublicKey key =keyDecoder.decodePublicKey(newUser.getPublicKeys().get(0));
-    SubjectPublicKeyInfo subPubInfo = new SubjectPublicKeyInfo((ASN1Sequence) ASN1Sequence.fromByteArray(key.getEncoded()));
-    return subPubInfo;
-  }
-
-  private X500Name createX500Name(User newUser) {
-    X500Principal prince = new X500Principal("CN="+newUser.getUID());
-    X500Name x500Name = new X500Name(prince.getName());
-    return x500Name;
-  }
-
- 
- 
   
   public void saveCertificate(String name, X509Certificate certificate) throws Exception{
     FileOutputStream fos = new FileOutputStream(name);
     fos.write(getCertficateEncoded(certificate).getBytes());
     fos.close();
   }
+  
+
 
   private String getCertficateEncoded(X509Certificate cert) throws Exception{
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -137,12 +133,7 @@ public class CertificateAuthority {
     }
     private User getUserFromCert(X509Certificate userCert) {
     
-    try {
-      UserDBManager userDBManager; userDBManager = new UserDBManager();
-      return userDBManager.getUserFromCert(userCert);
-    } catch (SQLException e) {
-      throw new RecordNotFoundException();
-    }
+    return userDBManager.getUserFromCert(userCert);
     
       
   }
@@ -154,7 +145,18 @@ public class CertificateAuthority {
         throw new CertificateFactoryNotCreatedException();
       }
     }
-    
+    private SubjectPublicKeyInfo getPublicKey(User newUser) throws Exception {
+      KeyManagement keyDecoder = new KeyManagement();
+      PublicKey key =keyDecoder.decodePublicKey(newUser.getPublicKeys().get(0));
+      SubjectPublicKeyInfo subPubInfo = new SubjectPublicKeyInfo((ASN1Sequence) ASN1Sequence.fromByteArray(key.getEncoded()));
+      return subPubInfo;
+    }
+
+    private X500Name createX500Name(User newUser) {
+      X500Principal prince = new X500Principal("CN="+newUser.getUID());
+      X500Name x500Name = new X500Name(prince.getName());
+      return x500Name;
+    }
     public class CertificateFactoryNotCreatedException extends RuntimeException {
       private static final long serialVersionUID = 1L;
       

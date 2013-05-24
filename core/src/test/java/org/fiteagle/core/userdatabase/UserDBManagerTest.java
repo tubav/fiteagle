@@ -3,9 +3,17 @@ package org.fiteagle.core.userdatabase;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import junit.framework.Assert;
 
@@ -21,8 +29,8 @@ public class UserDBManagerTest {
   }
   
   @Test
-  public void testCreateUser() throws DuplicateUIDException, NoSuchAlgorithmException, SQLException {
-    User u = userDBManager.createUser("test", "test", "testName", "password", new ArrayList<String>());
+  public void testCreateUser() throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, IOException {
+    User u = userDBManager.createUser("test", "test", "testName", "password");
     Assert.assertEquals("test", u.getFirstName());
     Assert.assertEquals("test", u.getUID());
     Assert.assertEquals("testName", u.getLastName());
@@ -32,9 +40,10 @@ public class UserDBManagerTest {
   
   @Test 
   public void testVerifyPassword() throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, IOException{
-    User  u = userDBManager.createUser("test", "test", "testName", "password", new ArrayList<String>());
+    User  u = userDBManager.createUser("test", "test", "testName", "password");
     Assert.assertTrue(userDBManager.verifyPassword("password",u.getPasswordHash(),u.getPasswordSalt()));
     
   }
   
+ 
 }

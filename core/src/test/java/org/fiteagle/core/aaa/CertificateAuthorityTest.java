@@ -24,7 +24,6 @@ public class CertificateAuthorityTest {
   @Test
   public void testCreateCertificateForDummyUser() throws Exception {
     X509Certificate userCert =   CA.createCertificate(dummyUser);
-    System.out.println(userCert);
     Assert.assertTrue(userCert != null);   
   }
   

@@ -2,6 +2,7 @@ package org.fiteagle.core.userdatabase;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class UserDBTest {
 	private   User USER3; 
 	
 	@Before
-	public void setUp() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException{
+	public void setUp() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException, IOException{
 	  userDBManager = new UserDBManager();
 	  USER1 = userDBManager.createUser("mnikolaus", "mitja", "nikolaus", "mitja", KEYS1);
 	  USER2 = userDBManager.createUser("hschmidt", "herbert", "schmidt", "herbert", KEYS2);
@@ -56,7 +57,7 @@ public class UserDBTest {
 	}
 
 	@Test
-	public void testGetUserWhoHasNoKeys() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException{
+	public void testGetUserWhoHasNoKeys() throws SQLException, DuplicateUIDException, NoSuchAlgorithmException, IOException{
 		//User p = new User("mnikolaus", "mitja", "nikolaus","mitja", new ArrayList<String>());
 	  User p = userDBManager.createUser("mnikolaus", "mitja", "nikolaus","mitja", new ArrayList<String>());
 		database.add(p);
@@ -92,7 +93,7 @@ public class UserDBTest {
 	public void testAddKey() throws SQLException{
 		database.add(USER1);		
 		database.addKey(USER1.getUID(), KEYS2.get(0));
-		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(2));
+		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(3));
 	}
 		
 	@Test

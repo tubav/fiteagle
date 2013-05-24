@@ -98,7 +98,7 @@ public class AuthenticationHandler {
   private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) {
     boolean verified = false;
     for (String pubKeyString : identifiedUser.getPublicKeys()) {
-      KeyDecoder keydecoder = new KeyDecoder();
+      KeyManagement keydecoder = new KeyManagement();
       PublicKey pubKey = null;
       try {
         pubKey = keydecoder.decodePublicKey(pubKeyString);
