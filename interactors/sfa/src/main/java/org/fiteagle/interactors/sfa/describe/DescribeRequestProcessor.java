@@ -2,7 +2,7 @@ package org.fiteagle.interactors.sfa.describe;
 
 import java.util.List;
 
-import org.fiteagle.core.ResourceManager;
+import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -17,13 +17,13 @@ import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 
 	
-	private ResourceManager resourceManager;
+	private ResourceAdapterManager resourceManager;
 	private DescribeOptionsService optionsService;
 	private String outPutString = "";
 	
 	
 	public DescribeRequestProcessor() {
-		resourceManager = new ResourceManager();
+		resourceManager = new ResourceAdapterManager();
 	}
 	
 	
