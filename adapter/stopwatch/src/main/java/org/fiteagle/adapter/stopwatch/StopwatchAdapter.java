@@ -2,11 +2,12 @@ package org.fiteagle.adapter.stopwatch;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 
-import org.fiteagle.adapter.common.InMemoryResourceDatabase;
+//import org.fiteagle.adapter.common.InMemoryResourceDatabase;
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.common.ResourceProperties;
+//import org.fiteagle.adapter.common.ResourceProperties;
 
 
 public class StopwatchAdapter extends ResourceAdapter {
@@ -15,8 +16,9 @@ public class StopwatchAdapter extends ResourceAdapter {
 	private transient boolean runningState = false;
 
 	public StopwatchAdapter(){
-		this.resourceDatabase = new InMemoryResourceDatabase();
-		this.setId("StopWatchAdapter"); 
+	  super();
+	  this.setType("org.fiteagle.adapter.stopwatch.StopwatchAdapter");
+//		this.setId("StopWatchAdapter"); 
 		this.create();
 	}
 	public boolean isRunning() {
@@ -36,11 +38,16 @@ public class StopwatchAdapter extends ResourceAdapter {
 
 	@Override
 	public void create() {
+	  
+	  //adding some test data to specify stopwatch
+	  
+	  HashMap<String, Object> props = this.getProperties();
+	  props.put("format", "SimpleDateFormat");
 	
-		ResourceProperties props = new StopWatchInstanceProperties();
-		props.setIdentifier("myStopWatchInstance");
-		props.setName("StopWatch");
-		this.resourceDatabase.addResource(props);
+//		ResourceProperties props = new StopWatchInstanceProperties();
+//		props.setIdentifier("myStopWatchInstance");
+//		props.setName("StopWatch");
+//		this.resourceDatabase.addResource(props);
 		
 	}
 
@@ -57,14 +64,14 @@ public class StopwatchAdapter extends ResourceAdapter {
 	}
 
 
-	@Override
-	public String getStatus() {
-		return "Is running: "+runningState;
-	}
-	@Override
-	public List<ResourceProperties> getAllResources() {
-		return resourceDatabase.getResources();
-	}
+//	@Override
+//	public String getStatus() {
+//		return "Is running: "+runningState;
+//	}
+//	@Override
+//	public List<ResourceProperties> getAllResources() {
+//		return resourceDatabase.getResources();
+//	}
 	
 	
 }

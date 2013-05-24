@@ -79,6 +79,7 @@ public class SFAv3RspecTranslator {
 	}
 	
 	public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
+	  //TODO: if type is a known type (e. g. virtual machine) use GENI RSpec specific elements
 
 		Resource fiteagleSFAResource = new Resource();
 
@@ -106,16 +107,22 @@ public class SFAv3RspecTranslator {
 			}
 
 		}
+		
+		Property typeProperty = new Property();
+    typeProperty.setName("type");
+//    idProperty.setType("string");
+    typeProperty.setValue(resourceAdapter.getType());
+    fiteagleSFAResource.getProperty().add(typeProperty);
 
 		Property idProperty = new Property();
 		idProperty.setName("id");
-		idProperty.setType("string");
+//		idProperty.setType("string");
 		idProperty.setValue(resourceAdapter.getId());
 		fiteagleSFAResource.getProperty().add(idProperty);
 
 		Property statusProperty = new Property();
 		statusProperty.setName("status");
-		statusProperty.setType("string");
+//		statusProperty.setType("string");
 		statusProperty.setValue(resourceAdapter.getStatus());
 		fiteagleSFAResource.getProperty().add(statusProperty);
 
@@ -219,5 +226,60 @@ public class SFAv3RspecTranslator {
 		return stringWriter.toString();
 		
 	}
+
+  public ResourceAdapter translateResourceToResourceAdapter(Resource object) {
+    List<Property> properties = object.getProperty();
+    String type="";
+    ResourceAdapter resource;
+    HashMap<String, Object> resourceProperties = new HashMap<String, Object>();
+    
+    for (Iterator iterator = properties.iterator(); iterator.hasNext();) {
+      Property property = (Property) iterator.next();
+      if(property.getName().compareToIgnoreCase("type")==0){
+        type=property.getValue();
+        
+        break;
+      }
+    }
+    try {
+      Class<?> clazz = Class.forName(type);
+       resource = (ResourceAdapter)clazz.newInstance();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+      throw new RuntimeException();//TODO: change this.
+    } catch (InstantiationException e) {
+      e.printStackTrace();
+      throw new RuntimeException();//TODO: change this.
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+      throw new RuntimeException();//TODO: change this.
+    }
+    
+    
+    for (Iterator iterator = properties.iterator(); iterator.hasNext();) {
+      Property property = (Property) iterator.next();
+      if(property.getName().compareToIgnoreCase("id")==0){
+        resource.setId(property.getValue());
+        continue;
+      }
+      if(property.getName().compareToIgnoreCase("type")==0){
+        resource.setType(property.getValue());
+        continue;
+      }
+      if(property.getName().compareToIgnoreCase("status")==0){
+//        resource.setStatus(property.getValue());
+        continue;
+      }
+      resourceProperties.put(property.getName(), property.getValue());
+    }
+    resource.setProperties(resourceProperties);
+    return resource;
+  }
+
+  public String translateResourceIdToSliverUrn(String id, String urn) {
+    String[] str = urn.split("\\+slice\\+");
+    String response = str[0]+"+sliver+"+id;
+    return response;
+  }
 
 }

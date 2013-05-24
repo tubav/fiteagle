@@ -31,11 +31,15 @@ public class SQLiteUserDB implements UserDB {
         }
     }
 	
-	public SQLiteUserDB() throws SQLException{	 
-		getConnection();
-		createTableUsers();
-		createTableKeys();
-		connection.commit();
+	public SQLiteUserDB() throws DatabaseException{
+	  try{
+  		getConnection();
+  		createTableUsers();
+  		createTableKeys();
+  		connection.commit();
+	  } catch(SQLException e){
+	    throw new DatabaseException();
+	  }
 	}				
 
   private void createTableKeys() throws SQLException {
@@ -46,7 +50,7 @@ public class SQLiteUserDB implements UserDB {
 
 	private void createTableUsers() throws SQLException {
 		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName,passwordHash,passwordSalt, PRIMARY KEY (UID))");
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName, passwordHash, passwordSalt, PRIMARY KEY (UID))");
 		st.close();
 	}
 	
@@ -69,10 +73,14 @@ public class SQLiteUserDB implements UserDB {
 	}
 	
 	@Override
-	public void add(User u) throws DuplicateUIDException, SQLException {			
-		addUserToDatabase(u);		
-		addKeysToDatabase(u.getUID(),u.getPublicKeys());
-		connection.commit();
+	public void add(User u) throws DuplicateUIDException, DatabaseException {
+	  try{
+  		addUserToDatabase(u);		
+  		addKeysToDatabase(u.getUID(),u.getPublicKeys());
+  		connection.commit();
+	  } catch(SQLException e){
+	    throw new DatabaseException();
+	  }
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
@@ -81,11 +89,16 @@ public class SQLiteUserDB implements UserDB {
 		ps.setString(2, u.getFirstName());
 		ps.setString(3, u.getLastName());
 		ps.setString(4, u.getPasswordHash());
-		ps.setString(5,u.getPasswordSalt());
+		ps.setString(5, u.getPasswordSalt());
 		try{
 			ps.execute();
 		} catch(SQLException e){
-			throw new DuplicateUIDException();
+		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column UID is not unique)")){
+		      throw new DuplicateUIDException();
+		    }
+		    else{
+		      throw e;
+		    }
 		} finally{
 			ps.close();
 		}
@@ -103,15 +116,20 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void delete(User u) throws SQLException {
-		delete(u.getUID());
+	public void delete(User u) throws DatabaseException {		
+	  delete(u.getUID());   
 	}
 	
 	@Override
-	public void delete(String UID) throws SQLException {		
-		deleteUserFromDatabase(UID);		
-		deleteKeysFromDatabase(UID);
-		connection.commit();
+	public void delete(String UID) throws DatabaseException {		
+		try {
+      deleteUserFromDatabase(UID);
+      deleteKeysFromDatabase(UID);
+      connection.commit();
+    } catch (SQLException e) {
+      throw new DatabaseException();
+    }		
+		
 	}
 
 	private void deleteKeysFromDatabase(String UID) throws SQLException {
@@ -129,11 +147,16 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, SQLException {
-		updateUserInDatabase(u);
-		deleteKeysFromDatabase(u.getUID());		
-		addKeysToDatabase(u.getUID(), u.getPublicKeys());
-		connection.commit();
+	public void update(User u) throws RecordNotFoundException, DatabaseException {
+	  try{
+	    updateUserInDatabase(u);
+	    deleteKeysFromDatabase(u.getUID());    
+	    addKeysToDatabase(u.getUID(), u.getPublicKeys());
+	    connection.commit();
+	  } catch(SQLException e){
+	    throw new DatabaseException();
+	  }
+		
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
@@ -151,18 +174,27 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(String UID, String key) throws SQLException {
-		if(!get(UID).getPublicKeys().contains(key)){
-			ArrayList<String> keys = new ArrayList<String>();			
-			keys.add(key);
-			addKeysToDatabase(UID,keys);
-			connection.commit();
-		}		
+	public void addKey(String UID, String key) throws DatabaseException {
+	  try{
+  		if(!get(UID).getPublicKeys().contains(key)){
+  			ArrayList<String> keys = new ArrayList<String>();			
+  			keys.add(key);
+  			addKeysToDatabase(UID,keys);
+  			connection.commit();
+  		}
+	  } catch(SQLException e){
+	    throw new DatabaseException();
+	  }
 	}
 
 	@Override
-	public User get(String UID) throws RecordNotFoundException, SQLException {		
-		User u = getUserFromDatabase(UID);
+	public User get(String UID) throws RecordNotFoundException, DatabaseException {		
+		User u;
+    try {
+      u = getUserFromDatabase(UID);
+    } catch (SQLException e) {
+      throw new DatabaseException();
+    }
 		if(u == null){
 			throw new UserDB.RecordNotFoundException();
 		}
@@ -193,33 +225,41 @@ public class SQLiteUserDB implements UserDB {
 			keys.add(key1);
 		}
 		while(rs.next()){		
-			keys.add(rs.getString(4));
+			keys.add(rs.getString(6));
 		}			
-		return new User(UID, firstname, lastname,passwordHash,passwordSalt, keys);
+		return new User(UID, firstname, lastname, passwordHash, passwordSalt, keys);
 	}
 
 	@Override
-	public User get(User u) throws RecordNotFoundException, SQLException {		
+	public User get(User u) throws RecordNotFoundException, DatabaseException {		
 		return get(u.getUID());
 	}
 
 	@Override
-	public int getNumberOfUsers() throws SQLException {	
-		Statement st = connection.createStatement();
-		ResultSet rs = st.executeQuery("SELECT COUNT(*) AS NumberOfUsers FROM Users");
-		int size = 0;
-		if(rs.next()){
-			size = rs.getInt(1);			
-		}
-		st.close();
-		return size;
+	public int getNumberOfUsers() throws DatabaseException {
+	  try{
+  		Statement st = connection.createStatement();
+  		ResultSet rs = st.executeQuery("SELECT COUNT(*) AS NumberOfUsers FROM Users");
+  		int size = 0;
+  		if(rs.next()){
+  			size = rs.getInt(1);			
+  		}
+  		st.close();
+  		return size;
+	  } catch(SQLException e){
+	    throw new DatabaseException();
+	  }
 	}	
 
-	public void deleteAllEntries() throws SQLException{	
-		Statement st = connection.createStatement();
-		st.executeUpdate("DELETE FROM Users");	
-		st.executeUpdate("DELETE FROM Keys");	
-		st.close();
-		connection.commit();
+	public void deleteAllEntries() throws DatabaseException{
+	  try{
+  		Statement st = connection.createStatement();
+  		st.executeUpdate("DELETE FROM Users");	
+  		st.executeUpdate("DELETE FROM Keys");	
+  		st.close();
+  		connection.commit();
+	  } catch(SQLException e){
+	    throw new DatabaseException();
+	  }
 	}
 }

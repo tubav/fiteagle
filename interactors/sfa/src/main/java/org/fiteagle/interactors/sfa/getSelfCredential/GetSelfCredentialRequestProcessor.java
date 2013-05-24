@@ -101,7 +101,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   }
 
   private String getOwnerURN(String xrn) {
-   
+    
     String[] split = xrn.split("\\.");
     String user = split[split.length-1];
     String returnString = "urn:publicid:IDN"; 

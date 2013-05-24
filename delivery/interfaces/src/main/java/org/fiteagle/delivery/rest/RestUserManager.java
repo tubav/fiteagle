@@ -1,6 +1,8 @@
 package org.fiteagle.delivery.rest;
 
-import java.sql.SQLException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.userdatabase.User;
+import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
@@ -26,7 +29,7 @@ public class RestUserManager implements RestUserManagement{
   static{
     try {
       manager = new UserDBManager();
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);           
     }
   }
@@ -41,7 +44,7 @@ public class RestUserManager implements RestUserManagement{
       user = manager.get(UID);
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return user;
@@ -52,13 +55,21 @@ public class RestUserManager implements RestUserManagement{
   @Path("{UID}")
   public Response addUser(@PathParam("UID") String UID, 
                           @QueryParam("firstName") String firstName, 
-                          @QueryParam("lastName") String lastName, 
-                          @QueryParam("key") String key){   
+                          @QueryParam("lastName") String lastName,
+                          @QueryParam("password") String password,
+                          @QueryParam("key") String key){
+    ArrayList<String> keys = new ArrayList<String>();
+    keys.add(key);
     try {
-      manager.add(new User(UID, firstName, lastName, key));
+      manager.add(manager.createUser(UID, firstName, lastName, password, keys));
     } catch (DuplicateUIDException e) {
       throw new WebApplicationException(Response.Status.CONFLICT);    
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
+    } catch (NoSuchAlgorithmException e) {
+      //TODO: Not sure
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
+    } catch (IOException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
     }
     return Response.status(201).build();
@@ -69,19 +80,34 @@ public class RestUserManager implements RestUserManagement{
   @Path("{UID}")
   public Response updateUser(@PathParam("UID") String UID, 
                              @QueryParam("firstName") String firstName, 
-                             @QueryParam("lastName") String lastName, 
-                             @QueryParam("key") String key){   
+                             @QueryParam("lastName") String lastName,
+                             @QueryParam("password") String password,
+                             @QueryParam("key") String key){
+    ArrayList<String> keys = new ArrayList<String>();
+    keys.add(key);
     try {
-      manager.update(new User(UID, firstName, lastName, key));
+      manager.update(manager.createUser(UID, firstName, lastName, password, keys));
     } catch (RecordNotFoundException e) {
       try {
-        manager.add(new User(UID, firstName, lastName, key));
-      } catch (DuplicateUIDException | SQLException e1) {
+        manager.add(manager.createUser(UID, firstName, lastName, password, keys));;
+      } catch (DuplicateUIDException | DatabaseException e1) {
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+      } catch (NoSuchAlgorithmException e1) {
+        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
+      } catch (IOException e1) {
+        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
+
       }
       return Response.status(201).build();
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    } catch (DuplicateUIDException e) {
+      throw new WebApplicationException(Response.Status.CONFLICT);
+    } catch (NoSuchAlgorithmException e) {
+      //TODO: Not sure
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
+    } catch (IOException e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR); 
     }
     return Response.status(200).build();
   }
@@ -94,7 +120,7 @@ public class RestUserManager implements RestUserManagement{
       manager.addKey(UID, key);
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }    
     return Response.status(200).build();
@@ -106,7 +132,7 @@ public class RestUserManager implements RestUserManagement{
   public Response deleteUser(@PathParam("UID") String UID){
     try {
       manager.delete(UID);
-    } catch (SQLException e) {
+    } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return Response.status(200).build();

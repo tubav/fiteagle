@@ -9,7 +9,7 @@ import org.fiteagle.adapter.common.ResourceAdapter;
 
 public class InMemoryResourceAdapterDatabase implements ResourceAdapterDatabase {
 
-	private Map<String, ResourceAdapter> adapterMap = new HashMap<>();
+	private static Map<String, ResourceAdapter> adapterMap = new HashMap<>();
 
 	@Override
 	public void addResourceAdapter(ResourceAdapter resourceAdapter) {

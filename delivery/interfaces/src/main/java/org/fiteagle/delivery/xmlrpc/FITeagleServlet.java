@@ -34,14 +34,14 @@ public class FITeagleServlet extends XmlRpcServlet {
 	private final String AM_PATH = "/am/v3";
 	private final String REGISTRY_PATH = "/registry/v1";
 	
-
+	private int counter = 0;
 
 	public FITeagleServlet()  {
 
 		// TODO: choose dependency injection here (i.e. add a parameter to
 		// define the interactor here, use reflection to find one or use
 		// a config file)
-
+	  
 		this.server = new FixedXmlRpcServer();
 		this.server.setSerializer(new FixedSerializer());
 		SFAInteractor_v3 interactor = new SFAInteractor_v3();
@@ -70,8 +70,8 @@ public class FITeagleServlet extends XmlRpcServlet {
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
 	  
-
-	  
+	  counter++;
+	  log.info(""+counter);
 	  this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo());
 	
 	 

@@ -13,8 +13,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.common.ResourceProperties;
-import org.fiteagle.core.ResourceManager;
+//import org.fiteagle.adapter.common.ResourceProperties;
+import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -26,13 +26,12 @@ import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
-	private ResourceManager resourceManager;
+	private ResourceAdapterManager resourceManager;
 	private ListResourceOptionsService optionsService;
-	private AMCode runTimeReturnCode;
-	private String outPutString = "";
+	
 
 	public ListResourceRequestProcessor() {
-		resourceManager = new ResourceManager();
+		resourceManager = new ResourceAdapterManager();
 	}
 
 	@Override
@@ -129,64 +128,39 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 				.getResourceAdapters();
 
 		RSpecContents advertisedRspec = getAdvertisedRSpec(resourceAdapters);
-		String advertisedRspecSTR = getRSpecString(advertisedRspec);
+		String advertisedRspecSTR = this.getRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
 	}
 
-	private String getRSpecString(RSpecContents advertisedRspec) {
-		String advertisedRspecSTR = "";
-		
 
-		JAXBElement<RSpecContents> rspec = new ObjectFactory()
-				.createRspec(advertisedRspec);
 
-		try {
-			advertisedRspecSTR = getString(rspec);
-		} catch (JAXBException e) {
-			 setRuntimeReturnCode(GENI_CodeEnum.ERROR);
-			 setOutput("Internal Server Error!");
-		}
 
-		// result.setValue(advertisedRspecSTR);
-		return advertisedRspecSTR;
-	}
 
-	private void setOutput(String string) {
-		this.outPutString = string;
-		
-	}
+//	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
+//		RSpecContents advertisedRspec = new RSpecContents();
+//		advertisedRspec.setType("advertisement");
+//
+//		List<Object> rspecContentElements = advertisedRspec
+//				.getAnyOrNodeOrLink();
+//		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+//		
+//		for(ResourceAdapter resourceAdapter: resourceAdapters){
+//			Object fiteagleResource = translator.translateToFITeagleResource(resourceAdapter);
+//			rspecContentElements.add(fiteagleResource);
+//		}
+//		return advertisedRspec;
+//	}
 
-	private void setRuntimeReturnCode(GENI_CodeEnum error) {
-		runTimeReturnCode = new AMCode();
-		runTimeReturnCode.setGeni_code(error);
-		
-	}
-
-	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
-		RSpecContents advertisedRspec = new RSpecContents();
-		advertisedRspec.setType("advertisement");
-
-		List<Object> rspecContentElements = advertisedRspec
-				.getAnyOrNodeOrLink();
-		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-		
-		for(ResourceAdapter resourceAdapter: resourceAdapters){
-			Object fiteagleResource = translator.translateToFITeagleResource(resourceAdapter);
-			rspecContentElements.add(fiteagleResource);
-		}
-		return advertisedRspec;
-	}
-
-	private List<ResourceProperties> getResourceProperties() {
-		List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
-		List<ResourceAdapter> resourceAdapters = resourceManager
-				.getResourceAdapters();
-		for (ResourceAdapter adapter : resourceAdapters) {
-			resources.addAll(adapter.getAllResources());
-		}
-		return resources;
-	}
+//	private List<ResourceProperties> getResourceProperties() {
+//		List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
+//		List<ResourceAdapter> resourceAdapters = resourceManager
+//				.getResourceAdapters();
+//		for (ResourceAdapter adapter : resourceAdapters) {
+//			resources.addAll(adapter.getAllResources());
+//		}
+//		return resources;
+//	}
 
 	private boolean optionsAreValid() {
 
@@ -198,15 +172,5 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		return optionsService.getErrorCode();
 	}
 
-	private String getString(Object jaxbObject) throws JAXBException {
-		JAXBContext context = JAXBContext
-				.newInstance("org.fiteagle.interactors.sfa.rspec");
-		Marshaller marshaller = context.createMarshaller();
-		StringWriter stringWriter = new StringWriter();
-		marshaller.marshal(jaxbObject, stringWriter);
-
-		return stringWriter.toString();
-
-	}
 
 }

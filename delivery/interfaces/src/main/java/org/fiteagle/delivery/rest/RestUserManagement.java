@@ -23,7 +23,7 @@ public interface RestUserManagement {
   @PUT
   @Path("{UID}")
   public abstract Response addUser(@PathParam("UID") String UID, @QueryParam("firstName") String firstName,
-                                    @QueryParam("lastName") String lastName, @QueryParam("key") String key);
+                                    @QueryParam("lastName") String lastName, @QueryParam("password") String password, @QueryParam("key") String key);
   
   @PUT
   @Path("{UID}/key/{key}")
@@ -32,7 +32,7 @@ public interface RestUserManagement {
   @POST
   @Path("{UID}")
   public abstract Response updateUser(@PathParam("UID") String UID, @QueryParam("firstName") String firstName,
-                                      @QueryParam("lastName") String lastName, @QueryParam("key") String key);
+                                      @QueryParam("lastName") String lastName, @QueryParam("password") String password, @QueryParam("key") String key);
   
   @DELETE
   @Path("{UID}")

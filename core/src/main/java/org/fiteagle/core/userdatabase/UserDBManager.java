@@ -8,7 +8,6 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +24,7 @@ import net.iharder.Base64;
 import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.slf4j.Logger;
@@ -37,8 +37,12 @@ public class UserDBManager {
   
   private static enum databaseType {InMemory, SQLite} 
   private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
+
   Logger log = LoggerFactory.getLogger(getClass());
-  public UserDBManager() throws SQLException{
+ 
+  
+  public UserDBManager() throws DatabaseException{
+
     if(preferences.get("databaseType") == null){
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
     }
@@ -58,31 +62,31 @@ public class UserDBManager {
     }   
   }
   
-  public void add(User u) throws DuplicateUIDException, SQLException{
+  public void add(User u) throws DuplicateUIDException, DatabaseException{
     database.add(u);
   }
   
-  public void delete(String UID) throws SQLException{
+  public void delete(String UID) throws DatabaseException{
     database.delete(UID);
   }
   
-  public void delete(User u) throws SQLException{
+  public void delete(User u) throws DatabaseException{
     database.delete(u);
   }
   
-  public void update(User u) throws RecordNotFoundException, SQLException{
+  public void update(User u) throws RecordNotFoundException, DatabaseException{
     database.update(u);
   }
   
-  public void addKey(String UID, String key) throws RecordNotFoundException, SQLException{
+  public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException{
     database.addKey(UID, key);
   }
   
-  public User get(String UID) throws RecordNotFoundException, SQLException{
+  public User get(String UID) throws RecordNotFoundException, DatabaseException{
     return database.get(UID);
   }
   
-  public User get(User u) throws RecordNotFoundException, SQLException{
+  public User get(User u) throws RecordNotFoundException, DatabaseException{
     return database.get(u);
   }
   
@@ -94,9 +98,9 @@ public class UserDBManager {
       X500Principal prince = userCert.getSubjectX500Principal();
       username = getCN(prince);
     }else{
-      Iterator it = alternativeNames.iterator();
+      Iterator<List<?>> it = alternativeNames.iterator();
       while(it.hasNext()){
-        List<?> altName = (List<?>) it.next();
+        List<?> altName = it.next();
         if(altName.get(0).equals(Integer.valueOf(0))){
           username = new String((byte[])altName.get(1));
         }
@@ -106,13 +110,8 @@ public class UserDBManager {
     User identifiedUser = get(username);
     return identifiedUser;
    } catch (CertificateParsingException e1) {
-    
-   throw new NonParsableNamingFormat();
-  }
-   
-    catch (SQLException e) {
-      throw new DatabaseException();
-    }
+       throw new NonParsableNamingFormat();
+   }
   }
 
   private String getCN(X500Principal prince) {
@@ -138,8 +137,9 @@ public class UserDBManager {
    
   }
   
-  
-  public User createUser(String uuid, String firstName, String lastName,String password) throws DuplicateUIDException, SQLException, NoSuchAlgorithmException, IOException{
+
+  public User createUser(String uuid, String firstName, String lastName,String password) throws DuplicateUIDException, NoSuchAlgorithmException, IOException{
+
     
    
     SecureRandom random = new SecureRandom();
@@ -156,7 +156,7 @@ public class UserDBManager {
     return new User(uuid, firstName, lastName,passwordHash,passwordSalt,keys );
    
   }
-  public User createUser(String uuid, String firstName, String lastName,String password, List<String> keys) throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, IOException{
+  public User createUser(String uuid, String firstName, String lastName,String password, List<String> keys) throws DuplicateUIDException, NoSuchAlgorithmException, IOException{
     User u = createUser(uuid, firstName, lastName, password);
     for(String key:keys){
       u.addPublicKey(key);
@@ -164,6 +164,7 @@ public class UserDBManager {
     return u;
   }
     
+
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException, NoSuchAlgorithmException {
     byte[] passwordHashBytes = Base64.decode(passwordHash);
     byte[] passwordSaltBytes = Base64.decode(passwordSalt);
@@ -192,7 +193,9 @@ public class UserDBManager {
     return returnString;
   }
   
-  private byte[] createHash(byte[] salt,String password) throws NoSuchAlgorithmException{
+
+  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException{
+
     MessageDigest  digest = MessageDigest.getInstance("SHA-256");
     digest.reset();
     digest.update(salt);
@@ -204,12 +207,6 @@ public class UserDBManager {
   private class NonParsableNamingFormat extends RuntimeException{
     
     private static final long serialVersionUID = -3819932831236493248L;
-    
-  }
-  
-  public class DatabaseException extends RuntimeException {
-
-    private static final long serialVersionUID = -8002909402748409082L;
     
   }
 
