@@ -276,8 +276,8 @@ public class SFAv3RspecTranslator {
     return resource;
   }
 
-  public String translateResourceIdToSliverUrn(String id, String urn) {
-    String[] str = urn.split("\\+slice\\+");
+  public String translateResourceIdToSliverUrn(String id, String sliceUrn) {
+    String[] str = sliceUrn.split("\\+slice\\+");
     String response = str[0]+"+sliver+"+id;
     return response;
   }
