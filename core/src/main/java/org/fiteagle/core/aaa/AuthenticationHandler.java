@@ -55,7 +55,7 @@ public class AuthenticationHandler {
         UserDBManager userDBManager = new UserDBManager();
         User identifiedUser = userDBManager.getUserFromCert(cert);
         verifyUserSignedCertificate(identifiedUser, cert);
-        signAndStoreCertificate(identifiedUser);
+      //  signAndStoreCertificate(identifiedUser);
         
       } else {
         X500Principal issuerX500Principal = cert.getIssuerX500Principal();

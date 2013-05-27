@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
@@ -34,7 +35,12 @@ public class KeyManagementTest {
   @Test
   public void testGetEncyrptedPrivateKey() throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, InvalidKeyException, InvalidKeySpecException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException{
     User u = userDBManager.createUser("test", "test", "testName", "password");
-    String encryptedPrivateKey = keyManagement.getEncryptedPrivateKey(u, "password");
+    CertificateAuthority cA = new CertificateAuthority();
+    
+  
+    KeyPair keyPair = keyManagement.generateKeyPair();
+    String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair, "password");
+    
     Assert.assertNotNull(encryptedPrivateKey);
     
   }
@@ -42,8 +48,9 @@ public class KeyManagementTest {
   @Test 
   public void testVerifyEncryptedPrivateKey() throws DuplicateUIDException, NoSuchAlgorithmException, SQLException, InvalidKeyException, InvalidKeySpecException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidAlgorithmParameterException{
     User u = userDBManager.createUser("test", "test", "testName", "password");
-   
-    String encryptedPrivateKey = keyManagement.getEncryptedPrivateKey(u, "password");
+
+    KeyPair keyPair = keyManagement.generateKeyPair();
+    String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair, "password");
     Assert.assertFalse(keyManagement.verifyPrivateKey(encryptedPrivateKey, "Wrongpassword"));
     Assert.assertTrue(keyManagement.verifyPrivateKey(encryptedPrivateKey, "password"));
     

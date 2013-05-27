@@ -99,8 +99,9 @@ public class UserDBManager {
       Iterator<List<?>> it = alternativeNames.iterator();
       while(it.hasNext()){
         List<?> altName = it.next();
-        if(altName.get(0).equals(Integer.valueOf(0))){
-          username = new String((byte[])altName.get(1));
+        if(altName.get(0).equals(Integer.valueOf(6))){
+          username = (String)altName.get(1);
+          username = getUIDFromURN(username);
         }
       }
     }
@@ -110,6 +111,15 @@ public class UserDBManager {
    } catch (CertificateParsingException e1) {
        throw new NonParsableNamingFormat();
    }
+  }
+
+  private String getUIDFromURN(String urn) {
+    String userFromURN = urn.substring(urn.lastIndexOf("+")+1);
+    System.out.println(userFromURN);
+    String domain = urn.substring(urn.indexOf("IDN")+4, urn.indexOf("+user+") );
+    domain = domain.replace(":", ".");
+    System.out.println(domain);
+    return domain+"."+userFromURN;
   }
 
   private String getCN(X500Principal prince) {
