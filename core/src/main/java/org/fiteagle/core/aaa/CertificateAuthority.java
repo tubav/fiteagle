@@ -3,8 +3,11 @@ package org.fiteagle.core.aaa;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -106,10 +109,19 @@ public class CertificateAuthority {
       CertificateFactory cf = getCertifcateFactory();
       
       X509Certificate userCert =getX509Certificate( cf,  certString);
- 
+      
       User user = getUserFromCert(userCert);
       String alias =  user.getUID();
       X509Certificate storedCertificate = getStoredCertificate( alias);
+      if(storedCertificate == null){
+        try {
+          keyStoreManagement.storeCertificate(alias, userCert);
+          storedCertificate = userCert;
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
       
       try {
         return getCertificateBodyEncoded(storedCertificate);
