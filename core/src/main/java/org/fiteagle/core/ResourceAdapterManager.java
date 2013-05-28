@@ -2,6 +2,7 @@ package org.fiteagle.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
@@ -58,6 +59,34 @@ public class ResourceAdapterManager {
   
   public Group getGroup(String groupId){
     return groups.getGroup(groupId);
+  }
+  
+  public ResourceAdapter getResourceAdapterInstance(String instanceId){
+    return adapterInstancesDatabase.getResourceAdapter(instanceId);
+  }
+  
+  public Group getGroupOfInstance(String instanceId){
+    
+    List<Group> groupList = groups.getGroups();
+    
+    for (Iterator iterator = groupList.iterator(); iterator.hasNext();) {
+      Group group = (Group) iterator.next();
+      ArrayList<ResourceAdapter> instances = group.getResources();
+      for (Iterator iterator2 = instances.iterator(); iterator2.hasNext();) {
+        ResourceAdapter resourceAdapter = (ResourceAdapter) iterator2.next();
+        if(resourceAdapter.getId().compareTo(instanceId)==0)
+          return group;
+      }
+    }
+    
+    return null;
+    
+  }
+
+  public void deleteResource(String resourceAdapterId) {
+    adapterInstancesDatabase.deleteResourceAdapter(resourceAdapterId);
+    Group groupOfResourceAdapter = getGroupOfInstance(resourceAdapterId);
+    groupOfResourceAdapter.deleteResource(resourceAdapterId);
   }
   
   

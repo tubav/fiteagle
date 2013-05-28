@@ -36,7 +36,6 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	
 	public DescribeResult processRequest(List<String> urns, ListCredentials credentials,
 			Object... specificArgs) {
-//		List<String> urns = (List<String>) specificArgs[0];
 		DescribeOptions options = (DescribeOptions) specificArgs[0];
 		DescribeResult result = getResult(urns, credentials, options);
 		return result;
@@ -105,9 +104,9 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();
       tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(resourceAdapter.getId(),urns.get(0)));
-      tmpSliver.setGeni_allocation_status(resourceAdapter.getStatus());//TODO: set right status information over translator(implement this in translator)
+      tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));
+      tmpSliver.setGeni_operational_status((String)resourceAdapter.getProperties().get("operational_status"));
       //TODO: expires????!!!
-      //TODO: geni_operational_status
       //TODO: geni_error (optional)
       slivers.add(tmpSliver);
     }
@@ -119,16 +118,6 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
     } else resultValue.setGeni_rspec(geni_rspec);
     
     return resultValue;
-	  
-//		static test values only. Slice management is missing
-//		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-//		DescribeValue describeValue = translator.getDescription(urns);
-//		String rspecStr = (String) describeValue.getGeni_rspec();
-//		if(this.optionsService.isCompressed()){
-//			describeValue.setGeni_rspec(this.compress(rspecStr));
-//		}
-//		
-//		return describeValue;
 		
 	}
 

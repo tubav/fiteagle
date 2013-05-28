@@ -120,11 +120,11 @@ public class SFAv3RspecTranslator {
 		idProperty.setValue(resourceAdapter.getId());
 		fiteagleSFAResource.getProperty().add(idProperty);
 
-		Property statusProperty = new Property();
-		statusProperty.setName("status");
-//		statusProperty.setType("string");
-		statusProperty.setValue(resourceAdapter.getStatus());
-		fiteagleSFAResource.getProperty().add(statusProperty);
+//		Property statusProperty = new Property();
+//		statusProperty.setName("status");
+////		statusProperty.setType("string");
+//		statusProperty.setValue(resourceAdapter.getStatus());
+//		fiteagleSFAResource.getProperty().add(statusProperty);
 
 		return new ObjectFactory().createResource(fiteagleSFAResource);
 	}
@@ -165,66 +165,6 @@ public class SFAv3RspecTranslator {
 			result.add(rspecParameter);
 		}
 		return result;
-	}
-
-	//TODO: only for static test. Implement slice(sliver) management.
-	public DescribeValue getDescription(List<String> urns) {
-		
-		DescribeValue result = new DescribeValue();
-		result.setGeni_rspec(createTestGeniManifestRspec());
-		result.setGeni_slivers(createTestGeniSlivers());
-		result.setGeni_urn("urn:publicid:IDN+fiteagletest+slice+testtest");
-		
-		return result;
-	}
-
-	// helper methods for static test. 
-	
-	private List<GeniSlivers> createTestGeniSlivers() {
-		ArrayList<GeniSlivers> result= new ArrayList<GeniSlivers>();
-		
-		GeniSlivers testGeniSlivers1 = new GeniSlivers();
-		testGeniSlivers1.setGeni_sliver_urn("urn:publicid:IDN+fiteagletest+sliver+123456");
-		testGeniSlivers1.setGeni_expires("2019-09-22T22:00:00Z");
-		testGeniSlivers1.setGeni_allocation_status("geni_allocated");
-		testGeniSlivers1.setGeni_operational_status("geni_pending_allocation");
-
-		GeniSlivers testGeniSlivers2 = new GeniSlivers();
-		testGeniSlivers2.setGeni_sliver_urn("urn:publicid:IDN+fiteagletest+sliver+123457");
-		testGeniSlivers2.setGeni_expires("2019-09-22T12:00:00Z");
-		testGeniSlivers2.setGeni_allocation_status("geni_provisioned");
-		testGeniSlivers2.setGeni_operational_status("geni_ready");
-		
-		result.add(testGeniSlivers1);
-		result.add(testGeniSlivers2);
-		
-		return result;
-	}
-
-	
-	private String createTestGeniManifestRspec() {
-		RSpecContents manifestRspec = new RSpecContents();
-		manifestRspec.setType("manifest");
-		ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
-		List<Object> rspecContentElements = manifestRspec.getAnyOrNodeOrLink();
-		rspecContentElements.add(this.translateToFITeagleResource(dummyResourceAdapter));
-		
-		JAXBElement<RSpecContents> rspec = new ObjectFactory()
-		.createRspec(manifestRspec);
-		
-		JAXBContext context;
-		StringWriter stringWriter = new StringWriter();
-		try {
-			context = JAXBContext.newInstance("org.fiteagle.interactors.sfa.rspec");
-			Marshaller marshaller = context.createMarshaller();
-			marshaller.marshal(rspec, stringWriter);
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return stringWriter.toString();
-		
 	}
 
   public ResourceAdapter translateResourceToResourceAdapter(Resource object) {
@@ -281,5 +221,9 @@ public class SFAv3RspecTranslator {
     String response = str[0]+"+sliver+"+id;
     return response;
   }
-
+  
+  public String getIdFromSliverUrn(String urn) {
+    String[] str = urn.split("\\+sliver\\+");
+    return str[1];
+  }
 }
