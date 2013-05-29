@@ -22,7 +22,7 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
 
   private AuthenticationHandler authenticationHandler;
   public FiteagleTrustmanager(){
-    this.authenticationHandler = new AuthenticationHandler();
+    this.authenticationHandler = AuthenticationHandler.getInstance();
   }
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {

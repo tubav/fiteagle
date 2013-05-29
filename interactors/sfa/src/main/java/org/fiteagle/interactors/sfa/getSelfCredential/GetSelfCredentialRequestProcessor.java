@@ -48,10 +48,11 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     Credential credential = new Credential();
     credential.setId("testCredential");
     credential.setType("privilege");
-    credential.setOwnerGid(getOwnerGID(cert));
+   // credential.setOwnerGid(getOwnerGID(cert));
+    credential.setOwnerGid(cert);
     credential.setOwnerURN(getOwnerURN(xrn));
     credential.setTargetGid(credential.getOwnerGid());
-    credential.setTargetURN(getOwnerURN(xrn));
+    credential.setTargetURN(xrn);
     GregorianCalendar gregCalendar = new GregorianCalendar();
     gregCalendar
         .setTimeInMillis(java.lang.System.currentTimeMillis() + 10000);
@@ -121,7 +122,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   }
 
   private String getOwnerGID(String cert) {
-    CertificateAuthority ca = new CertificateAuthority();
+    CertificateAuthority ca =CertificateAuthority.getInstance();
     String owner_gid = ca.getUserCertificateAsString(cert);
     return owner_gid;
   }
