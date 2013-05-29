@@ -38,5 +38,9 @@ public interface RestUserManagement {
   @Path("{UID}")
   public abstract Response deleteUser(@PathParam("UID") String UID);
 
+  
+  @GET
+  @Path("{UID/certificate}")
+  public String getUserCertAndPrivateKey(@PathParam("UID") String uid, @QueryParam("password") String password);
  
 }
