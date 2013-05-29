@@ -17,7 +17,7 @@ public class UserDBManagerTest {
   
   @Before
   public void setUp() throws Exception {
-    userDBManager = new UserDBManager();
+    userDBManager =UserDBManager.getInstance();
   }
   
   @Test
