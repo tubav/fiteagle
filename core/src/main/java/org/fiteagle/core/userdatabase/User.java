@@ -2,12 +2,16 @@ package org.fiteagle.core.userdatabase;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class User {
 	
 	private String UID;
 	private String firstName;
 	private String lastName;
+	@JsonIgnore
 	private String passwordHash;
+	@JsonIgnore
 	private String passwordSalt;
 	private List<String> publicKeys;
 
