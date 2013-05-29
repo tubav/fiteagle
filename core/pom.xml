@@ -135,10 +135,18 @@
 							<goal>importKeystore</goal>
 						</goals>
 					</execution>
+					<execution>
+					   <goals>
+					       <goal>importCertificate</goal>
+					   </goals>
+					   <phase>generate-resources</phase>
+					</execution>
 				</executions>
 				<configuration>
-				   <srckeystore>src/main/resources/org/fiteagle/core/certificates/testCA.p12</srckeystore>
+				   <!-- common parameters -->
 				   <keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
+				   <!-- import keystore -->
+				   <srckeystore>src/main/resources/org/fiteagle/core/certificates/testCA.p12</srckeystore>
 				   <srcstoretype>PKCS12</srcstoretype>
 			       <srcstorepass>jetty6</srcstorepass>
 				   <srckeypass>jetty6</srckeypass>
@@ -147,7 +155,13 @@
 		           <destkeypass>jetty6</destkeypass>
 		           <deststorepass>jetty6</deststorepass>	
 		           <destalias>root</destalias>
-
+		           <!-- import certificate -->
+		           <storepass>jetty6</storepass>
+		           <keypass>jetty6</keypass>
+		           <alias>virtualWall</alias>
+		           <file>src/main/resources/org/fiteagle/core/certificates/virtual_wall.pem</file>
+		           <trustcacerts>true</trustcacerts>
+		           <noprompt>true</noprompt>
 				</configuration>
 			</plugin>
 
@@ -177,6 +191,9 @@
 										<goals>
 											<goal>clean</goal>
 											<goal>importKeystore</goal>
+											<goal>
+												importCertificate
+											</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
