@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# fiteagled        Startup script for the FITeagle Server
+# fiteagled        Startup script for the FITeagle Federation Server
 #
 # chkconfig: - 85 15
-# description: The FITeagle Server is an efficient and extensible  \
-#              server implementing the current testbed federation standards.
+# description: The FITeagle Federation Server is an efficient and extensible  \
+#              server implementing the current Federation standards.
 # processname: fiteagled
 # config: /etc/fiteagled/conf/fiteagled.conf
 # config: /etc/sysconfig/fiteagled
@@ -14,10 +14,10 @@
 # Provides: fiteagled
 # Required-Start: $local_fs $remote_fs $network $named
 # Required-Stop: $local_fs $remote_fs $network
-# Should-Start: distcache
-# Short-Description: start and stop FITeagle Server
-# Description: The FITeagle Server is an extensible server
-#  implementing the current testbed federation standards.
+# Should-Start: 
+# Short-Description: start and stop FITeagle Federation Server
+# Description: The FITeagle Federation Server is an extensible server 
+#  implementing the current Federation standards.
 ### END INIT INFO
 
 # Source function library.
@@ -27,51 +27,50 @@ if [ -f /etc/sysconfig/fiteagled ]; then
         . /etc/sysconfig/fiteagled
 fi
 
-# Path to the fiteagle script, server binary, and short-form for messages.
-prog=${PROG-/opt/fiteagle/fiteagle/src/main/bin/fiteagle.sh}
+# Path to the FITeaglectl script, server binary, and short-form for messages.
+fiteaglepath=${FITEAGLEPATH-/opt/fiteagle/fiteagle/}
+fiteaglectl=${FITEAGLECTL-$fiteaglepath/src/main/bin/fiteaglectl}
+fiteagled=${FITEAGLED-$fiteaglepath/src/main/bin/fiteagle}
+fiteagleuser=${FITEAGLEUSER-fiteagle}
+prog=fiteagled
 pidfile=${PIDFILE-/var/run/fiteagled.pid}
 lockfile=${LOCKFILE-/var/lock/subsys/fiteagled}
+logFile=${LOGFILE-/var/log/fiteagled}
 RETVAL=0
-STOP_TIMEOUT=${STOP_TIMEOUT-10}
+PATH=$PATH:/usr/local/sbin
 
 start() {
         echo -n $"Starting $prog: "
-        daemon --pidfile=${pidfile} $prog start $OPTIONS
+        start-stop-daemon --start --background --chuid $fiteagleuser --pidfile $pidfile --make-pidfile --exec $fiteagled  --name $prog -- $OPTIONS
         RETVAL=$?
         echo
-	[ $RETVAL = 0 ] && touch ${lockfile}
+        [ $RETVAL = 0 ] && touch ${lockfile}
         return $RETVAL
 }
-
 stop() {
         echo -n $"Stopping $prog: "
-        killproc -p ${pidfile} -d ${STOP_TIMEOUT} $prog
+        pkill -P $(cat $pidfile)
+        start-stop-daemon --stop --chuid $fiteagleuser --pidfile $pidfile --name $prog
         RETVAL=$?
         echo
-	[ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
+        [ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
 }
 
 # See how we were called.
 case "$1" in
   start)
         start
-	;;
+        ;;
   stop)
-       	stop
-	;;
-  status)
-        status -p ${pidfile} $fiteagled
-        RETVAL=$?
+        stop
         ;;
   restart)
         stop
-	start
-	;;
+        start
+        ;;
   *)
-    	echo $"Usage: $prog {start|stop|status|restart}"
+        echo $"Usage: $prog {start|stop|restart}"
         RETVAL=2
 esac
 
 exit $RETVAL
-
-
