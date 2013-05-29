@@ -63,7 +63,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
     
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     List<Object> rspecRequestedResources = requestRspec.getAnyOrNodeOrLink();
-    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     ArrayList<ResourceAdapter> resourcesList = new ArrayList<ResourceAdapter>();
     
     for (Iterator iterator = rspecRequestedResources.iterator(); iterator.hasNext();) {
@@ -101,7 +101,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
   private AllocateValue getValue(String urn) {
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     AllocateValue resultValue = new AllocateValue();
-    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     Group group = resourceManager.getGroup(urn);
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     

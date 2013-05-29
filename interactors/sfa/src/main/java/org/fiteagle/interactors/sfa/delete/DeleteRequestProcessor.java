@@ -58,7 +58,7 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
   
   private ArrayList<GeniSlivers> getDeleteResultValue(ArrayList<String> urns) {
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     //TODO: the urn is a slice urn..
     String test = urns.get(0);
