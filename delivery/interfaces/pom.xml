@@ -69,6 +69,8 @@
     </dependency>
 				</dependencies>
 				<configuration>
+                    <stopKey>stopKey</stopKey>
+                    <stopPort>8444</stopPort>
 					<contextPath>/</contextPath>
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<connectors>
