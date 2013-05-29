@@ -21,10 +21,12 @@ import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/userdb")
 public class RestUserManager implements RestUserManagement {
-  
+  private Logger log = LoggerFactory.getLogger(getClass());
   private static UserDBManager manager;
   static {
     try {
@@ -144,6 +146,7 @@ public class RestUserManager implements RestUserManagement {
       String certificate = manager.createUserCertificate(uid);
       return privateKey + "\n" + certificate;
     } catch (Exception e) {
+      log.error(e.getMessage());
       throw new RuntimeException(e.getCause());
     }
     
