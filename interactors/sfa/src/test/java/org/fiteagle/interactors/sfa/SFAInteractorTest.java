@@ -7,6 +7,7 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -15,6 +16,8 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
+import org.fiteagle.interactors.sfa.delete.DeleteOptions;
+import org.fiteagle.interactors.sfa.delete.DeleteResult;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getversion.GeniAPIVersion;
@@ -23,6 +26,13 @@ import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.provision.ProvisionResult;
+import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
+import org.fiteagle.interactors.sfa.rspec.Property;
+import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.Resource;
+import org.fiteagle.interactors.sfa.status.StatusOptions;
+import org.fiteagle.interactors.sfa.status.StatusResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,6 +42,8 @@ public class SFAInteractorTest {
 	public static final String EXPECTED_API_URL = "https://fiteagle.org/api/sfa/v2/xmlrpc/am";
 
 	private transient ISFA sfaInteractor;
+	
+	
 
 	@Before
 	public void setUp() {
@@ -59,6 +71,7 @@ public class SFAInteractorTest {
 				"3");
 		final ListResourcesResult listResourcesResult = this.sfaInteractor
 				.listResources(getListCredentials(), options);
+		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 
 	}
 
@@ -77,15 +90,70 @@ public class SFAInteractorTest {
 	}
 	
 	@Test
-	public void testdescribe() throws IOException {
+	public void testDescribe() throws IOException {
 		DescribeOptions options;// = createMinimalListResourceOptions("GENI", "3");
 		ArrayList<String> urns = new ArrayList<String>();
 		urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+		RSpecContents testRSpec = getTestRspec();
+		testRSpec.setType("request");
+    
+		this.sfaInteractor.allocate(urns.get(0), getListCredentials(), testRSpec, null);
 		
 		DescribeResult describeResult = this.sfaInteractor.describe(urns, getListCredentials(), createTestDescribeOptions("GENI", "3", false));
 		Assert.assertEquals(0, describeResult.getCode().getGeni_code());
 	}
+	
+	@Test
+  public void testAllocate() throws IOException {
+    ArrayList<String> urns = new ArrayList<String>();
+    urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+    RSpecContents testRSpec = getTestRspec();
+    testRSpec.setType("request");
+    
+    AllocateResult allocateResult = this.sfaInteractor.allocate(urns.get(0), getListCredentials(), testRSpec, null);
+    
+    Assert.assertEquals(0, allocateResult.getCode().getGeni_code());
+  }
+	
+	@Test
+  public void testProvision() throws IOException {
+    ArrayList<String> urns = new ArrayList<String>();
+    urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+    this.testAllocate();
+    
+    ProvisionResult provisionResult = this.sfaInteractor.provision(urns, getListCredentials(), null);
+    
+    Assert.assertEquals(0, provisionResult.getCode().getGeni_code());
+  }
+	
+	@Test
+  public void testStatus() throws IOException {
+    ArrayList<String> urns = new ArrayList<String>();
+    urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+    this.testAllocate();
+    
+    DescribeResult describeResult = this.sfaInteractor.describe(urns, getListCredentials(), createTestDescribeOptions("GENI", "3", false));
+    
+    
+    ArrayList<String> statusUrns= new ArrayList<String>();
+    statusUrns.add(describeResult.getValue().getGeni_slivers().get(0).getGeni_sliver_urn());
+    StatusResult statusResult = this.sfaInteractor.status(statusUrns, getListCredentials(), new StatusOptions());
+    
+    Assert.assertEquals(0, statusResult.getCode().getGeni_code());
+  }
+	
+	@Test
+  public void testDelete() throws IOException {
+    ArrayList<String> urns = new ArrayList<String>();
+    urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+    this.testAllocate();
+    
+    DeleteResult deleteResult = this.sfaInteractor.delete(urns, getListCredentials(), new DeleteOptions());
+    
+    Assert.assertEquals(0, deleteResult.getCode().getGeni_code());
+  }
 
+	
 	@Test
 	public void testInvalidListResourcesVersion() throws IOException {
 
@@ -182,6 +250,26 @@ public class SFAInteractorTest {
 		ListCredentials listCredentials = new ListCredentials();
 		listCredentials.getCredentialsList().add(credentials);
 		return listCredentials;
+	}
+	
+	private RSpecContents getTestRspec(){
+	  
+	  
+	  RSpecContents testRSpec = new RSpecContents();
+    List<Object> fiteagleResources = testRSpec .getAnyOrNodeOrLink();
+    Resource fiteagleResource1 = new Resource();
+    List<Property> properties = fiteagleResource1.getProperty();
+    Property idProperty= new Property();
+//    idProperty.setName("id");
+//    idProperty.setValue("TestId");
+    Property typeProperty= new Property();
+    typeProperty.setName("type");
+    typeProperty.setValue("org.fiteagle.adapter.stopwatch.StopwatchAdapter");
+    
+//    properties.add(idProperty);
+    properties.add(typeProperty);
+    fiteagleResources.add(new ObjectFactory().createResource(fiteagleResource1));
+    return testRSpec;
 	}
 
 }

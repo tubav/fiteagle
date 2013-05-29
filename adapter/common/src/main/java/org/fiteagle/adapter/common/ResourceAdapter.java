@@ -3,6 +3,7 @@ package org.fiteagle.adapter.common;
 import java.rmi.server.ObjID;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class ResourceAdapter {
 
@@ -36,7 +37,8 @@ public abstract class ResourceAdapter {
 	
 	public ResourceAdapter() {
 	  ObjID objId = new ObjID();
-	  this.setId(objId.toString());
+//	  this.setId(objId.toString());
+	  this.setId(UUID.randomUUID().toString());
 	  this.setStatus("geni_allocated");
   }
 	public String getType() {

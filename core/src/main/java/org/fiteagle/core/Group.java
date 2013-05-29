@@ -1,6 +1,7 @@
 package org.fiteagle.core;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 
@@ -53,6 +54,37 @@ public class Group {
     if(this.resources == null)
       this.resources = new ArrayList<ResourceAdapter>();
     this.resources.add(resource);
+  }
+  
+  public boolean contains(String resourceAdapterId){
+    for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
+      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+      if (resourceAdapter.getId().compareTo(resourceAdapterId)==0)
+        return true;
+    }
+    return false;
+  }
+  
+  public ResourceAdapter getResource(String adapterId){
+    for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
+      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+      if (resourceAdapter.getId().compareTo(adapterId)==0)
+        return resourceAdapter;
+    }
+    return null;
+  }
+  
+  public void deleteResource(String adapterId){
+    
+    Iterator iterator = resources.iterator();
+    while (iterator.hasNext()) {
+      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+      if (resourceAdapter.getId().compareTo(adapterId)==0){
+        resources.remove(resourceAdapter);
+        return;
+      }
+    }
+    
   }
   
 }

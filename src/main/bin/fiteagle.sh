@@ -11,7 +11,7 @@ function testFITeagle {
   fi
 }
 
-function runFITeagle {
+function startFITeagle {
   main_dir="./delivery/interfaces"  
   echo "Starting FITeagle..."
   cd "${main_dir}"
@@ -24,12 +24,26 @@ function runFITeagle {
   fi
 }
 
+function stopFITeagle {
+  main_dir="./delivery/interfaces"  
+  echo "Stopping FITeagle..."
+  cd "${main_dir}"
+  mvn -B -q jetty:stop
+  if [ "0" != "$?" ]; then
+    echo >&2 "FAILED. Please have a look above."
+    exit 3
+  fi
+}
+
+
 function usage {
-    echo "Usage: ./src/main/bin/fiteagle.sh test|start"
+    echo "Usage: ./src/main/bin/fiteagle.sh test|start|stop"
 }
 
 case $1 in
     test) testFITeagle;;
-    start) runFITeagle;;
+    start) startFITeagle;;
+    daemon) startFITeagle &;;
+    stop) stopFITeagle;;
     *) usage
 esac

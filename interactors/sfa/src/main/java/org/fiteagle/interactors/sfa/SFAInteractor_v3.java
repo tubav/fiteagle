@@ -94,7 +94,8 @@ public class SFAInteractor_v3 implements ISFA {
     log.info(credential);
     log.info("target: " + xrn);
     log.info("type: "+ type);
-    return "";
+    return credential;
+//    return "";
   }
   
   @Override

@@ -17,6 +17,8 @@ import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
+import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
+import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
@@ -57,7 +59,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
     }
     //check options is optional!
     
-  //TODO: process the correct request..
+  //process the correct request..
     
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     List<Object> rspecRequestedResources = requestRspec.getAnyOrNodeOrLink();
@@ -66,28 +68,31 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
     
     for (Iterator iterator = rspecRequestedResources.iterator(); iterator.hasNext();) {
       Object object = (Object) iterator.next();
+//      if(Resource.class.isAssignableFrom(object.getClass())){
+//        ResourceAdapter resource = translator.translateResourceToResourceAdapter((Resource)object);
+//        resourceManager.addResourceAdapterInstance(resource);
+//        resourcesList.add(resource);
+//      }
       if(JAXBElement.class.isAssignableFrom(object.getClass())){
         JAXBElement jaxbElem = (JAXBElement)object;
         if(Resource.class.isAssignableFrom(jaxbElem.getValue().getClass())){
           ResourceAdapter resource = translator.translateResourceToResourceAdapter((Resource)jaxbElem.getValue());
+          resource.getProperties().put("operational_status", GENISliverOperationalState.geni_pending_allocation.toString());
+          resource.getProperties().put("allocation_status", GENISliverAllocationState.geni_allocated.toString());
           resourceManager.addResourceAdapterInstance(resource);
           resourcesList.add(resource);
-          
-          //TODO:get resource manager and add resource to group DB and resource adapter instance database.
         }
       }
-      //TODO: implement if it is node or link
+      //TODO: implement if it is node or link for resource adapter virtual machine
       
     }
     
-    Group group = new Group(urn, groupOwnerId, resourcesList);//TODO: do this in slice management
+    Group group = new Group(urn, groupOwnerId, resourcesList);
     resourceManager.addGroup(group);
     
     returnCode = getSuccessReturnCode();
     
     result.setCode(returnCode);
-//    result.setValue(getTestResultValue(urn, requestRspec));
-    AllocateValue terstValue = getValue(urn);
     result.setValue(getValue(urn));
     return result;
   }
@@ -105,62 +110,20 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();
       tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(resourceAdapter.getId(),urn));
-      tmpSliver.setGeni_allocation_status(resourceAdapter.getStatus());//TODO: set right status information over translator(implement this in translator)
+      tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));
       //TODO: expires????!!!
       slivers.add(tmpSliver);
     }
     resultValue.setGeni_slivers(slivers);
     
-    
-    
-    
-    
-    
     RSpecContents manifestRSpec = getManifestRSpec(resources);
     String geni_rspec = getRSpecString(manifestRSpec);
     resultValue.setGeni_rspec(geni_rspec);
-    
-    
     
     return resultValue;
   }
 
   
-  private AllocateValue getTestResultValue(String urn, RSpecContents requestRspec) {
-    
-    
-  //TODO: static test values only.
-    SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    
-//    translator.allocate();
-    
-    
-    
-    DescribeValue describeValue = translator.getDescription(new ArrayList<String>());
-    
-    AllocateValue resultValue = new AllocateValue();
-    
-    ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
-    
-    List<GeniSlivers> testList = describeValue.getGeni_slivers();
-    for (Iterator iterator = testList.iterator(); iterator.hasNext();) {
-      GeniSlivers geniSlivers = (GeniSlivers) iterator.next();
-      //for allocate other geni sliver attributes are not allowed!!!!!!
-      GeniSlivers tmpSlivers = new GeniSlivers();
-      tmpSlivers.setGeni_sliver_urn(geniSlivers.getGeni_sliver_urn());
-      tmpSlivers.setGeni_expires(geniSlivers.getGeni_expires());
-      tmpSlivers.setGeni_allocation_status(geniSlivers.getGeni_allocation_status());
-      slivers.add(tmpSlivers);
-    }
-    
-    resultValue.setGeni_slivers(slivers );
-    resultValue.setGeni_rspec(describeValue.getGeni_rspec());
-    
-    return resultValue;
-    
-  }
-
-
   @Override
   public AMResult processRequest(ListCredentials credentials, Object... specificArgs) {
     // TODO Auto-generated method stub

@@ -44,14 +44,6 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		ListResourcesResult result = getResult(credentials, options);
 		return result;
 
-		// SFACredentialsService credentialService = new
-		// SFACredentialsService(credentials);
-
-		// if(goOn &&
-		// !credentialService.isPermitted(SFAv3MethodsEnum.LIST_RESOURCES) ){
-		// returnCode.setGeni_code(GENI_CodeEnum.FORBIDDEN);
-		// goOn = false;
-		// }
 	}
 
 	private ListResourcesResult getResult(ListCredentials listCredentials, ListResourceOptions options) {
@@ -136,31 +128,6 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 
 
-
-//	private RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
-//		RSpecContents advertisedRspec = new RSpecContents();
-//		advertisedRspec.setType("advertisement");
-//
-//		List<Object> rspecContentElements = advertisedRspec
-//				.getAnyOrNodeOrLink();
-//		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-//		
-//		for(ResourceAdapter resourceAdapter: resourceAdapters){
-//			Object fiteagleResource = translator.translateToFITeagleResource(resourceAdapter);
-//			rspecContentElements.add(fiteagleResource);
-//		}
-//		return advertisedRspec;
-//	}
-
-//	private List<ResourceProperties> getResourceProperties() {
-//		List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
-//		List<ResourceAdapter> resourceAdapters = resourceManager
-//				.getResourceAdapters();
-//		for (ResourceAdapter adapter : resourceAdapters) {
-//			resources.addAll(adapter.getAllResources());
-//		}
-//		return resources;
-//	}
 
 	private boolean optionsAreValid() {
 

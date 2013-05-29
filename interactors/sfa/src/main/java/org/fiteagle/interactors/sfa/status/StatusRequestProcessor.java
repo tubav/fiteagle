@@ -1,16 +1,19 @@
 package org.fiteagle.interactors.sfa.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.core.Group;
+import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.describe.DescribeValue;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class StatusRequestProcessor extends SFAv3RequestProcessor {
@@ -52,41 +55,46 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
     }
     
     
-    //TODO: process the correct request..
+    //process the correct request..
     returnCode = getSuccessReturnCode();
     
     result.setCode(returnCode);
-    result.setValue(getTestResultStatusValue(urns));
+    result.setValue(getResultStatusValue(urns));
     return result;
   }
+  private StatusValue getResultStatusValue(List<String> urns) {
 
-
-  private StatusValue getTestResultStatusValue(List<String> urns) {
-  //TODO: static test values only.
-    
-    StatusValue testStatusResultValue = new StatusValue();
-    
-    testStatusResultValue.setGeni_urn("urn:publicid:IDN+fiteagle:av+slice+myslice");
-    
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    DescribeValue describeValue = translator.getDescription(urns);
+    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
-//    ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
-//    
-//    List<GeniSlivers> testList = describeValue.getGeni_slivers();
-//    for (Iterator iterator = testList.iterator(); iterator.hasNext();) {
-//      GeniSlivers geniSlivers = (GeniSlivers) iterator.next();
-//      //for status other geni sliver attributes are not allowed!!!!!!
-//      slivers.add(geniSlivers);
-//    }
+    String instaNceId = translator.getIdFromSliverUrn(urns.get(0)); 
+    Group group = resourceManager.getGroupOfInstance(instaNceId);
+
+    for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
+      String urn = (String) iterator.next();
+      String id=translator.getIdFromSliverUrn(urn);
+      if(!group.contains(id))
+        throw new RuntimeException();//TODO: define this exception concrete
+
+      ResourceAdapter resourceAdapter = group.getResource(id);
+      GeniSlivers tmpSliver = new GeniSlivers();
+      tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(resourceAdapter.getId(),urn));
+      tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));//TODO: set right status information over translator(implement this in translator)
+      tmpSliver.setGeni_operational_status((String)resourceAdapter.getProperties().get("operational_status"));
+      //TODO: expires????!!!
+      //TODO error(optional)??
+      slivers.add(tmpSliver);
+      
+    }
     
-    
-    List<GeniSlivers> slivers = describeValue.getGeni_slivers();
-    
-    testStatusResultValue.setGeni_slivers(slivers );
-    
-    return testStatusResultValue;
-  }
+      StatusValue statusResultValue = new StatusValue();
+      statusResultValue.setGeni_urn(group.getGroupId());
+      statusResultValue.setGeni_slivers(slivers );
+      
+      return statusResultValue;
+    }
+
 
 
   @Override

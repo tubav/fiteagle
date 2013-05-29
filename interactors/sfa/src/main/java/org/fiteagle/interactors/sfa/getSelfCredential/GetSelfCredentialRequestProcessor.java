@@ -55,7 +55,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     credential.setTargetURN(xrn);
     GregorianCalendar gregCalendar = new GregorianCalendar();
     gregCalendar
-        .setTimeInMillis(java.lang.System.currentTimeMillis() + 10000);
+        .setTimeInMillis(java.lang.System.currentTimeMillis() + 100000);
     XMLGregorianCalendar expirationDate = null;
     try {
       expirationDate = DatatypeFactory.newInstance()
