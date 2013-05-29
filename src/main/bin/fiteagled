@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# fiteagled        Startup script for the FITeagle Server
+#
+# chkconfig: - 85 15
+# description: The FITeagle Server is an efficient and extensible  \
+#              server implementing the current testbed federation standards.
+# processname: fiteagled
+# config: /etc/fiteagled/conf/fiteagled.conf
+# config: /etc/sysconfig/fiteagled
+# pidfile: /var/run/fiteagled.pid
+#
+### BEGIN INIT INFO
+# Provides: fiteagled
+# Required-Start: $local_fs $remote_fs $network $named
+# Required-Stop: $local_fs $remote_fs $network
+# Should-Start: distcache
+# Short-Description: start and stop FITeagle Server
+# Description: The FITeagle Server is an extensible server
+#  implementing the current testbed federation standards.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ -f /etc/sysconfig/fiteagled ]; then
+        . /etc/sysconfig/fiteagled
+fi
+
+# Path to the fiteagle script, server binary, and short-form for messages.
+prog=${PROG-/opt/fiteagle/fiteagle/src/main/bin/fiteagle.sh}
+pidfile=${PIDFILE-/var/run/fiteagled.pid}
+lockfile=${LOCKFILE-/var/lock/subsys/fiteagled}
+RETVAL=0
+STOP_TIMEOUT=${STOP_TIMEOUT-10}
+
+start() {
+        echo -n $"Starting $prog: "
+        daemon --pidfile=${pidfile} $prog start $OPTIONS
+        RETVAL=$?
+        echo
+	[ $RETVAL = 0 ] && touch ${lockfile}
+        return $RETVAL
+}
+
+stop() {
+        echo -n $"Stopping $prog: "
+        killproc -p ${pidfile} -d ${STOP_TIMEOUT} $prog
+        RETVAL=$?
+        echo
+	[ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+	;;
+  stop)
+       	stop
+	;;
+  status)
+        status -p ${pidfile} $fiteagled
+        RETVAL=$?
+        ;;
+  restart)
+        stop
+	start
+	;;
+  *)
+    	echo $"Usage: $prog {start|stop|status|restart}"
+        RETVAL=2
+esac
+
+exit $RETVAL
+
+
