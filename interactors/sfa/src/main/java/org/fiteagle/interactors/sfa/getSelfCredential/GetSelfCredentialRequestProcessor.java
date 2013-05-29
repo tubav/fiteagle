@@ -51,7 +51,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
    // credential.setOwnerGid(getOwnerGID(cert));
     credential.setOwnerGid(cert);
     credential.setOwnerURN(getOwnerURN(xrn));
-    credential.setTargetGid(credential.getOwnerGid());
+    credential.setTargetGid(getTargetGID(type,xrn));
     credential.setTargetURN(xrn);
     GregorianCalendar gregCalendar = new GregorianCalendar();
     gregCalendar
@@ -96,7 +96,22 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 	}
 
 
-  private String getTargetGID(String xrn) {
+  private String getTargetGID(String type, String xrn) {
+    String cert = "";
+    if(type.equalsIgnoreCase("user")){
+      cert = getServerCert();
+    }else if(type.equalsIgnoreCase("Slice")){
+      cert = getSliceCert(xrn);
+    }
+    throw new UnsupportedTarget();
+  }
+
+  private String getSliceCert(String xrn) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  private String getServerCert() {
     // TODO Auto-generated method stub
     return null;
   }
@@ -159,4 +174,10 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 		return null;
 	}
 
+	public class UnsupportedTarget extends RuntimeException {
+
+   
+    private static final long serialVersionUID = -7821229625163019933L;
+	  
+	}
 }
