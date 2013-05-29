@@ -43,6 +43,7 @@ function usage {
 case $1 in
     test) testFITeagle;;
     start) startFITeagle;;
+    daemon) startFITeagle &;;
     stop) stopFITeagle;;
     *) usage
 esac
