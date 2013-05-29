@@ -37,8 +37,16 @@ public class AuthenticationHandler {
   private KeyStoreManagement keyStoreManagement;
   Logger log = LoggerFactory.getLogger(this.getClass());
   
+  private static AuthenticationHandler authHandler = null;
   
-  public AuthenticationHandler() {
+  public static AuthenticationHandler getInstance(){
+    if(authHandler == null)
+       authHandler =  new AuthenticationHandler();
+      
+    return authHandler;
+  }
+  
+  private AuthenticationHandler() {
     
     this.keyStoreManagement = new KeyStoreManagement();
     
@@ -52,7 +60,7 @@ public class AuthenticationHandler {
       X509Certificate cert = certificates[0];
       if (cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())) {
         // self signed cert
-        UserDBManager userDBManager = new UserDBManager();
+        UserDBManager userDBManager = UserDBManager.getInstance();
         User identifiedUser = userDBManager.getUserFromCert(cert);
         verifyUserSignedCertificate(identifiedUser, cert);
       //  signAndStoreCertificate(identifiedUser);
@@ -84,7 +92,7 @@ public class AuthenticationHandler {
   }
   
   private void signAndStoreCertificate(User identifiedUser) {
-    CertificateAuthority ca = new CertificateAuthority();
+    CertificateAuthority ca = CertificateAuthority.getInstance();
     X509Certificate saveCert;
     try {
       saveCert = ca.createCertificate(identifiedUser);

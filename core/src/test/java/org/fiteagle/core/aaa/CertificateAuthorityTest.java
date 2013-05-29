@@ -15,8 +15,8 @@ public class CertificateAuthorityTest {
   User dummyUser ;
   @Before
   public void setUp() throws Exception {
-    CA = new CertificateAuthority();
-    um = new UserDBManager();
+    CA =CertificateAuthority.getInstance();
+    um = UserDBManager.getInstance();
     dummyUser = um.get("fiteagle.av.test");
   }
   

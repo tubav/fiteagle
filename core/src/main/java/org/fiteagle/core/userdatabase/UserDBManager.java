@@ -1,17 +1,26 @@
 package org.fiteagle.core.userdatabase;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
@@ -19,6 +28,8 @@ import javax.security.auth.x500.X500Principal;
 
 import net.iharder.Base64;
 
+import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
@@ -32,192 +43,212 @@ public class UserDBManager {
   private UserDB database;
   private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   
-  private static enum databaseType {InMemory, SQLite} 
-  private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
-
-  Logger log = LoggerFactory.getLogger(getClass());
- 
+  private static enum databaseType {
+    InMemory, SQLite
+  }
   
-  public UserDBManager() throws DatabaseException{
-
-    if(preferences.get("databaseType") == null){
+  private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
+  private static UserDBManager dbManager = null;
+  Logger log = LoggerFactory.getLogger(getClass());
+  
+  public static UserDBManager getInstance(){
+    if(dbManager == null)
+        dbManager =  new UserDBManager();
+    return dbManager;
+  } 
+  
+  private UserDBManager() throws DatabaseException {
+    
+    if (preferences.get("databaseType") == null) {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
     }
-    if(preferences.get("databaseType").equals(databaseType.SQLite.name())){
+    if (preferences.get("databaseType").equals(databaseType.SQLite.name())) {
       database = new SQLiteUserDB();
-    }
-    else{
+    } else {
       database = new InMemoryUserDB();
       try {
         String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
-        User u = createUser("fiteagle.av.test","test","testUser","test");
+        User u = createUser("fiteagle.av.test", "test", "testUser", "test");
         u.addPublicKey(key);
         add(u);
       } catch (DuplicateUIDException | NoSuchAlgorithmException | IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-    }   
+    }
   }
   
-  public void add(User u) throws DuplicateUIDException, DatabaseException{
+  public void add(User u) throws DuplicateUIDException, DatabaseException {
     database.add(u);
   }
   
-  public void delete(String UID) throws DatabaseException{
+  public void delete(String UID) throws DatabaseException {
     database.delete(UID);
   }
   
-  public void delete(User u) throws DatabaseException{
+  public void delete(User u) throws DatabaseException {
     database.delete(u);
   }
   
-  public void update(User u) throws RecordNotFoundException, DatabaseException{
+  public void update(User u) throws RecordNotFoundException, DatabaseException {
     database.update(u);
   }
   
-  public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException{
+  public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException {
     database.addKey(UID, key);
   }
   
-  public User get(String UID) throws RecordNotFoundException, DatabaseException{
+  public User get(String UID) throws RecordNotFoundException, DatabaseException {
     return database.get(UID);
   }
   
-  public User get(User u) throws RecordNotFoundException, DatabaseException{
+  public User get(User u) throws RecordNotFoundException, DatabaseException {
     return database.get(u);
   }
   
   public User getUserFromCert(X509Certificate userCert) {
-   try {
-    String username = "";
-    Collection<List<?>> alternativeNames =  userCert.getSubjectAlternativeNames();
-    if(alternativeNames == null){
-      X500Principal prince = userCert.getSubjectX500Principal();
-      username = getCN(prince);
-    }else{
-      Iterator<List<?>> it = alternativeNames.iterator();
-      while(it.hasNext()){
-        List<?> altName = it.next();
-        if(altName.get(0).equals(Integer.valueOf(6))){
-          username = (String)altName.get(1);
-          username = getUIDFromURN(username);
+    try {
+      String username = "";
+      Collection<List<?>> alternativeNames = userCert.getSubjectAlternativeNames();
+      if (alternativeNames == null) {
+        X500Principal prince = userCert.getSubjectX500Principal();
+        username = getCN(prince);
+      } else {
+        Iterator<List<?>> it = alternativeNames.iterator();
+        while (it.hasNext()) {
+          List<?> altName = it.next();
+          if (altName.get(0).equals(Integer.valueOf(6))) {
+            username = (String) altName.get(1);
+            username = getUIDFromURN(username);
+          }
         }
       }
-    }
       
-    User identifiedUser = get(username);
-    return identifiedUser;
-   } catch (CertificateParsingException e1) {
-       throw new NonParsableNamingFormat();
-   }
+      User identifiedUser = get(username);
+      return identifiedUser;
+    } catch (CertificateParsingException e1) {
+      throw new NonParsableNamingFormat();
+    }
   }
-
+  
   private String getUIDFromURN(String urn) {
-    String userFromURN = urn.substring(urn.lastIndexOf("+")+1);
+    String userFromURN = urn.substring(urn.lastIndexOf("+") + 1);
     System.out.println(userFromURN);
-    String domain = urn.substring(urn.indexOf("IDN")+4, urn.indexOf("+user+") );
+    String domain = urn.substring(urn.indexOf("IDN") + 4, urn.indexOf("+user+"));
     domain = domain.replace(":", ".");
     System.out.println(domain);
-    return domain+"."+userFromURN;
+    return domain + "." + userFromURN;
   }
-
+  
   private String getCN(X500Principal prince) {
     String uuid = prince.getName();
     LdapName ldapDN = getLdapName(uuid);
-   
-    for(Rdn rdn: ldapDN.getRdns()) {
-        if(rdn.getType().equals("CN")){
-          return (String) rdn.getValue();
-        }
+    
+    for (Rdn rdn : ldapDN.getRdns()) {
+      if (rdn.getType().equals("CN")) {
+        return (String) rdn.getValue();
+      }
     }
     throw new NonParsableNamingFormat();
   }
-
+  
   private LdapName getLdapName(String uuid) {
     try {
       LdapName ldapDN = new LdapName(uuid);
       return ldapDN;
     } catch (InvalidNameException e) {
-  
-       throw new NonParsableNamingFormat();
+      
+      throw new NonParsableNamingFormat();
     }
-   
+    
   }
   
-
-  public User createUser(String uuid, String firstName, String lastName,String password) throws DuplicateUIDException, NoSuchAlgorithmException, IOException{
-
+  public User createUser(String uuid, String firstName, String lastName, String password) throws DuplicateUIDException,
+      NoSuchAlgorithmException, IOException {
     
-   
     SecureRandom random = new SecureRandom();
     byte[] salt = random.generateSeed(20);
     String passwordSalt = Base64.encodeBytes(salt);
-   
+    
     byte[] passwordBytes = createHash(salt, password);
-    String passwordHash =  Base64.encodeBytes(passwordBytes);
-  
+    String passwordHash = Base64.encodeBytes(passwordBytes);
+    
     List<String> keys = new ArrayList<>();
-    return new User(uuid, firstName, lastName,passwordHash,passwordSalt,keys );
-   
+    return new User(uuid, firstName, lastName, passwordHash, passwordSalt, keys);
+    
   }
-  public User createUser(String uuid, String firstName, String lastName,String password, List<String> keys) throws DuplicateUIDException, NoSuchAlgorithmException, IOException{
+  
+  public User createUser(String uuid, String firstName, String lastName, String password, List<String> keys)
+      throws DuplicateUIDException, NoSuchAlgorithmException, IOException {
     User u = createUser(uuid, firstName, lastName, password);
-    for(String key:keys){
+    for (String key : keys) {
       u.addPublicKey(key);
     }
     return u;
   }
-    
-
-  public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException, NoSuchAlgorithmException {
+  
+  public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
+      NoSuchAlgorithmException {
     byte[] passwordHashBytes = Base64.decode(passwordHash);
     byte[] passwordSaltBytes = Base64.decode(passwordSalt);
     byte[] proposedDigest = createHash(passwordSaltBytes, password);
     return Arrays.equals(passwordHashBytes, proposedDigest);
   }
-
- 
+  
   public String getOwnerURN(User u) {
     
     String[] split = u.getUID().split("\\.");
-    String user = split[split.length-1];
-    String returnString = "urn:publicid:IDN"; 
+    String user = split[split.length - 1];
+    String returnString = "urn:publicid:IDN";
     String domain = "";
-    for(int i = 0; i< split.length-1;i++){
-      if(i>0){
-        domain+= ":"+split[i];
-      }
-      else{
-        domain+=split[i];
+    for (int i = 0; i < split.length - 1; i++) {
+      if (i > 0) {
+        domain += ":" + split[i];
+      } else {
+        domain += split[i];
       }
     }
     
-    String plus = domain.length()>0 ? "+" :"";
-    returnString = returnString + plus + domain + "+user+" +user;
+    String plus = domain.length() > 0 ? "+" : "";
+    returnString = returnString + plus + domain + "+user+" + user;
     return returnString;
   }
   
-
-  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException{
-
-    MessageDigest  digest = MessageDigest.getInstance("SHA-256");
+  public String createUserCertificate(String uid) throws Exception {
+    User u = get(uid);
+    CertificateAuthority ca = CertificateAuthority.getInstance();
+    X509Certificate cert = ca.createCertificate(u);
+    // store?
+    return ca.getCertficateEncoded(cert);
+  }
+  
+  public String createUserPrivateKey(String uid, String password) throws IOException, GeneralSecurityException {
+    User u = get(uid);
+    KeyManagement keyManager = new KeyManagement();
+    KeyPair keypair = keyManager.generateKeyPair();
+    PrivateKey prvKey = keypair.getPrivate();
+    PublicKey pubKey = keypair.getPublic();
+    //Here?
+    String pubKeyEncoded = keyManager.encodePublicKey(pubKey);
+    addKey(uid, pubKeyEncoded);
+    
+    String prvKeyEncoded = keyManager.encryptPrivateKey(keypair, password);
+    return prvKeyEncoded;
+    
+  }
+  
+  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {
+    
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
     digest.reset();
     digest.update(salt);
     return digest.digest(password.getBytes());
   }
-
- 
   
-  private class NonParsableNamingFormat extends RuntimeException{
+  private class NonParsableNamingFormat extends RuntimeException {
     
     private static final long serialVersionUID = -3819932831236493248L;
     
   }
-
- 
-
- 
-
- 
+  
 }

@@ -42,143 +42,150 @@ import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 
 public class CertificateAuthority {
-
-  private  UserDBManager userDBManager ;
   
- 
-  public CertificateAuthority(){
-     try {
-      userDBManager = new UserDBManager();
+  private UserDBManager userDBManager;
+  private static CertificateAuthority CA = null;
+  public static CertificateAuthority getInstance(){
+    if (CA == null)
+        CA = new CertificateAuthority();
+    
+    return CA;
+  }
+  
+  private CertificateAuthority() {
+    try {
+      userDBManager = UserDBManager.getInstance();
     } catch (DatabaseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw e;
     }
   }
   
   private KeyStoreManagement keyStoreManagement = new KeyStoreManagement();
   
-  public X509Certificate createCertificate(User newUser) throws Exception{
+  public X509Certificate createCertificate(User newUser) throws Exception {
     X509Certificate caCert = keyStoreManagement.getCACert();
     X500Name issuer = new JcaX509CertificateHolder(caCert).getSubject();
     PrivateKey caPrivateKey = keyStoreManagement.getCAPrivateKey();
     ContentSigner contentsigner = new JcaContentSignerBuilder("SHA1WithRSAEncryption").build(caPrivateKey);
     
     X500Name subject = createX500Name(newUser);
-    SubjectPublicKeyInfo  subjectsPublicKeyInfo = getPublicKey(newUser);
-    X509v3CertificateBuilder ca_gen = new X509v3CertificateBuilder(issuer, new BigInteger( new SecureRandom().generateSeed(256)), new Date(), new Date(System.currentTimeMillis()+ 31500000000L), subject, subjectsPublicKeyInfo); 
+    SubjectPublicKeyInfo subjectsPublicKeyInfo = getPublicKey(newUser);
+    X509v3CertificateBuilder ca_gen = new X509v3CertificateBuilder(issuer, new BigInteger(
+        new SecureRandom().generateSeed(256)), new Date(), new Date(System.currentTimeMillis() + 31500000000L),
+        subject, subjectsPublicKeyInfo);
     BasicConstraints ca_constraint = new BasicConstraints(false);
     ca_gen.addExtension(X509Extension.basicConstraints, true, ca_constraint);
-    GeneralNames subjectAltName = new GeneralNames(
-        new GeneralName(GeneralName.uniformResourceIdentifier, userDBManager.getOwnerURN(newUser)));
-
+    GeneralNames subjectAltName = new GeneralNames(new GeneralName(GeneralName.uniformResourceIdentifier,
+        userDBManager.getOwnerURN(newUser)));
+    
     X509Extension extension = new X509Extension(false, new DEROctetString(subjectAltName));
-    ca_gen.addExtension(X509Extension.subjectAlternativeName, false, extension.getParsedValue()); 
+    ca_gen.addExtension(X509Extension.subjectAlternativeName, false, extension.getParsedValue());
     X509CertificateHolder holder = (X509CertificateHolder) ca_gen.build(contentsigner);
     CertificateFactory cf = CertificateFactory.getInstance("X.509");
     return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(holder.getEncoded()));
   }
-
   
-  public void saveCertificate(String name, X509Certificate certificate) throws Exception{
+  public void saveCertificate(String name, X509Certificate certificate) throws Exception {
     FileOutputStream fos = new FileOutputStream(name);
     fos.write(getCertficateEncoded(certificate).getBytes());
     fos.close();
   }
   
-
-
-  private String getCertficateEncoded(X509Certificate cert) throws Exception{
+  public String getCertficateEncoded(X509Certificate cert) throws Exception {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     bout.write("-----BEGIN CERTIFICATE-----\n".getBytes());
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(),0,cert.getEncoded().length,Base64.DO_BREAK_LINES));
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.DO_BREAK_LINES));
     bout.write("\n-----END CERTIFICATE-----\n".getBytes());
     String encodedCert = new String(bout.toByteArray());
     bout.close();
     return encodedCert;
   }
   
-  private String getCertificateBodyEncoded(X509Certificate cert) throws Exception{
+  private String getCertificateBodyEncoded(X509Certificate cert) throws Exception {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(),0,cert.getEncoded().length,Base64.DO_BREAK_LINES));
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.DO_BREAK_LINES));
     String encodedCert = new String(bout.toByteArray());
     bout.close();
     return encodedCert;
   }
   
   public String getUserCertificateAsString(String certString) {
-      CertificateFactory cf = getCertifcateFactory();
-      
-      X509Certificate userCert =getX509Certificate( cf,  certString);
-      
-      User user = getUserFromCert(userCert);
-      String alias =  user.getUID();
-      X509Certificate storedCertificate = getStoredCertificate( alias);
-      if(storedCertificate == null){
-        try {
-          keyStoreManagement.storeCertificate(alias, userCert);
-          storedCertificate = userCert;
-        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-      
+    CertificateFactory cf = getCertifcateFactory();
+    
+    X509Certificate userCert = getX509Certificate(cf, certString);
+    
+    User user = getUserFromCert(userCert);
+    String alias = user.getUID();
+    X509Certificate storedCertificate = getStoredCertificate(alias);
+    if (storedCertificate == null) {
       try {
-        return getCertificateBodyEncoded(storedCertificate);
-      } catch (Exception e) {
-        throw new EncodeCertificateException();
+        
+        keyStoreManagement.storeCertificate(alias, userCert);
+        storedCertificate = userCert;
+      } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
     }
     
-    private X509Certificate getStoredCertificate(String alias) {
-        return keyStoreManagement.getStoredCertificate(alias);
+    try {
+      return getCertificateBodyEncoded(storedCertificate);
+    } catch (Exception e) {
+      throw new EncodeCertificateException();
     }
-
- 
-
-    private X509Certificate getX509Certificate(CertificateFactory cf, String certString){
-      InputStream in =  new ByteArrayInputStream(certString.getBytes());
-      try{
-        return (X509Certificate) cf.generateCertificate(in);
-      }catch(Exception e){
-        throw new GenerateCertificateException();
-      }
+  }
+  
+  private X509Certificate getStoredCertificate(String alias) {
+    return keyStoreManagement.getStoredCertificate(alias);
+  }
+  
+  private X509Certificate getX509Certificate(CertificateFactory cf, String certString) {
+    InputStream in = new ByteArrayInputStream(certString.getBytes());
+    try {
+      return (X509Certificate) cf.generateCertificate(in);
+    } catch (Exception e) {
+      throw new GenerateCertificateException();
     }
-    private User getUserFromCert(X509Certificate userCert) {
+  }
+  
+  private User getUserFromCert(X509Certificate userCert) {
     
     return userDBManager.getUserFromCert(userCert);
-
-  }
-
-    private CertificateFactory getCertifcateFactory(){
-      try{
-        return CertificateFactory.getInstance("X.509");
-      } catch(CertificateException e){
-        throw new CertificateFactoryNotCreatedException();
-      }
-    }
-    private SubjectPublicKeyInfo getPublicKey(User newUser) throws Exception {
-      KeyManagement keyDecoder = new KeyManagement();
-      PublicKey key =keyDecoder.decodePublicKey(newUser.getPublicKeys().get(0));
-      SubjectPublicKeyInfo subPubInfo = new SubjectPublicKeyInfo((ASN1Sequence) ASN1Sequence.fromByteArray(key.getEncoded()));
-      return subPubInfo;
-    }
-
-    private X500Name createX500Name(User newUser) {
-      X500Principal prince = new X500Principal("CN="+newUser.getUID());
-      X500Name x500Name = new X500Name(prince.getName());
-      return x500Name;
-    }
-    public class CertificateFactoryNotCreatedException extends RuntimeException {
-      private static final long serialVersionUID = 1L;
-      
-    }
     
-    public class GenerateCertificateException extends RuntimeException {
-      private static final long serialVersionUID = 1L;
-    }
-    public class EncodeCertificateException extends RuntimeException {
-      private static final long serialVersionUID = 1L;
+  }
+  
+  private CertificateFactory getCertifcateFactory() {
+    try {
+      return CertificateFactory.getInstance("X.509");
+    } catch (CertificateException e) {
+      throw new CertificateFactoryNotCreatedException();
     }
   }
- 
+  
+  private SubjectPublicKeyInfo getPublicKey(User newUser) throws Exception {
+    KeyManagement keyDecoder = new KeyManagement();
+    PublicKey key = keyDecoder.decodePublicKey(newUser.getPublicKeys().get(0));
+    SubjectPublicKeyInfo subPubInfo = new SubjectPublicKeyInfo((ASN1Sequence) ASN1Sequence.fromByteArray(key
+        .getEncoded()));
+    return subPubInfo;
+  }
+  
+  private X500Name createX500Name(User newUser) {
+    X500Principal prince = new X500Principal("CN=" + newUser.getUID());
+    X500Name x500Name = new X500Name(prince.getName());
+    return x500Name;
+  }
+  
+  public class CertificateFactoryNotCreatedException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+    
+  }
+  
+  public class GenerateCertificateException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+  }
+  
+  public class EncodeCertificateException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+  }
+}

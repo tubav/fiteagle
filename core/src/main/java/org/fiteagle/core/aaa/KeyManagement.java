@@ -1,16 +1,23 @@
 package org.fiteagle.core.aaa;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -29,9 +36,15 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 
 import net.iharder.Base64;
 
+import org.apache.commons.ssl.DerivedKey;
+import org.apache.commons.ssl.OpenSSL;
+import org.bouncycastle.openssl.PEMEncryptor;
+import org.bouncycastle.openssl.PEMWriter;
+import org.bouncycastle.openssl.jcajce.JcePEMEncryptorBuilder;
 import org.fiteagle.core.userdatabase.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,34 +159,47 @@ public class KeyManagement {
     
   }
   
-  public String encryptPrivateKey(KeyPair keyPair, String password) throws InvalidKeySpecException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException {
+  public String encryptPrivateKey(KeyPair keyPair, String password) throws IOException, GeneralSecurityException {
     
     PrivateKey privKey = keyPair.getPrivate();
-    final byte[] keyBytes = Arrays.copyOf(password.getBytes(), 24);
-    DESedeKeySpec keyspec = new DESedeKeySpec(keyBytes);
-    SecretKeyFactory factory = SecretKeyFactory.getInstance("DESede");
-    SecretKey key = factory.generateSecret(keyspec);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    PEMWriter writer = new PEMWriter(new BufferedWriter(new OutputStreamWriter(out)));
+    JcePEMEncryptorBuilder builder = new JcePEMEncryptorBuilder("DES-EDE3-CBC");
+    PEMEncryptor encryptor = builder.build(password.toCharArray());
+    writer.writeObject(privKey, encryptor);
+    writer.flush();
+    writer.close();
+    String returnString = out.toString();
+    out.close();
+    return returnString;
     
-    Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-    cipher.init(Cipher.ENCRYPT_MODE, key);
-    byte[] encrypted = cipher.doFinal(privKey.getEncoded());
-    
-    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write("-----BEGIN RSA PRIVATE KEY-----\n".getBytes());
-    bout.write("Proc-Type: 4, ENCRYPTED\n".getBytes());
-    bout.write(("DEK-Info: DES-EDE3-CBC, " + Base64.encodeBytes(cipher.getIV()) + "\n").getBytes());
-    bout.write(Base64.encodeBytesToBytes(encrypted, 0, encrypted.length, Base64.DO_BREAK_LINES));
-    bout.write("\n-----END RSA PRIVATE KEY-----\n".getBytes());
-    String encodedCert = new String(bout.toByteArray());
-    bout.close();
-    return encodedCert;
   }
   
- 
+  private String bytesToHex(byte[] bytes) {
+    final char[] hexArray = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    char[] hexChars = new char[bytes.length * 2];
+    int v;
+    for (int j = 0; j < bytes.length; j++) {
+      v = bytes[j] & 0xFF;
+      hexChars[j * 2] = hexArray[v >>> 4];
+      hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+  
+  private byte[] hexStringToByteArray(String s) {
+    int len = s.length();
+    log.info(len + "");
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
+    }
+    return data;
+  }
   
   public boolean verifyPrivateKey(String encryptedPrivateKey, String password) {
     String ivString = getIVString(encryptedPrivateKey);
-    
+    log.info(ivString);
     try {
       String encryptedKeyString = "";
       if (ivString == null) {
@@ -188,7 +214,7 @@ public class KeyManagement {
       SecretKeyFactory factory = SecretKeyFactory.getInstance("DESede");
       SecretKey key = factory.generateSecret(keyspec);
       
-      final IvParameterSpec iv = new IvParameterSpec(Base64.decode(ivString));
+      final IvParameterSpec iv = new IvParameterSpec(hexStringToByteArray(ivString));
       final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
       decipher.init(Cipher.DECRYPT_MODE, key, iv);
       
@@ -196,6 +222,7 @@ public class KeyManagement {
       
       return true;
     } catch (Exception e) {
+      log.error(e.getMessage());
       return false;
     }
     
