@@ -18,7 +18,9 @@ public class ResourceAdapterManager {
 //  private HashMap<String, List<ResourceAdapter>> groups;
   
   
-  public ResourceAdapterManager() {
+  private ResourceAdapterManager() {
+    if (manager!=null) return;
+    
     adapterInstancesDatabase = new InMemoryResourceAdapterDatabase();
     adapterDatabase = new InMemoryResourceAdapterDatabase();
     groups=new InMemoryGroupDatabase();
@@ -26,12 +28,14 @@ public class ResourceAdapterManager {
     
     //TODO: add the resource adapters with their groups over registry
     ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
-    ArrayList<ResourceAdapter> adapterList= new ArrayList<ResourceAdapter>();
-    String sliceURN= "urn:publicid:IDN+fiteagle:av+slice+myslice";
     adapterDatabase.addResourceAdapter(dummyResourceAdapter);
-    String ownerURN = "urn:publicid:IDN+fiteagle:av+user+testUser";
 //    this.addGroup(ownerURN, sliceURN, adapterList);
-    
+    manager=this;
+  }
+  
+  public static ResourceAdapterManager getInstance(){
+    if (manager!=null) return manager;
+    return new ResourceAdapterManager();
   }
   
   public List<ResourceAdapter> getResourceAdapters() {

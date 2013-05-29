@@ -65,7 +65,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
   private StatusValue getResultStatusValue(List<String> urns) {
 
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
     String instaNceId = translator.getIdFromSliverUrn(urns.get(0)); 

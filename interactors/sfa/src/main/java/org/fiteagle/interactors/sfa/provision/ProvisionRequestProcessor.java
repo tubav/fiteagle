@@ -54,7 +54,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor{
   //TODO: implement if there are one or multiple sliver urns not only one slice urn
     
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     Group group = resourceManager.getGroup(urns.get(0));
     
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
