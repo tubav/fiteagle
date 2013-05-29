@@ -348,10 +348,15 @@ public class GeniAMHandler extends SFAHandler {
   private Object parseListResourcesOptions(Object from, Object to) {
     XmlRpcStruct listResourceOptionsStruct = (XmlRpcStruct) from;
     ListResourceOptions listResourceOptions = (ListResourceOptions) to;
+    if(listResourceOptionsStruct.get("geni_available")!=null)
     listResourceOptions.setGeni_available(new GeniAvailableOption(
         listResourceOptionsStruct.getBoolean("geni_available")));
-    listResourceOptions.setGeni_compressed(new org.fiteagle.interactors.sfa.common.GeniCompressedOption(
-        listResourceOptionsStruct.getBoolean("geni_compressed")));
+    if(listResourceOptionsStruct.get("geni_compressed")!=null){
+      listResourceOptions.setGeni_compressed(new org.fiteagle.interactors.sfa.common.GeniCompressedOption(
+          listResourceOptionsStruct.getBoolean("geni_compressed")));
+    }else {
+      listResourceOptions.setGeni_compressed(new org.fiteagle.interactors.sfa.common.GeniCompressedOption(false));
+    }
 
     XmlRpcStruct geni_rspec_version_struct = listResourceOptionsStruct
         .getStruct("geni_rspec_version");

@@ -29,7 +29,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	
 	
 	public DescribeRequestProcessor() {
-		resourceManager = new ResourceAdapterManager();
+		resourceManager = ResourceAdapterManager.getInstance();
 	}
 	
 	
@@ -95,7 +95,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	  
 	  SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     DescribeValue resultValue = new DescribeValue();
-    ResourceAdapterManager resourceManager = new ResourceAdapterManager();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     Group group = resourceManager.getGroup(urns.get(0));
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     

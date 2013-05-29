@@ -31,7 +31,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	
 
 	public ListResourceRequestProcessor() {
-		resourceManager = new ResourceAdapterManager();
+		resourceManager = ResourceAdapterManager.getInstance();
 	}
 
 	@Override
