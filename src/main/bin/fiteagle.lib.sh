@@ -40,10 +40,3 @@ function usage {
     echo "Usage: ./src/main/bin/fiteagle.sh test|start|stop"
 }
 
-case $1 in
-    test) testFITeagle;;
-    start) startFITeagle;;
-    daemon) startFITeagle &;;
-    stop) stopFITeagle;;
-    *) usage
-esac
