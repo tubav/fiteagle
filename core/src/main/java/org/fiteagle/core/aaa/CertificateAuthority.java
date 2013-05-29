@@ -60,7 +60,7 @@ public class CertificateAuthority {
     }
   }
   
-  private KeyStoreManagement keyStoreManagement = new KeyStoreManagement();
+  private KeyStoreManagement keyStoreManagement = KeyStoreManagement.getInstance();
   
   public X509Certificate createCertificate(User newUser) throws Exception {
     X509Certificate caCert = keyStoreManagement.getCACert();

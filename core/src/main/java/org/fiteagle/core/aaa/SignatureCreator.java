@@ -33,7 +33,7 @@ public class SignatureCreator {
   
     Init.init();
     ElementProxy.setDefaultPrefix(Constants.SignatureSpecNS, "");
-    KeyStoreManagement keyStoreManagement = new KeyStoreManagement();
+    KeyStoreManagement keyStoreManagement = KeyStoreManagement.getInstance();
     XMLSignature sig = new XMLSignature(doc, null, XMLSignature.ALGO_ID_SIGNATURE_RSA);
     Transforms transforms = new Transforms(doc);
     transforms.addTransform(Transforms.TRANSFORM_ENVELOPED_SIGNATURE);
