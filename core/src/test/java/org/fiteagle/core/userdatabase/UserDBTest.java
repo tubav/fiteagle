@@ -39,8 +39,7 @@ public class UserDBTest {
 	}
 	
 	@Before
-	public void setUp() throws DatabaseException{	  
-
+	public void setUp() throws DatabaseException{
 		database = new InMemoryUserDB();
 	}
 	
