@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
   }
   @Override
   public abstract Object invoke(String method, List arguments) throws Throwable;
+  public abstract Object invoke(String method, List arguments, X509Certificate certificate) throws Throwable;
   
   Method getMethod(String methodName) {
     Method knownMethod = null;
@@ -39,6 +41,7 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
         // Critical assumption !!! Only one method which equals the
         // methodname exists!
         // failure prone
+        //TODO: check with arguments!
         knownMethod = methodsFromHandler[i];
       }
     }

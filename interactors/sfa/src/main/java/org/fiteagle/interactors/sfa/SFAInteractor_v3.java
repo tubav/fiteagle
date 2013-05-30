@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
@@ -37,6 +38,9 @@ public class SFAInteractor_v3 implements ISFA {
 	
 	private final SFARequestProcessorFactory requestProcessorFactor = SFARequestProcessorFactory.getInstance();
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	private X509Certificate certificate;
+	
 	@Override
 	public GetVersionResult getVersion() throws IOException {
 		
@@ -98,6 +102,16 @@ public class SFAInteractor_v3 implements ISFA {
 //    return "";
   }
   
+//  @Override
+//  public String getCredential() {
+//    log.info("GetCredential");
+//    log.info(credential);
+//    log.info("target: " + xrn);
+//    log.info("type: "+ type);
+//    return credential;
+////    return "";
+//  }
+  
   @Override
   public AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec, AllocateOptions allocateOptions) throws IOException {
     
@@ -140,6 +154,14 @@ public class SFAInteractor_v3 implements ISFA {
     
     return result;
     
+  }
+
+  public X509Certificate getCertificate() {
+    return certificate;
+  }
+
+  public void setCertificate(X509Certificate certificate) {
+    this.certificate = certificate;
   }
 
 
