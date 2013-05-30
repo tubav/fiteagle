@@ -28,7 +28,15 @@ private Logger log = LoggerFactory.getLogger(getClass());
 private final String DEFAULT_KEYSTORE_LOCATION=System.getProperty("user.home")+System.getProperty("file.separator")+"fiteagle"+System.getProperty("file.separator")+"jetty-ssl.keystore";
 private final String DEFAULT_KEYSTORE_PASSWORD = "jetty6";
 private final String DEFAULT_CA_ALIAS ="root";
-public KeyStoreManagement(){
+
+private static KeyStoreManagement keyStoreManagement;
+public static KeyStoreManagement getInstance(){
+  if(keyStoreManagement == null)
+    keyStoreManagement = new KeyStoreManagement();
+  return keyStoreManagement;
+  
+}
+private KeyStoreManagement(){
   this.preferences = new FiteaglePreferencesXML(this.getClass());
   if(preferences.get("CAAlias") == null){
     preferences.put("CAAlias", DEFAULT_CA_ALIAS);

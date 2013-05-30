@@ -273,6 +273,11 @@
 			<groupId>org.apache.santuario</groupId>
 			<artifactId>xmlsec</artifactId>
 			<version>1.5.4</version>
-		</dependency>
+		</dependency>		
+		<dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+      <version>1.17</version>
+    </dependency>
 	</dependencies>
 </project>

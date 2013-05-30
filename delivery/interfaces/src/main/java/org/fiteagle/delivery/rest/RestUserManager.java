@@ -2,8 +2,8 @@ package org.fiteagle.delivery.rest;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -11,7 +11,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,12 +29,12 @@ public class RestUserManager implements RestUserManagement {
   private static UserDBManager manager;
   static {
     try {
-      manager =UserDBManager.getInstance();
+      manager = UserDBManager.getInstance();
     } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
   }
-  
+    
   @Override
   @GET
   @Path("{UID}")
@@ -54,65 +53,43 @@ public class RestUserManager implements RestUserManagement {
   
   @Override
   @PUT
-  @Path("{UID}")
-  public Response addUser(@PathParam("UID") String UID, @QueryParam("firstName") String firstName,
-      @QueryParam("lastName") String lastName, @QueryParam("password") String password, @QueryParam("key") String key) {
-    ArrayList<String> keys = new ArrayList<String>();
-    keys.add(key);
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response addUser(NewUser user) {
     try {
-      manager.add(manager.createUser(UID, firstName, lastName, password, keys));
+      manager.add(createUser(user));
     } catch (DuplicateUIDException e) {
       throw new WebApplicationException(Response.Status.CONFLICT);
     } catch (DatabaseException e) {
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (NoSuchAlgorithmException e) {
-      // TODO: Not sure
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (IOException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return Response.status(201).build();
   }
+   
   
   @Override
   @POST
-  @Path("{UID}")
-  public Response updateUser(@PathParam("UID") String UID, @QueryParam("firstName") String firstName,
-      @QueryParam("lastName") String lastName, @QueryParam("password") String password, @QueryParam("key") String key) {
-    ArrayList<String> keys = new ArrayList<String>();
-    keys.add(key);
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response updateUser(NewUser user) {
     try {
-      manager.update(manager.createUser(UID, firstName, lastName, password, keys));
+      manager.update(createUpdatedUser(user));
+      return Response.status(200).build();
+    } catch (DatabaseException e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
     } catch (RecordNotFoundException e) {
       try {
-        manager.add(manager.createUser(UID, firstName, lastName, password, keys));
-        ;
+        manager.add(createUser(user));
+        return Response.status(201).build();
       } catch (DuplicateUIDException | DatabaseException e1) {
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-      } catch (NoSuchAlgorithmException e1) {
-        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-      } catch (IOException e1) {
-        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-        
       }
-      return Response.status(201).build();
-    } catch (DatabaseException e) {
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (DuplicateUIDException e) {
-      throw new WebApplicationException(Response.Status.CONFLICT);
-    } catch (NoSuchAlgorithmException e) {
-      // TODO: Not sure
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (IOException e) {
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    }
-    return Response.status(200).build();
+    }      
   }
   
   @Override
-  @PUT
-  @Path("{UID}/key/{key}")
-  public Response addPublicKey(@PathParam("UID") String UID, @PathParam("key") String key) {
+  @POST
+  @Path("{UID}/key/")
+  @Consumes("text/plain")
+  public Response addPublicKey(@PathParam("UID") String UID, String key) {
     try {
       manager.addKey(UID, key);
     } catch (RecordNotFoundException e) {
@@ -136,19 +113,50 @@ public class RestUserManager implements RestUserManagement {
   }
   
   @Override
-  @GET
+  @POST
   @Path("{UID}/certificate")
-  public String getUserCertAndPrivateKey(@PathParam("UID") String uid, @QueryParam("password") String password) {
-    
-    try {
-      
-      String privateKey = manager.createUserPrivateKey(uid, password);
-      String certificate = manager.createUserCertificate(uid);
+  @Consumes("text/plain")
+  public String getUserCertAndPrivateKey(@PathParam("UID") String UID, String passphrase) {  
+    try {      
+      String privateKey = manager.createUserPrivateKey(UID, passphrase);
+      String certificate = manager.createUserCertificate(UID);
       return privateKey + "\n" + certificate;
     } catch (Exception e) {
       log.error(e.getMessage());
       throw new RuntimeException(e.getCause());
-    }
-    
+    }    
   }
+  
+  
+  private User createUser(NewUser newUser) {
+    User user = null;	
+	try {
+	  user =  manager.createUser(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), newUser.getPassword(), newUser.getPublicKeys());
+	} catch (NoSuchAlgorithmException e) {
+	  // TODO: Not sure
+	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+	} catch (IOException e) {
+	  // TODO: Not sure
+	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+	}    
+	return user;
+  }
+  
+  private User createUpdatedUser(NewUser newUser) {
+    User oldUser = manager.get(newUser.getUID());
+    if(newUser.getFirstName() == null){
+      newUser.setFirstName(oldUser.getFirstName());
+    }
+    if(newUser.getLastName() == null){
+      newUser.setLastName(oldUser.getLastName());
+    }
+    if(newUser.getPublicKeys() == null){
+      newUser.setPublicKeys(oldUser.getPublicKeys());
+    }
+    if(newUser.getPassword() == null){
+      return new User(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), oldUser.getPasswordHash(), oldUser.getPasswordSalt(), newUser.getPublicKeys());
+    }
+    return createUser(newUser);
+  }
+  
 }

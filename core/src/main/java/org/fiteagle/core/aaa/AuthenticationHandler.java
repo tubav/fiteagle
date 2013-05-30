@@ -48,7 +48,7 @@ public class AuthenticationHandler {
   
   private AuthenticationHandler() {
     
-    this.keyStoreManagement = new KeyStoreManagement();
+    this.keyStoreManagement = KeyStoreManagement.getInstance();
     
   }
   

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.core.aaa.AuthenticationHandler;
+import org.fiteagle.delivery.xmlrpc.util.CertificateStorage;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
 import org.fiteagle.delivery.xmlrpc.util.GeniAMHandler;
@@ -34,7 +35,6 @@ public class FITeagleServlet extends XmlRpcServlet {
 	private final String AM_PATH = "/am/v3";
 	private final String REGISTRY_PATH = "/registry/v1";
 	
-	private int counter = 0;
 
 	public FITeagleServlet()  {
 
@@ -68,14 +68,20 @@ public class FITeagleServlet extends XmlRpcServlet {
 	public void doPost(final HttpServletRequest req,
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
-	  
-	  counter++;
-	  log.info(""+counter);
+	  storeCert(req);
 	  this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo());
 	
 	 
 		
 	}
+
+  private void storeCert(HttpServletRequest req) throws IOException {
+    X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
+    if (null != certs && certs.length > 0) {
+        CertificateStorage.addCert(req.getInputStream().hashCode(), certs[0]);
+    }
+    throw new RuntimeException("No X.509 client certificate found in request");
+  }
 
   public String handleRequestGetVersionStatic() throws IOException {
 		return FITeagleUtils

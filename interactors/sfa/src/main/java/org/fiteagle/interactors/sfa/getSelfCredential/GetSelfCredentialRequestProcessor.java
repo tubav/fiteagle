@@ -3,6 +3,8 @@ package org.fiteagle.interactors.sfa.getSelfCredential;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
@@ -15,6 +17,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.SignatureCreator;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -36,10 +39,14 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 			throw new IllegalArgumentException();
 		}
 		
-		return getSelfCredential(cert, xrn, type);
+		try {
+      return getSelfCredential(cert, xrn, type);
+    } catch (Exception e) {
+     throw new RuntimeException();
+    }
 	}
 
-	private String getSelfCredential(String cert, String xrn, String type) {
+	private String getSelfCredential(String cert, String xrn, String type) throws Exception {
 		// TODO implement the get self credentials. check access rights etc.
 	  
 	  String signedCredentialString = "";
@@ -51,8 +58,8 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
    // credential.setOwnerGid(getOwnerGID(cert));
     credential.setOwnerGid(cert);
     credential.setOwnerURN(getOwnerURN(xrn));
-    credential.setTargetGid(credential.getOwnerGid());
-    credential.setTargetURN(xrn);
+    credential.setTargetGid(getTargetGID(type,xrn));
+    credential.setTargetURN(getTargetURN(type,xrn));
     GregorianCalendar gregCalendar = new GregorianCalendar();
     gregCalendar
         .setTimeInMillis(java.lang.System.currentTimeMillis() + 100000);
@@ -96,9 +103,47 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 	}
 
 
-  private String getTargetGID(String xrn) {
+  private String getTargetURN(String type, String xrn) throws CertificateParsingException {
+    String urn = "";
+    if(type.equalsIgnoreCase("user")){
+      urn = getServerURN();
+      
+    }else if(type.equalsIgnoreCase("Slice")){
+       urn = xrn;
+    }else{
+      throw new UnsupportedTarget();
+    }
+    return urn;
+   
+  }
+
+  private String getServerURN() throws CertificateParsingException {
+    CertificateAuthority ca = CertificateAuthority.getInstance();
+    return ca.getServerURN();
+  }
+
+  private String getTargetGID(String type, String xrn) throws Exception {
+    String cert = "";
+    if(type.equalsIgnoreCase("user")){
+      cert = getServerCert();
+    }else if(type.equalsIgnoreCase("Slice")){
+      cert = getSliceCert(xrn);
+    }else{
+      throw new UnsupportedTarget();
+    }
+    return cert;
+  }
+
+  private String getSliceCert(String xrn) {
     // TODO Auto-generated method stub
-    return null;
+    return "";
+  }
+
+  private String getServerCert() throws Exception {
+    CertificateAuthority ca =CertificateAuthority.getInstance();
+    X509Certificate serverCert = ca.getServerCertificate();
+    return ca.getCertficateEncoded(serverCert);
+    
   }
 
   private String getOwnerURN(String xrn) {
@@ -159,4 +204,10 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 		return null;
 	}
 
+	public class UnsupportedTarget extends RuntimeException {
+
+   
+    private static final long serialVersionUID = -7821229625163019933L;
+	  
+	}
 }

@@ -13,9 +13,13 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -45,9 +49,10 @@ public class CertificateAuthority {
   
   private UserDBManager userDBManager;
   private static CertificateAuthority CA = null;
-  public static CertificateAuthority getInstance(){
+  
+  public static CertificateAuthority getInstance() {
     if (CA == null)
-        CA = new CertificateAuthority();
+      CA = new CertificateAuthority();
     
     return CA;
   }
@@ -60,7 +65,7 @@ public class CertificateAuthority {
     }
   }
   
-  private KeyStoreManagement keyStoreManagement = new KeyStoreManagement();
+  private KeyStoreManagement keyStoreManagement = KeyStoreManagement.getInstance();
   
   public X509Certificate createCertificate(User newUser) throws Exception {
     X509Certificate caCert = keyStoreManagement.getCACert();
@@ -85,10 +90,32 @@ public class CertificateAuthority {
     return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(holder.getEncoded()));
   }
   
+  public String getServerURN() throws CertificateParsingException {
+    X509Certificate caCert = getServerCertificate();
+    Collection<List<?>> alternativeNames = caCert.getSubjectAlternativeNames();
+    Iterator<?> iter =  alternativeNames.iterator();
+    String urn = "";
+    while(iter.hasNext()){
+      List<?> altName = (List<?>) iter.next();
+      if (altName.get(0).equals(Integer.valueOf(6))) {
+        urn = (String) altName.get(1);
+      }
+    }
+    return urn;
+  }
+  
   public void saveCertificate(String name, X509Certificate certificate) throws Exception {
     FileOutputStream fos = new FileOutputStream(name);
     fos.write(getCertficateEncoded(certificate).getBytes());
     fos.close();
+  }
+  
+  public X509Certificate getServerCertificate() {
+    try {
+      return keyStoreManagement.getCACert();
+    } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+      throw new CertificateNotFoundException();
+    }
   }
   
   public String getCertficateEncoded(X509Certificate cert) throws Exception {
@@ -188,4 +215,9 @@ public class CertificateAuthority {
   public class EncodeCertificateException extends RuntimeException {
     private static final long serialVersionUID = 1L;
   }
+  
+  public class CertificateNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+  }
+  
 }
