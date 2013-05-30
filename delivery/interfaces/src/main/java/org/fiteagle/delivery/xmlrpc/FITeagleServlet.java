@@ -44,13 +44,12 @@ public class FITeagleServlet extends XmlRpcServlet {
 	  
 		this.server = new FixedXmlRpcServer();
 		this.server.setSerializer(new FixedSerializer());
-		SFAInteractor_v3 interactor = new SFAInteractor_v3();
-		final XmlRpcInvocationHandler sfaHandler = new GeniAMHandler(
-		    interactor);
+		
+		final XmlRpcInvocationHandler sfaHandler = new GeniAMHandler();
 		
 		this.server.addInvocationHandler(AM_PATH, sfaHandler);
 		
-		final XmlRpcInvocationHandler registryHandler = new SFARegistryHandler(interactor);
+		final XmlRpcInvocationHandler registryHandler = new SFARegistryHandler();
 		this.server.addInvocationHandler(REGISTRY_PATH, registryHandler);
 
 		XmlRpcController controller = new XmlRpcController();

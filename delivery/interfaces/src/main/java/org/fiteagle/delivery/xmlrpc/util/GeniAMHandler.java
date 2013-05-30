@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,13 +45,18 @@ public class GeniAMHandler extends SFAHandler {
 
   private final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
   
-  public GeniAMHandler(SFAInteractor_v3 sfaInteractor_v3) {
-    setInteractor(sfaInteractor_v3);
-  }
+//  public GeniAMHandler(SFAInteractor_v3 sfaInteractor_v3) {
+//    setInteractor(sfaInteractor_v3);
+//  }
+  
+public GeniAMHandler() {
+}
 
   @SuppressWarnings("rawtypes")
   @Override
   public Object invoke(String methodName, List parameters) throws Throwable {
+    SFAInteractor_v3 interactor = new SFAInteractor_v3();
+    setInteractor(interactor);
     
   Object response = null;
 
@@ -92,6 +98,25 @@ public class GeniAMHandler extends SFAHandler {
       response = introspect(result);
     } catch (IOException ioException) {
       log.error(ioException.getMessage(),ioException);
+    }
+    return response;
+  }
+  
+  
+  @Override
+  public Object invoke(String methodName, List arguments, X509Certificate certificate) throws Throwable {
+    SFAInteractor_v3 interactor = new SFAInteractor_v3();
+    interactor.setCertificate(certificate);
+    setInteractor(interactor);
+    
+    Object response = null;
+
+    try {
+      Method knownMethod = getMethod(methodName);
+      AMResult result =(AMResult) getMethodCallResult(knownMethod, arguments);
+      response = createResponse(result);
+    } catch (ParsingException e) {
+      response = createErrorResponse(e);
     }
     return response;
   }
@@ -408,6 +433,8 @@ public class GeniAMHandler extends SFAHandler {
     }
 
 
-  }}
+  }
+
+}
 
 
