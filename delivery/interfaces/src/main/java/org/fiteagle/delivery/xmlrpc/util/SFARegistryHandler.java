@@ -23,7 +23,7 @@ Logger log =  LoggerFactory.getLogger(this.getClass());
 	public Object invoke(String methodName, List arguments) throws Throwable {
 		
 		ArrayList<String> argumentsList = new ArrayList<String>();
-		
+	
 		
 		Method calledMethod = getMethod(methodName);
 		Object response = calledMethod.invoke(this.interactor, arguments.toArray());

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fiteagle.delivery.xmlrpc.util.CertificateStorage;
+import org.fiteagle.delivery.xmlrpc.util.SFAHandler;
 import org.xml.sax.SAXException;
 
 import redstone.xmlrpc.XmlRpcDispatcher;
@@ -36,8 +37,8 @@ public class FixedXmlRpcDispatcher extends XmlRpcDispatcher {
 		this.path = path;
 	}
 
-	@Override
-	public void dispatch(InputStream xmlInput, Writer xmlOutput)
+	
+	public void dispatch(InputStream xmlInput, Writer xmlOutput, X509Certificate x509Certificate)
 			throws XmlRpcException {
 		// Parse the inbound XML-RPC message. May throw an exception.
 	  
@@ -68,11 +69,15 @@ public class FixedXmlRpcDispatcher extends XmlRpcDispatcher {
 								XmlRpcMessages
 										.getString("XmlRpcDispatcher.InvocationCancelled"));
 					} else {
-					  X509Certificate certificate = CertificateStorage.getCert(xmlInput.hashCode());
-					  this.arguments.add(0, certificate);
-						Object localObject = localXmlRpcInvocationHandler
-								.invoke(localXmlRpcInvocation.getMethodName(),
-										this.arguments);
+					  Object localObject = null;
+					  if(localXmlRpcInvocationHandler.getClass().isAssignableFrom(SFAHandler.class)){
+					    
+					  }else{
+					    localObject = localXmlRpcInvocationHandler
+	                .invoke(localXmlRpcInvocation.getMethodName(),
+	                    this.arguments);
+					  }
+						 
 						localObject = postProcess(localXmlRpcInvocation,
 								localObject);
 						if (localObject != null)

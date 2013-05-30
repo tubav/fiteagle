@@ -69,17 +69,17 @@ public class FITeagleServlet extends XmlRpcServlet {
 	public void doPost(final HttpServletRequest req,
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
-	  storeCert(req);
-	  this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo());
+	  
+	  this.handleRequest(req.getInputStream(), resp.getWriter(), req.getPathInfo(), getCert(req));
 	
 	 
 		
 	}
 
-  private void storeCert(HttpServletRequest req) throws IOException {
+  private X509Certificate getCert(HttpServletRequest req) throws IOException {
     X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
     if (null != certs && certs.length > 0) {
-        CertificateStorage.addCert(req.getInputStream().hashCode(), certs[0]);
+        return certs[0];
     }
     throw new RuntimeException("No X.509 client certificate found in request");
   }
@@ -94,9 +94,9 @@ public class FITeagleServlet extends XmlRpcServlet {
 				.getFileAsString("/org/fiteagle/delivery/xmlrpc/sfa/listresources_response.xml");
 	}
 
-	public void handleRequest(final InputStream inputStream, final Writer writer, String path)
+	public void handleRequest(final InputStream inputStream, final Writer writer, String path, X509Certificate x509Certificate)
 			throws IOException {
-		this.server.execute(inputStream, writer, path);
+		this.server.execute(inputStream, writer, path, x509Certificate);
 	}
 
 	
