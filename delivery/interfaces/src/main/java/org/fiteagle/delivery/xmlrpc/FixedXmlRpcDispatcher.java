@@ -71,7 +71,8 @@ public class FixedXmlRpcDispatcher extends XmlRpcDispatcher {
 					} else {
 					  Object localObject = null;
 					  if(localXmlRpcInvocationHandler.getClass().isAssignableFrom(SFAHandler.class)){
-					    
+					    SFAHandler handler = (SFAHandler) localXmlRpcInvocationHandler;
+					    handler.invoke(methodName, arguments, x509Certificate);
 					  }else{
 					    localObject = localXmlRpcInvocationHandler
 	                .invoke(localXmlRpcInvocation.getMethodName(),

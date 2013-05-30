@@ -28,7 +28,7 @@ public SFARegistryHandler(){
 	public Object invoke(String methodName, List arguments) throws Throwable {
 	  SFAInteractor_v3 interactor = new SFAInteractor_v3();
     setInteractor(interactor);
-//    String certificate= arguments.get(index)
+
 		
 		ArrayList<String> argumentsList = new ArrayList<String>();
 	
@@ -51,7 +51,7 @@ public SFARegistryHandler(){
     SFAInteractor_v3 interactor = new SFAInteractor_v3();
     interactor.setCertificate(certificate);
     setInteractor(interactor);
-//    String certificate= arguments.get(index)
+
     
     ArrayList<String> argumentsList = new ArrayList<String>();
     
