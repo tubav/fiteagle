@@ -1,4 +1,4 @@
-package org.fiteagle.interactors.sfa.util;
+package org.fiteagle.delivery.xmlrpc.util;
 
 import java.util.LinkedHashMap;
 

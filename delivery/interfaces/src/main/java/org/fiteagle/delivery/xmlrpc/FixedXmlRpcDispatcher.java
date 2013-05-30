@@ -3,9 +3,11 @@ package org.fiteagle.delivery.xmlrpc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fiteagle.delivery.xmlrpc.util.CertificateStorage;
 import org.xml.sax.SAXException;
 
 import redstone.xmlrpc.XmlRpcDispatcher;
@@ -52,6 +54,7 @@ public class FixedXmlRpcDispatcher extends XmlRpcDispatcher {
 			XmlRpcInvocationHandler localXmlRpcInvocationHandler = this.server
 					.getInvocationHandler(str);
 			if (localXmlRpcInvocationHandler != null) {
+			  
 				int j = ++callSequence;
 				XmlRpcInvocation localXmlRpcInvocation = null;
 				if (this.server.getInvocationInterceptors().size() > 0)
@@ -65,6 +68,8 @@ public class FixedXmlRpcDispatcher extends XmlRpcDispatcher {
 								XmlRpcMessages
 										.getString("XmlRpcDispatcher.InvocationCancelled"));
 					} else {
+					  X509Certificate certificate = CertificateStorage.getCert(xmlInput.hashCode());
+					  this.arguments.add(0, certificate);
 						Object localObject = localXmlRpcInvocationHandler
 								.invoke(localXmlRpcInvocation.getMethodName(),
 										this.arguments);
