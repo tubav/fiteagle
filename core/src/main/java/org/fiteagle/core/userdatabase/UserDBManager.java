@@ -158,8 +158,7 @@ public class UserDBManager {
     
   }
   
-  public User createUser(String uuid, String firstName, String lastName, String password) throws DuplicateUIDException,
-      NoSuchAlgorithmException, IOException {
+  public User createUser(String uuid, String firstName, String lastName, String password) throws NoSuchAlgorithmException, IOException {
     
     SecureRandom random = new SecureRandom();
     byte[] salt = random.generateSeed(20);
@@ -174,14 +173,17 @@ public class UserDBManager {
   }
   
   public User createUser(String uuid, String firstName, String lastName, String password, List<String> keys)
-      throws DuplicateUIDException, NoSuchAlgorithmException, IOException {
-    User u = createUser(uuid, firstName, lastName, password);
-    for (String key : keys) {
-      u.addPublicKey(key);
-    }
-    return u;
+      throws NoSuchAlgorithmException, IOException {
+	SecureRandom random = new SecureRandom();
+	byte[] salt = random.generateSeed(20);
+	String passwordSalt = Base64.encodeBytes(salt);
+	    
+	byte[] passwordBytes = createHash(salt, password);
+	String passwordHash = Base64.encodeBytes(passwordBytes);
+	    
+    return new User(uuid, firstName, lastName, passwordHash, passwordSalt, keys);
   }
-  
+    
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
       NoSuchAlgorithmException {
     byte[] passwordHashBytes = Base64.decode(passwordHash);

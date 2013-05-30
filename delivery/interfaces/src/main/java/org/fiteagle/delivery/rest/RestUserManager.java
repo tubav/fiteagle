@@ -71,20 +71,18 @@ public class RestUserManager implements RestUserManagement {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response updateUser(NewUser user) {
     try {
-      manager.update(createUser(user));
+      manager.update(createUpdatedUser(user));
+      return Response.status(200).build();
+    } catch (DatabaseException e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
     } catch (RecordNotFoundException e) {
       try {
         manager.add(createUser(user));
+        return Response.status(201).build();
       } catch (DuplicateUIDException | DatabaseException e1) {
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
       }
-      return Response.status(201).build();
-    } catch (DatabaseException e) {
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (DuplicateUIDException e) {
-      throw new WebApplicationException(Response.Status.CONFLICT);
-    }
-    return Response.status(200).build();
+    }      
   }
   
   @Override
@@ -131,18 +129,34 @@ public class RestUserManager implements RestUserManagement {
   
   
   private User createUser(NewUser newUser) {
-    User user = null;
-    try {
-      user =  manager.createUser(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), newUser.getPassword());
-    } catch (DuplicateUIDException e) {
-      throw new WebApplicationException(Response.Status.CONFLICT);
-    } catch (NoSuchAlgorithmException e) {
-      // TODO: Not sure
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (IOException e) {
-      // TODO: Not sure
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    }
-    return user;
+    User user = null;	
+	try {
+	  user =  manager.createUser(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), newUser.getPassword(), newUser.getPublicKeys());
+	} catch (NoSuchAlgorithmException e) {
+	  // TODO: Not sure
+	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+	} catch (IOException e) {
+	  // TODO: Not sure
+	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+	}    
+	return user;
   }
+  
+  private User createUpdatedUser(NewUser newUser) {
+    User oldUser = manager.get(newUser.getUID());
+    if(newUser.getFirstName() == null){
+      newUser.setFirstName(oldUser.getFirstName());
+    }
+    if(newUser.getLastName() == null){
+      newUser.setLastName(oldUser.getLastName());
+    }
+    if(newUser.getPublicKeys() == null){
+      newUser.setPublicKeys(oldUser.getPublicKeys());
+    }
+    if(newUser.getPassword() == null){
+      return new User(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), oldUser.getPasswordHash(), oldUser.getPasswordSalt(), newUser.getPublicKeys());
+    }
+    return createUser(newUser);
+  }
+  
 }

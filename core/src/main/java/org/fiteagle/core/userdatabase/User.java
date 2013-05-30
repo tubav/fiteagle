@@ -1,5 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -18,10 +19,15 @@ public class User {
 	public User(String UID, String firstName, String lastName, String passwordHash, String passwordSalt, List<String> publicKeys){
 		this.UID = UID;
 		this.firstName = firstName;
-		this.lastName = lastName;
-		this.publicKeys = publicKeys;
+		this.lastName = lastName;		
 		this.passwordHash = passwordHash;
 		this.passwordSalt =  passwordSalt;
+		if(publicKeys == null){
+		  this.publicKeys = new ArrayList<>();
+		}
+		else{
+		  this.publicKeys = publicKeys;
+		}		
 	}
 	
 	public String getUID() {

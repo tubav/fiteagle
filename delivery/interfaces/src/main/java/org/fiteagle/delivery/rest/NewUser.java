@@ -1,5 +1,7 @@
 package org.fiteagle.delivery.rest;
 
+import java.util.List;
+
 
 public class NewUser {
   
@@ -7,21 +9,23 @@ public class NewUser {
   private String firstName;
   private String lastName;
   private String password;
+  private List<String> publicKeys;
   
   public NewUser(){};
   
-  public NewUser(String uID, String firstName, String lastName, String password) {
-    this.UID = uID;
+  public NewUser(String UID, String firstName, String lastName, String password, List<String> publicKeys) {
+    this.UID = UID;
     this.firstName = firstName;
     this.lastName = lastName;
     this.password = password;
-  }
+    this.publicKeys = publicKeys;
+  }  
   
   public String getUID() {
     return UID;
   }
-  public void setUID(String uID) {
-    UID = uID;
+  public void setUID(String UID) {
+    this.UID = UID;
   }
   public String getFirstName() {
     return firstName;
@@ -42,6 +46,14 @@ public class NewUser {
 
   public void setPassword(String password) {
     this.password = password;
-  } 
+  }
+  
+  public List<String> getPublicKeys() {
+	return publicKeys;
+  }
+
+  public void setPublicKeys(List<String> publicKeys) {
+	this.publicKeys = publicKeys;
+  }
  
 }
