@@ -33,7 +33,7 @@ public SFARegistryHandler(){
 		ArrayList<String> argumentsList = new ArrayList<String>();
 	
 		
-		Method calledMethod = getMethod(methodName);
+		Method calledMethod = getMethod(methodName,arguments);
 		Object response = calledMethod.invoke(this.interactor, arguments.toArray());
 		return response;
 	}
@@ -56,7 +56,7 @@ public SFARegistryHandler(){
     ArrayList<String> argumentsList = new ArrayList<String>();
     
     
-    Method calledMethod = getMethod(methodName);
+    Method calledMethod = getMethod(methodName, arguments);
     Object response = calledMethod.invoke(this.interactor, arguments.toArray());
     return response;
   }

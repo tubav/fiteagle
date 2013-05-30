@@ -61,7 +61,7 @@ public GeniAMHandler() {
   Object response = null;
 
     try {
-      Method knownMethod = getMethod(methodName);
+      Method knownMethod = getMethod(methodName, parameters);
       AMResult result =(AMResult) getMethodCallResult(knownMethod, parameters);
       response = createResponse(result);
     } catch (ParsingException e) {
@@ -112,7 +112,7 @@ public GeniAMHandler() {
     Object response = null;
 
     try {
-      Method knownMethod = getMethod(methodName);
+      Method knownMethod = getMethod(methodName, arguments);
       AMResult result =(AMResult) getMethodCallResult(knownMethod, arguments);
       response = createResponse(result);
     } catch (ParsingException e) {

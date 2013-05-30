@@ -52,5 +52,6 @@ public interface ISFA {
       throws IOException;
   DeleteResult delete(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions)
       throws IOException;
+  String getCredential();
 
 }

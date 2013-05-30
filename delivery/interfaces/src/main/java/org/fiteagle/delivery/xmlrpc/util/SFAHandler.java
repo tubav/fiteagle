@@ -32,16 +32,16 @@ public abstract class SFAHandler implements XmlRpcInvocationHandler {
   public abstract Object invoke(String method, List arguments) throws Throwable;
   public abstract Object invoke(String method, List arguments, X509Certificate certificate) throws Throwable;
   
-  Method getMethod(String methodName) {
+  Method getMethod(String methodName, List arguments) {
     Method knownMethod = null;
     Method[] methodsFromHandler = this.interactor.getClass().getMethods();
     
     for (int i = 0; i < methodsFromHandler.length; i++) {
-      if (methodsFromHandler[i].getName().equals(methodName)) {
+      if (methodsFromHandler[i].getName().compareToIgnoreCase(methodName)==0) {
         // Critical assumption !!! Only one method which equals the
         // methodname exists!
         // failure prone
-        //TODO: check with arguments!
+        if(methodsFromHandler[i].getParameterTypes().length == arguments.size())
         knownMethod = methodsFromHandler[i];
       }
     }

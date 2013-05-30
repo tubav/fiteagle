@@ -1,9 +1,15 @@
 package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
+import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
+import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.CertificateAuthorityTest;
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
@@ -102,15 +108,37 @@ public class SFAInteractor_v3 implements ISFA {
 //    return "";
   }
   
-//  @Override
-//  public String getCredential() {
-//    log.info("GetCredential");
-//    log.info(credential);
-//    log.info("target: " + xrn);
-//    log.info("type: "+ type);
-//    return credential;
-////    return "";
-//  }
+  @Override
+  public String getCredential() {
+    if(this.certificate!=null){
+      Collection<List<String>> alternativeNames;
+      Collection<List<?>> alternativeNamesCollection;
+      try {
+        alternativeNamesCollection = certificate.getSubjectAlternativeNames();
+//        alterna
+      } catch (CertificateParsingException e) {
+        e.printStackTrace();
+        throw new RuntimeException();//TODO: specify this.
+      }
+      
+      Iterator<?> iter =  alternativeNamesCollection.iterator();
+      String urn = "";
+      while(iter.hasNext()){
+        List<?> altName = (List<?>) iter.next();
+        if (altName.get(0).equals(Integer.valueOf(6))) {
+          urn = (String) altName.get(1);
+        }
+      }
+      
+      try {
+        return getSelfCredential(CertificateAuthority.getInstance().getCertificateBodyEncoded(certificate), urn, "user");
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException();//TODO: specify this.
+      }
+    }
+    return null;
+  }
   
   @Override
   public AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec, AllocateOptions allocateOptions) throws IOException {
