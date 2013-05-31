@@ -67,14 +67,14 @@ public class CertificateAuthority {
   
   private KeyStoreManagement keyStoreManagement = KeyStoreManagement.getInstance();
   
-  public X509Certificate createCertificate(User newUser) throws Exception {
+  public X509Certificate createCertificate(User newUser, PublicKey publicKey) throws Exception {
     X509Certificate caCert = keyStoreManagement.getCACert();
     X500Name issuer = new JcaX509CertificateHolder(caCert).getSubject();
     PrivateKey caPrivateKey = keyStoreManagement.getCAPrivateKey();
     ContentSigner contentsigner = new JcaContentSignerBuilder("SHA1WithRSAEncryption").build(caPrivateKey);
     
     X500Name subject = createX500Name(newUser);
-    SubjectPublicKeyInfo subjectsPublicKeyInfo = getPublicKey(newUser);
+    SubjectPublicKeyInfo subjectsPublicKeyInfo = getPublicKey(publicKey);
     X509v3CertificateBuilder ca_gen = new X509v3CertificateBuilder(issuer, new BigInteger(
         new SecureRandom().generateSeed(256)), new Date(), new Date(System.currentTimeMillis() + 31500000000L),
         subject, subjectsPublicKeyInfo);
@@ -189,9 +189,8 @@ public class CertificateAuthority {
     }
   }
   
-  private SubjectPublicKeyInfo getPublicKey(User newUser) throws Exception {
-    KeyManagement keyDecoder = new KeyManagement();
-    PublicKey key = keyDecoder.decodePublicKey(newUser.getPublicKeys().get(0));
+  private SubjectPublicKeyInfo getPublicKey(PublicKey key) throws Exception {
+    
     SubjectPublicKeyInfo subPubInfo = new SubjectPublicKeyInfo((ASN1Sequence) ASN1Sequence.fromByteArray(key
         .getEncoded()));
     return subPubInfo;

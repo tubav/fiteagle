@@ -1,19 +1,9 @@
 package org.fiteagle.core.aaa;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import junit.framework.Assert;
 
@@ -29,7 +19,7 @@ public class KeyManagementTest {
   @Before
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
-    keyManagement = new KeyManagement();
+    keyManagement = KeyManagement.getInstance();
   }
   
   
@@ -40,7 +30,7 @@ public class KeyManagementTest {
     
   
     KeyPair keyPair = keyManagement.generateKeyPair();
-    String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair, "password");
+    String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "password");
     System.out.println(encryptedPrivateKey);
     Assert.assertNotNull(encryptedPrivateKey);
     
@@ -51,7 +41,7 @@ public class KeyManagementTest {
     User u = userDBManager.createUser("test", "test", "testName", "password");
 
     KeyPair keyPair = keyManagement.generateKeyPair();
-    String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair, "passwordpasswordpassword");
+    String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "passwordpasswordpassword");
     Assert.assertFalse(keyManagement.verifyPrivateKey(encryptedPrivateKey, "Wrongpassword"));
     Assert.assertTrue(keyManagement.verifyPrivateKey(encryptedPrivateKey, "passwordpasswordpassword"));
     

@@ -7,7 +7,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fiteagle.delivery.xmlrpc.util.CertificateStorage;
 import org.fiteagle.delivery.xmlrpc.util.SFAHandler;
 import org.xml.sax.SAXException;
 

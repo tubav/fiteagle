@@ -91,22 +91,11 @@ public class AuthenticationHandler {
     throw new CertificateNotTrustedException();
   }
   
-  private void signAndStoreCertificate(User identifiedUser) {
-    CertificateAuthority ca = CertificateAuthority.getInstance();
-    X509Certificate saveCert;
-    try {
-      saveCert = ca.createCertificate(identifiedUser);
-      keyStoreManagement.storeCertificate(identifiedUser.getUID(), saveCert);
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
   
   private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) {
     boolean verified = false;
     for (String pubKeyString : identifiedUser.getPublicKeys()) {
-      KeyManagement keydecoder = new KeyManagement();
+      KeyManagement keydecoder = KeyManagement.getInstance();
       PublicKey pubKey = null;
       try {
         pubKey = keydecoder.decodePublicKey(pubKeyString);

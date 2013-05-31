@@ -45,7 +45,7 @@ public class UserDBManager {
   private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
   private static UserDBManager dbManager = null;
   Logger log = LoggerFactory.getLogger(getClass());
-  
+  KeyManagement keyManager = null;
   public static UserDBManager getInstance(){
     if(dbManager == null)
         dbManager =  new UserDBManager();
@@ -53,7 +53,7 @@ public class UserDBManager {
   } 
   
   private UserDBManager() throws DatabaseException {
-    
+    keyManager = KeyManagement.getInstance();
     if (preferences.get("databaseType") == null) {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
     }
@@ -211,28 +211,16 @@ public class UserDBManager {
     return returnString;
   }
   
-  public String createUserCertificate(String uid) throws Exception {
+  private String createUserCertificate(String uid, PublicKey publicKey) throws Exception {
     User u = get(uid);
     CertificateAuthority ca = CertificateAuthority.getInstance();
-    X509Certificate cert = ca.createCertificate(u);
-    // store?
+    X509Certificate cert = ca.createCertificate(u, publicKey);
     return ca.getCertficateEncoded(cert);
   }
   
-  public String createUserPrivateKey(String uid, String password) throws IOException, GeneralSecurityException {
-    User u = get(uid);
-    KeyManagement keyManager = new KeyManagement();
-    KeyPair keypair = keyManager.generateKeyPair();
-    PrivateKey prvKey = keypair.getPrivate();
-    PublicKey pubKey = keypair.getPublic();
-    //Here?
-    String pubKeyEncoded = keyManager.encodePublicKey(pubKey);
-    addKey(uid, pubKeyEncoded);
-    
-    String prvKeyEncoded = keyManager.encryptPrivateKey(keypair, password);
-    return prvKeyEncoded;
-    
-  }
+  
+  
+  
   
   private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {
     
@@ -247,5 +235,22 @@ public class UserDBManager {
     private static final long serialVersionUID = -3819932831236493248L;
     
   }
+
   
+  public String createUserPrivateKeyAndCertAsString(String uID, String passphrase) throws Exception {
+    String returnString = "";
+   
+    KeyPair keypair = keyManager.generateKeyPair();
+    String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
+    String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
+    addKey(uID, pubKeyEncoded);
+    String userCertString = createUserCertificate(uID,keypair.getPublic()); 
+    returnString = privateKeyEncoded + "\n" + userCertString;
+   
+    return returnString;
+  }
+
+  
+  
+
 }

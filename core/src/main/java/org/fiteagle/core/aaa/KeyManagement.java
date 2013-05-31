@@ -55,6 +55,16 @@ public class KeyManagement {
   private int pos;
   
   Logger log = LoggerFactory.getLogger(getClass());
+  private static KeyManagement keymanagement;
+  private KeyManagement(){};
+  
+  
+  public static KeyManagement  getInstance(){
+    if(keymanagement == null)
+      keymanagement =  new KeyManagement();
+    
+    return keymanagement;
+  } 
   
   public PublicKey decodePublicKey(String keyLine) throws Exception {
     bytes = null;
@@ -159,14 +169,14 @@ public class KeyManagement {
     
   }
   
-  public String encryptPrivateKey(KeyPair keyPair, String password) throws IOException, GeneralSecurityException {
+  public String encryptPrivateKey(PrivateKey privateKey, String password) throws IOException, GeneralSecurityException {
     
-    PrivateKey privKey = keyPair.getPrivate();
+   
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     PEMWriter writer = new PEMWriter(new BufferedWriter(new OutputStreamWriter(out)));
     JcePEMEncryptorBuilder builder = new JcePEMEncryptorBuilder("DES-EDE3-CBC");
     PEMEncryptor encryptor = builder.build(password.toCharArray());
-    writer.writeObject(privKey, encryptor);
+    writer.writeObject(privateKey, encryptor);
     writer.flush();
     writer.close();
     String returnString = out.toString();
