@@ -205,7 +205,7 @@ public class SFAInteractorTest {
 
 	@SuppressWarnings("unchecked")
 	private void valudateGetVersionGeniAPIs(final GetVersionValue value) {
-		final Map<String, GeniAPIVersion> api_versions = value
+		final Map<String, String> api_versions = value
 				.getGeni_api_versions();
 		Assert.assertNotNull(api_versions);
 		// Assert.assertEquals(SFAInteractorTest.EXPECTED_API_URL, api_versions.
