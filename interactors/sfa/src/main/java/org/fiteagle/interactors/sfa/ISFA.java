@@ -2,6 +2,7 @@ package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
@@ -52,6 +53,6 @@ public interface ISFA {
       throws IOException;
   DeleteResult delete(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions)
       throws IOException;
-  String getCredential();
+  HashMap<String, Object> getCredential();
 
 }

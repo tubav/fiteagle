@@ -5,6 +5,7 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMCode;
+import org.fiteagle.interactors.sfa.common.AMResult;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFARequestProcessorFactory;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;
@@ -93,7 +96,7 @@ public class SFAInteractor_v3 implements ISFA {
 	  SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
 	  GetSelfCredentialRequestProcessor getSelfCredentialRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.GET_SELF_CREDENTIAL);
 	  String result = getSelfCredentialRequestProcessor.processRequest(certificate, xrn, type);
-	  log.info(result);
+	  log.info(result.toString());
 	  return result;
   }
 
@@ -108,7 +111,7 @@ public class SFAInteractor_v3 implements ISFA {
   }
   
   @Override
-  public String getCredential() {
+  public HashMap<String, Object> getCredential() {
     if(this.certificate!=null){
       Collection<List<String>> alternativeNames;
       Collection<List<?>> alternativeNamesCollection;
@@ -128,13 +131,19 @@ public class SFAInteractor_v3 implements ISFA {
           urn = (String) altName.get(1);
         }
       }
-      
+      String response="";
       try {
-        return getSelfCredential(CertificateAuthority.getInstance().getCertificateBodyEncoded(certificate), urn, "user");
+        response =  getSelfCredential(CertificateAuthority.getInstance().getCertificateBodyEncoded(certificate), urn, "user");
       } catch (Exception e) {
         e.printStackTrace();
         throw new RuntimeException();//TODO: specify this.
       }
+      
+      HashMap<String, Object> result = new HashMap<>();
+      result.put("value", response);
+      result.put("code", 0);
+      result.put("output", "");
+      return result;
     }
     return null;
   }
