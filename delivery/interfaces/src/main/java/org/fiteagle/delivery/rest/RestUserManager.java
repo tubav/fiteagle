@@ -56,6 +56,7 @@ public class RestUserManager implements RestUserManagement {
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addUser(@PathParam("username") String username, NewUser user) {
+    user.setUsername(username);
     try {
       manager.add(createUser(user));
     } catch (DuplicateUsernameException e) {
@@ -71,6 +72,7 @@ public class RestUserManager implements RestUserManagement {
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response updateUser(@PathParam("username") String username, NewUser user) {
+    user.setUsername(username);
     try {
       manager.update(createUpdatedUser(user));
       return Response.status(200).build();

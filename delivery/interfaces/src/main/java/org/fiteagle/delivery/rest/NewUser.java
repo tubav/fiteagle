@@ -14,15 +14,6 @@ public class NewUser {
   
   public NewUser(){};
   
-  public NewUser(String username, String firstName, String lastName, String email, String password, List<String> publicKeys) {
-    this.username = username;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.password = password;
-    this.publicKeys = publicKeys;
-  }  
-  
   public String getUsername() {
     return username;
   }
