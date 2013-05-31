@@ -2,7 +2,7 @@ package org.fiteagle.core.userdatabase;
 
 public interface UserDB {
 
-	public void add(User u) throws DuplicateUIDException, DatabaseException;
+	public void add(User u) throws DuplicateUsernameException, DatabaseException;
 	
 	public void delete(String UID) throws DatabaseException;
 	public void delete(User u) throws DatabaseException;
@@ -22,7 +22,7 @@ public interface UserDB {
 		private static final long serialVersionUID = 2315125279537534064L;
 	}
 	
-	public class DuplicateUIDException extends RuntimeException {
+	public class DuplicateUsernameException extends RuntimeException {
 		private static final long serialVersionUID = -7242105025265481986L;		
 	}
 	

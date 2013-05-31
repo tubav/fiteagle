@@ -44,13 +44,13 @@ public class SQLiteUserDB implements UserDB {
 
   private void createTableKeys() throws SQLException {
 		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Keys (UID, key)");
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Keys (username, key)");
 		st.close();
 	}
 
 	private void createTableUsers() throws SQLException {
 		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (UID, firstName, lastName, passwordHash, passwordSalt, PRIMARY KEY (UID))");
+		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
 		st.close();
 	}
 	
@@ -73,10 +73,10 @@ public class SQLiteUserDB implements UserDB {
 	}
 	
 	@Override
-	public void add(User u) throws DuplicateUIDException, DatabaseException {
+	public void add(User u) throws DuplicateUsernameException, DatabaseException {
 	  try{
   		addUserToDatabase(u);		
-  		addKeysToDatabase(u.getUID(),u.getPublicKeys());
+  		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
   		connection.commit();
 	  } catch(SQLException e){
 	    throw new DatabaseException();
@@ -84,17 +84,18 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?)");
-		ps.setString(1, u.getUID());
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?)");
+		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getFirstName());
 		ps.setString(3, u.getLastName());
-		ps.setString(4, u.getPasswordHash());
-		ps.setString(5, u.getPasswordSalt());
+		ps.setString(4, u.getEmail());
+		ps.setString(5, u.getPasswordHash());
+		ps.setString(6, u.getPasswordSalt());
 		try{
 			ps.execute();
 		} catch(SQLException e){
-		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column UID is not unique)")){
-		      throw new DuplicateUIDException();
+		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
+		      throw new DuplicateUsernameException();
 		    }
 		    else{
 		      throw e;
@@ -104,10 +105,10 @@ public class SQLiteUserDB implements UserDB {
 		}
 	}
 
-	private void addKeysToDatabase(String UID,List<String> Keys) throws SQLException {		
+	private void addKeysToDatabase(String username, List<String> Keys) throws SQLException {		
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?)");
 		for(String key: Keys){
-			ps.setString(1, UID);
+			ps.setString(1, username);
 			ps.setString(2, key);
 			ps.addBatch();
 		}		
@@ -117,14 +118,14 @@ public class SQLiteUserDB implements UserDB {
 
 	@Override
 	public void delete(User u) throws DatabaseException {		
-	  delete(u.getUID());   
+	  delete(u.getUsername());   
 	}
 	
 	@Override
-	public void delete(String UID) throws DatabaseException {		
+	public void delete(String username) throws DatabaseException {		
 		try {
-      deleteUserFromDatabase(UID);
-      deleteKeysFromDatabase(UID);
+      deleteUserFromDatabase(username);
+      deleteKeysFromDatabase(username);
       connection.commit();
     } catch (SQLException e) {
       throw new DatabaseException();
@@ -132,16 +133,16 @@ public class SQLiteUserDB implements UserDB {
 		
 	}
 
-	private void deleteKeysFromDatabase(String UID) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE UID=?");
-		ps.setString(1, UID);
+	private void deleteKeysFromDatabase(String username) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=?");
+		ps.setString(1, username);
 		ps.execute();
 		ps.close();
 	}
 
-	private void deleteUserFromDatabase(String UID) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("DELETE FROM Users WHERE UID=?");
-		ps.setString(1, UID);
+	private void deleteUserFromDatabase(String username) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("DELETE FROM Users WHERE username=?");
+		ps.setString(1, username);
 		ps.execute();
 		ps.close();
 	}
@@ -150,8 +151,8 @@ public class SQLiteUserDB implements UserDB {
 	public void update(User u) throws RecordNotFoundException, DatabaseException {
 	  try{
 	    updateUserInDatabase(u);
-	    deleteKeysFromDatabase(u.getUID());    
-	    addKeysToDatabase(u.getUID(), u.getPublicKeys());
+	    deleteKeysFromDatabase(u.getUsername());    
+	    addKeysToDatabase(u.getUsername(), u.getPublicKeys());
 	    connection.commit();
 	  } catch(SQLException e){
 	    throw new DatabaseException();
@@ -160,12 +161,13 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, passwordHash=?, passwordSalt=? WHERE UID=?");
+		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=? WHERE username=?");
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
-		ps.setString(3, u.getPasswordHash());
-		ps.setString(4, u.getPasswordSalt());
-		ps.setString(5, u.getUID());
+		ps.setString(3, u.getEmail());
+		ps.setString(4, u.getPasswordHash());
+		ps.setString(5, u.getPasswordSalt());
+		ps.setString(6, u.getUsername());
 		if(ps.executeUpdate() == 0){
 			ps.close();
 			throw new RecordNotFoundException();
@@ -174,12 +176,12 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(String UID, String key) throws DatabaseException {
+	public void addKey(String username, String key) throws DatabaseException {
 	  try{
-  		if(!get(UID).getPublicKeys().contains(key)){
+  		if(!get(username).getPublicKeys().contains(key)){
   			ArrayList<String> keys = new ArrayList<String>();			
   			keys.add(key);
-  			addKeysToDatabase(UID,keys);
+  			addKeysToDatabase(username,keys);
   			connection.commit();
   		}
 	  } catch(SQLException e){
@@ -188,10 +190,10 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public User get(String UID) throws RecordNotFoundException, DatabaseException {		
+	public User get(String username) throws RecordNotFoundException, DatabaseException {		
 		User u;
     try {
-      u = getUserFromDatabase(UID);
+      u = getUserFromDatabase(username);
     } catch (SQLException e) {
       throw new DatabaseException();
     }
@@ -201,9 +203,9 @@ public class SQLiteUserDB implements UserDB {
 		return u;
 	}
 	
-	private User getUserFromDatabase(String UID) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT Users.UID, Users.firstname, Users.lastname, Users.passwordHash, Users.passwordSalt, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.UID=Keys.UID WHERE Users.UID=?");
-		ps.setString(1, UID);
+	private User getUserFromDatabase(String username) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
 		if(rs.next()){
@@ -215,24 +217,25 @@ public class SQLiteUserDB implements UserDB {
 
 	private User evaluateResultSet(ResultSet rs) throws SQLException {
 		ArrayList<String> keys = new ArrayList<String>();
-		String UID = rs.getString(1);
+		String username = rs.getString(1);
 		String firstname = rs.getString(2);
 		String lastname = rs.getString(3);
-		String passwordHash = rs.getString(4);
-		String passwordSalt = rs.getString(5);
-		String key1 = rs.getString(6);
+		String email = rs.getString(4);
+		String passwordHash = rs.getString(5);
+		String passwordSalt = rs.getString(6);
+		String key1 = rs.getString(7);
 		if(key1 != null){
 			keys.add(key1);
 		}
 		while(rs.next()){		
-			keys.add(rs.getString(6));
+			keys.add(rs.getString(7));
 		}			
-		return new User(UID, firstname, lastname, passwordHash, passwordSalt, keys);
+		return new User(username, firstname, lastname, email, passwordHash, passwordSalt, keys);
 	}
 
 	@Override
 	public User get(User u) throws RecordNotFoundException, DatabaseException {		
-		return get(u.getUID());
+		return get(u.getUsername());
 	}
 
 	@Override

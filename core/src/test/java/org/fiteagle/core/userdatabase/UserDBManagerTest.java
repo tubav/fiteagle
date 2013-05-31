@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
+import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,24 +17,23 @@ public class UserDBManagerTest {
   
   @Before
   public void setUp() throws Exception {
-    userDBManager =UserDBManager.getInstance();
+    userDBManager = UserDBManager.getInstance();
   }
   
   @Test
-  public void testCreateUser() throws DuplicateUIDException, NoSuchAlgorithmException, DatabaseException, IOException {
-    User u = userDBManager.createUser("test", "test", "testName", "password");
-
+  public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException {
+    User u = userDBManager.createUser("test", "test", "testName", "test@test.org", "password");
  
     Assert.assertEquals("test", u.getFirstName());
-    Assert.assertEquals("test", u.getUID());
+    Assert.assertEquals("test", u.getUsername());
     Assert.assertEquals("testName", u.getLastName());
+    Assert.assertEquals("test@test.org", u.getEmail());
     Assert.assertNotNull(u.getPasswordHash());
     Assert.assertNotNull(u.getPasswordSalt());
-  }
-  
+  }  
  
-  public void testVerifyPassword() throws DuplicateUIDException, NoSuchAlgorithmException, DatabaseException, IOException{
-    User u = userDBManager.createUser("test", "test", "testName", "password", new ArrayList<String>());
+  public void testVerifyPassword() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException{
+    User u = userDBManager.createUser("test", "test", "testName", "test@test.org", "password", new ArrayList<String>());
     Assert.assertTrue(userDBManager.verifyPassword("password",u.getPasswordHash(),u.getPasswordSalt()));    
   }
   

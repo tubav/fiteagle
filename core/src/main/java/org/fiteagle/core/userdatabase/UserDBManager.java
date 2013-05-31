@@ -1,11 +1,9 @@
 package org.fiteagle.core.userdatabase;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateParsingException;
@@ -28,7 +26,7 @@ import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
+import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,17 +61,17 @@ public class UserDBManager {
       database = new InMemoryUserDB();
       try {
         String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
-        User u = createUser("fiteagle.av.test", "test", "testUser", "test");
+        User u = createUser("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
         u.addPublicKey(key);
         add(u);
-      } catch (DuplicateUIDException | NoSuchAlgorithmException | IOException e) {
+      } catch (DuplicateUsernameException | NoSuchAlgorithmException | IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
   }
   
-  public void add(User u) throws DuplicateUIDException, DatabaseException {
+  public void add(User u) throws DuplicateUsernameException, DatabaseException {
     database.add(u);
   }
   
@@ -158,7 +156,7 @@ public class UserDBManager {
     
   }
   
-  public User createUser(String uuid, String firstName, String lastName, String password) throws NoSuchAlgorithmException, IOException {
+  public User createUser(String username, String firstName, String lastName, String email, String password) throws NoSuchAlgorithmException, IOException {
     
     SecureRandom random = new SecureRandom();
     byte[] salt = random.generateSeed(20);
@@ -168,11 +166,11 @@ public class UserDBManager {
     String passwordHash = Base64.encodeBytes(passwordBytes);
     
     List<String> keys = new ArrayList<>();
-    return new User(uuid, firstName, lastName, passwordHash, passwordSalt, keys);
+    return new User(username, firstName, lastName, email, passwordHash, passwordSalt, keys);
     
   }
   
-  public User createUser(String uuid, String firstName, String lastName, String password, List<String> keys)
+  public User createUser(String username, String firstName, String lastName, String email, String password, List<String> keys)
       throws NoSuchAlgorithmException, IOException {
 	SecureRandom random = new SecureRandom();
 	byte[] salt = random.generateSeed(20);
@@ -181,7 +179,7 @@ public class UserDBManager {
 	byte[] passwordBytes = createHash(salt, password);
 	String passwordHash = Base64.encodeBytes(passwordBytes);
 	    
-    return new User(uuid, firstName, lastName, passwordHash, passwordSalt, keys);
+    return new User(username, firstName, lastName, email, passwordHash, passwordSalt, keys);
   }
     
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
@@ -194,7 +192,7 @@ public class UserDBManager {
   
   public String getOwnerURN(User u) {
     
-    String[] split = u.getUID().split("\\.");
+    String[] split = u.getUsername().split("\\.");
     String user = split[split.length - 1];
     String returnString = "urn:publicid:IDN";
     String domain = "";
