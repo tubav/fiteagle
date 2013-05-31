@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
-import org.fiteagle.core.aaa.CertificateAuthorityTest;
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
