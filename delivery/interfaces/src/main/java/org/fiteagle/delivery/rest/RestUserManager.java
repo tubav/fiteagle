@@ -23,7 +23,7 @@ import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/userdb")
+@Path("/user")
 public class RestUserManager implements RestUserManagement {
   private Logger log = LoggerFactory.getLogger(getClass());
   private static UserDBManager manager;
@@ -53,8 +53,9 @@ public class RestUserManager implements RestUserManagement {
   
   @Override
   @PUT
+  @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response addUser(NewUser user) {
+  public Response addUser(@PathParam("username") String username, NewUser user) {
     try {
       manager.add(createUser(user));
     } catch (DuplicateUsernameException e) {
@@ -63,13 +64,13 @@ public class RestUserManager implements RestUserManagement {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return Response.status(201).build();
-  }
-   
+  }   
   
   @Override
   @POST
+  @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response updateUser(NewUser user) {
+  public Response updateUser(@PathParam("username") String username, NewUser user) {
     try {
       manager.update(createUpdatedUser(user));
       return Response.status(200).build();
@@ -87,11 +88,11 @@ public class RestUserManager implements RestUserManagement {
   
   @Override
   @POST
-  @Path("{username}/key/")
+  @Path("{username}/pubkey/")
   @Consumes("text/plain")
-  public Response addPublicKey(@PathParam("username") String username, String key) {
+  public Response addPublicKey(@PathParam("username") String username, String pubkey) {
     try {
-      manager.addKey(username, key);
+      manager.addKey(username, pubkey);
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
