@@ -14,6 +14,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
@@ -24,6 +25,8 @@ public abstract class SFAv3RequestProcessor {
   public AMCode runTimeReturnCode;
   public String outPutString = "";
 
+  protected InterfaceConfiguration interfaceConfig = InterfaceConfiguration.getInstance();
+  
 	public abstract AMResult processRequest(ListCredentials credentials,
 			Object... specificArgs);
 	

@@ -18,18 +18,17 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 
 	final static int GENI_API_VERSION = 3;
 	
-	Configurator configurator = new Configurator();
 	
 	
 	
 	public GetVersionResult processRequest() {
 		GetVersionResult getVersionResult = new GetVersionResult();
 		GetVersionValue value = getVersionValue();
-		value.addGenericAttribute("urn", "urn:publicid:IDN+fiteagle+authority+sa");
-		value.addGenericAttribute("hostname", "fiteagle.org");
-		value.addGenericAttribute("fiteagle version", configurator.getCommitVersion());
+		value.addGenericAttribute("urn", interfaceConfig.getAM_URN());
+		value.addGenericAttribute("hostname", interfaceConfig.getHostname());
+		value.addGenericAttribute("fiteagle version", interfaceConfig.getCommitVersion());
 		Map<String, String> peers = new HashMap<>();
-		peers.put("fiteagle", "https://fiteagle.org:9112/api/sfa/v3/am");
+		peers.put("fiteagle", interfaceConfig.getAM_URL());
 		value.addGenericAttribute("peers", peers);
 		getVersionResult.setValue(value);
 		AMCode code = new AMCode();
