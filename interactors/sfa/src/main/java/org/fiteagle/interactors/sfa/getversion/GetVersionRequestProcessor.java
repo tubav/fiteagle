@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fiteagle.core.config.Configurator;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -51,14 +50,12 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		value.setGeni_request_rspec_versions(geni_request_rspec_versions_list);
 		
 		Map<String, String> geniApiVersions= new HashMap<String, String>();
-		String version="3";
-    String url="https://fiteagle.org:9112/api/sfa/v3/am";
+//		String version="3";
+//    String url="https://fiteagle.org:9112/api/sfa/v3/am";
+		String version=new Integer(GetVersionRequestProcessor.GENI_API_VERSION).toString();
+    String url=this.interfaceConfig.getAM_URL();
     
-    String version2="2";
-    String url2="https://fiteagle.org:9112/api/sfa/v3/am";
-//    GeniAPIVersion versions= new GeniAPIVersion(version, url);
     geniApiVersions.put(version, url);
-    geniApiVersions.put(version2, url2);
     
     value.setGeni_api_versions(geniApiVersions);
 		
