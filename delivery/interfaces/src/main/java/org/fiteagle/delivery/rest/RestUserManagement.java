@@ -16,9 +16,9 @@ import org.fiteagle.core.userdatabase.User;
 public interface RestUserManagement {
   
   @GET
-  @Path("{UID}")
+  @Path("{username}")
   @Produces(MediaType.APPLICATION_JSON)
-  public abstract User getUser(@PathParam("UID") String UID);
+  public abstract User getUser(@PathParam("username") String username);
   
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
@@ -29,17 +29,17 @@ public interface RestUserManagement {
   public abstract Response updateUser(NewUser user);
   
   @DELETE
-  @Path("{UID}")
-  public abstract Response deleteUser(@PathParam("UID") String UID);
+  @Path("{username}")
+  public abstract Response deleteUser(@PathParam("username") String username);
   
   @GET
-  @Path("{UID/certificate}")
+  @Path("{username/certificate}")
   @Consumes("text/plain")
-  public String getUserCertAndPrivateKey(@PathParam("UID") String uid, String passphrase);
+  public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase);
  
   @POST
-  @Path("{UID}/key/")
+  @Path("{username}/key/")
   @Consumes("text/plain")
-  public abstract Response addPublicKey(@PathParam("UID") String UID, String key);  
+  public abstract Response addPublicKey(@PathParam("username") String username, String key);  
   
 }

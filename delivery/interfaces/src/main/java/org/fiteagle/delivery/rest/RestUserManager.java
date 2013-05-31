@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
+import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
@@ -37,12 +37,12 @@ public class RestUserManager implements RestUserManagement {
     
   @Override
   @GET
-  @Path("{UID}")
+  @Path("{username}")
   @Produces(MediaType.APPLICATION_JSON)
-  public User getUser(@PathParam("UID") String UID) {
+  public User getUser(@PathParam("username") String username) {
     User user = null;
     try {
-      user = manager.get(UID);
+      user = manager.get(username);
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
@@ -57,7 +57,7 @@ public class RestUserManager implements RestUserManagement {
   public Response addUser(NewUser user) {
     try {
       manager.add(createUser(user));
-    } catch (DuplicateUIDException e) {
+    } catch (DuplicateUsernameException e) {
       throw new WebApplicationException(Response.Status.CONFLICT);
     } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
@@ -79,7 +79,7 @@ public class RestUserManager implements RestUserManagement {
       try {
         manager.add(createUser(user));
         return Response.status(201).build();
-      } catch (DuplicateUIDException | DatabaseException e1) {
+      } catch (DuplicateUsernameException | DatabaseException e1) {
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
       }
     }      
@@ -87,11 +87,11 @@ public class RestUserManager implements RestUserManagement {
   
   @Override
   @POST
-  @Path("{UID}/key/")
+  @Path("{username}/key/")
   @Consumes("text/plain")
-  public Response addPublicKey(@PathParam("UID") String UID, String key) {
+  public Response addPublicKey(@PathParam("username") String username, String key) {
     try {
-      manager.addKey(UID, key);
+      manager.addKey(username, key);
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
@@ -102,10 +102,10 @@ public class RestUserManager implements RestUserManagement {
   
   @Override
   @DELETE
-  @Path("{UID}")
-  public Response deleteUser(@PathParam("UID") String UID) {
+  @Path("{username}")
+  public Response deleteUser(@PathParam("username") String username) {
     try {
-      manager.delete(UID);
+      manager.delete(username);
     } catch (DatabaseException e) {
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
@@ -114,12 +114,12 @@ public class RestUserManager implements RestUserManagement {
   
   @Override
   @POST
-  @Path("{UID}/certificate")
+  @Path("{username}/certificate")
   @Consumes("text/plain")
-  public String getUserCertAndPrivateKey(@PathParam("UID") String UID, String passphrase) {  
+  public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
     try {      
       
-      return manager.createUserPrivateKeyAndCertAsString(UID, passphrase);
+      return manager.createUserPrivateKeyAndCertAsString(username, passphrase);
     } catch (Exception e) {
       log.error(e.getMessage());
       throw new RuntimeException(e.getCause());
@@ -130,7 +130,7 @@ public class RestUserManager implements RestUserManagement {
   private User createUser(NewUser newUser) {
     User user = null;	
 	try {
-	  user =  manager.createUser(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), newUser.getPassword(), newUser.getPublicKeys());
+	  user =  manager.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
 	} catch (NoSuchAlgorithmException e) {
 	  // TODO: Not sure
 	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
@@ -142,7 +142,7 @@ public class RestUserManager implements RestUserManagement {
   }
   
   private User createUpdatedUser(NewUser newUser) {
-    User oldUser = manager.get(newUser.getUID());
+    User oldUser = manager.get(newUser.getUsername());
     if(newUser.getFirstName() == null){
       newUser.setFirstName(oldUser.getFirstName());
     }
@@ -152,8 +152,11 @@ public class RestUserManager implements RestUserManagement {
     if(newUser.getPublicKeys() == null){
       newUser.setPublicKeys(oldUser.getPublicKeys());
     }
+    if(newUser.getEmail() == null){
+      newUser.setEmail(oldUser.getEmail());
+    }
     if(newUser.getPassword() == null){
-      return new User(newUser.getUID(), newUser.getFirstName(), newUser.getLastName(), oldUser.getPasswordHash(), oldUser.getPasswordSalt(), newUser.getPublicKeys());
+      return new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), oldUser.getPasswordHash(), oldUser.getPasswordSalt(), newUser.getPublicKeys());
     }
     return createUser(newUser);
   }
