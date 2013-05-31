@@ -118,9 +118,8 @@ public class RestUserManager implements RestUserManagement {
   @Consumes("text/plain")
   public String getUserCertAndPrivateKey(@PathParam("UID") String UID, String passphrase) {  
     try {      
-      String privateKey = manager.createUserPrivateKey(UID, passphrase);
-      String certificate = manager.createUserCertificate(UID);
-      return privateKey + "\n" + certificate;
+      
+      return manager.createUserPrivateKeyAndCertAsString(UID, passphrase);
     } catch (Exception e) {
       log.error(e.getMessage());
       throw new RuntimeException(e.getCause());

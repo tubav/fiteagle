@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.core.aaa.AuthenticationHandler;
-import org.fiteagle.delivery.xmlrpc.util.CertificateStorage;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
 import org.fiteagle.delivery.xmlrpc.util.GeniAMHandler;
