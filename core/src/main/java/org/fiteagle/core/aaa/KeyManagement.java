@@ -66,7 +66,7 @@ public class KeyManagement {
     return keymanagement;
   } 
   
-  public PublicKey decodePublicKey(String keyLine) throws Exception {
+  public PublicKey decodePublicKey(String keyLine) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
     bytes = null;
     pos = 0;
     // look for the Base64 encoded part of the line to decode
@@ -78,7 +78,7 @@ public class KeyManagement {
       }
     }
     if (bytes == null) {
-      throw new IllegalArgumentException("no Base64 part to decode");
+       throw new CouldNotParse("Could not find base64 part");
     }
     
     String type = decodeType();
@@ -95,7 +95,7 @@ public class KeyManagement {
       DSAPublicKeySpec spec = new DSAPublicKeySpec(y, p, q, g);
       return KeyFactory.getInstance("DSA").generatePublic(spec);
     } else {
-      throw new IllegalArgumentException("unknown type " + type);
+      throw new CouldNotParse("unknown type " + type);
     }
   }
   
@@ -132,7 +132,7 @@ public class KeyManagement {
       publicKeyEncoded = new String(Base64.encodeBytes(byteOs.toByteArray()));
       return "ssh-dss " + publicKeyEncoded;
     } else {
-      throw new IllegalArgumentException("Unknown public key encoding: " + pubKey.getAlgorithm());
+      throw new CouldNotParse("Unknown public key encoding: " + pubKey.getAlgorithm());
     }
   }
   
@@ -246,7 +246,7 @@ public class KeyManagement {
     try {
       result = m.group(2);
     } catch (Exception e) {
-      
+      throw new CouldNotParse(e.getMessage());
     }
     return result;
   }
@@ -261,9 +261,9 @@ public class KeyManagement {
       String result = m.group(2);
       return result;
     } catch (Exception e) {
-      System.err.println(e.getMessage());
+      throw new CouldNotParse(e.getMessage());
     }
-    throw new CouldNotParse();
+   
     
   }
   
@@ -291,17 +291,20 @@ public class KeyManagement {
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
-    throw new CouldNotParse();
+    throw new CouldNotParse("Could not find encrypted key string");
     
   }
   
   public class CouldNotParse extends RuntimeException {
     
-    /**
-       * 
-       */
+ 
+    public CouldNotParse(String message){
+      super(message);
+    }
+    
     private static final long serialVersionUID = -5738049748536007261L;
     
   }
+  
   
 }

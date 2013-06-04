@@ -157,5 +157,16 @@ public class RestUserManager implements RestUserManagement {
     }
     return createUser(newUser);
   }
+
+  @Override
+  @POST
+  @Path("{UID}/certificate")
+  public String getUserCertificate(@PathParam("UID") String uid, String publicKeyEncoded) {
+    try {
+      return manager.createUserCertificate(uid, publicKeyEncoded);
+    } catch (Exception e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+  }
   
 }

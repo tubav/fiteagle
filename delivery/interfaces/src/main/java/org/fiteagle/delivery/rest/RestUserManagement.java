@@ -32,10 +32,14 @@ public interface RestUserManagement {
   @Path("{UID}")
   public abstract Response deleteUser(@PathParam("UID") String UID);
   
-  @GET
-  @Path("{UID/certificate}")
+  @POST
+  @Path("{UID}/certificate")
   @Consumes("text/plain")
   public String getUserCertAndPrivateKey(@PathParam("UID") String uid, String passphrase);
+  
+  @POST
+  @Path("{UID}/certificate")
+  public String getUserCertificate(@PathParam("UID")String uid, String publicKeyEncoded);
  
   @POST
   @Path("{UID}/key/")
