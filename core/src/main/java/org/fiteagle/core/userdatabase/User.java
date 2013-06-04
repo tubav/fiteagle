@@ -7,19 +7,21 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class User {
 	
-	private String UID;
+	private String username;
 	private String firstName;
 	private String lastName;
+	private String email;
 	@JsonIgnore
 	private String passwordHash;
 	@JsonIgnore
 	private String passwordSalt;
 	private List<String> publicKeys;
 
-	public User(String UID, String firstName, String lastName, String passwordHash, String passwordSalt, List<String> publicKeys){
-		this.UID = UID;
+	public User(String username, String firstName, String lastName, String email, String passwordHash, String passwordSalt, List<String> publicKeys){
+		this.username = username;
 		this.firstName = firstName;
-		this.lastName = lastName;		
+		this.lastName = lastName;
+		this.email = email;
 		this.passwordHash = passwordHash;
 		this.passwordSalt =  passwordSalt;
 		if(publicKeys == null){
@@ -30,12 +32,12 @@ public class User {
 		}		
 	}
 	
-	public String getUID() {
-		return UID;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUID(String uID) {
-		UID = uID;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getFirstName() {
@@ -54,7 +56,15 @@ public class User {
 		this.lastName = lastName;
 	}
 	
-	public List<String> getPublicKeys() {
+	public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public List<String> getPublicKeys() {
 		return publicKeys;
 	}
 
@@ -77,10 +87,10 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (UID == null) {
-			if (other.UID != null)
+		if (username == null) {
+			if (other.username != null)
 				return false;
-		} else if (!UID.equals(other.UID))
+		} else if (!username.equals(other.username))
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
@@ -102,7 +112,7 @@ public class User {
 	
 	@Override
   public String toString() {
-    return "User [UID=" + UID + ", firstName=" + firstName + ", lastName="
+    return "User [username=" + username + ", firstName=" + firstName + ", lastName="
         + lastName + ", publicKeys=" + publicKeys + "]";
   }
 

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUIDException;
+import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +24,8 @@ public class KeyManagementTest {
   
   
   @Test
-  public void testGetEncryptedPrivateKey() throws DuplicateUIDException, SQLException, IOException, GeneralSecurityException{
-    User u = userDBManager.createUser("test", "test", "testName", "password");
+  public void testGetEncryptedPrivateKey() throws DuplicateUsernameException, SQLException, IOException, GeneralSecurityException{
+    User u = userDBManager.createUser("test", "test", "testName", "test@test.org", "password");
     CertificateAuthority cA = CertificateAuthority.getInstance();
     
   
@@ -37,8 +37,8 @@ public class KeyManagementTest {
   }
   
   //@Test 
-  public void testVerifyEncryptedPrivateKey() throws DuplicateUIDException, SQLException, IOException, GeneralSecurityException{
-    User u = userDBManager.createUser("test", "test", "testName", "password");
+  public void testVerifyEncryptedPrivateKey() throws DuplicateUsernameException, SQLException, IOException, GeneralSecurityException{
+    User u = userDBManager.createUser("test", "test", "testName", "test@test.org", "password");
 
     KeyPair keyPair = keyManagement.generateKeyPair();
     String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "passwordpasswordpassword");

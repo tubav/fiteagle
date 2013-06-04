@@ -15,7 +15,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -42,7 +41,6 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 
 public class CertificateAuthority {
@@ -142,8 +140,9 @@ public class CertificateAuthority {
     X509Certificate userCert = getX509Certificate(cf, certString);
     
     User user = getUserFromCert(userCert);
-    String alias = user.getUID();
+    String alias = user.getUsername();
     X509Certificate[] storedCertificate = getStoredCertificate(alias);
+
     if (storedCertificate == null) {
       try {
         
@@ -197,7 +196,7 @@ public class CertificateAuthority {
   }
   
   private X500Name createX500Name(User newUser) {
-    X500Principal prince = new X500Principal("CN=" + newUser.getUID());
+    X500Principal prince = new X500Principal("CN=" + newUser.getUsername());
     X500Name x500Name = new X500Name(prince.getName());
     return x500Name;
   }

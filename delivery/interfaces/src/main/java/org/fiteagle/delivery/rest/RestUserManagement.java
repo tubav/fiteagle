@@ -16,34 +16,38 @@ import org.fiteagle.core.userdatabase.User;
 public interface RestUserManagement {
   
   @GET
-  @Path("{UID}")
+  @Path("{username}")
   @Produces(MediaType.APPLICATION_JSON)
-  public abstract User getUser(@PathParam("UID") String UID);
+  public abstract User getUser(@PathParam("username") String username);
   
   @PUT
+  @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public abstract Response addUser(NewUser user);
+  public abstract Response addUser(@PathParam("username") String username, NewUser user);
     
   @POST
+  @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public abstract Response updateUser(NewUser user);
+  public abstract Response updateUser(@PathParam("username") String username, NewUser user);
   
   @DELETE
-  @Path("{UID}")
-  public abstract Response deleteUser(@PathParam("UID") String UID);
+  @Path("{username}")
+  public abstract Response deleteUser(@PathParam("username") String username);
   
   @POST
-  @Path("{UID}/certificate")
+  @Path("{username}/certificate")
   @Consumes("text/plain")
-  public String getUserCertAndPrivateKey(@PathParam("UID") String uid, String passphrase);
+  public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase);
   
   @POST
-  @Path("{UID}/certificate")
-  public String getUserCertificate(@PathParam("UID")String uid, String publicKeyEncoded);
+  @Path("{username}/certificate")
+  @Consumes("text/plain")
+  public String getUserCertificate(@PathParam("username")String username, String publicKeyEncoded);
+
  
   @POST
-  @Path("{UID}/key/")
+  @Path("{username}/pubkey/")
   @Consumes("text/plain")
-  public abstract Response addPublicKey(@PathParam("UID") String UID, String key);  
-  
+  public abstract Response addPublicKey(@PathParam("username") String username, String pubkey);  
+    
 }
