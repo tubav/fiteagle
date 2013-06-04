@@ -23,6 +23,7 @@ import net.iharder.Base64;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.KeyManagement;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
@@ -247,5 +248,15 @@ public class UserDBManager {
    
     return returnString;
   }
+
+  public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
+    String returnString = "";
+    PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
+    addKey(uid, publicKeyEncoded);
+    returnString = createUserCertificate(returnString, pkey);
+    return returnString;
+  }
+
+  
 
 }

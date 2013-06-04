@@ -32,13 +32,13 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-    // TODO Auto-generated method stub
+    Log.info("server trusted ");
     
   }
 
   @Override
   public X509Certificate[] getAcceptedIssuers() {
-    // TODO Auto-generated method stub
+    Log.info("accepted Issuers");
     return new X509Certificate[]{};
   }
 
@@ -62,14 +62,14 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
-    // TODO Auto-generated method stub
+    Log.info("checkserver trusted 2");
     
   }
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine)
       throws CertificateException {
-    // TODO Auto-generated method stub
+    Log.info("server trusted 3");
     
   }
 

@@ -115,56 +115,29 @@
 			</plugin>
 			<!-- END OF GIT COMMIT ID PLUGIN CONFIGURATION -->
 
-			<!-- other plugins -->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>keytool-maven-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<phase>generate-resources</phase>
-						<id>clean</id>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
-					<execution>
-						<phase>generate-resources</phase>
-						<id>importKeystore</id>
-						<goals>
-							<goal>importKeystore</goal>
-						</goals>
-					</execution>
-					<execution>
-					   <goals>
-					       <goal>importCertificate</goal>
-					   </goals>
-					   <phase>generate-resources</phase>
-					</execution>
-				</executions>
-				<configuration>
-				   <!-- common parameters -->
-				   <keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
-				   <!-- import keystore -->
-				   <srckeystore>src/main/resources/org/fiteagle/core/certificates/testCA.p12</srckeystore>
-				   <srcstoretype>PKCS12</srcstoretype>
-			       <srcstorepass>jetty6</srcstorepass>
-				   <srckeypass>jetty6</srckeypass>
-			       <srcalias>1</srcalias>
-				   <destkeystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</destkeystore>
-		           <destkeypass>jetty6</destkeypass>
-		           <deststorepass>jetty6</deststorepass>	
-		           <destalias>root</destalias>
-		           <!-- import certificate -->
-		           <storepass>jetty6</storepass>
-		           <keypass>jetty6</keypass>
-		           <alias>virtualWall</alias>
-		           <file>src/main/resources/org/fiteagle/core/certificates/virtual_wall.pem</file>
-		           <trustcacerts>true</trustcacerts>
-		           <noprompt>true</noprompt>
-				</configuration>
-			</plugin>
-
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${user.home}${file.separator}fiteagle</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src/main/resources/org/fiteagle/core/certificates</directory>
+                  <includes><include>jetty-ssl.*</include></includes>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
 		</plugins>
 
 		<pluginManagement>
@@ -177,29 +150,6 @@
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											keytool-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.2,)
-										</versionRange>
-										<goals>
-											<goal>clean</goal>
-											<goal>importKeystore</goal>
-											<goal>
-												importCertificate
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>

@@ -24,8 +24,10 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.mortbay.jetty.security.Password;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.log.Log;
@@ -73,7 +75,10 @@ public class FiteagleSSLSocketConnector extends SslSocketConnector {
       keyStore.load(keystoreInputStream, _password==null?null:_password.toString().toCharArray());
 
       KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(_sslKeyManagerFactoryAlgorithm);        
-      keyManagerFactory.init(keyStore,_keyPassword==null?null:_keyPassword.toString().toCharArray());
+      KeyStoreManagement keystoreManager = KeyStoreManagement.getInstance();
+      char[] prk_pass = keystoreManager.getPrivateKeyPassword();
+    
+      keyManagerFactory.init(keyStore, prk_pass);
       keyManagers = keyManagerFactory.getKeyManagers();
 
       TrustManager[] trustManagers = null;
@@ -89,6 +94,12 @@ public class FiteagleSSLSocketConnector extends SslSocketConnector {
       for(int i = 0; i< trustManagers.length;i++){
         if(trustManagers[i] instanceof X509TrustManager){
           trustManagers[i] = new FiteagleTrustmanager();
+        }
+      }
+      
+      for(int i = 0; i< keyManagers.length;i++){
+        if(keyManagers[i] instanceof X509KeyManager){
+          keyManagers[i] = new FiteagleKeyManager();
         }
       }
  

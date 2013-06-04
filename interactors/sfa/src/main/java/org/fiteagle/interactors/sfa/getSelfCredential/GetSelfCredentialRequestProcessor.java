@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.GregorianCalendar;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -53,9 +54,8 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 	  SignedCredential signedCredential = new SignedCredential();
 
     Credential credential = new Credential();
-    credential.setId("testCredential");
+    credential.setId(createSignedCredentialId());
     credential.setType("privilege");
-   // credential.setOwnerGid(getOwnerGID(cert));
     credential.setOwnerGid(cert);
     credential.setOwnerURN(getOwnerURN(xrn));
     credential.setTargetGid(getTargetGID(type,xrn));
@@ -92,11 +92,9 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
       
     
     } catch (JAXBException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new RuntimeException(e.getMessage());
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new RuntimeException(e.getMessage());
     }
     signedCredentialString =  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + signedCredentialString;
     return signedCredentialString;
@@ -118,8 +116,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   }
 
   private String getServerURN() throws CertificateParsingException {
-    CertificateAuthority ca = CertificateAuthority.getInstance();
-    return ca.getServerURN();
+    return interfaceConfig.getAM_URN();
   }
 
   private String getTargetGID(String type, String xrn) throws Exception {
@@ -139,6 +136,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     return "";
   }
 
+  //TODO refactor AM cert or SA cert !! Server Cert is wrong here!!
   private String getServerCert() throws Exception {
     CertificateAuthority ca =CertificateAuthority.getInstance();
     X509Certificate serverCert = ca.getServerCertificate();
@@ -204,10 +202,17 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 		return null;
 	}
 
+	private String createSignedCredentialId(){
+	  return UUID.randomUUID().toString();
+	}
+
+	
 	public class UnsupportedTarget extends RuntimeException {
 
    
     private static final long serialVersionUID = -7821229625163019933L;
 	  
 	}
+	
+	
 }

@@ -83,9 +83,9 @@
 							<maxIdleTime>60000</maxIdleTime>
      						<keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
 							<password>jetty6</password>
-							<keyPassword>jetty6</keyPassword>
-<!-- 							 <truststore>${project.build.directory}/jetty-ssl.truststore</truststore>  -->
-<!-- 							 <trustPassword>jetty6</trustPassword> -->
+<!-- 							<keyPassword>jetty6</keyPassword> -->
+							 <truststore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.truststore</truststore> 
+							 <trustPassword>jetty6</trustPassword>
 							<allowRenegotiate>true</allowRenegotiate>
 							<wantClientAuth>true</wantClientAuth>
 						</connector>
