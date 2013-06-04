@@ -27,7 +27,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		value.addGenericAttribute("hostname", interfaceConfig.getHostname());
 		value.addGenericAttribute("fiteagle version", interfaceConfig.getCommitVersion());
 		Map<String, String> peers = new HashMap<>();
-		peers.put("fiteagle", interfaceConfig.getAM_URL());
+//		peers.put("fiteagle", interfaceConfig.getAM_URL());
 		value.addGenericAttribute("peers", peers);
 		getVersionResult.setValue(value);
 		AMCode code = new AMCode();
