@@ -25,8 +25,13 @@ public class AuthenticationFilter implements ContainerRequestFilter{
   
   private UserDBManager manager = null;
   private Logger log = LoggerFactory.getLogger(getClass());
+  
 	@Override
 	public ContainerRequest filter(ContainerRequest req) {
+	  if(!req.getSecurityContext().isSecure()){
+	    throw new WebApplicationException(Response.Status.BAD_REQUEST);
+	  }
+	  
 		String method = req.getMethod();    
     if(method.equals("PUT")){
       return req;
@@ -37,11 +42,12 @@ public class AuthenticationFilter implements ContainerRequestFilter{
 			throw new WebApplicationException(Response.Status.UNAUTHORIZED);
 		}
 		
-		String loggedUser = (String) this.request.getSession().getAttribute("LOGGED_USER");		
-		if(loggedUser != null && loggedUser.equals(credentials[0])){
-		  //TODO: safe?
-		  return req;
-		}
+//		String loggedUser = (String) this.request.getSession().getAttribute("LOGGED_USER");		
+//		if(loggedUser != null && loggedUser.equals(credentials[0])){
+//		  //TODO: safe?
+//		  return req;
+//		}
+		
 		manager = UserDBManager.getInstance();
 		try {
       if(!manager.verifyCredentials(credentials[0], credentials[1])){
@@ -53,10 +59,14 @@ public class AuthenticationFilter implements ContainerRequestFilter{
     } catch (RecordNotFoundException e){
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);       
     }
+
+		if(!req.getPathSegments().get(1).getPath().equals(credentials[0])){
+		    throw new WebApplicationException(Response.Status.UNAUTHORIZED); 
+		}
 		
 		//TODO: send cookie back?
-		this.request.getSession().setAttribute("LOGGED_USER", credentials[0]);
-		System.out.println("this was: "+this.request.getSession().getAttribute("LOGGED_USER"));
+		//System.out.println(request.getSession().getId());
+		//this.request.getSession().setAttribute("LOGGED_USER", credentials[0]);
 
 		return req;
 	}
