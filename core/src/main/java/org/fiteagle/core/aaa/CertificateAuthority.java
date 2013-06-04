@@ -51,7 +51,6 @@ public class CertificateAuthority {
   public static CertificateAuthority getInstance() {
     if (CA == null)
       CA = new CertificateAuthority();
-    
     return CA;
   }
   
