@@ -181,5 +181,19 @@ public class RestUserManager implements RestUserManagement {
       return new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), oldUser.getPasswordHash(), oldUser.getPasswordSalt(), newUser.getPublicKeys());
     }
     return createUser(newUser);
-  }  
+  }
+
+  @Override
+  @POST
+  @Path("{username}/certificate")
+  public String getUserCertificate(@PathParam("username") String uid, String publicKeyEncoded) {
+    try {
+      return manager.createUserCertificate(uid, publicKeyEncoded);
+    } catch (Exception e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+ 
+
 }

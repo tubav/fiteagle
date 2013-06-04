@@ -38,8 +38,8 @@ public class SignatureCreator {
     Transforms transforms = new Transforms(doc);
     transforms.addTransform(Transforms.TRANSFORM_ENVELOPED_SIGNATURE);
     sig.addDocument("#"+credentialId, transforms, Constants.ALGO_ID_DIGEST_SHA1);
-    Key privateKey = keyStoreManagement.getCAPrivateKey();
-    X509Certificate cert = keyStoreManagement.getCACert();
+    Key privateKey = keyStoreManagement.getCAPrivateKey();  // getSA or AM private Key
+    X509Certificate cert = keyStoreManagement.getCACert(); // TODO getSA or AM cert
     sig.addKeyInfo(cert);
     sig.addKeyInfo(cert.getPublicKey());
     sig.sign(privateKey);
