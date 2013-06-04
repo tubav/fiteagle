@@ -24,6 +24,7 @@ import javax.security.auth.x500.X500Principal;
 
 import net.iharder.Base64;
 
+import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DEROctetString;
@@ -39,6 +40,7 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.fiteagle.core.config.FiteaglePreferences;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDBManager;
@@ -77,8 +79,7 @@ public class CertificateAuthority {
         subject, subjectsPublicKeyInfo);
     BasicConstraints ca_constraint = new BasicConstraints(false);
     ca_gen.addExtension(X509Extension.basicConstraints, true, ca_constraint);
-    GeneralNames subjectAltName = new GeneralNames(new GeneralName(GeneralName.uniformResourceIdentifier,
-        userDBManager.getOwnerURN(newUser)));
+    GeneralNames subjectAltName = new GeneralNames(new GeneralName(GeneralName.uniformResourceIdentifier,getURN(newUser)));
     
     X509Extension extension = new X509Extension(false, new DEROctetString(subjectAltName));
     ca_gen.addExtension(X509Extension.subjectAlternativeName, false, extension.getParsedValue());
@@ -87,6 +88,11 @@ public class CertificateAuthority {
     return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(holder.getEncoded()));
   }
   
+  private String getURN(User newUser) {
+    InterfaceConfiguration config = InterfaceConfiguration.getInstance();
+    return config.getURN_Prefix()+"+"+config.getDomain()+"+user+"+newUser.getUsername();
+  }
+
   public String getServerURN() throws CertificateParsingException {
     X509Certificate caCert = getServerCertificate();
     Collection<List<?>> alternativeNames = caCert.getSubjectAlternativeNames();
