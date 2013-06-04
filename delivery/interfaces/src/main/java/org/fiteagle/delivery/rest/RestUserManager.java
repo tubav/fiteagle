@@ -25,12 +25,13 @@ import org.slf4j.LoggerFactory;
 
 @Path("/user")
 public class RestUserManager implements RestUserManagement {
-  private Logger log = LoggerFactory.getLogger(getClass());
+  private static Logger log = LoggerFactory.getLogger(RestUserManager.class);
   private static UserDBManager manager;
   static {
     try {
       manager = UserDBManager.getInstance();
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
   }
@@ -46,6 +47,7 @@ public class RestUserManager implements RestUserManagement {
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return user;
@@ -62,6 +64,7 @@ public class RestUserManager implements RestUserManagement {
     } catch (DuplicateUsernameException e) {
       throw new WebApplicationException(Response.Status.CONFLICT);
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return Response.status(201).build();
@@ -74,18 +77,14 @@ public class RestUserManager implements RestUserManagement {
   public Response updateUser(@PathParam("username") String username, NewUser user) {
     user.setUsername(username);
     try {
-      manager.update(createUpdatedUser(user));
-      return Response.status(200).build();
+      manager.update(createUpdatedUser(user));     
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
     } catch (RecordNotFoundException e) {
-      try {
-        manager.add(createUser(user));
-        return Response.status(201).build();
-      } catch (DuplicateUsernameException | DatabaseException e1) {
-        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-      }
-    }      
+      throw new WebApplicationException(Response.Status.NOT_FOUND);      
+    }
+    return Response.status(200).build();
   }
   
   @Override
@@ -93,11 +92,15 @@ public class RestUserManager implements RestUserManagement {
   @Path("{username}/pubkey/")
   @Consumes("text/plain")
   public Response addPublicKey(@PathParam("username") String username, String pubkey) {
+    if(pubkey == null || pubkey.length() == 0){
+      throw new WebApplicationException(Response.status(422).build());
+    }
     try {
       manager.addKey(username, pubkey);
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return Response.status(200).build();
@@ -110,6 +113,7 @@ public class RestUserManager implements RestUserManagement {
     try {
       manager.delete(username);
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return Response.status(200).build();
@@ -120,8 +124,10 @@ public class RestUserManager implements RestUserManagement {
   @Path("{username}/certificate")
   @Consumes("text/plain")
   public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
+    if(passphrase == null || passphrase.length() == 0){
+      throw new WebApplicationException(Response.status(422).build());
+    }
     try {      
-      
       return manager.createUserPrivateKeyAndCertAsString(username, passphrase);
     } catch (Exception e) {
       log.error(e.getMessage());
@@ -129,21 +135,34 @@ public class RestUserManager implements RestUserManagement {
     }    
   }
   
-  
   private User createUser(NewUser newUser) {
-    User user = null;	
-	try {
-	  user =  manager.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
-	} catch (NoSuchAlgorithmException e) {
-	  // TODO: Not sure
-	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-	} catch (IOException e) {
-	  // TODO: Not sure
-	  throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-	}    
-	return user;
+    checkAttributes(newUser);
+    User user = null;
+    try {
+      user = manager.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
+          newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
+    } catch (NoSuchAlgorithmException e) {
+      log.error(e.getMessage());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    } catch (IOException e) {
+      log.error(e.getMessage());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    return user;
   }
   
+  private void checkAttributes(NewUser user){
+    String firstName = user.getFirstName();
+    String lastName = user.getLastName();
+    String email = user.getEmail();
+    String password = user.getPassword();
+    if(firstName == null || lastName == null || email == null || password == null ||
+        firstName.length() == 0 || lastName.length() == 0 || email.length() == 0 || 
+        password.length() == 0 || !email.contains("@")){
+      throw new WebApplicationException(Response.status(422).build());
+    }
+  }
+
   private User createUpdatedUser(NewUser newUser) {
     User oldUser = manager.get(newUser.getUsername());
     if(newUser.getFirstName() == null){
@@ -163,5 +182,18 @@ public class RestUserManager implements RestUserManagement {
     }
     return createUser(newUser);
   }
-  
+
+  @Override
+  @POST
+  @Path("{username}/certificate")
+  public String getUserCertificate(@PathParam("username") String uid, String publicKeyEncoded) {
+    try {
+      return manager.createUserCertificate(uid, publicKeyEncoded);
+    } catch (Exception e) {
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+ 
+
 }

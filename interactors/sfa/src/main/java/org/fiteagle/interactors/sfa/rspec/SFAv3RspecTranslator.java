@@ -1,22 +1,13 @@
 package org.fiteagle.interactors.sfa.rspec;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
-import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
-import org.fiteagle.interactors.sfa.describe.DescribeValue;
 
 public class SFAv3RspecTranslator {
 

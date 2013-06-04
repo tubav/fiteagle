@@ -31,7 +31,7 @@ import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+ 
 public class AuthenticationHandler {
   
   private KeyStoreManagement keyStoreManagement;

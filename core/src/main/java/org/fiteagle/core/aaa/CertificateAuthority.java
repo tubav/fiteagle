@@ -51,7 +51,6 @@ public class CertificateAuthority {
   public static CertificateAuthority getInstance() {
     if (CA == null)
       CA = new CertificateAuthority();
-    
     return CA;
   }
   
@@ -141,12 +140,13 @@ public class CertificateAuthority {
     
     User user = getUserFromCert(userCert);
     String alias = user.getUsername();
-    X509Certificate storedCertificate = getStoredCertificate(alias);
+    X509Certificate[] storedCertificate = getStoredCertificate(alias);
+
     if (storedCertificate == null) {
       try {
         
         keyStoreManagement.storeCertificate(alias, userCert);
-        storedCertificate = userCert;
+        storedCertificate = new X509Certificate[]{userCert};
       } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -154,13 +154,13 @@ public class CertificateAuthority {
     }
     
     try {
-      return getCertificateBodyEncoded(storedCertificate);
+      return getCertificateBodyEncoded(storedCertificate[0]);
     } catch (Exception e) {
       throw new EncodeCertificateException();
     }
   }
   
-  private X509Certificate getStoredCertificate(String alias) {
+  private X509Certificate[] getStoredCertificate(String alias) {
     return keyStoreManagement.getStoredCertificate(alias);
   }
   

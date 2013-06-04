@@ -23,6 +23,7 @@ import net.iharder.Base64;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.KeyManagement;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
@@ -75,8 +76,8 @@ public class UserDBManager {
     database.add(u);
   }
   
-  public void delete(String UID) throws DatabaseException {
-    database.delete(UID);
+  public void delete(String username) throws DatabaseException {
+    database.delete(username);
   }
   
   public void delete(User u) throws DatabaseException {
@@ -87,12 +88,12 @@ public class UserDBManager {
     database.update(u);
   }
   
-  public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException {
-    database.addKey(UID, key);
+  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException {
+    database.addKey(username, key);
   }
   
-  public User get(String UID) throws RecordNotFoundException, DatabaseException {
-    return database.get(UID);
+  public User get(String username) throws RecordNotFoundException, DatabaseException {
+    return database.get(username);
   }
   
   public User get(User u) throws RecordNotFoundException, DatabaseException {
@@ -190,6 +191,11 @@ public class UserDBManager {
     return Arrays.equals(passwordHashBytes, proposedDigest);
   }
   
+  public boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException, IOException, RecordNotFoundException, DatabaseException{
+    User user = get(username);
+    return verifyPassword(password, user.getPasswordHash(), user.getPasswordSalt());
+  }
+  
   public String getOwnerURN(User u) {
     
     String[] split = u.getUsername().split("\\.");
@@ -209,17 +215,13 @@ public class UserDBManager {
     return returnString;
   }
   
-  private String createUserCertificate(String uid, PublicKey publicKey) throws Exception {
-    User u = get(uid);
+  private String createUserCertificate(String username, PublicKey publicKey) throws Exception {
+    User u = get(username);
     CertificateAuthority ca = CertificateAuthority.getInstance();
     X509Certificate cert = ca.createCertificate(u, publicKey);
     return ca.getCertficateEncoded(cert);
   }
-  
-  
-  
-  
-  
+    
   private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {
     
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -233,22 +235,28 @@ public class UserDBManager {
     private static final long serialVersionUID = -3819932831236493248L;
     
   }
-
   
-  public String createUserPrivateKeyAndCertAsString(String uID, String passphrase) throws Exception {
+  public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
     String returnString = "";
    
     KeyPair keypair = keyManager.generateKeyPair();
     String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(uID, pubKeyEncoded);
-    String userCertString = createUserCertificate(uID,keypair.getPublic()); 
+    addKey(username, pubKeyEncoded);
+    String userCertString = createUserCertificate(username,keypair.getPublic()); 
     returnString = privateKeyEncoded + "\n" + userCertString;
    
     return returnString;
   }
 
-  
+  public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
+    String returnString = "";
+    PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
+    addKey(uid, publicKeyEncoded);
+    returnString = createUserCertificate(returnString, pkey);
+    return returnString;
+  }
+
   
 
 }

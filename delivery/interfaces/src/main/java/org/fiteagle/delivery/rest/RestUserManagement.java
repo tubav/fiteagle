@@ -28,20 +28,26 @@ public interface RestUserManagement {
   @POST
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
-  public abstract Response updateUser(@PathParam("username") String usernamem, NewUser user);
+  public abstract Response updateUser(@PathParam("username") String username, NewUser user);
   
   @DELETE
   @Path("{username}")
   public abstract Response deleteUser(@PathParam("username") String username);
   
   @POST
-  @Path("{username/certificate}")
+  @Path("{username}/certificate")
   @Consumes("text/plain")
   public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase);
+  
+  @POST
+  @Path("{username}/certificate")
+  @Consumes("text/plain")
+  public String getUserCertificate(@PathParam("username")String username, String publicKeyEncoded);
+
  
   @POST
   @Path("{username}/pubkey/")
   @Consumes("text/plain")
   public abstract Response addPublicKey(@PathParam("username") String username, String pubkey);  
-  
+    
 }
