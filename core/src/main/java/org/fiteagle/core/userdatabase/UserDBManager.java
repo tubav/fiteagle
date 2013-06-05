@@ -196,25 +196,25 @@ public class UserDBManager {
     return verifyPassword(password, user.getPasswordHash(), user.getPasswordSalt());
   }
   
-  public String getOwnerURN(User u) {
-    
-    String[] split = u.getUsername().split("\\.");
-    String user = split[split.length - 1];
-    String returnString = "urn:publicid:IDN";
-    String domain = "";
-    for (int i = 0; i < split.length - 1; i++) {
-      if (i > 0) {
-        domain += ":" + split[i];
-      } else {
-        domain += split[i];
-      }
-    }
-    
-    String plus = domain.length() > 0 ? "+" : "";
-    returnString = returnString + plus + domain + "+user+" + user;
-    return returnString;
-  }
-  
+//  public String getOwnerURN(User u) {
+//    
+//    String[] split = u.getUsername().split("\\.");
+//    String user = split[split.length - 1];
+//    String returnString = "urn:publicid:IDN";
+//    String domain = "";
+//    for (int i = 0; i < split.length - 1; i++) {
+//      if (i > 0) {
+//        domain += ":" + split[i];
+//      } else {
+//        domain += split[i];
+//      }
+//    }
+//    
+//    String plus = domain.length() > 0 ? "+" : "";
+//    returnString = returnString + plus + domain + "+user+" + user;
+//    return returnString;
+//  }
+//  
   private String createUserCertificate(String username, PublicKey publicKey) throws Exception {
     User u = get(username);
     CertificateAuthority ca = CertificateAuthority.getInstance();

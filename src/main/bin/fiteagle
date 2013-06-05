@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 . "${DIR}/fiteagle.lib.sh"
 
-startFITeagle
+#TODO: add parameter to set this
+LOGPATH="$HOME/fiteagle"
+LOGFILE="$LOGPATH/fiteagle.log"
+mkdir -p $LOGPATH
+
+echo "Logging to $LOGFILE..."
+startFITeagle &>> $LOGFILE
+
