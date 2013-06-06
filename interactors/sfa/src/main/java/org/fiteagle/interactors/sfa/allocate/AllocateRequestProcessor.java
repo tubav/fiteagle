@@ -12,8 +12,8 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
-import org.fiteagle.core.Group;
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
