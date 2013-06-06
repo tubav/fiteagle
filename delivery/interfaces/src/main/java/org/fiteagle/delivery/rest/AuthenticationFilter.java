@@ -116,7 +116,7 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
       rb.cookie(createNewCookie(username));
       resp.setResponse(rb.build());
     }
-    
+
     //TODO: when to remove cookie?
     return resp;
   }

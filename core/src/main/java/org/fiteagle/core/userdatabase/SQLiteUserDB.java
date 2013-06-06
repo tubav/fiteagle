@@ -73,7 +73,8 @@ public class SQLiteUserDB implements UserDB {
 	}
 	
 	@Override
-	public void add(User u) throws DuplicateUsernameException, DatabaseException {
+	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	  u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
@@ -148,7 +149,10 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, DatabaseException {
+	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	  User oldUser = get(u.getUsername());
+	  u = User.createMergedUser(oldUser, u);
+	  u.checkAttributes();
 	  try{
 	    updateUserInDatabase(u);
 	    deleteKeysFromDatabase(u.getUsername());    
