@@ -113,11 +113,9 @@ public class SFAInteractor_v3 implements ISFA {
   @Override
   public HashMap<String, Object> getCredential() {
     if(this.certificate!=null){
-      Collection<List<String>> alternativeNames;
       Collection<List<?>> alternativeNamesCollection;
       try {
         alternativeNamesCollection = certificate.getSubjectAlternativeNames();
-//        alterna
       } catch (CertificateParsingException e) {
         e.printStackTrace();
         throw new RuntimeException();//TODO: specify this.
