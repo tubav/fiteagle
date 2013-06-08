@@ -132,4 +132,8 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
     String u = UUID.randomUUID().toString();    
     return new String(Base64.encode(u.getBytes()));
   }
+  
+  public static String getCookieName(){
+    return COOKIE_NAME;
+  }
 }
