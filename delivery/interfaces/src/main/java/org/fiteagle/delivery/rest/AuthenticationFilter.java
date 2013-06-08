@@ -76,6 +76,10 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
     if(credentials == null || credentials.length != 2){
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     }
+
+    if(!req.getPathSegments().get(1).getPath().equals(credentials[0])){
+        throw new WebApplicationException(Response.Status.FORBIDDEN); 
+    }
     
     manager = UserDBManager.getInstance();
     try {
@@ -86,11 +90,7 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
         log.error(e.getMessage());
         throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     } catch (RecordNotFoundException e){
-      throw new WebApplicationException(Response.Status.UNAUTHORIZED);       
-    }
-
-    if(!req.getPathSegments().get(1).getPath().equals(credentials[0])){
-        throw new WebApplicationException(Response.Status.FORBIDDEN); 
+      throw new WebApplicationException(Response.Status.NOT_FOUND);       
     }
   }
 

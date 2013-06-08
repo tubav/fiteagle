@@ -87,7 +87,7 @@ public class UserDBManager {
     database.update(u);
   }
   
-  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException {
+  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
     database.addKey(username, key);
   }
   

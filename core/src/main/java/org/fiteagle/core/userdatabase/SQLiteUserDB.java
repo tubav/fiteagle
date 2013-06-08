@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SQLiteUserDB implements UserDB {
   
@@ -21,13 +23,13 @@ public class SQLiteUserDB implements UserDB {
 	
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
 	
+	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
+	
 	static {
         try {
             Class.forName("org.sqlite.JDBC"); 
         } catch (ClassNotFoundException e) {
-        	//TODO error logging?
-            System.err.println("Fehler beim Laden des JDBC-Treibers"); 
-            e.printStackTrace();
+        	log.error(e.getMessage());
         }
     }
 	
@@ -180,7 +182,10 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws DatabaseException {
+	public void addKey(String username, String key) throws DatabaseException, InValidAttributeException {
+	  if(key == null || key.length() == 0){
+      throw new InValidAttributeException();
+    }
 	  try{
   		if(!get(username).getPublicKeys().contains(key)){
   			ArrayList<String> keys = new ArrayList<String>();			

@@ -87,17 +87,30 @@ public class RestUserManager implements RestUserManagement {
     }
     return Response.status(200).build();
   }
+
+  private User createUser(NewUser newUser){
+    User user = null;
+    try {
+      user = new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
+          newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
+    } catch (InValidAttributeException | NotEnoughAttributesException e){
+       throw new WebApplicationException(Response.status(422).build());
+    } catch (NoSuchAlgorithmException e) {
+      log.error(e.getMessage());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    return user;
+  }
   
   @Override
   @POST
   @Path("{username}/pubkey/")
   @Consumes("text/plain")
-  public Response addPublicKey(@PathParam("username") String username, String pubkey) {
-    if(pubkey == null || pubkey.length() == 0){
-      throw new WebApplicationException(Response.status(422).build());
-    }
+  public Response addPublicKey(@PathParam("username") String username, String pubkey) {    
     try {
       manager.addKey(username, pubkey);
+    } catch (InValidAttributeException e){
+      throw new WebApplicationException(Response.status(422).build());
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
@@ -134,20 +147,6 @@ public class RestUserManager implements RestUserManagement {
       log.error(e.getMessage());
       throw new RuntimeException(e.getCause());
     }    
-  }
-  
-  private User createUser(NewUser newUser){
-    User user = null;
-    try {
-      user = new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
-          newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
-    } catch (InValidAttributeException | NotEnoughAttributesException e){
-       throw new WebApplicationException(Response.status(422).build());
-    } catch (NoSuchAlgorithmException e) {
-      log.error(e.getMessage());
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    }
-    return user;
   }
   
   @Override

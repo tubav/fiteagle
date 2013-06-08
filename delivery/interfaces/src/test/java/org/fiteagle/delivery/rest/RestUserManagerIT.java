@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 public class RestUserManagerIT {
   
   private static FiteaglePreferencesXML keystorePrefs = new FiteaglePreferencesXML(KeyStoreManagement.class);
@@ -42,7 +41,7 @@ public class RestUserManagerIT {
     given().auth().preemptive().basic("mnikolaus", "pass").and()
       .when().delete("mnikolaus");
   }
-    
+  
   @Test
   public void testPutAndGet() {
     PutUser1();
@@ -60,6 +59,15 @@ public class RestUserManagerIT {
   public void testDelete() {
     PutUser1();
     DeleteUser1();
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+      .expect().statusCode(404).when().get("mnikolaus");
+  }
+  
+  @Test
+  public void testAuthorizationFailure(){
+    PutUser1();
+    given().auth().preemptive().basic("mnikolaus", "wrongpassword").and()
+      .expect().statusCode(401).when().get("mnikolaus");
   }
   
   @Test
@@ -69,7 +77,8 @@ public class RestUserManagerIT {
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus");
     cookieValue = response.getCookie(AuthenticationFilter.getCookieName());
     
-    given().cookie(AuthenticationFilter.getCookieName(),cookieValue).and().expect().statusCode(200).when().delete("mnikolaus");
+    given().cookie(AuthenticationFilter.getCookieName(),cookieValue).and()
+      .expect().statusCode(200).when().delete("mnikolaus");
   }
 
   private void PutUser1() {

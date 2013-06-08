@@ -8,7 +8,7 @@ public interface UserDB {
 	public void delete(User u) throws DatabaseException;
 	
 	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException; 
-	public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException;
+	public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
 	
 	public User get(String UID) throws RecordNotFoundException, DatabaseException;
 	public User get(User u) throws RecordNotFoundException, DatabaseException;

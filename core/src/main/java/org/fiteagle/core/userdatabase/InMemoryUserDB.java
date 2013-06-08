@@ -61,12 +61,14 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException {
+	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException {
+	  if(key == null || key.length() == 0){
+	    throw new InValidAttributeException();
+	  }
 	  User u;
 		if((u=users.get(username)) == null)
 			throw new RecordNotFoundException();
 		u.addPublicKey(key);
-		update(u);
 	}
 	
 	@Override
