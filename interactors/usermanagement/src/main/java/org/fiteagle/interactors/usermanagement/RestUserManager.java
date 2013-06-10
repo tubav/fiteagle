@@ -1,4 +1,4 @@
-package org.fiteagle.delivery.rest;
+package org.fiteagle.interactors.usermanagement;
 
 import java.security.NoSuchAlgorithmException;
 
