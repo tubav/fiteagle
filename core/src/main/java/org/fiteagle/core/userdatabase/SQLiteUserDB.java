@@ -9,8 +9,30 @@ import java.util.List;
 
 import org.fiteagle.core.persistence.SQLiteDatabase;
 
+import org.fiteagle.core.config.FiteaglePreferences;
+import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
-  
+
+
+	
+	
+	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
+	
+	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
+	
+	static {
+        try {
+            Class.forName("org.sqlite.JDBC"); 
+        } catch (ClassNotFoundException e) {
+        	log.error(e.getMessage());
+        }
+    }
+	
+
 	public SQLiteUserDB() throws DatabaseException{
 	  super();
 	  try{
@@ -27,7 +49,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 	
 	
 	@Override
-	public void add(User u) throws DuplicateUsernameException, DatabaseException {
+	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	  u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
@@ -102,7 +125,10 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, DatabaseException {
+	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	  User oldUser = get(u.getUsername());
+	  u = User.createMergedUser(oldUser, u);
+	  u.checkAttributes();
 	  try{
 	    updateUserInDatabase(u);
 	    deleteKeysFromDatabase(u.getUsername());    
@@ -130,7 +156,10 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws DatabaseException {
+	public void addKey(String username, String key) throws DatabaseException, InValidAttributeException {
+	  if(key == null || key.length() == 0){
+      throw new InValidAttributeException();
+    }
 	  try{
   		if(!get(username).getPublicKeys().contains(key)){
   			ArrayList<String> keys = new ArrayList<String>();			

@@ -5,10 +5,8 @@ import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,11 +21,12 @@ import net.iharder.Base64;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.KeyManagement;
-import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserDB.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserDB.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,17 +61,17 @@ public class UserDBManager {
       database = new InMemoryUserDB();
       try {
         String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
-        User u = createUser("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
+        User u = new User("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
         u.addPublicKey(key);
         add(u);
-      } catch (DuplicateUsernameException | NoSuchAlgorithmException | IOException e) {
+      } catch (DuplicateUsernameException | NoSuchAlgorithmException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
   }
   
-  public void add(User u) throws DuplicateUsernameException, DatabaseException {
+  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
     database.add(u);
   }
   
@@ -84,11 +83,11 @@ public class UserDBManager {
     database.delete(u);
   }
   
-  public void update(User u) throws RecordNotFoundException, DatabaseException {
+  public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
     database.update(u);
   }
   
-  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException {
+  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
     database.addKey(username, key);
   }
   
@@ -155,32 +154,6 @@ public class UserDBManager {
       throw new NonParsableNamingFormat();
     }
     
-  }
-  
-  public User createUser(String username, String firstName, String lastName, String email, String password) throws NoSuchAlgorithmException, IOException {
-    
-    SecureRandom random = new SecureRandom();
-    byte[] salt = random.generateSeed(20);
-    String passwordSalt = Base64.encodeBytes(salt);
-    
-    byte[] passwordBytes = createHash(salt, password);
-    String passwordHash = Base64.encodeBytes(passwordBytes);
-    
-    List<String> keys = new ArrayList<>();
-    return new User(username, firstName, lastName, email, passwordHash, passwordSalt, keys);
-    
-  }
-  
-  public User createUser(String username, String firstName, String lastName, String email, String password, List<String> keys)
-      throws NoSuchAlgorithmException, IOException {
-	SecureRandom random = new SecureRandom();
-	byte[] salt = random.generateSeed(20);
-	String passwordSalt = Base64.encodeBytes(salt);
-	    
-	byte[] passwordBytes = createHash(salt, password);
-	String passwordHash = Base64.encodeBytes(passwordBytes);
-	    
-    return new User(username, firstName, lastName, email, passwordHash, passwordSalt, keys);
   }
     
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
