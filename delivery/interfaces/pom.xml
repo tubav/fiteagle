@@ -75,7 +75,7 @@
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-							<port>8080</port>
+							<port>8088</port>
 							<maxIdleTime>60000</maxIdleTime>
 						</connector>
 						<connector implementation="org.fiteagle.server.FiteagleSSLSocketConnector">
