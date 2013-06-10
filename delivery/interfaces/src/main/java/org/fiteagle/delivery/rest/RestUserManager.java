@@ -130,8 +130,8 @@ public class RestUserManager implements RestUserManagement {
     try {      
       return manager.createUserPrivateKeyAndCertAsString(username, passphrase);
     } catch (Exception e) {
-      log.error(e.getMessage());
-      throw new RuntimeException(e.getCause());
+        log.error(e.getMessage(),e);
+      throw new RuntimeException(e.getMessage(),e.getCause());
     }    
   }
   
@@ -142,10 +142,10 @@ public class RestUserManager implements RestUserManagement {
       user = manager.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
           newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
     } catch (NoSuchAlgorithmException e) {
-      log.error(e.getMessage());
+      log.error(e.getMessage(),e);
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     } catch (IOException e) {
-      log.error(e.getMessage());
+      log.error(e.getMessage(),e);
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
     return user;

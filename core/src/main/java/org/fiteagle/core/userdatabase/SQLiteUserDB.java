@@ -1,8 +1,5 @@
 package org.fiteagle.core.userdatabase;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,67 +7,24 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fiteagle.core.config.FiteaglePreferences;
-import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.persistence.SQLiteDatabase;
 
-public class SQLiteUserDB implements UserDB {
+public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
   
-  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
-
-	private Connection connection = null;	
-	
-	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
-	
-	static {
-        try {
-            Class.forName("org.sqlite.JDBC"); 
-        } catch (ClassNotFoundException e) {
-        	//TODO error logging?
-            System.err.println("Fehler beim Laden des JDBC-Treibers"); 
-            e.printStackTrace();
-        }
-    }
-	
 	public SQLiteUserDB() throws DatabaseException{
+	  super();
 	  try{
   		getConnection();
-  		createTableUsers();
-  		createTableKeys();
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
   		connection.commit();
 	  } catch(SQLException e){
+	    log.error(e.getMessage(),e);
 	    throw new DatabaseException();
 	  }
 	}				
 
-  private void createTableKeys() throws SQLException {
-		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Keys (username, key)");
-		st.close();
-	}
-
-	private void createTableUsers() throws SQLException {
-		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
-		st.close();
-	}
 	
-	private void getConnection() throws SQLException{
-		if(connection!=null){
-		  connection.close();
-		}
-		connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
-		connection.setAutoCommit(false);
-	}
-	
-	private String getDatabasePath(){
-	  if(preferences.get("userdatabasePath") == null){
-	    preferences.put("userdatabasePath", DEFAULT_DATABASE_PATH);
-	  }
-	  String path = preferences.get("userdatabasePath");
-	  File dir = new File(path);
-	  dir.mkdirs();
-	  return path + "userdatabase.db";
-	}
 	
 	@Override
 	public void add(User u) throws DuplicateUsernameException, DatabaseException {

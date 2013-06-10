@@ -64,7 +64,7 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
     String test = urns.get(0);
     if(urns.get(0).contains("+slice+")){
       Group group=resourceManager.getGroup(urns.get(0));
-      ArrayList<ResourceAdapter> resourceAdapterInstances = group.getResources();
+      List<ResourceAdapter> resourceAdapterInstances = group.getResources();
       while(resourceAdapterInstances.size()>0){
         ResourceAdapter resourceAdapter = (ResourceAdapter) resourceAdapterInstances.get(0);
         String id=resourceAdapter.getId();

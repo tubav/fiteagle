@@ -1,7 +1,10 @@
 package org.fiteagle.core.groupmanagement;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 
@@ -9,15 +12,21 @@ public class Group {
   
   private String groupId;
   private String groupOwnerId;
-  private ArrayList<ResourceAdapter> resources;
-  private ArrayList<String> authorizedUsers=new ArrayList<String>();
+  private List<ResourceAdapter> resources;
+  private List<String> authorizedUsers;
+
   
-  public Group(String groupId, String groupOwnerId, ArrayList<ResourceAdapter> resources) {
+  public Group(String groupId, String groupOwnerId) {
     this.groupId = groupId;
     this.groupOwnerId = groupOwnerId;
-    this.resources = resources;
   }
-  
+
+  public Group(String urn, String groupOwnerId, List<ResourceAdapter> resourcesList) {
+    this.groupId=urn;
+    this.groupOwnerId=groupOwnerId;
+    this.resources=resourcesList;
+  }
+
   public String getGroupId() {
     return groupId;
   }
@@ -34,22 +43,28 @@ public class Group {
     this.groupOwnerId = groupOwnerId;
   }
   
-  public ArrayList<ResourceAdapter> getResources() {
+  public List<ResourceAdapter> getResources() {
     return resources;
   }
   
-  public void setResources(ArrayList<ResourceAdapter> resources) {
+  public void setResources(List<ResourceAdapter> resources) {
     this.resources = resources;
   }
   
-  public ArrayList<String> getAuthorizedUsers() {
+  public List<String> getAuthorizedUsers() {
     return authorizedUsers;
   }
+ 
   
-  public void setAuthorizedUsers(ArrayList<String> authorizedUsers) {
+  public void setAuthorizedUsers(List<String> authorizedUsers) {
     this.authorizedUsers = authorizedUsers;
   }
-  
+  public void addAuthorizedUser(String user){
+    if(authorizedUsers == null)
+      authorizedUsers =  new LinkedList<>();
+      
+    authorizedUsers.add(user);
+  }
   public void addResource(ResourceAdapter resource) {
     if(this.resources == null)
       this.resources = new ArrayList<ResourceAdapter>();

@@ -105,7 +105,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
     Group group = resourceManager.getGroup(urn);
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
-    ArrayList<ResourceAdapter> resources = group.getResources();
+    List<ResourceAdapter> resources = group.getResources();
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();

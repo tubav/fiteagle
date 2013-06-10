@@ -3,6 +3,7 @@ package org.fiteagle.interactors.sfa.provision;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
@@ -15,7 +16,6 @@ import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.describe.DescribeValue;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
@@ -60,7 +60,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor{
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     ProvisionValue resultValue = new ProvisionValue();
     
-    ArrayList<ResourceAdapter> resources = group.getResources();
+    List<ResourceAdapter> resources = group.getResources();
     
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
