@@ -19,10 +19,27 @@ public abstract class ResourceAdapter {
 	private String id;
 	private String groupId;
 	private String status;
+	private boolean exclusive = false;
+	private boolean available = true;
+//	private String locationCountry= "Germany";
+//  private String locationLatitude= "52.516719";
+//  private String longitude = "13.323507";
+	
+	
 //	public abstract List<ResourceProperties> getAllResources();
 	public HashMap<String, Object> getProperties() {
-		return (properties != null ? properties : (properties = new HashMap<String, Object>()));
+	  if (properties !=null){
+	    return properties;
+	  }else {
+	    properties = new HashMap<String, Object>();//TODO: get these from preferences!
+	    properties.put("country", "Germany");
+	    properties.put("latitude", "52.516719");
+	    properties.put("longitude","13.323507");
+	    
+	    return properties;
+    }
 	}
+	
 	public void setProperties(HashMap<String, Object> properties) {
 		this.properties = properties;
 	}
@@ -65,7 +82,20 @@ public abstract class ResourceAdapter {
   public void setStatus(String status) {
     this.status = status;
   }
+  public boolean isExclusive() {
+    return exclusive;
+  }
+  public void setExclusive(boolean exclusive) {
+    this.exclusive = exclusive;
+  }
 	
+  public boolean isAvailable() {
+    return available;
+  }
+
+  public void setAvailable(boolean available) {
+    this.available = available;  
+  }
 	
 	
 	

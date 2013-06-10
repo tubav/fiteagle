@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
+import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDatabase;
 import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
@@ -29,10 +31,20 @@ public class ResourceAdapterManager {
     groups=new InMemoryGroupDatabase();
 //    groups = new HashMap<String, List<ResourceAdapter>>();
     
-    //TODO: add the resource adapters with their groups over registry
+    //TODO: add the resource adapters over registry
     ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
     adapterDatabase.addResourceAdapter(dummyResourceAdapter);
-//    this.addGroup(ownerURN, sliceURN, adapterList);
+    
+    ResourceAdapter dummyResourceAdapterHardware = new SSHDeployAdapter();
+    ((SSHAccessable)dummyResourceAdapterHardware).setHardwareType("demolaptop");
+    
+    dummyResourceAdapterHardware.setExclusive(true);
+    
+    HashMap<String, Object> dummyHardwareProps = dummyResourceAdapterHardware.getProperties();
+//    dummyHardwareProps.put("exclusive", true);
+    dummyHardwareProps.put("id","laptop");
+    adapterDatabase.addResourceAdapter(dummyResourceAdapterHardware);
+
     manager=this;
   }
   
