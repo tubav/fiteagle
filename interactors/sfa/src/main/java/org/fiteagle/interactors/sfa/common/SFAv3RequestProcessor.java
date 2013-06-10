@@ -13,7 +13,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.bouncycastle.jcajce.provider.symmetric.AES.OFB;
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
@@ -115,12 +117,7 @@ public abstract class SFAv3RequestProcessor {
 	     
 	   }
 	   
-	   public RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
-	     RSpecContents advertisedRspec = getRSpecFromAdapters(resourceAdapters);
-	     advertisedRspec.setType("advertisement");
-	     return advertisedRspec;
-	   }
-	   
+
 	   public RSpecContents getManifestRSpec(List<ResourceAdapter> resourceAdapters) {
 	     RSpecContents manifestRspec = getRSpecFromAdapters(resourceAdapters);
 	     manifestRspec.setType("manifest");
@@ -128,6 +125,26 @@ public abstract class SFAv3RequestProcessor {
 	   }
 	   
 	   
+	   public RSpecContents getAdvertisedRSpec(List<ResourceAdapter> resourceAdapters) {
+       RSpecContents advertisedRspec = new RSpecContents();
+       advertisedRspec.setType("advertisement");
+
+       List<Object> rspecContentElements = advertisedRspec
+           .getAnyOrNodeOrLink();
+       SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+       
+       for(ResourceAdapter resourceAdapter: resourceAdapters){
+         //TODO: if option available set check the resource adapter
+         Object resource;
+         if(resourceAdapter instanceof SSHAccessable)
+            resource = translator.translateSSHAccesableToAdvertisementNode(resourceAdapter);
+         else
+         resource = translator.translateToFITeagleResource(resourceAdapter);
+         rspecContentElements.add(resource);
+       }
+       return advertisedRspec;
+     }
+     
 	   
 	   
 	   public RSpecContents getRSpecFromAdapters(List<ResourceAdapter> resourceAdapters) {
@@ -138,11 +155,16 @@ public abstract class SFAv3RequestProcessor {
 	     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 	     
 	     for(ResourceAdapter resourceAdapter: resourceAdapters){
-	       Object fiteagleResource = translator.translateToFITeagleResource(resourceAdapter);
-	       rspecContentElements.add(fiteagleResource);
+	       Object resource;
+	       if(resourceAdapter instanceof SSHAccessable)
+	          resource = translator.translateToNode(resourceAdapter);
+	       else
+	       resource = translator.translateToFITeagleResource(resourceAdapter);
+	       rspecContentElements.add(resource);
 	     }
 	     return advertisedRspec;
 	   }
+	   
 	
 	
 	

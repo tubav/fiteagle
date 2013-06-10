@@ -15,6 +15,7 @@
 	<modules>
 		<module>stopwatch</module>
 		<module>common</module>
+		<module>sshdeployadapter</module>
 	</modules>
 
    <repositories>

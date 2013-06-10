@@ -74,6 +74,21 @@ public class SFAInteractorTest {
 		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 
 	}
+	
+	@Test
+  public void testListResourcesWithNode() throws IOException {
+    ListResourceOptions options = createMinimalListResourceOptions("GENI",
+        "3");
+    final ListResourcesResult listResourcesResult = this.sfaInteractor
+        .listResources(getListCredentials(), options);
+    
+    String listResourcesValue = (String)listResourcesResult.getValue();
+    Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
+    Assert.assertTrue(listResourcesValue.contains("node"));
+    Assert.assertTrue(listResourcesValue.contains("Germany"));
+    Assert.assertTrue(listResourcesValue.contains("demolaptop"));
+
+  }
 
 	@Test
 	public void testCombinedGetVersionAndListResources() throws IOException {
