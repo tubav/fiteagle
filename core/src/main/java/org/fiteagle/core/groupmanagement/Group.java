@@ -1,4 +1,4 @@
-package org.fiteagle.core;
+package org.fiteagle.core.groupmanagement;
 
 import java.util.ArrayList;
 import java.util.Iterator;

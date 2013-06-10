@@ -7,11 +7,11 @@ bash -c "$(curl -fsSkL fiteagle.org/bootstrap)"
 
 Test
 ----
-./src/main/bin/fiteagle.sh test
+./src/main/bin/fiteaglectl test
 
 Start
 -----
-./src/main/bin/fiteagle.sh start
+./src/main/bin/fiteaglectl start
 
 Further Information
 -------------------

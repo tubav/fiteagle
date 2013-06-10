@@ -12,22 +12,24 @@ import java.util.List;
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SQLiteUserDB implements UserDB {
   
-  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
+  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+System.getProperty("file.separator")+".fiteagle"+System.getProperty("file.separator")+"db"+System.getProperty("file.separator");
 
 	private Connection connection = null;	
 	
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
 	
+	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
+	
 	static {
         try {
             Class.forName("org.sqlite.JDBC"); 
         } catch (ClassNotFoundException e) {
-        	//TODO error logging?
-            System.err.println("Fehler beim Laden des JDBC-Treibers"); 
-            e.printStackTrace();
+        	log.error(e.getMessage());
         }
     }
 	
@@ -73,7 +75,8 @@ public class SQLiteUserDB implements UserDB {
 	}
 	
 	@Override
-	public void add(User u) throws DuplicateUsernameException, DatabaseException {
+	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	  u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
@@ -148,7 +151,10 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, DatabaseException {
+	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	  User oldUser = get(u.getUsername());
+	  u = User.createMergedUser(oldUser, u);
+	  u.checkAttributes();
 	  try{
 	    updateUserInDatabase(u);
 	    deleteKeysFromDatabase(u.getUsername());    
@@ -176,7 +182,10 @@ public class SQLiteUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws DatabaseException {
+	public void addKey(String username, String key) throws DatabaseException, InValidAttributeException {
+	  if(key == null || key.length() == 0){
+      throw new InValidAttributeException();
+    }
 	  try{
   		if(!get(username).getPublicKeys().contains(key)){
   			ArrayList<String> keys = new ArrayList<String>();			

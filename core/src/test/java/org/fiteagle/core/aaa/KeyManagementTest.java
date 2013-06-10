@@ -25,7 +25,7 @@ public class KeyManagementTest {
   
   @Test
   public void testGetEncryptedPrivateKey() throws DuplicateUsernameException, SQLException, IOException, GeneralSecurityException{
-    User u = userDBManager.createUser("test", "test", "testName", "test@test.org", "password");
+    User u = new User("test", "test", "testName", "test@test.org", "password");
     CertificateAuthority cA = CertificateAuthority.getInstance();
     
   
@@ -38,7 +38,7 @@ public class KeyManagementTest {
   
   //@Test 
   public void testVerifyEncryptedPrivateKey() throws DuplicateUsernameException, SQLException, IOException, GeneralSecurityException{
-    User u = userDBManager.createUser("test", "test", "testName", "test@test.org", "password");
+    User u = new User("test", "test", "testName", "test@test.org", "password");
 
     KeyPair keyPair = keyManagement.generateKeyPair();
     String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "passwordpasswordpassword");

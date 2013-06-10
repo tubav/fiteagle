@@ -30,10 +30,10 @@ public class UserDBTest {
 	  KEYS1.add("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
     KEYS1.add("ssh-rsa AAAAB3NzaC1yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
     KEYS2.add("ssh-rsa AAAAB3NzaC1yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-	  USER1 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassworHash", "mitjastPasswordSalt", KEYS1);
-	  USER2 = new User("hschmidt", "hans", "herbert", "hschmidt@test.org", "hansPasswordHash", "hansPasswordSalt", KEYS2);
-	  USER3 = new User("hschmidt", "herbert", "herbert", "hschmidt@test.org", "herbertsPasswordHash", "herbertsPasswordSalt", KEYS1);
-	  USER4 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassworHash", "mitjastPasswordSalt", new ArrayList<String>());
+	  USER1 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassword", KEYS1);
+	  USER2 = new User("hschmidt", "hans", "herbert", "hschmidt@test.org", "hansPassword", KEYS2);
+	  USER3 = new User("hschmidt", "herbert", "herbert", "hschmidt@test.org", "herbertsPassword", KEYS1);
+	  USER4 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassword", new ArrayList<String>());
 	}
 	
 	@Before
@@ -85,6 +85,14 @@ public class UserDBTest {
 		database.add(USER2);
 		database.update(USER3);
 		assertTrue(USER3.equals(database.get(USER3)));
+	}
+	
+	@Test
+	public void testUpdateWithFewArguments(){
+	  database.add(USER1);
+	  database.update(new User("mnikolaus", "martin", null, null, null, null, null));
+	  assertEquals("martin", database.get(USER1.getUsername()).getFirstName());
+	  assertEquals("nikolaus", database.get(USER1.getUsername()).getLastName());
 	}
 	
 	@Test(expected=UserDB.RecordNotFoundException.class)

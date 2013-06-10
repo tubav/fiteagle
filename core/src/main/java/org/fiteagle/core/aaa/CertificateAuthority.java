@@ -93,19 +93,19 @@ public class CertificateAuthority {
     return config.getURN_Prefix()+"+"+config.getDomain()+"+user+"+newUser.getUsername();
   }
 
-  public String getServerURN() throws CertificateParsingException {
-    X509Certificate caCert = getServerCertificate();
-    Collection<List<?>> alternativeNames = caCert.getSubjectAlternativeNames();
-    Iterator<?> iter =  alternativeNames.iterator();
-    String urn = "";
-    while(iter.hasNext()){
-      List<?> altName = (List<?>) iter.next();
-      if (altName.get(0).equals(Integer.valueOf(6))) {
-        urn = (String) altName.get(1);
-      }
-    }
-    return urn;
-  }
+//  public String getServerURN() throws CertificateParsingException {
+//    X509Certificate caCert = getServerCertificate();
+//    Collection<List<?>> alternativeNames = caCert.getSubjectAlternativeNames();
+//    Iterator<?> iter =  alternativeNames.iterator();
+//    String urn = "";
+//    while(iter.hasNext()){
+//      List<?> altName = (List<?>) iter.next();
+//      if (altName.get(0).equals(Integer.valueOf(6))) {
+//        urn = (String) altName.get(1);
+//      }
+//    }
+//    return urn;
+//  }
   
   public void saveCertificate(String name, X509Certificate certificate) throws Exception {
     FileOutputStream fos = new FileOutputStream(name);
@@ -113,9 +113,9 @@ public class CertificateAuthority {
     fos.close();
   }
   
-  public X509Certificate getServerCertificate() {
+  public X509Certificate getSliceAuthorityCertificate() {
     try {
-      return keyStoreManagement.getCACert();
+      return keyStoreManagement.getSliceAuthorityCert();
     } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
       throw new CertificateNotFoundException();
     }
@@ -222,5 +222,6 @@ public class CertificateAuthority {
   public class CertificateNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
   }
+
   
 }

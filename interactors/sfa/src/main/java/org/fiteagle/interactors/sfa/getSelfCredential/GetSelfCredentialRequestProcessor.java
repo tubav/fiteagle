@@ -104,7 +104,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   private String getTargetURN(String type, String xrn) throws CertificateParsingException {
     String urn = "";
     if(type.equalsIgnoreCase("user")){
-      urn = getServerURN();
+      urn = getSliceAuthorityURN();
       
     }else if(type.equalsIgnoreCase("Slice")){
        urn = xrn;
@@ -115,14 +115,14 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
    
   }
 
-  private String getServerURN() throws CertificateParsingException {
-    return interfaceConfig.getAM_URN();
+  private String getSliceAuthorityURN() throws CertificateParsingException {
+    return interfaceConfig.getSA_URN();
   }
 
   private String getTargetGID(String type, String xrn) throws Exception {
     String cert = "";
     if(type.equalsIgnoreCase("user")){
-      cert = getServerCert();
+      cert = getSliceAuthorityCert();
     }else if(type.equalsIgnoreCase("Slice")){
       cert = getSliceCert(xrn);
     }else{
@@ -136,11 +136,10 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     return "";
   }
 
-  //TODO refactor AM cert or SA cert !! Server Cert is wrong here!!
-  private String getServerCert() throws Exception {
+  private String getSliceAuthorityCert() throws Exception {
     CertificateAuthority ca =CertificateAuthority.getInstance();
-    X509Certificate serverCert = ca.getServerCertificate();
-    return ca.getCertficateEncoded(serverCert);
+    X509Certificate sliceAuthorityCert = ca.getSliceAuthorityCertificate();
+    return ca.getCertificateBodyEncoded(sliceAuthorityCert);
     
   }
 
@@ -164,25 +163,6 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     return returnString;
   }
 
-  private String getOwnerGID(String cert) {
-    CertificateAuthority ca =CertificateAuthority.getInstance();
-    String owner_gid = ca.getUserCertificateAsString(cert);
-    return owner_gid;
-  }
-
-  private String getSignedCredentialString(SignedCredential signedCredential) {
-    String signedCredentialSTR="";
-    QName _SignedCredential_QNAME = new QName("", "signed-credential");
-		JAXBElement<SignedCredential> signedCredJAXB = new JAXBElement<SignedCredential>(_SignedCredential_QNAME, SignedCredential.class, null, signedCredential);
-
-    try {
-      signedCredentialSTR = getJAXBString(signedCredJAXB);
-    } catch (JAXBException e) {
-      System.out.println("EXCEPTION!!!!!!!!1"+e);
-    }
-    
-    return signedCredentialSTR;
-  }
 	
 	private static String getJAXBString(Object jaxbObject) throws JAXBException {
     JAXBContext context = JAXBContext

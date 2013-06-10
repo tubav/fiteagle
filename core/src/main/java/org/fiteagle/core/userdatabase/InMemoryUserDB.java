@@ -15,14 +15,15 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void add(User u) throws DuplicateUsernameException {
+	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException {
 		if(users.get(u.getUsername()) != null){
 			throw new DuplicateUsernameException();
 		}
 		else{
+		  u.checkAttributes();
 			users.put(u.getUsername(), u);
 		}
-	}	
+	}
 
 	@Override
 	public void delete(String username){
@@ -35,11 +36,16 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException {
+	public void update(User u) throws RecordNotFoundException, NotEnoughAttributesException, InValidAttributeException {
 		if(users.get(u.getUsername()) == null)
 			throw new RecordNotFoundException();
-		else
-			users.put(u.getUsername(), u);		
+		else{
+		  User oldUser = get(u.getUsername());
+		  u = User.createMergedUser(oldUser, u);
+		  u.checkAttributes();
+		  users.put(u.getUsername(), u);    
+		}
+			
 	}
 
 	@Override
@@ -55,12 +61,14 @@ public class InMemoryUserDB implements UserDB {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException {
+	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException {
+	  if(key == null || key.length() == 0){
+	    throw new InValidAttributeException();
+	  }
 	  User u;
 		if((u=users.get(username)) == null)
 			throw new RecordNotFoundException();
 		u.addPublicKey(key);
-		update(u);
 	}
 	
 	@Override

@@ -9,6 +9,9 @@ import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
+import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDatabase;
+import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
 
 public class ResourceAdapterManager {
   

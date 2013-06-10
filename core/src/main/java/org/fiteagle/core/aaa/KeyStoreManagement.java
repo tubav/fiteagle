@@ -3,6 +3,7 @@ package org.fiteagle.core.aaa;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStore.Entry;
 import java.security.KeyStore.PasswordProtection;
@@ -34,6 +35,8 @@ private final String DEFAULT_PRK_PASS= "jetty6";
 private final String DEFAULT_TRUSTSTORE_LOCATION= System.getProperty("user.home")+System.getProperty("file.separator")+"fiteagle"+System.getProperty("file.separator")+"jetty-ssl.truststore";
 private final String DEFAULT_TRUSTSTORE_PASSWORD =  DEFAULT_KEYSTORE_PASSWORD;
 private final String DEFAULT_SERVER_ALIAS ="root";
+private final String DEFAULT_SA_ALIAS="fiteagleSA";
+private final String DEFAULT_SA_PASS="changeit";
 
 private static KeyStoreManagement keyStoreManagement;
 public static KeyStoreManagement getInstance(){
@@ -68,7 +71,11 @@ private KeyStoreManagement(){
   if(preferences.get("ca_prkey_pass")==null){
     preferences.put("ca_prkey_pass", DEFAULT_CA_PRK_PASS);
   }
+  if(preferences.get("SAAlias")==null)
+    preferences.put("SAAlias", DEFAULT_SA_ALIAS);
 
+  if(preferences.get("sa_prkey_pass")==null)
+    preferences.put("sa_prkey_pass", DEFAULT_SA_PASS);
   
 }
   
@@ -198,6 +205,31 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
   }
   private String getServerAlias() {
     return preferences.get("server_alias");
+  }
+  public X509Certificate getSliceAuthorityCert() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+      String sa_alias = preferences.get("SAAlias");
+      X509Certificate cert = (X509Certificate) loadTrustStore().getCertificate(sa_alias);
+      return cert;
+  }
+  public Key getSAPrivateKey() throws NoSuchAlgorithmException, CertificateException, KeyStoreException, IOException, UnrecoverableEntryException {
+    PrivateKey privateKey = null;
+    KeyStore  ks = loadTrustStore();
+    PasswordProtection protection = new PasswordProtection(getSA_PrivateKeyPassword());
+    Entry keyStoreEntry = ks.getEntry(getSAAlias(), protection);
+    if(keyStoreEntry instanceof PrivateKeyEntry){
+         PrivateKeyEntry privateKeyEntry = (PrivateKeyEntry)keyStoreEntry;
+         privateKey = privateKeyEntry.getPrivateKey();
+      
+    }else {
+      throw new PrivateKeyException();
+    }
+    return privateKey;
+  }
+  private String getSAAlias() {
+    return preferences.get("SAAlias");
+  }
+  private char[] getSA_PrivateKeyPassword() {
+    return preferences.get("sa_prkey_pass").toCharArray();
   }
   
   
