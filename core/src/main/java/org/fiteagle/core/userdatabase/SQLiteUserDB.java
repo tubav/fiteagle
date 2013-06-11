@@ -45,7 +45,6 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 	    throw new DatabaseException();
 	  }
 	}				
-
 	
 	
 	@Override
