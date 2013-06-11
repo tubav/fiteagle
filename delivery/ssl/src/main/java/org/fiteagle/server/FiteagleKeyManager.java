@@ -23,9 +23,9 @@ public class FiteagleKeyManager extends X509ExtendedKeyManager {
   
   @Override
   public String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket) {
-    log.info("client alias");
+    log.debug("client alias");
     for(String s: keyType){
-      log.info(s);
+      log.debug(s);
     }
     return null;
   }
@@ -44,7 +44,7 @@ public class FiteagleKeyManager extends X509ExtendedKeyManager {
 
   @Override
   public String[] getClientAliases(String keyType, Principal[] issuers) {
-    log.info("getClientAlias "+ keyType);
+    log.debug("getClientAlias "+ keyType);
     return null;
   }
 
@@ -64,7 +64,7 @@ public class FiteagleKeyManager extends X509ExtendedKeyManager {
 
   @Override
   public String[] getServerAliases(String keyType, Principal[] issuers) {
-    log.info("get server aliases for "+ keyType);
+    log.debug("get server aliases for "+ keyType);
     return null;
   }
   
