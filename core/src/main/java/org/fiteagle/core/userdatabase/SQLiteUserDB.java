@@ -1,5 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,29 +18,20 @@ import org.slf4j.LoggerFactory;
 
 public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 
-
-	
 	
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
-	
+	private Connection connection;
 	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
-	
-	static {
-        try {
-            Class.forName("org.sqlite.JDBC"); 
-        } catch (ClassNotFoundException e) {
-        	log.error(e.getMessage());
-        }
-    }
+
 	
 
-	public SQLiteUserDB() throws DatabaseException{
+	public SQLiteUserDB() throws DatabaseException, SQLException{
 	  super();
 	  try{
-  		getConnection();
+	    connection = getConnection();
   		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
   		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
-  		connection.commit();
+  		
 	  } catch(SQLException e){
 	    log.error(e.getMessage(),e);
 	    throw new DatabaseException();
@@ -53,13 +45,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
-  		connection.commit();
+
 	  } catch(SQLException e){
 	    throw new DatabaseException();
 	  }
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
+	  
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?)");
 		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getFirstName());
@@ -78,6 +71,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
 		    }
 		} finally{
 			ps.close();
+			connection.commit();
 		}
 	}
 

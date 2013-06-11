@@ -1,5 +1,6 @@
 package org.fiteagle.core.groupmanagement;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,30 +8,24 @@ import java.util.List;
 
 import org.fiteagle.core.persistence.SQLiteDatabase;
 
+
 public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupDatabase {
-  
-  static {
-    try {
-      Class.forName("org.sqlite.JDBC");
-    } catch (ClassNotFoundException e) {
-      
-      log.error(e.getMessage(), e);
-      
-    }
-  }
-  
+ 
+  private Connection connection;
   public SQLiteGroupDatabase() throws SQLException {
     super();
-    getConnection();
+   
     createTable("CREATE TABLE IF NOT EXISTS Groups (groupId, ownerId, PRIMARY KEY(groupId))");
-    connection.commit();
+    connection = getConnection();
     
   }
   
   @Override
   public void addGroup(Group group) {
     PreparedStatement ps =null;
+    
     try {
+      
       ps = connection.prepareStatement("INSERT INTO Groups VALUES(?,?)");
    
       ps.setString(1, group.getGroupId());
@@ -54,6 +49,7 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupDatabase
   public Group getGroup(String groupId) {
      
     try{
+   
     PreparedStatement ps = connection.prepareStatement("SELECT Groups.groupId, Groups.ownerId FROM Groups WHERE Groups.groupId = ? ");
     ps.setString(1, groupId);
     ResultSet result = ps.executeQuery();
@@ -91,6 +87,8 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupDatabase
   @Override
   public void deleteGroup(String groupId) {
     try{
+      
+    
       PreparedStatement ps = connection.prepareStatement("DELETE FROM Groups WHERE Groups.groupId = ?");
       ps.setString(1, groupId);
       ps.execute();

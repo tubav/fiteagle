@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -42,15 +43,19 @@ public class UserDBManager {
   
   private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
   private static UserDBManager dbManager = null;
-  Logger log = LoggerFactory.getLogger(getClass());
+  static Logger log = LoggerFactory.getLogger(UserDBManager.class);
   KeyManagement keyManager = null;
   public static UserDBManager getInstance(){
     if(dbManager == null)
+      try {
         dbManager =  new UserDBManager();
+      } catch (DatabaseException | SQLException e) {
+        log.error(e.getMessage(),e);
+      }
     return dbManager;
   } 
   
-  private UserDBManager() throws DatabaseException {
+  private UserDBManager() throws DatabaseException, SQLException {
     keyManager = KeyManagement.getInstance();
     if (preferences.get("databaseType") == null) {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
