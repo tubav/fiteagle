@@ -1,15 +1,13 @@
 
 
-package org.fiteagle.delivery.rest;
+package org.fiteagle.interactors.usermanagement;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -29,9 +27,6 @@ import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 
 public class AuthenticationFilter implements ContainerRequestFilter, ContainerResponseFilter{
-
-  @Context
-  private HttpServletRequest request;  
   
   private final static String COOKIE_NAME = "fiteagle_user_cookie";
   private HashMap<String, Cookie> cookies = new HashMap<>();

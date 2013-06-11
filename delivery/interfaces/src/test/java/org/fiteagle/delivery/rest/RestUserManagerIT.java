@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.interactors.usermanagement.AuthenticationFilter;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
