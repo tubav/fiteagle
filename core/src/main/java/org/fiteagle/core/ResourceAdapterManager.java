@@ -36,6 +36,8 @@ public class ResourceAdapterManager {
     adapterDatabase.addResourceAdapter(dummyResourceAdapter);
     
     ResourceAdapter dummyResourceAdapterHardware = new SSHDeployAdapter();
+//    dummyResourceAdapter.setAvailable(false);
+//    dummyResourceAdapterHardware.setAvailable(false);
     ((SSHAccessable)dummyResourceAdapterHardware).setHardwareType("demolaptop");
     
     dummyResourceAdapterHardware.setExclusive(true);

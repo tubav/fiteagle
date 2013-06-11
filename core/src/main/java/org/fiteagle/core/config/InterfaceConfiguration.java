@@ -11,7 +11,7 @@ public class InterfaceConfiguration {
   private String DEFAULT_AM_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+am";
   private String DEFAULT_SA_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+sa";
   private String DEFAULT_HOSTHAME = "fiteagle.org";
-  private String DEFAULT_AM_URL = "https://fiteagle-fuseco.fokus.fraunhofer.de/api/sfa/am/v3";
+  private String DEFAULT_AM_URL = "https://fuseco.fokus.fraunhofer.de/api/sfa/am/v3";
   private InterfaceConfiguration(){
     
    preferences = new FiteaglePreferencesXML(getClass());

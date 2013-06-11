@@ -13,6 +13,7 @@ import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.GeniAvailableOption;
 import org.fiteagle.interactors.sfa.common.GeniCompressedOption;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -74,6 +75,19 @@ public class SFAInteractorTest {
 		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 
 	}
+	
+	@Test
+  public void testListAvailableResources() throws IOException {
+    ListResourceOptions options = createMinimalListResourceOptions("GENI",
+        "3");
+    options.setGeni_available(new GeniAvailableOption(true));
+    final ListResourcesResult listResourcesResult = this.sfaInteractor
+        .listResources(getListCredentials(), options);
+    Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
+    String listResourcesValue = (String)listResourcesResult.getValue();
+    Assert.assertTrue(listResourcesValue.contains("available now=\"true\""));
+
+  }
 	
 	@Test
   public void testListResourcesWithNode() throws IOException {
