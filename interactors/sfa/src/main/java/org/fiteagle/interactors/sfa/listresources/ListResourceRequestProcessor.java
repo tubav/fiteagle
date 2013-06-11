@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.Deflater;
 
@@ -118,8 +119,21 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	
 		List<ResourceAdapter> resourceAdapters = resourceManager
 				.getResourceAdapters();
+	
+		RSpecContents advertisedRspec;
+		
+		if(optionsService.isAvailableSet()){
+		  ArrayList<ResourceAdapter> availableResourceAdapters = new ArrayList<ResourceAdapter>();
+		  for (Iterator iterator = resourceAdapters.iterator(); iterator.hasNext();) {
+        ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+        if(resourceAdapter.isAvailable())
+          availableResourceAdapters.add(resourceAdapter);
+      }
+		  
+		  advertisedRspec = getAdvertisedRSpec(availableResourceAdapters);
+		}else
+		  advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 
-		RSpecContents advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 		String advertisedRspecSTR = this.getRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
