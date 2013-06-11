@@ -36,19 +36,19 @@
   </servlet-mapping>
   
   <servlet>
-    <servlet-name>Jersey REST Servlet</servlet-name>
+    <servlet-name>Jersey REST UserManagement-Servlet</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>org.fiteagle.delivery.rest</param-value>
+          <param-value>org.fiteagle.interactors.usermanagement</param-value>
     </init-param>    
     <init-param>
       <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-      <param-value>org.fiteagle.delivery.rest.AuthenticationFilter</param-value>
+      <param-value>org.fiteagle.interactors.usermanagement.AuthenticationFilter</param-value>
     </init-param>
     <init-param>
       <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-      <param-value>org.fiteagle.delivery.rest.AuthenticationFilter</param-value>
+      <param-value>org.fiteagle.interactors.usermanagement.AuthenticationFilter</param-value>
     </init-param>
     <init-param>
         <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -57,8 +57,26 @@
            <load-on-startup>1</load-on-startup>         
   </servlet>
   <servlet-mapping>
-     <servlet-name>Jersey REST Servlet</servlet-name>
+     <servlet-name>Jersey REST UserManagement-Servlet</servlet-name>
      <url-pattern>/api/v1/*</url-pattern>
+  </servlet-mapping>   
+  
+  <servlet>
+    <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>org.fiteagle.interactors.certificates</param-value>
+    </init-param>    
+    <init-param>
+        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+        <param-value>true</param-value>
+    </init-param>
+           <load-on-startup>1</load-on-startup>         
+  </servlet>
+  <servlet-mapping>
+     <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
+     <url-pattern>/api/fed4fire/v1/*</url-pattern>
   </servlet-mapping>   
 </web-app>
 

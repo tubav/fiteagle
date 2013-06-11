@@ -3,6 +3,7 @@ package org.fiteagle.core.aaa;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStore.Entry;
@@ -13,16 +14,25 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStrictStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.bouncycastle.openssl.PEMWriter;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class KeyStoreManagement {
 private FiteaglePreferences preferences;
@@ -164,6 +174,42 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
     }
    
     return certificateList;
+  }
+  
+  public List<String> getTrustedCertsCommonNames() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{
+    List<X509Certificate> certs;
+    certs = getTrustedCerts();    
+     
+    List<String> certsAsStrings = new ArrayList<String>();
+    for(X509Certificate cert : certs){     
+      certsAsStrings.add(getCertificateCommonName(cert));
+    }
+    
+    return certsAsStrings;
+  }
+  
+  private String getCertificateCommonName(X509Certificate cert) throws CertificateEncodingException{
+    X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+    RDN commonName = x500name.getRDNs(BCStrictStyle.CN)[0];
+   return IETFUtils.valueToString(commonName.getFirst().getValue());
+  }
+  
+  public String getTrustedCertificate(String commonName) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{
+    for(X509Certificate cert : getTrustedCerts()){
+      if(getCertificateCommonName(cert).equals(commonName)){
+        return convertToPem(cert);
+      }
+    }
+    return null;
+  }
+  
+  private String convertToPem(X509Certificate cert) throws CertificateEncodingException, IOException{
+    StringWriter sw = new StringWriter();
+    PEMWriter pemwriter = new PEMWriter(sw);
+    pemwriter.writeObject(cert);
+    pemwriter.close();
+    
+    return sw.toString();
   }
  
   public X509Certificate[] getStoredCertificate(String alias) {
