@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,7 +16,7 @@ import org.junit.Test;
 
 public class UserDBTest {
 
-	private static UserDB database;
+	private static UserPersistable database;
 	
 	private static final ArrayList<String> KEYS1 = new ArrayList<String>();
 	private static final ArrayList<String> KEYS2 = new ArrayList<String>();	
@@ -48,7 +48,7 @@ public class UserDBTest {
 		assertEquals(1,database.getNumberOfUsers());
 	}
 	
-	@Test(expected=UserDB.DuplicateUsernameException.class)
+	@Test(expected=UserPersistable.DuplicateUsernameException.class)
 	public void testAddFails() throws DatabaseException{
 		database.add(USER2);
 		database.add(USER3);
@@ -67,13 +67,13 @@ public class UserDBTest {
 
 	}
 	
-	@Test(expected=UserDB.RecordNotFoundException.class)
+	@Test(expected=UserPersistable.RecordNotFoundException.class)
 	public void testGetFails() throws DatabaseException{
 		database.add(USER1);
 		database.get(USER2);
 	}
 	
-	@Test(expected=UserDB.RecordNotFoundException.class)
+	@Test(expected=UserPersistable.RecordNotFoundException.class)
 	public void testDelete() throws DatabaseException{
 		database.add(USER1);
 		database.delete(USER1);
@@ -95,7 +95,7 @@ public class UserDBTest {
 	  assertEquals("nikolaus", database.get(USER1.getUsername()).getLastName());
 	}
 	
-	@Test(expected=UserDB.RecordNotFoundException.class)
+	@Test(expected=UserPersistable.RecordNotFoundException.class)
 	public void testUpdateFails() throws DatabaseException{
 		database.update(USER3);
 	}

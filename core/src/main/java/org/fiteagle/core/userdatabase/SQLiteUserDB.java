@@ -8,15 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fiteagle.core.persistence.SQLiteDatabase;
-
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.persistence.SQLiteDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
+public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
@@ -174,7 +173,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
       throw new DatabaseException();
     }
 		if(u == null){
-			throw new UserDB.RecordNotFoundException();
+			throw new UserPersistable.RecordNotFoundException();
 		}
 		return u;
 	}

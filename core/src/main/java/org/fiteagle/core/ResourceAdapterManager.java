@@ -1,16 +1,15 @@
 package org.fiteagle.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
+import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.groupmanagement.Group;
-import org.fiteagle.core.groupmanagement.GroupDatabase;
+import org.fiteagle.core.groupmanagement.GroupPersistable;
 import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
 
 public class ResourceAdapterManager {
@@ -19,7 +18,7 @@ public class ResourceAdapterManager {
   
   private ResourceAdapterDatabase adapterInstancesDatabase;//TODO: This will be filled while creating resources
   private ResourceAdapterDatabase adapterDatabase;//TODO: this will be filled, while adding a resource adapter
-  private GroupDatabase groups;
+  private GroupPersistable groups;
 //  private HashMap<String, List<ResourceAdapter>> groups;
   
   

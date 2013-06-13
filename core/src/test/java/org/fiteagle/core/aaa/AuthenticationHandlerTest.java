@@ -13,7 +13,7 @@ import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 
 import org.fiteagle.core.aaa.AuthenticationHandler.KeyDoesNotMatchException;
-import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 

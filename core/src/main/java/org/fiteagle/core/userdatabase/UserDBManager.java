@@ -24,17 +24,17 @@ import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserDB.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
+import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserDBManager {
   
-  private UserDB database;
+  private UserPersistable database;
   private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   
   private static enum databaseType {

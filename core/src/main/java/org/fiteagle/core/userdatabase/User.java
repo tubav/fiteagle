@@ -9,8 +9,8 @@ import java.util.List;
 import net.iharder.Base64;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.fiteagle.core.userdatabase.UserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserDB.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
+import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 
 public class User {
 	
@@ -74,11 +74,11 @@ public class User {
 	
 	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException{  
     if(username == null || firstName == null || lastName == null || email == null || passwordHash == null || passwordSalt == null){
-      throw new UserDB.NotEnoughAttributesException();
+      throw new UserPersistable.NotEnoughAttributesException();
     }
     if(username.length() == 0 || firstName.length() == 0 || lastName.length() == 0 || email.length() == 0 ||
         !email.contains("@") || passwordHash.length() == 0 || passwordSalt.length() == 0){
-      throw new UserDB.InValidAttributeException();
+      throw new UserPersistable.InValidAttributeException();
     }
   }
 	

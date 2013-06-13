@@ -42,7 +42,7 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 
 public class CertificateAuthority {

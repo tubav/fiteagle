@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class GroupManager {
 
   private static GroupManager gm = null;
-  private GroupDatabase groupDatabase;
+  private GroupPersistable groupDatabase;
   private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   private Logger log = LoggerFactory.getLogger(getClass());
   private static enum databaseType {

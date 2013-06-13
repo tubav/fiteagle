@@ -15,11 +15,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserDB.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
