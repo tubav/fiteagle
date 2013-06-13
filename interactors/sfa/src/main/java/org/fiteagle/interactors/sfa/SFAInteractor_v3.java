@@ -34,6 +34,7 @@ import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
+import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
@@ -196,6 +197,13 @@ public class SFAInteractor_v3 implements ISFA {
 
   public void setCertificate(X509Certificate certificate) {
     this.certificate = certificate;
+  }
+
+  @Override
+  public HashMap<String, Object> register(HashMap<String, Object> registerParameters) {
+    SFARequestProcessorFactory sfaRequestProcessorFactory = new SFARequestProcessorFactory();
+    RegisterRequestProcessor registerRequestProcessor = sfaRequestProcessorFactory.createRequestProcessor(SFAv3MethodsEnum.REGISTER);
+    return registerRequestProcessor.register(registerParameters);
   }
 
 

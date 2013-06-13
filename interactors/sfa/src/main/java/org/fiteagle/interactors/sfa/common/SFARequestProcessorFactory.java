@@ -8,6 +8,7 @@ import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestPr
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
+import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
 
 public class SFARequestProcessorFactory {
@@ -52,6 +53,8 @@ public class SFARequestProcessorFactory {
 			break;
 		case GET_VERSION:
 			result = (E) new GetVersionRequestProcessor();
+		case REGISTER: 
+		  result = (E) new RegisterRequestProcessor();
 		default:
 			break;
 			

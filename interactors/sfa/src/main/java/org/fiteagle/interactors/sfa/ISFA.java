@@ -54,5 +54,6 @@ public interface ISFA {
   DeleteResult delete(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions)
       throws IOException;
   HashMap<String, Object> getCredential();
+  HashMap<String, Object> register(HashMap<String, Object> registerParameters);
 
 }
