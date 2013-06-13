@@ -38,13 +38,13 @@ public class ResourceAdapterManager {
     ResourceAdapter dummyResourceAdapterHardware = new SSHDeployAdapter();
 //    dummyResourceAdapter.setAvailable(false);
 //    dummyResourceAdapterHardware.setAvailable(false);
-    ((SSHAccessable)dummyResourceAdapterHardware).setHardwareType("demolaptop");
+    ((SSHAccessable)dummyResourceAdapterHardware).setHardwareType("testSSHAccessableResourceHardwareType");
     
     dummyResourceAdapterHardware.setExclusive(true);
     
     HashMap<String, Object> dummyHardwareProps = dummyResourceAdapterHardware.getProperties();
 //    dummyHardwareProps.put("exclusive", true);
-    dummyHardwareProps.put("id","laptop");
+    dummyHardwareProps.put("id","testSSHAccessableResource");
     adapterDatabase.addResourceAdapter(dummyResourceAdapterHardware);
 
     manager=this;

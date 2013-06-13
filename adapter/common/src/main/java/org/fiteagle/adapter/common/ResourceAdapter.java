@@ -32,7 +32,7 @@ public abstract class ResourceAdapter {
 	    return properties;
 	  }else {
 	    properties = new HashMap<String, Object>();//TODO: get these from preferences!
-	    properties.put("country", "Germany");
+	    properties.put("country", "TestCountry");
 	    properties.put("latitude", "52.516719");
 	    properties.put("longitude","13.323507");
 	    

@@ -65,6 +65,16 @@ public class SFAInteractorTest {
 		// this.valudateGeniAPIs(value);
 		this.validateRSpecVersions(value);
 	}
+	
+	@Test
+	public void testGetVersionF4FExtentions() throws IOException {
+		GetVersionResult result = this.getGeniVersion();
+		GetVersionValue getVersionValue = result.getValue();
+		Assert.assertNotNull(getVersionValue.getF4f_describe_testbed());
+		Assert.assertNotNull(getVersionValue.getF4f_testbed_homepage());
+		Assert.assertNotNull(getVersionValue.getF4f_testbed_picture());
+		Assert.assertNotNull(getVersionValue.getF4f_endorsed_tools());
+	}
 
 	@Test
 	public void testListResources() throws IOException {
