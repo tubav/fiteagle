@@ -109,8 +109,8 @@ public class SFAInteractorTest {
     String listResourcesValue = (String)listResourcesResult.getValue();
     Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
     Assert.assertTrue(listResourcesValue.contains("node"));
-    Assert.assertTrue(listResourcesValue.contains("Germany"));
-    Assert.assertTrue(listResourcesValue.contains("demolaptop"));
+    Assert.assertTrue(listResourcesValue.contains("TestCountry"));
+    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResource"));
 
   }
 
