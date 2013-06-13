@@ -99,7 +99,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
     Group group = resourceManager.getGroup(urns.get(0));
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
-    ArrayList<ResourceAdapter> resources = group.getResources();
+    List<ResourceAdapter> resources = group.getResources();
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();

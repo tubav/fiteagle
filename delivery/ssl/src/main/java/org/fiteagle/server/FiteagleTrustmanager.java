@@ -26,25 +26,25 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
   }
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-   Log.info("checkClientTrusted 1");
+   Log.debug("checkClientTrusted 1");
     
   }
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-    Log.info("server trusted ");
+    Log.debug("server trusted ");
     
   }
 
   @Override
   public X509Certificate[] getAcceptedIssuers() {
-    Log.info("accepted Issuers");
+    Log.debug("accepted Issuers");
     return new X509Certificate[]{};
   }
 
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
-    Log.info("checkClientTrusted 2");
+    Log.debug("checkClientTrusted 2");
     try{
       authenticationHandler.authenticateCertificates(chain);
     }catch(IOException | KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | CertPathValidatorException | SQLException  e){
@@ -56,20 +56,20 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
   @Override
   public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine)
       throws CertificateException {
-    Log.info("checkClientTrusted 3");
+    Log.debug("checkClientTrusted 3");
     
   }
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
-    Log.info("checkserver trusted 2");
+    Log.debug("checkserver trusted 2");
     
   }
 
   @Override
   public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine)
       throws CertificateException {
-    Log.info("server trusted 3");
+    Log.debug("server trusted 3");
     
   }
 

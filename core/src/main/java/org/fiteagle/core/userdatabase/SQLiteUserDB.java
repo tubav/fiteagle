@@ -1,8 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,69 +8,36 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fiteagle.core.persistence.SQLiteDatabase;
+
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SQLiteUserDB implements UserDB {
-  
-  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+System.getProperty("file.separator")+".fiteagle"+System.getProperty("file.separator")+"db"+System.getProperty("file.separator");
 
-	private Connection connection = null;	
+public class SQLiteUserDB extends SQLiteDatabase implements UserDB {
+
 	
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
-	
+	private Connection connection;
 	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
+
 	
-	static {
-        try {
-            Class.forName("org.sqlite.JDBC"); 
-        } catch (ClassNotFoundException e) {
-        	log.error(e.getMessage());
-        }
-    }
-	
-	public SQLiteUserDB() throws DatabaseException{
+
+	public SQLiteUserDB() throws DatabaseException, SQLException{
+	  super();
 	  try{
-  		getConnection();
-  		createTableUsers();
-  		createTableKeys();
-  		connection.commit();
+	    connection = getConnection();
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
+  		
 	  } catch(SQLException e){
+	    log.error(e.getMessage(),e);
 	    throw new DatabaseException();
 	  }
 	}				
-
-  private void createTableKeys() throws SQLException {
-		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Keys (username, key)");
-		st.close();
-	}
-
-	private void createTableUsers() throws SQLException {
-		Statement st = connection.createStatement();
-		st.executeUpdate("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
-		st.close();
-	}
 	
-	private void getConnection() throws SQLException{
-		if(connection!=null){
-		  connection.close();
-		}
-		connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
-		connection.setAutoCommit(false);
-	}
-	
-	private String getDatabasePath(){
-	  if(preferences.get("userdatabasePath") == null){
-	    preferences.put("userdatabasePath", DEFAULT_DATABASE_PATH);
-	  }
-	  String path = preferences.get("userdatabasePath");
-	  File dir = new File(path);
-	  dir.mkdirs();
-	  return path + "userdatabase.db";
-	}
 	
 	@Override
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
@@ -80,13 +45,14 @@ public class SQLiteUserDB implements UserDB {
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
-  		connection.commit();
+
 	  } catch(SQLException e){
 	    throw new DatabaseException();
 	  }
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
+	  
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?)");
 		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getFirstName());
@@ -105,6 +71,7 @@ public class SQLiteUserDB implements UserDB {
 		    }
 		} finally{
 			ps.close();
+			connection.commit();
 		}
 	}
 

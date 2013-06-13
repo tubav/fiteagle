@@ -92,7 +92,7 @@ public class ResourceAdapterManager {
     
     for (Iterator iterator = groupList.iterator(); iterator.hasNext();) {
       Group group = (Group) iterator.next();
-      ArrayList<ResourceAdapter> instances = group.getResources();
+      List<ResourceAdapter> instances = group.getResources();
       for (Iterator iterator2 = instances.iterator(); iterator2.hasNext();) {
         ResourceAdapter resourceAdapter = (ResourceAdapter) iterator2.next();
         if(resourceAdapter.getId().compareTo(instanceId)==0)
