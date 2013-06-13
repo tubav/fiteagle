@@ -11,7 +11,7 @@ import org.fiteagle.core.persistence.SQLiteDatabase;
 
 public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupPersistable {
  
-  private Connection connection;
+  
   public SQLiteGroupDatabase() throws SQLException {
     super();
    

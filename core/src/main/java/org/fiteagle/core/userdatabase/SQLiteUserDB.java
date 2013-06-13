@@ -19,7 +19,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
-	private Connection connection;
+	;
 	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
 
 	
@@ -27,7 +27,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	public SQLiteUserDB() throws DatabaseException, SQLException{
 	  super();
 	  try{
-	    connection = getConnection();
+	   
   		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
   		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
   		
