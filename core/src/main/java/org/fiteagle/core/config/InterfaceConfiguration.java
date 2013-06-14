@@ -13,11 +13,11 @@ private FiteaglePreferences preferences;
   private static InterfaceConfiguration interfaceConfig;
   private Configurator configurator ;
   private String DEFAULT_URN_PREFIX = "urn:publicid:IDN";
-  private String DEFAULT_DOMAIN = "fiteagle";
+  private String DEFAULT_DOMAIN = "localhost";
   private String DEFAULT_AM_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+am";
   private String DEFAULT_SA_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+sa";
-  private String DEFAULT_HOSTHAME = "fiteagle.org";
-  private String DEFAULT_AM_URL = "https://fuseco.fokus.fraunhofer.de/api/sfa/am/v3";
+  private String DEFAULT_HOSTNAME = "example.org";
+  private String DEFAULT_AM_URL = "https://localhost/api/sfa/am/v3";
   
 //  private String DEFAULT_TESTBED_DESCRIPTION = "FUSECO Playground. The independent testbed for FUture SEamless COmmunication";
 //  private String DEFAULT_TESTBED_HOMEPAGE="https://fuseco.fokus.fraunhofer.de";
@@ -43,8 +43,8 @@ private FiteaglePreferences preferences;
     if(preferences.get("am_urn")== null)
       preferences.put("am_urn", DEFAULT_AM_URN);
     
-    if(preferences.get("hosthame") == null)
-      preferences.put("hostname", DEFAULT_HOSTHAME);
+    if(preferences.get("hostname") == null)
+      preferences.put("hostname", DEFAULT_HOSTNAME);
     
     if(preferences.get("am_url") == null)
       preferences.put("am_url", DEFAULT_AM_URL);
