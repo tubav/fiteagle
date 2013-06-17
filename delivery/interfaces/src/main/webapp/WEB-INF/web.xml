@@ -77,14 +77,18 @@
   <servlet-mapping>
      <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
      <url-pattern>/api/fed4fire/v1/certificates/*</url-pattern>
-  </servlet-mapping>   
+  </servlet-mapping>
 
   <servlet>
-    <servlet-name>Jersey REST Configuration-Servlet</servlet-name>
+    <servlet-name>FITeagle-REST</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>org.fiteagle.interactors.configuration</param-value>
+          <param-value>org.fiteagle.delivery.rest.fiteagle</param-value>
+    </init-param>
+    <init-param>
+          <param-name>javax.ws.rs.core.Application</param-name>
+          <param-value>org.fiteagle.interactors.configuration.ConfigurationApp</param-value>
     </init-param>
     <init-param>
         <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -94,8 +98,10 @@
   </servlet>
 
   <servlet-mapping>
-     <servlet-name>Jersey REST Configuration-Servlet</servlet-name>
-     <url-pattern>/api/v1/config/*</url-pattern>
+     <servlet-name>FITeagle-REST</servlet-name>
+     <url-pattern>/api/v2/*</url-pattern>
   </servlet-mapping>   
+
+
 </web-app>
 

@@ -17,6 +17,7 @@
 		<module>usermanagement</module>
 		<module>certificates</module>
 		<module>configuration</module>
+		<module>api</module>
 	</modules>
 
    <repositories>
