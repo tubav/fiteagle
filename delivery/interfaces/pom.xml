@@ -162,6 +162,12 @@
       <version>0.1-SNAPSHOT</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.fiteagle.interactors</groupId>
+      <artifactId>configuration</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
