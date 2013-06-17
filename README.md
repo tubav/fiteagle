@@ -24,4 +24,3 @@ FAQ
 
 * Q: I get annoying merge conflicts regarding core/src/main/resources/org/fiteagle/core/config/git.properties
 * A: Just untrack it: git update-index --assume-unchanged core/src/main/resources/org/fiteagle/core/config/git.properties 
-
