@@ -19,7 +19,7 @@ import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/certificates")
+@Path("/")
 public class RestCertificateManager implements RestCertificateManagement{
   
   private Logger log = LoggerFactory.getLogger(RestCertificateManager.class);
