@@ -19,10 +19,10 @@ import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/certificates")
-public class RestCertficateManager implements RestCertificateManagement{
+@Path("/")
+public class RestCertificateManager implements RestCertificateManagement{
   
-  private Logger log = LoggerFactory.getLogger(RestCertficateManager.class);
+  private Logger log = LoggerFactory.getLogger(RestCertificateManager.class);
   private KeyStoreManagement manager = KeyStoreManagement.getInstance();
   
   @Override
@@ -58,5 +58,4 @@ public class RestCertficateManager implements RestCertificateManagement{
     }
     return cert;
   }
-  
 }
