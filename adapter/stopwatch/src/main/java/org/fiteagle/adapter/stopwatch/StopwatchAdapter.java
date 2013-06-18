@@ -2,23 +2,22 @@ package org.fiteagle.adapter.stopwatch;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 //import org.fiteagle.adapter.common.InMemoryResourceDatabase;
 import org.fiteagle.adapter.common.ResourceAdapter;
-//import org.fiteagle.adapter.common.ResourceProperties;
 
 
 public class StopwatchAdapter extends ResourceAdapter {
 
-	
+	private static boolean loaded = false;
 	private transient boolean runningState = false;
 
 	public StopwatchAdapter(){
 	  super();
 	  this.setType("org.fiteagle.adapter.stopwatch.StopwatchAdapter");
-//		this.setId("StopWatchAdapter"); 
 		this.create();
 	}
 	public boolean isRunning() {
@@ -44,11 +43,6 @@ public class StopwatchAdapter extends ResourceAdapter {
 	  HashMap<String, Object> props = this.getProperties();
 	  props.put("format", "SimpleDateFormat");
 	
-//		ResourceProperties props = new StopWatchInstanceProperties();
-//		props.setIdentifier("myStopWatchInstance");
-//		props.setName("StopWatch");
-//		this.resourceDatabase.addResource(props);
-		
 	}
 
 	@Override
@@ -62,16 +56,24 @@ public class StopwatchAdapter extends ResourceAdapter {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public List<ResourceAdapter> getJavaInstances() {
+		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
+	    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
+	    dummyResourceAdapter.setExclusive(false);
+	    dummyResourceAdapter.setAvailable(true);
+	    resourceAdapters.add(dummyResourceAdapter);
+		
+		return resourceAdapters;
+	}
+	@Override
+	public boolean isLoaded() {
+		return loaded;
+	}
+	@Override
+	public void setLoaded(boolean loaded) {
+		this.loaded=loaded;
+	}
 
 
-//	@Override
-//	public String getStatus() {
-//		return "Is running: "+runningState;
-//	}
-//	@Override
-//	public List<ResourceProperties> getAllResources() {
-//		return resourceDatabase.getResources();
-//	}
-	
-	
 }
