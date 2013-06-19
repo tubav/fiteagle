@@ -113,29 +113,117 @@ public void setSshKey(String sshKey) {
 public List<ResourceAdapter> getJavaInstances() {
 	List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
 	
-	String[] ips = sshDeployAdapterConfig.getIps().split(",");
-	String[] usernames = sshDeployAdapterConfig.getUsernames().split(",");
-	String[] passwords = sshDeployAdapterConfig.getPasswords().split(",");
-	String[] sshKeys = sshDeployAdapterConfig.getSsh_keys().split(",");
 	
-	String[] countries = sshDeployAdapterConfig.getCountries().split(",");
-	String[] latitudes = sshDeployAdapterConfig.getLatitudes().split(",");
-	String[] longitudes = sshDeployAdapterConfig.getLongitues().split(",");
+	String[] ips = null;
+	String[] usernames = null;
+	String[] passwords = null;
+	String[] sshKeys = null;
+	String[] countries = null;
+	String[] latitudes = null;
+	String[] longitudes = null;
+	String[] hardwareTypes = null;
 	
-	String[] hardwareTypes = sshDeployAdapterConfig.getHardware_types().split(",");
+	if (sshDeployAdapterConfig.getPasswords()==null && sshDeployAdapterConfig.getSsh_keys()==null || sshDeployAdapterConfig.getIps()==null || sshDeployAdapterConfig.getUsernames()==null)
+		return resourceAdapters;
+	
+	if (sshDeployAdapterConfig.getIps()!=null) {
+		ips = sshDeployAdapterConfig.getIps().split(",");
+	}
+	
+	if(sshDeployAdapterConfig.getUsernames()!=null){
+		usernames = sshDeployAdapterConfig.getUsernames().split(",");
+	}
+	
+	if (sshDeployAdapterConfig.getPasswords()!=null) {
+		passwords = sshDeployAdapterConfig.getPasswords().split(",");
+	}
+	
+	if (sshDeployAdapterConfig.getSsh_keys()!=null) {
+		sshKeys = sshDeployAdapterConfig.getSsh_keys().split(",");
+	}
+	
+	if (sshDeployAdapterConfig.getCountries()!=null) {
+		countries = sshDeployAdapterConfig.getCountries().split(",");
+	}
+	
+	if (sshDeployAdapterConfig.getLatitudes()!=null) {
+		latitudes = sshDeployAdapterConfig.getLatitudes().split(",");
+	}
+	
+	if (sshDeployAdapterConfig.getLongitues()!=null) {
+		longitudes = sshDeployAdapterConfig.getLongitues().split(",");
+	}
+	
+	if (sshDeployAdapterConfig.getHardwareTypes()!=null) {
+		hardwareTypes = sshDeployAdapterConfig.getHardwareTypes().split(",");
+	}
+	
+	
+	if(!(ips.length==usernames.length && usernames.length==passwords.length)&&(!(ips.length==usernames.length && usernames.length==sshKeys.length)))
+	return resourceAdapters;
 	
 	for (int i = 0; i < usernames.length; i++) {
 		SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(ips[i], usernames[i], passwords[i], sshKeys[i]);
-		sshDeployAdapter.setHardwareType(hardwareTypes[i]);
 		
+		if(hardwareTypes!=null && i<hardwareTypes.length)
+		sshDeployAdapter.setHardwareType(hardwareTypes[i]);
+		if(countries!=null && i<countries.length)
 		sshDeployAdapter.addProperty("country", countries[i]);
+		if(latitudes!=null && i<latitudes.length)
 		sshDeployAdapter.addProperty("latitude", latitudes[i]);
+		if(longitudes!=null && i<longitudes.length)
 		sshDeployAdapter.addProperty("longitude", longitudes[i]);
+		
 		sshDeployAdapter.setExclusive(true);
 		resourceAdapters.add(sshDeployAdapter);
 	}
 	
 	return resourceAdapters;
+}
+
+public void setPreferences(String ips, String usernames, String passwords, String hardwareTypesPreference,String sshKeys, String countries, String latitudes, String longitudes){
+	
+	if(ips!=null)
+		sshDeployAdapterConfig.setIps(ips);
+
+	if(usernames!=null)
+		sshDeployAdapterConfig.setUsernames(usernames);
+
+	if(passwords!=null)
+		sshDeployAdapterConfig.setPasswords(passwords);
+
+	if(sshKeys!=null)
+		sshDeployAdapterConfig.setSsh_keys(sshKeys);
+	
+	if(countries!=null)
+		sshDeployAdapterConfig.setCountries(countries);
+	
+	if(latitudes!=null)
+		sshDeployAdapterConfig.setLatitudes(latitudes);
+
+	if(longitudes!=null)
+		sshDeployAdapterConfig.setLongitues(longitudes);
+	
+	if(hardwareTypesPreference!=null)
+		sshDeployAdapterConfig.setHardwareTypes(hardwareTypesPreference);
+}
+public void removeAllPreferences(){
+
+	sshDeployAdapterConfig.removeIps();
+	
+	sshDeployAdapterConfig.removeUsernames();
+	
+	sshDeployAdapterConfig.removePasswords();
+	
+	sshDeployAdapterConfig.removeSsh_keys();
+	
+	sshDeployAdapterConfig.removeCountries();
+	
+	sshDeployAdapterConfig.removeLatitudes();
+	
+	sshDeployAdapterConfig.removeLongitues();
+	
+	sshDeployAdapterConfig.removeHardwareTypes();
 }
 
 @Override
