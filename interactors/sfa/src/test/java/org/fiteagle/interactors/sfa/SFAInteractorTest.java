@@ -60,16 +60,13 @@ public class SFAInteractorTest {
 	@Before
 	public void setUp() {
 		this.sfaInteractor = new SFAInteractor_v3();
-		
 		new SSHDeployAdapter().setPreferences(ips, usernames, passwords, hardwareTypes, sshKeys, countries, latitudes, longitudes);
-		
 	}
 	
 	@After
 	public void tearDown(){
 		new SSHDeployAdapter().removeAllPreferences();
 	}
-	
 	
 	@Test
 	public void testGetVersion() throws IOException {
@@ -94,7 +91,7 @@ public class SFAInteractorTest {
 		Assert.assertNotNull(getVersionValue.getF4f_testbed_homepage());
 		Assert.assertNotNull(getVersionValue.getF4f_testbed_picture());
 		Assert.assertNotNull(getVersionValue.getF4f_endorsed_tools());
-		Assert.assertTrue(getVersionValue.getF4f_testbed_homepage().compareToIgnoreCase("https://fuseco.fokus.fraunhofer.de")==0);
+		Assert.assertNotNull(getVersionValue.getF4f_testbed_homepage());
 	}
 
 	@Test
