@@ -72,7 +72,7 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     }
 
-    if(!req.getPathSegments().get(1).getPath().equals(credentials[0])){
+    if(!getUsernameFromRequest(req).equals(credentials[0])){
         throw new WebApplicationException(Response.Status.FORBIDDEN); 
     }
     
@@ -90,13 +90,18 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
   }
 
   private boolean authenticateWithCookie(ContainerRequest req){
-    String username = (String) req.getPathSegments().get(1).getPath(); 
+    String username = getUsernameFromRequest(req); 
     Cookie cookie = req.getCookies().get(COOKIE_NAME);
     Cookie cookieFromStorage = cookies.get(username);
     if(cookie != null && cookieFromStorage != null && cookie.getValue().equals(cookieFromStorage.getValue())){
       return true;
     }
     return false;
+  }
+
+  private String getUsernameFromRequest(ContainerRequest req) {
+    //@mitja: ugly code - exception if path changes
+    return (String) req.getPathSegments().get(0).getPath();
   }
   
   @Override
@@ -105,7 +110,7 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
       return resp;
     }
         
-    String username = (String) req.getPathSegments().get(1).getPath(); 
+    String username = getUsernameFromRequest(req); 
     if(username != null && req.getCookies().get(COOKIE_NAME) == null){
       ResponseBuilder rb = Response.fromResponse(resp.getResponse());
       rb.cookie(createNewCookie(username));

@@ -2,6 +2,7 @@ package org.fiteagle.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,14 @@ public class InMemoryResourceAdapterDatabase implements ResourceAdapterDatabase 
 	public void deleteResourceAdapter(String resourceAdapterId) {
 		adapterMap.remove(resourceAdapterId);
 
+	}
+
+	@Override
+	public void addResourceAdapters(List<ResourceAdapter> resourceAdapters) {
+		for (Iterator iterator = resourceAdapters.iterator(); iterator
+				.hasNext();) {
+			addResourceAdapter((ResourceAdapter) iterator.next());
+		}
 	}
 
 }

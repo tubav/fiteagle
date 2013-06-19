@@ -45,6 +45,7 @@ public class UserDBManager {
   private static UserDBManager dbManager = null;
   static Logger log = LoggerFactory.getLogger(UserDBManager.class);
   KeyManagement keyManager = null;
+  
   public static UserDBManager getInstance(){
     if(dbManager == null)
       try {

@@ -65,6 +65,17 @@ public class SFAInteractorTest {
 		// this.valudateGeniAPIs(value);
 		this.validateRSpecVersions(value);
 	}
+	
+	@Test
+	public void testGetVersionF4FExtentions() throws IOException {
+		GetVersionResult result = this.getGeniVersion();
+		GetVersionValue getVersionValue = result.getValue();
+		Assert.assertNotNull(getVersionValue.getF4f_describe_testbed());
+		Assert.assertNotNull(getVersionValue.getF4f_testbed_homepage());
+		Assert.assertNotNull(getVersionValue.getF4f_testbed_picture());
+		Assert.assertNotNull(getVersionValue.getF4f_endorsed_tools());
+		Assert.assertTrue(getVersionValue.getF4f_testbed_homepage().compareToIgnoreCase("https://fuseco.fokus.fraunhofer.de")==0);
+	}
 
 	@Test
 	public void testListResources() throws IOException {
@@ -76,7 +87,7 @@ public class SFAInteractorTest {
 
 	}
 	
-	@Test
+  @Test
   public void testListAvailableResources() throws IOException {
     ListResourceOptions options = createMinimalListResourceOptions("GENI",
         "3");
@@ -87,6 +98,18 @@ public class SFAInteractorTest {
     String listResourcesValue = (String)listResourcesResult.getValue();
     Assert.assertTrue(listResourcesValue.contains("available now=\"true\""));
 
+  }
+  
+  @Test
+  public void tesGetResourceAdapterOverPreferences() throws IOException {
+    ListResourceOptions options = createMinimalListResourceOptions("GENI",
+        "3");
+    options.setGeni_available(new GeniAvailableOption(false));
+    final ListResourcesResult listResourcesResult = this.sfaInteractor
+        .listResources(getListCredentials(), options);
+    Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
+    String listResourcesValue = (String)listResourcesResult.getValue();
+    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResourceHardwareType1"));
   }
 	
 	@Test
@@ -99,8 +122,8 @@ public class SFAInteractorTest {
     String listResourcesValue = (String)listResourcesResult.getValue();
     Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
     Assert.assertTrue(listResourcesValue.contains("node"));
-    Assert.assertTrue(listResourcesValue.contains("Germany"));
-    Assert.assertTrue(listResourcesValue.contains("demolaptop"));
+    Assert.assertTrue(listResourcesValue.contains("TestCountry"));
+    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResource"));
 
   }
 

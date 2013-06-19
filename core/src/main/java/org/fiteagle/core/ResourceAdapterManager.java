@@ -1,26 +1,32 @@
 package org.fiteagle.core;
 
-import java.util.HashMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.common.SSHAccessable;
-import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupPersistable;
 import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
 
 public class ResourceAdapterManager {
   
-  private static ResourceAdapterManager manager=null;
-  
-  private ResourceAdapterDatabase adapterInstancesDatabase;//TODO: This will be filled while creating resources
-  private ResourceAdapterDatabase adapterDatabase;//TODO: this will be filled, while adding a resource adapter
+  private static final String packageName = "org.fiteagle.adapter";
+
+private static ResourceAdapterManager manager=null;
+
+
+  private ResourceAdapterDatabase adapterInstancesDatabase;
+  private ResourceAdapterDatabase adapterDatabase;
   private GroupPersistable groups;
-//  private HashMap<String, List<ResourceAdapter>> groups;
-  
+
   
   private ResourceAdapterManager() {
     if (manager!=null) return;
@@ -28,24 +34,36 @@ public class ResourceAdapterManager {
     adapterInstancesDatabase = new InMemoryResourceAdapterDatabase();
     adapterDatabase = new InMemoryResourceAdapterDatabase();
     groups=new InMemoryGroupDatabase();
-//    groups = new HashMap<String, List<ResourceAdapter>>();
     
-    //TODO: add the resource adapters over registry
-    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
-    adapterDatabase.addResourceAdapter(dummyResourceAdapter);
+    Class[] allClassesInPackage=null;
+    try {
+		allClassesInPackage = getAllClassesInPackage(packageName);
+	} catch (ClassNotFoundException e) {
+		throw new RuntimeException();//TODO: give more information in exception
+	} catch (IOException e) {
+		throw new RuntimeException();//TODO: give more information in exception
+	}
     
-    ResourceAdapter dummyResourceAdapterHardware = new SSHDeployAdapter();
-//    dummyResourceAdapter.setAvailable(false);
-//    dummyResourceAdapterHardware.setAvailable(false);
-    ((SSHAccessable)dummyResourceAdapterHardware).setHardwareType("demolaptop");
-    
-    dummyResourceAdapterHardware.setExclusive(true);
-    
-    HashMap<String, Object> dummyHardwareProps = dummyResourceAdapterHardware.getProperties();
-//    dummyHardwareProps.put("exclusive", true);
-    dummyHardwareProps.put("id","laptop");
-    adapterDatabase.addResourceAdapter(dummyResourceAdapterHardware);
-
+    if(allClassesInPackage!=null){
+    	for (int i = 0; i < allClassesInPackage.length; i++) {
+    		ResourceAdapter resourceAdapter=null;
+    		try {
+				if(allClassesInPackage[i].newInstance() instanceof ResourceAdapter){
+					resourceAdapter = (ResourceAdapter) allClassesInPackage[i].newInstance();
+					if(resourceAdapter.isLoaded())
+						continue;
+					
+					List<ResourceAdapter> resourceAdapters = resourceAdapter.getJavaInstances();
+					resourceAdapter.setLoaded(true);
+					adapterDatabase.addResourceAdapters(resourceAdapters);
+				}
+			} catch (InstantiationException e) {
+				continue;
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException();//TODO: give more information in exception
+			}
+		}
+    }
     manager=this;
   }
   
@@ -108,6 +126,84 @@ public class ResourceAdapterManager {
     Group groupOfResourceAdapter = getGroupOfInstance(resourceAdapterId);
     groupOfResourceAdapter.deleteResource(resourceAdapterId);
   }
+  
+  
+  private static Class[] getAllClassesInPackage(String packageName)
+			throws ClassNotFoundException, IOException {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		if(classLoader == null) throw new RuntimeException();//TODO: give more information in exception
+		String path = packageName.replace('.', '/');
+		Enumeration<URL> resources = classLoader.getResources(path);
+		List<File> dirs = new ArrayList<File>();
+		while (resources.hasMoreElements()) {
+			URL resource = resources.nextElement();
+			dirs.add(new File(resource.getFile()));
+		}
+		ArrayList<Class> classes = new ArrayList<Class>();
+		for (File directory : dirs) {
+			classes.addAll(findClassesInDirectory(directory, packageName));
+		}
+		
+		//this has duplicate entries in classes!
+		return classes.toArray(new Class[classes.size()]);
+	}
+
+	private static List<Class> findClassesInDirectory(File directory, String packageName)
+			throws ClassNotFoundException {
+		List<Class> classes = new ArrayList<Class>();
+		if (!directory.exists()) {
+			if(directory.getPath().contains("!")){
+				String[] tmp = directory.getPath().split("!");
+				if(tmp[0].startsWith("file:"))
+					tmp[0]=tmp[0].substring(5);
+				JarFile jarFile=null;
+				try {
+					jarFile = new JarFile(tmp[0]);
+				} catch (IOException e) {
+					throw new RuntimeException(); //TODO: change this and give appropriate error info!
+				}
+				return findClassesInJar(jarFile, tmp[1]);
+			}
+			return classes;
+		}
+		File[] files = directory.listFiles();
+		for (File file : files) {
+			if (file.isDirectory()) {
+				if(file.getName().contains(".")) throw new RuntimeException();//TODO: give more information in exception
+				classes.addAll(findClassesInDirectory(file,
+						packageName + "." + file.getName()));
+			} else if (file.getName().endsWith(".class")) {
+				classes.add(Class.forName(packageName
+						+ '.'
+						+ file.getName().substring(0,
+								file.getName().length() - 6)));
+			}
+		}
+		return classes;
+	}
+
+	private static List<Class> findClassesInJar(JarFile jarFile, String pathInJar) throws ClassNotFoundException {
+		if(jarFile==null) return null;
+		List<Class> classes = new ArrayList<Class>();
+		if(pathInJar.startsWith("/"))
+			pathInJar=pathInJar.substring(1);
+		
+		if(!pathInJar.endsWith("/"))
+			pathInJar=pathInJar+"/";
+		
+		Enumeration<JarEntry> jarEntries = jarFile.entries();
+		while (jarEntries.hasMoreElements()) {
+			JarEntry jarEntry = (JarEntry) jarEntries.nextElement();
+			if(jarEntry.getName().contains(pathInJar)&&jarEntry.getName().endsWith(".class")){
+				String clazzName = jarEntry.getName().replace('/', '.');
+				Class clazz = (Class) Class.forName(clazzName.substring(0, clazzName.length()-6));
+				classes.add(clazz);
+			}
+			
+		}
+		return classes;
+	}
   
   
 

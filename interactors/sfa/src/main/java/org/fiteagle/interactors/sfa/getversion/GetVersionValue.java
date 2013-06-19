@@ -23,7 +23,13 @@ public class GetVersionValue extends AMValue {
 
 	private int geni_api;
 	private Map<String, Object> genericAttributes;
-
+	
+	//F4F extensions
+	private String f4f_describe_testbed;
+	private String f4f_testbed_homepage;
+	private String f4f_testbed_picture;
+	private List<F4FEndorsedTools> f4f_endorsed_tools;
+	
 	public GetVersionValue() {
 
 	}
@@ -108,5 +114,37 @@ public class GetVersionValue extends AMValue {
   public void setGeni_api_versions(Map<String, String> geni_api_versions) {
     this.geni_api_versions = geni_api_versions;
   }
+
+public String getF4f_describe_testbed() {
+	return f4f_describe_testbed;
+}
+
+public void setF4f_describe_testbed(String f4f_describe_testbed) {
+	this.f4f_describe_testbed = f4f_describe_testbed;
+}
+
+public String getF4f_testbed_homepage() {
+	return f4f_testbed_homepage;
+}
+
+public void setF4f_testbed_homepage(String f4f_testbed_homepage) {
+	this.f4f_testbed_homepage = f4f_testbed_homepage;
+}
+
+public String getF4f_testbed_picture() {
+	return f4f_testbed_picture;
+}
+
+public void setF4f_testbed_picture(String f4f_testbed_picture) {
+	this.f4f_testbed_picture = f4f_testbed_picture;
+}
+
+public List<F4FEndorsedTools> getF4f_endorsed_tools() {
+	return f4f_endorsed_tools;
+}
+
+public void setF4f_endorsed_tools(List<F4FEndorsedTools> f4f_endorsed_tools) {
+	this.f4f_endorsed_tools = f4f_endorsed_tools;
+}
 
 }

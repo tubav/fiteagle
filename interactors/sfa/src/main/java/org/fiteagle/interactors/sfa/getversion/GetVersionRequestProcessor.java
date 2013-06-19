@@ -17,9 +17,6 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 
 	final static int GENI_API_VERSION = 3;
 	
-	
-	
-	
 	public GetVersionResult processRequest() {
 		GetVersionResult getVersionResult = new GetVersionResult();
 		GetVersionValue value = getVersionValue();
@@ -29,6 +26,48 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		Map<String, String> peers = new HashMap<>();
 //		peers.put("fiteagle", interfaceConfig.getAM_URL());
 		value.addGenericAttribute("peers", peers);
+		
+		//Set F4F extensions
+		value.setF4f_describe_testbed(interfaceConfig.getTestbed_description());
+		value.setF4f_testbed_homepage(interfaceConfig.getTestbed_homepage());
+		value.setF4f_testbed_picture(interfaceConfig.getTestbed_picture());
+		
+		if(interfaceConfig.getEndorsed_tool_names()!=null){
+			ArrayList<F4FEndorsedTools> f4fEndorsedTools = new ArrayList<F4FEndorsedTools>();
+			
+			String[] toolNames = interfaceConfig.getEndorsed_tool_names().split(",");
+			String[] toolLogos = interfaceConfig.getEndorsed_tool_logos().split(",");
+			String[] toolHomepages = interfaceConfig.getEndorsed_tool_homepages().split(",");
+			String[] toolVersions = interfaceConfig.getEndorsed_tool_versions().split(",");
+			
+			for (int i = 0; i < toolNames.length; i++) {
+//				String toolName = toolNames[i].trim();
+//				String toolLogo = toolLogos[i].trim();
+//				String toolHomepage = toolHomepages[i].trim();
+//				String toolVersion = toolVersions[i].trim();
+//				F4FEndorsedTools f4fEndorsedTool = new F4FEndorsedTools();
+//				f4fEndorsedTool.setTool_name(toolName);
+//				f4fEndorsedTool.setTool_logo(toolLogo);
+//				f4fEndorsedTool.setTool_homepage(toolHomepage);
+//				f4fEndorsedTool.setTool_version(toolVersion);
+				
+				F4FEndorsedTools f4fEndorsedTool = new F4FEndorsedTools();
+				f4fEndorsedTool.setTool_name(toolNames[i].trim());
+				if(i<toolLogos.length)
+				f4fEndorsedTool.setTool_logo(toolLogos[i].trim());
+				if(i<toolHomepages.length)
+				f4fEndorsedTool.setTool_homepage(toolHomepages[i].trim());
+				if(i<toolVersions.length)
+				f4fEndorsedTool.setTool_version(toolVersions[i].trim());
+				
+				f4fEndorsedTools.add(f4fEndorsedTool);
+			}
+			value.setF4f_endorsed_tools(f4fEndorsedTools);
+			
+		}
+		
+		
+		
 		getVersionResult.setValue(value);
 		AMCode code = new AMCode();
 		code.setGeni_code(GENI_CodeEnum.SUCCESS);
@@ -53,11 +92,11 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 //		String version="3";
 //    String url="https://fiteagle.org:9112/api/sfa/v3/am";
 		String version=new Integer(GetVersionRequestProcessor.GENI_API_VERSION).toString();
-    String url=this.interfaceConfig.getAM_URL();
+		String url=this.interfaceConfig.getAM_URL();
     
-    geniApiVersions.put(version, url);
+		geniApiVersions.put(version, url);
     
-    value.setGeni_api_versions(geniApiVersions);
+		value.setGeni_api_versions(geniApiVersions);
 		
 		//Set GENI ad rspec versions;
 		
