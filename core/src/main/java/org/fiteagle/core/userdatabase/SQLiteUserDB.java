@@ -1,5 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +22,6 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
 
 	public SQLiteUserDB() throws DatabaseException, SQLException{
-	  super();
 	  try{
 	   
   		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt,created, lastModified , PRIMARY KEY (username))");
@@ -47,7 +47,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
-	  
+	  Connection connection = getConnection();
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)");
 		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getFirstName());
@@ -70,10 +70,12 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		} finally{
 			ps.close();
 			connection.commit();
+			connection.close();
 		}
 	}
 
-	private void addKeysToDatabase(String username, List<String> Keys) throws SQLException {		
+	private void addKeysToDatabase(String username, List<String> Keys) throws SQLException {	
+	  Connection connection = getConnection();
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?)");
 		for(String key: Keys){
 			ps.setString(1, username);
@@ -82,6 +84,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		}		
 		ps.executeBatch();		
 		ps.close();
+		connection.commit();
+		connection.close();
 	}
 
 	@Override
@@ -92,9 +96,11 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	@Override
 	public void delete(String username) throws DatabaseException {		
 		try {
+		  Connection connection = getConnection();
       deleteUserFromDatabase(username);
       deleteKeysFromDatabase(username);
       connection.commit();
+      connection.close();
     } catch (SQLException e) {
       throw new DatabaseException();
     }		
@@ -102,17 +108,23 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private void deleteKeysFromDatabase(String username) throws SQLException {
+	  Connection connection = getConnection();
 		PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=?");
 		ps.setString(1, username);
 		ps.execute();
 		ps.close();
+		connection.commit();
+		connection.close();
 	}
 
 	private void deleteUserFromDatabase(String username) throws SQLException {
+	  Connection connection =getConnection();
 		PreparedStatement ps = connection.prepareStatement("DELETE FROM Users WHERE username=?");
 		ps.setString(1, username);
 		ps.execute();
 		ps.close();
+		connection.commit();
+		connection.close();
 	}
 
 	@Override
@@ -121,10 +133,12 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  u = User.createMergedUser(oldUser, u);
 	  u.checkAttributes();
 	  try{
+	    Connection connection = getConnection();
 	    updateUserInDatabase(u);
 	    deleteKeysFromDatabase(u.getUsername());    
 	    addKeysToDatabase(u.getUsername(), u.getPublicKeys());
 	    connection.commit();
+	    connection.close();
 	  } catch(SQLException e){
 	    throw new DatabaseException();
 	  }
@@ -132,6 +146,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
+	  Connection connection = getConnection();
 		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=?, last_modified=? WHERE username=?");
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
@@ -145,6 +160,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 			throw new RecordNotFoundException();
 		}
 		ps.close();
+		connection.commit();
+		connection.close();
 	}
 
 	@Override
@@ -157,7 +174,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
   			ArrayList<String> keys = new ArrayList<String>();			
   			keys.add(key);
   			addKeysToDatabase(username,keys);
-  			connection.commit();
+  			
   		}
 	  } catch(SQLException e){
 	    throw new DatabaseException();
@@ -179,7 +196,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 	
 	private User getUserFromDatabase(String username) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt,Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+		Connection connection = getConnection();
+	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt,Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
@@ -187,6 +205,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 			u = evaluateResultSet(rs);
 		}
 		ps.close();
+		connection.commit();
+		connection.close();
 		return u;
 	}
 
@@ -218,6 +238,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	@Override
 	public int getNumberOfUsers() throws DatabaseException {
 	  try{
+	    Connection connection = getConnection();
   		Statement st = connection.createStatement();
   		ResultSet rs = st.executeQuery("SELECT COUNT(*) AS NumberOfUsers FROM Users");
   		int size = 0;
@@ -225,6 +246,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
   			size = rs.getInt(1);			
   		}
   		st.close();
+  		connection.commit();
+  		connection.close();
   		return size;
 	  } catch(SQLException e){
 	    throw new DatabaseException();
@@ -233,11 +256,13 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	public void deleteAllEntries() throws DatabaseException{
 	  try{
+	    Connection connection = getConnection();
   		Statement st = connection.createStatement();
   		st.executeUpdate("DELETE FROM Users");	
   		st.executeUpdate("DELETE FROM Keys");	
   		st.close();
   		connection.commit();
+  		connection.close();
 	  } catch(SQLException e){
 	    throw new DatabaseException();
 	  }

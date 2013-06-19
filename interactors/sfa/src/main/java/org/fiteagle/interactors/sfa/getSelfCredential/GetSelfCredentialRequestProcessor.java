@@ -40,7 +40,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 		try {
       return getSelfCredential(cert, xrn, type);
     } catch (Exception e) {
-     throw new RuntimeException();
+     throw new RuntimeException(e);
     }
 	}
 
