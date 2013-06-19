@@ -24,7 +24,7 @@ import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/")
+@Path("/user")
 public class RestUserManager implements RestUserManagement {
   private static Logger log = LoggerFactory.getLogger(RestUserManager.class);
   private static UserDBManager manager;

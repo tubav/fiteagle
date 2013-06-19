@@ -132,20 +132,23 @@ public class UserDBManager {
   
   private String getUIDFromURN(String urn) {
     String userFromURN = urn.substring(urn.lastIndexOf("+") + 1);
-    System.out.println(userFromURN);
-    String domain = urn.substring(urn.indexOf("IDN") + 4, urn.indexOf("+user+"));
-    domain = domain.replace(":", ".");
-    System.out.println(domain);
-    return domain + "." + userFromURN;
+    return userFromURN;
   }
   
   private String getCN(X500Principal prince) {
+    String username = "";
     String uuid = prince.getName();
     LdapName ldapDN = getLdapName(uuid);
     
     for (Rdn rdn : ldapDN.getRdns()) {
       if (rdn.getType().equals("CN")) {
-        return (String) rdn.getValue();
+        String fullCN =  (String)rdn.getValue();
+        if(fullCN.contains(".")){
+          username = fullCN.split("\\.")[fullCN.split("\\.").length-1];
+        }else{
+          username = fullCN;
+        }
+        return username;
       }
     }
     throw new NonParsableNamingFormat();
