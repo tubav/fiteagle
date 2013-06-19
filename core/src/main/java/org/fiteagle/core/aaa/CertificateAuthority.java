@@ -183,6 +183,11 @@ public class CertificateAuthority {
     return keyStoreManagement.getStoredCertificate(alias);
   }
   
+  public X509Certificate buildX509Certificate(String certString){
+    CertificateFactory certificateFactory = getCertifcateFactory();
+    return getX509Certificate(certificateFactory, certString);
+  }
+  
   private X509Certificate getX509Certificate(CertificateFactory cf, String certString) {
     InputStream in = new ByteArrayInputStream(certString.getBytes());
     try {
@@ -234,6 +239,12 @@ public class CertificateAuthority {
   
   public class CertificateNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
+  }
+
+  public X509Certificate createCertificate(X509Certificate xCert) throws Exception {
+    User user = getUserFromCert(xCert);
+    PublicKey pubkey = xCert.getPublicKey();
+    return createCertificate(user, pubkey);
   }
 
   

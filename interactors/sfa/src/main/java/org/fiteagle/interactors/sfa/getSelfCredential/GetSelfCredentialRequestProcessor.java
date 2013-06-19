@@ -9,16 +9,13 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
-import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.SignatureCreator;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -68,8 +65,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
       expirationDate = DatatypeFactory.newInstance()
           .newXMLGregorianCalendar(gregCalendar);
     } catch (DatatypeConfigurationException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
     credential.setExpires(expirationDate);
     Privileges privileges = new Privileges();
@@ -101,18 +97,22 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 	}
 
 
-  private String getOwnerGID(String cert) {
-    String prefix = "-----BEGIN CERTIFICATE-----\n";
-    String suffix ="-----END CERTIFICATE-----\n";
-    if(cert.startsWith(prefix)){
-      if(!cert.endsWith("\n"))
-        cert = cert + "\n";
-      return cert;
-    }
-    else{
-      return prefix + cert + "\n" + suffix;
-      
-    }
+  private String getOwnerGID(String cert) throws Exception {
+    CertificateAuthority ca = CertificateAuthority.getInstance();
+    X509Certificate xCert = ca.buildX509Certificate(cert);
+    X509Certificate returnCert = xCert;
+    if(isSelfSigned(xCert))
+      returnCert = ca.createCertificate(xCert);
+    
+    String returnString = ca.getCertficateEncoded(returnCert);
+    return returnString;
+    
+  }
+
+ 
+
+  private boolean isSelfSigned(X509Certificate xCert) {
+    return xCert.getIssuerX500Principal().equals(xCert.getSubjectX500Principal());
   }
 
   private String getTargetURN(String type, String xrn) throws CertificateParsingException {
