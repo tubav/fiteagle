@@ -74,6 +74,7 @@ public class SFAInteractorTest {
 		Assert.assertNotNull(getVersionValue.getF4f_testbed_homepage());
 		Assert.assertNotNull(getVersionValue.getF4f_testbed_picture());
 		Assert.assertNotNull(getVersionValue.getF4f_endorsed_tools());
+		Assert.assertTrue(getVersionValue.getF4f_testbed_homepage().compareToIgnoreCase("https://fuseco.fokus.fraunhofer.de")==0);
 	}
 
 	@Test
@@ -86,7 +87,7 @@ public class SFAInteractorTest {
 
 	}
 	
-	@Test
+  @Test
   public void testListAvailableResources() throws IOException {
     ListResourceOptions options = createMinimalListResourceOptions("GENI",
         "3");
@@ -97,6 +98,18 @@ public class SFAInteractorTest {
     String listResourcesValue = (String)listResourcesResult.getValue();
     Assert.assertTrue(listResourcesValue.contains("available now=\"true\""));
 
+  }
+  
+  @Test
+  public void tesGetResourceAdapterOverPreferences() throws IOException {
+    ListResourceOptions options = createMinimalListResourceOptions("GENI",
+        "3");
+    options.setGeni_available(new GeniAvailableOption(false));
+    final ListResourcesResult listResourcesResult = this.sfaInteractor
+        .listResources(getListCredentials(), options);
+    Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
+    String listResourcesValue = (String)listResourcesResult.getValue();
+    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResourceHardwareType1"));
   }
 	
 	@Test

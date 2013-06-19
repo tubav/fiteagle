@@ -38,7 +38,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	@Override
 	public ListResourcesResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
-		
+		resourceManager = ResourceAdapterManager.getInstance();
 		
 		ListResourceOptions options = (ListResourceOptions) specificArgs[0];
 		// has to be modified to check credentials

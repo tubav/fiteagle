@@ -12,30 +12,24 @@ public abstract class ResourceAdapter {
 	public abstract void create();
 	public abstract void configure();
 	public abstract void release();
-//	public abstract String getStatus();
-	private HashMap<String, Object> properties;
-//	protected ResourceDatabase resourceDatabase;
+	public abstract List<ResourceAdapter> getJavaInstances();
+	
+	public abstract boolean isLoaded();
+	public abstract void setLoaded(boolean loaded);
+	
+	private HashMap<String, Object> properties = new HashMap<String, Object>();
 	private String type;//class of the implementing adapter
 	private String id;
 	private String groupId;
 	private String status;
 	private boolean exclusive = false;
 	private boolean available = true;
-//	private String locationCountry= "Germany";
-//  private String locationLatitude= "52.516719";
-//  private String longitude = "13.323507";
 	
-	
-//	public abstract List<ResourceProperties> getAllResources();
 	public HashMap<String, Object> getProperties() {
 	  if (properties !=null){
 	    return properties;
 	  }else {
-	    properties = new HashMap<String, Object>();//TODO: get these from preferences!
-	    properties.put("country", "TestCountry");
-	    properties.put("latitude", "52.516719");
-	    properties.put("longitude","13.323507");
-	    
+	    properties = new HashMap<String, Object>();
 	    return properties;
     }
 	}
@@ -44,20 +38,16 @@ public abstract class ResourceAdapter {
 		this.properties = properties;
 	}
 	
-//	public void addProperty(HashMap<String, Object> property) {
-//    this.properties = properties;
-//  }
-	
-//	public ResourceDatabase getResourceDatabase() {
-//		return resourceDatabase;
-//	}
+	public void addProperty(String key, Object value) {
+		this.properties.put(key, value);
+	}
 	
 	public ResourceAdapter() {
 	  ObjID objId = new ObjID();
-//	  this.setId(objId.toString());
 	  this.setId(UUID.randomUUID().toString());
 	  this.setStatus("geni_allocated");
   }
+	
 	public String getType() {
 		return type;
 	}

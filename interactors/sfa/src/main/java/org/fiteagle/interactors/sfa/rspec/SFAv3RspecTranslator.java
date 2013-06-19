@@ -12,7 +12,8 @@ import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 
 public class SFAv3RspecTranslator {
   
-  private static final String COMPONENT_MANAGER_ID = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+authority+root";
+  private static final String COMPONENT_ID_PREFIX = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+";
+private static final String COMPONENT_MANAGER_ID = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+authority+root";
   private final Geni_RSpec_Version geni_rspec_version;
   private final String adRspecNamespace = "http://www.geni.net/resources/rspec/3";
   private final String adRspecSchema = "http://www.geni.net/resources/rspec/3/ad.xsd";
@@ -109,12 +110,6 @@ public class SFAv3RspecTranslator {
     // idProperty.setType("string");
     idProperty.setValue(resourceAdapter.getId());
     fiteagleSFAResource.getProperty().add(idProperty);
-    
-    // Property statusProperty = new Property();
-    // statusProperty.setName("status");
-    // // statusProperty.setType("string");
-    // statusProperty.setValue(resourceAdapter.getStatus());
-    // fiteagleSFAResource.getProperty().add(statusProperty);
     
     return new ObjectFactory().createResource(fiteagleSFAResource);
   }
@@ -231,7 +226,6 @@ public class SFAv3RspecTranslator {
         
         logins.add(new ObjectFactory().createLogin(login));
         
-        // service.getAnyOrLoginOrInstall()
         services.add(new ObjectFactory().createServices(service));
         // TODO: add node properties
         
@@ -253,7 +247,7 @@ public class SFAv3RspecTranslator {
       ObjectFactory factory = new ObjectFactory();
 
       HashMap<String, Object> resourceProperties = resourceAdapter.getProperties();
-      node.setComponentId("urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+"+resourceProperties.get("id"));
+      node.setComponentId(COMPONENT_ID_PREFIX+resourceAdapter.getId());
       node.setComponentManagerId(COMPONENT_MANAGER_ID);
       node.setExclusive(resourceAdapter.isExclusive());
       
@@ -273,7 +267,6 @@ public class SFAv3RspecTranslator {
       SSHAccessable sshAccesableResource = (SSHAccessable)resourceAdapter;
       
       HardwareTypeContents hardwareType = new HardwareTypeContents();
-//      hardwareType.setName((String)resourceAdapterProperties.get("hardwareType"));
       hardwareType.setName(sshAccesableResource.getHardwareType());
       nodeContent.add(factory.createHardwareType(hardwareType));
       
