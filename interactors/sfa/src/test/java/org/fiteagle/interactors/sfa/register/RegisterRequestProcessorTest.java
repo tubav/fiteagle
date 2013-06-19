@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RegisterRequestProcessorTest {
@@ -151,7 +152,7 @@ public class RegisterRequestProcessorTest {
     String urn = proc.getUrn(hashMap);
   }
   
- 
+  @Ignore
   @Test
   public void getAndTestUrn(){
     String urn = proc.getUrn(hashMap);
