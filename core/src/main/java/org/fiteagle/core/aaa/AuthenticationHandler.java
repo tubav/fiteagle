@@ -47,9 +47,8 @@ public class AuthenticationHandler {
   }
   
   private AuthenticationHandler() {
-    
-    this.keyStoreManagement = KeyStoreManagement.getInstance();
-    
+   
+    this.keyStoreManagement = KeyStoreManagement.getInstance(); 
   }
   
   public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException,
@@ -92,10 +91,14 @@ public class AuthenticationHandler {
   }
   
   
-  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) {
+  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) throws IOException {
     boolean verified = false;
+    KeyManagement keydecoder = KeyManagement.getInstance();
+    if(identifiedUser.getPublicKeys() == null || identifiedUser.getPublicKeys().size() == 0){
+      identifiedUser.addPublicKey(keydecoder.encodePublicKey(certificate.getPublicKey()));
+    }
     for (String pubKeyString : identifiedUser.getPublicKeys()) {
-      KeyManagement keydecoder = KeyManagement.getInstance();
+    
       PublicKey pubKey = null;
       try {
         pubKey = keydecoder.decodePublicKey(pubKeyString);

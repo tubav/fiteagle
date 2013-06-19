@@ -38,8 +38,8 @@ public class GroupManager {
 
   public void deleteGroup(String groupId) {
       groupDatabase.deleteGroup(groupId);
-    
   }
+  
   public static GroupManager getInstance() throws SQLException {
     if(gm == null ){
       gm = new GroupManager();

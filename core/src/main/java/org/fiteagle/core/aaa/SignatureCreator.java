@@ -30,7 +30,6 @@ public class SignatureCreator {
     Element element =  ((Element)doc.getElementsByTagName("credential").item(0));
     element.setAttribute("id",credentialId);
     element.setIdAttribute("id",true);
-  
     Init.init();
     ElementProxy.setDefaultPrefix(Constants.SignatureSpecNS, "");
     KeyStoreManagement keyStoreManagement = KeyStoreManagement.getInstance();
@@ -38,8 +37,8 @@ public class SignatureCreator {
     Transforms transforms = new Transforms(doc);
     transforms.addTransform(Transforms.TRANSFORM_ENVELOPED_SIGNATURE);
     sig.addDocument("#"+credentialId, transforms, Constants.ALGO_ID_DIGEST_SHA1);
-    Key privateKey = keyStoreManagement.getSAPrivateKey();  // getSA or AM private Key
-    X509Certificate cert = keyStoreManagement.getCACert(); // TODO getSA or AM cert
+    Key privateKey = keyStoreManagement.getSAPrivateKey();  
+    X509Certificate cert = keyStoreManagement.getSliceAuthorityCert(); 
     sig.addKeyInfo(cert);
     sig.addKeyInfo(cert.getPublicKey());
     sig.sign(privateKey);

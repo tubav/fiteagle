@@ -56,7 +56,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     Credential credential = new Credential();
     credential.setId(createSignedCredentialId());
     credential.setType("privilege");
-    credential.setOwnerGid(cert);
+    credential.setOwnerGid(getOwnerGID(cert));
     credential.setOwnerURN(getOwnerURN(xrn));
     credential.setTargetGid(getTargetGID(type,xrn));
     credential.setTargetURN(getTargetURN(type,xrn));
@@ -85,11 +85,11 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     signedCredential.setSignatures(signatures);
     SignatureCreator signer = new SignatureCreator();
     try {
-      String signedcredentialString = getJAXBString(signedCredential);
-      InputSource is = new InputSource(new StringReader(signedcredentialString));
+      String tmpsignedcredentialString = getJAXBString(signedCredential);
+      InputSource is = new InputSource(new StringReader(tmpsignedcredentialString));
       ByteArrayOutputStream bout = signer.signContent(is, credential.getId());
-      signedCredentialString = new String(bout.toByteArray());
-      
+      tmpsignedcredentialString = new String(bout.toByteArray());
+      signedCredentialString = SFIFix.removeNewlinesFromCertificateInsideSignature(tmpsignedcredentialString);
     
     } catch (JAXBException e) {
       throw new RuntimeException(e.getMessage());
@@ -100,6 +100,20 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     return signedCredentialString;
 	}
 
+
+  private String getOwnerGID(String cert) {
+    String prefix = "-----BEGIN CERTIFICATE-----\n";
+    String suffix ="-----END CERTIFICATE-----\n";
+    if(cert.startsWith(prefix)){
+      if(!cert.endsWith("\n"))
+        cert = cert + "\n";
+      return cert;
+    }
+    else{
+      return prefix + cert + "\n" + suffix;
+      
+    }
+  }
 
   private String getTargetURN(String type, String xrn) throws CertificateParsingException {
     String urn = "";
@@ -139,7 +153,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   private String getSliceAuthorityCert() throws Exception {
     CertificateAuthority ca =CertificateAuthority.getInstance();
     X509Certificate sliceAuthorityCert = ca.getSliceAuthorityCertificate();
-    return ca.getCertificateBodyEncoded(sliceAuthorityCert);
+    return ca.getCertficateEncoded(sliceAuthorityCert);
     
   }
 
@@ -194,5 +208,16 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 	  
 	}
 	
-	
+	private static class SFIFix{
+	  
+	  public static String removeNewlinesFromCertificateInsideSignature(String certificateString){
+	    String begin = "<X509Certificate>";
+	    String end = "</X509Certificate>";
+	    certificateString = certificateString.replaceAll(begin+"\\n", begin);
+	    certificateString = certificateString.replaceAll("\\n" +end, end);
+	    return certificateString;
+
+	    
+	  }
+	}
 }

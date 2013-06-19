@@ -36,5 +36,10 @@
 			<artifactId>common</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-urn</artifactId>
+			<version>0.7.19</version>
+		</dependency>
 	</dependencies>
 </project>

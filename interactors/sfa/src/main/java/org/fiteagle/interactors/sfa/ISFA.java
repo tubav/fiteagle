@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
-import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.delete.DeleteOptions;
 import org.fiteagle.interactors.sfa.delete.DeleteResult;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeResult;
-import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
@@ -38,7 +37,7 @@ public interface ISFA {
 	GetVersionResult getVersion() throws IOException;
 	ListResourcesResult listResources(ListCredentials credentials, ListResourceOptions listResourceOptions) throws IOException;
 
-	String resolve(Object o1, Object o2);
+	List<Map<String,Object>> resolve(String o1, String o2);
 	String getSelfCredential(String certificate, String xrn, String type);
 //	String getCredential(SignedCredential credential, String xrn, String type);
 	String getCredential(String credential, String xrn, String type);

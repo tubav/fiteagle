@@ -123,17 +123,30 @@ public class CertificateAuthority {
   
   public String getCertficateEncoded(X509Certificate cert) throws Exception {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write("-----BEGIN CERTIFICATE-----\n".getBytes());
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.DO_BREAK_LINES));
-    bout.write("\n-----END CERTIFICATE-----\n".getBytes());
+    
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
+    String prefix = "-----BEGIN CERTIFICATE-----\n";
+    String suffix = "\n-----END CERTIFICATE-----\n";
     String encodedCert = new String(bout.toByteArray());
     bout.close();
-    return encodedCert;
+    int i = 0;
+    String returnCert="";
+    while(i< encodedCert.length()){
+      int max = i +64;
+      if(max < encodedCert.length()){
+        returnCert =returnCert +  encodedCert.subSequence(i, max)+"\n";
+      }else{
+        returnCert = returnCert + encodedCert.subSequence(i, encodedCert.length());
+      }
+      i+=64;
+    }
+    returnCert = prefix + returnCert + suffix;
+    return returnCert;
   }
   
   public String getCertificateBodyEncoded(X509Certificate cert) throws Exception {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.DO_BREAK_LINES));
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
     String encodedCert = new String(bout.toByteArray());
     bout.close();
     return encodedCert;

@@ -62,9 +62,6 @@ public SFARegistryHandler(){
     setInteractor(interactor);
 
     
-    ArrayList<String> argumentsList = new ArrayList<String>();
-    
-    
     Method calledMethod = getMethod(methodName, arguments);
     Object response = calledMethod.invoke(this.interactor, arguments.toArray());
     if(response instanceof AMResult)

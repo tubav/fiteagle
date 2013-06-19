@@ -14,7 +14,6 @@
 		<module>interactors</module>
 		<module>delivery</module>
 		<module>core</module>
-		<module>persistence</module>
 	</modules>
 
 	<description>
