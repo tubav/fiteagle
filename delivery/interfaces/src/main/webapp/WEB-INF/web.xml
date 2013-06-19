@@ -57,16 +57,12 @@
            <load-on-startup>1</load-on-startup>         
   </servlet>
   <servlet-mapping>
-<<<<<<< HEAD
+
      <servlet-name>Jersey REST Servlet</servlet-name>
      <url-pattern>/api/v1/*</url-pattern>
   </servlet-mapping>  
-=======
-     <servlet-name>Jersey REST UserManagement-Servlet</servlet-name>
-     <url-pattern>/api/v1/user/*</url-pattern>
-  </servlet-mapping>   
+
   
->>>>>>> branch 'master' of ssh://git@github.com/tubav/fiteagle.git
   <servlet>
     <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>

@@ -90,7 +90,7 @@ public class UserDBTest {
 	@Test
 	public void testUpdateWithFewArguments(){
 	  database.add(USER1);
-	  database.update(new User("mnikolaus", "martin", null, null, null, null, null));
+	  database.update(new User("mnikolaus", "martin", null, null, null, null, null,null,null));
 	  assertEquals("martin", database.get(USER1.getUsername()).getFirstName());
 	  assertEquals("nikolaus", database.get(USER1.getUsername()).getLastName());
 	}

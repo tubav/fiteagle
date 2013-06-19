@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import net.iharder.Base64;
@@ -18,6 +20,8 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private Date created;
+	private Date last_modified;
 	@JsonIgnore
 	private String passwordHash;
 	@JsonIgnore
@@ -26,13 +30,15 @@ public class User {
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
 	
-	public User(String username, String firstName, String lastName, String email, String passwordHash, String passwordSalt, List<String> publicKeys){
+	public User(String username, String firstName, String lastName, String email, String passwordHash, String passwordSalt, Date created, Date lastModified, List<String> publicKeys){
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.passwordHash = passwordHash;
 		this.passwordSalt =  passwordSalt;
+		this.created =created;
+		this.last_modified = lastModified;
 		if(publicKeys == null){
 		  this.publicKeys = new ArrayList<>();
 		}
@@ -46,7 +52,8 @@ public class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;    
-  
+    this.created =Calendar.getInstance().getTime();
+    this.last_modified = created;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
@@ -59,7 +66,8 @@ public class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;    
-  
+    this.created =Calendar.getInstance().getTime();
+    this.last_modified = created;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
@@ -222,4 +230,18 @@ public class User {
   public void setPasswordSalt(String passwordSalt) {
     this.passwordSalt = passwordSalt;
   }
+
+  public Date getLast_modified() {
+    return last_modified;
+  }
+
+  public void setLast_modified(Date last_modified) {
+    this.last_modified = last_modified;
+  }
+
+  public Date getCreated() {
+    return created;
+  }
+  
+  
 }

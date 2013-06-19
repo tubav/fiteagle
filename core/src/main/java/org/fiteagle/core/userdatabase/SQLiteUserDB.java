@@ -1,10 +1,12 @@
 package org.fiteagle.core.userdatabase;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.fiteagle.core.persistence.SQLiteDatabase;
@@ -22,7 +24,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  super();
 	  try{
 	   
-  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt,created, lastModified , PRIMARY KEY (username))");
   		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
   		
 	  } catch(SQLException e){
@@ -46,13 +48,16 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	private void addUserToDatabase(User u) throws SQLException {
 	  
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?)");
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)");
 		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getFirstName());
 		ps.setString(3, u.getLastName());
 		ps.setString(4, u.getEmail());
 		ps.setString(5, u.getPasswordHash());
 		ps.setString(6, u.getPasswordSalt());
+		ps.setDate(7, new java.sql.Date(u.getCreated().getTime()));
+		ps.setDate(8, new java.sql.Date(u.getLast_modified().getTime()));
+		
 		try{
 			ps.execute();
 		} catch(SQLException e){
@@ -127,13 +132,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=? WHERE username=?");
+		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=?, last_modified=? WHERE username=?");
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
 		ps.setString(3, u.getEmail());
 		ps.setString(4, u.getPasswordHash());
 		ps.setString(5, u.getPasswordSalt());
-		ps.setString(6, u.getUsername());
+		ps.setDate(6, new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+		ps.setString(7, u.getUsername());
 		if(ps.executeUpdate() == 0){
 			ps.close();
 			throw new RecordNotFoundException();
@@ -173,7 +179,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 	
 	private User getUserFromDatabase(String username) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+		PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt,Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
@@ -192,14 +198,16 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		String email = rs.getString(4);
 		String passwordHash = rs.getString(5);
 		String passwordSalt = rs.getString(6);
-		String key1 = rs.getString(7);
+		Date created = rs.getDate(7);
+		Date lastModified = rs.getDate(8);
+		String key1 = rs.getString(9);
 		if(key1 != null){
 			keys.add(key1);
 		}
 		while(rs.next()){		
 			keys.add(rs.getString(7));
 		}			
-		return new User(username, firstname, lastname, email, passwordHash, passwordSalt, keys);
+		return new User(username, firstname, lastname, email, passwordHash, passwordSalt,created,lastModified, keys);
 	}
 
 	@Override
