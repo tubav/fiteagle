@@ -93,25 +93,7 @@ public class CertificateAuthority {
     return config.getURN_Prefix()+"+"+config.getDomain()+"+user+"+newUser.getUsername();
   }
 
-//  public String getServerURN() throws CertificateParsingException {
-//    X509Certificate caCert = getServerCertificate();
-//    Collection<List<?>> alternativeNames = caCert.getSubjectAlternativeNames();
-//    Iterator<?> iter =  alternativeNames.iterator();
-//    String urn = "";
-//    while(iter.hasNext()){
-//      List<?> altName = (List<?>) iter.next();
-//      if (altName.get(0).equals(Integer.valueOf(6))) {
-//        urn = (String) altName.get(1);
-//      }
-//    }
-//    return urn;
-//  }
-  
-  public void saveCertificate(String name, X509Certificate certificate) throws Exception {
-    FileOutputStream fos = new FileOutputStream(name);
-    fos.write(getCertficateEncoded(certificate).getBytes());
-    fos.close();
-  }
+
   
   public X509Certificate getSliceAuthorityCertificate() {
     try {
@@ -121,67 +103,6 @@ public class CertificateAuthority {
     }
   }
   
-  public String getCertficateEncoded(X509Certificate cert) throws Exception {
-    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
-    String prefix = "-----BEGIN CERTIFICATE-----\n";
-    String suffix = "\n-----END CERTIFICATE-----\n";
-    String encodedCert = new String(bout.toByteArray());
-    bout.close();
-    int i = 0;
-    String returnCert="";
-    while(i< encodedCert.length()){
-      int max = i +64;
-      if(max < encodedCert.length()){
-        returnCert =returnCert +  encodedCert.subSequence(i, max)+"\n";
-      }else{
-        returnCert = returnCert + encodedCert.subSequence(i, encodedCert.length());
-      }
-      i+=64;
-    }
-    returnCert = prefix + returnCert + suffix;
-    return returnCert;
-  }
-  
-  public String getCertificateBodyEncoded(X509Certificate cert) throws Exception {
-    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
-    String encodedCert = new String(bout.toByteArray());
-    bout.close();
-    return encodedCert;
-  }
-  
-  public String getUserCertificateAsString(String certString) {
-    CertificateFactory cf = getCertifcateFactory();
-    
-    X509Certificate userCert = getX509Certificate(cf, certString);
-    
-    User user = getUserFromCert(userCert);
-    String alias = user.getUsername();
-    X509Certificate[] storedCertificate = getStoredCertificate(alias);
-
-    if (storedCertificate == null) {
-      try {
-        
-        keyStoreManagement.storeCertificate(alias, userCert);
-        storedCertificate = new X509Certificate[]{userCert};
-      } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-    
-    try {
-      return getCertificateBodyEncoded(storedCertificate[0]);
-    } catch (Exception e) {
-      throw new EncodeCertificateException();
-    }
-  }
-  
-  private X509Certificate[] getStoredCertificate(String alias) {
-    return keyStoreManagement.getStoredCertificate(alias);
-  }
   
   public X509Certificate buildX509Certificate(String certString){
     CertificateFactory certificateFactory = getCertifcateFactory();

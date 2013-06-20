@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
@@ -135,7 +136,7 @@ public class SFAInteractor_v3 implements ISFA {
       }
       String response="";
       try {
-        response =  getSelfCredential(CertificateAuthority.getInstance().getCertificateBodyEncoded(certificate), urn, "user");
+        response =  getSelfCredential(X509Util.getCertficateEncoded(certificate), urn, "user");
       } catch (Exception e) {
         e.printStackTrace();
         throw new RuntimeException();//TODO: specify this.

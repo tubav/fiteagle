@@ -131,7 +131,10 @@
               <resources>          
                 <resource>
                   <directory>src/main/resources/org/fiteagle/core/certificates</directory>
-                  <includes><include>jetty-ssl.*</include></includes>
+                  <includes>
+                  <include>jetty-ssl.*</include>
+                  <include> resourceCertificateStore</include>
+                  </includes>
                 </resource>
               </resources>              
             </configuration>            

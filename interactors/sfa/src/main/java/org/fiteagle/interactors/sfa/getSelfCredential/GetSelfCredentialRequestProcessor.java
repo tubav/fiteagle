@@ -1,13 +1,18 @@
 package org.fiteagle.interactors.sfa.getSelfCredential;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
+import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -16,7 +21,9 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.SignatureCreator;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
@@ -101,15 +108,33 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
     CertificateAuthority ca = CertificateAuthority.getInstance();
     X509Certificate xCert = ca.buildX509Certificate(cert);
     X509Certificate returnCert = xCert;
-    if(isSelfSigned(xCert))
-      returnCert = ca.createCertificate(xCert);
-    
-    String returnString = ca.getCertficateEncoded(returnCert);
+    if(isSelfSigned(xCert) ){
+      if (!userHasCertificate(xCert)){
+        returnCert = ca.createCertificate(xCert);
+        storeUserCert(returnCert);
+      }
+    }
+    String returnString = X509Util.getCertficateEncoded(returnCert);
     return returnString;
     
   }
 
  
+  private void storeUserCert(X509Certificate returnCert) {
+    KeyStoreManagement keyStoremanagement = KeyStoreManagement.getInstance();
+    try {
+      keyStoremanagement.storeResourceCertificate(returnCert);
+    } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+ 
+
+  private boolean userHasCertificate(X509Certificate xCert) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
   private boolean isSelfSigned(X509Certificate xCert) {
     return xCert.getIssuerX500Principal().equals(xCert.getSubjectX500Principal());
@@ -153,7 +178,7 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   private String getSliceAuthorityCert() throws Exception {
     CertificateAuthority ca =CertificateAuthority.getInstance();
     X509Certificate sliceAuthorityCert = ca.getSliceAuthorityCertificate();
-    return ca.getCertficateEncoded(sliceAuthorityCert);
+    return X509Util.getCertficateEncoded(sliceAuthorityCert);
     
   }
 

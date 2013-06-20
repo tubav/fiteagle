@@ -13,15 +13,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
 import net.iharder.Base64;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.KeyManagement;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
@@ -108,62 +106,15 @@ public class UserDBManager {
   public User getUserFromCert(X509Certificate userCert) {
     try {
       String username = "";
-      Collection<List<?>> alternativeNames = userCert.getSubjectAlternativeNames();
-      if (alternativeNames == null) {
-        X500Principal prince = userCert.getSubjectX500Principal();
-        username = getCN(prince);
-      } else {
-        Iterator<List<?>> it = alternativeNames.iterator();
-        while (it.hasNext()) {
-          List<?> altName = it.next();
-          if (altName.get(0).equals(Integer.valueOf(6))) {
-            username = (String) altName.get(1);
-            username = getUIDFromURN(username);
-          }
-        }
-      }
+      username = X509Util.getUserNameFromX509Certificate(userCert);
       
       User identifiedUser = get(username);
       return identifiedUser;
     } catch (CertificateParsingException e1) {
-      throw new NonParsableNamingFormat();
+      throw new RuntimeException(e1);
     }
   }
-  
-  private String getUIDFromURN(String urn) {
-    String userFromURN = urn.substring(urn.lastIndexOf("+") + 1);
-    return userFromURN;
-  }
-  
-  private String getCN(X500Principal prince) {
-    String username = "";
-    String uuid = prince.getName();
-    LdapName ldapDN = getLdapName(uuid);
-    
-    for (Rdn rdn : ldapDN.getRdns()) {
-      if (rdn.getType().equals("CN")) {
-        String fullCN =  (String)rdn.getValue();
-        if(fullCN.contains(".")){
-          username = fullCN.split("\\.")[fullCN.split("\\.").length-1];
-        }else{
-          username = fullCN;
-        }
-        return username;
-      }
-    }
-    throw new NonParsableNamingFormat();
-  }
-  
-  private LdapName getLdapName(String uuid) {
-    try {
-      LdapName ldapDN = new LdapName(uuid);
-      return ldapDN;
-    } catch (InvalidNameException e) {
-      
-      throw new NonParsableNamingFormat();
-    }
-    
-  }
+
     
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
       NoSuchAlgorithmException {
@@ -177,31 +128,12 @@ public class UserDBManager {
     User user = get(username);
     return verifyPassword(password, user.getPasswordHash(), user.getPasswordSalt());
   }
-  
-//  public String getOwnerURN(User u) {
-//    
-//    String[] split = u.getUsername().split("\\.");
-//    String user = split[split.length - 1];
-//    String returnString = "urn:publicid:IDN";
-//    String domain = "";
-//    for (int i = 0; i < split.length - 1; i++) {
-//      if (i > 0) {
-//        domain += ":" + split[i];
-//      } else {
-//        domain += split[i];
-//      }
-//    }
-//    
-//    String plus = domain.length() > 0 ? "+" : "";
-//    returnString = returnString + plus + domain + "+user+" + user;
-//    return returnString;
-//  }
-//  
+
   private String createUserCertificate(String username, PublicKey publicKey) throws Exception {
     User u = get(username);
     CertificateAuthority ca = CertificateAuthority.getInstance();
     X509Certificate cert = ca.createCertificate(u, publicKey);
-    return ca.getCertficateEncoded(cert);
+    return X509Util.getCertficateEncoded(cert);
   }
     
   private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {
@@ -212,11 +144,7 @@ public class UserDBManager {
     return digest.digest(password.getBytes());
   }
   
-  private class NonParsableNamingFormat extends RuntimeException {
-    
-    private static final long serialVersionUID = -3819932831236493248L;
-    
-  }
+ 
   
   public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
     String returnString = "";

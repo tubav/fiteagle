@@ -1,6 +1,7 @@
 package org.fiteagle.core.aaa;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -28,6 +29,7 @@ import org.bouncycastle.asn1.x500.style.BCStrictStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.openssl.PEMWriter;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.slf4j.Logger;
@@ -47,8 +49,13 @@ private final String DEFAULT_TRUSTSTORE_PASSWORD =  DEFAULT_KEYSTORE_PASSWORD;
 private final String DEFAULT_SERVER_ALIAS ="root";
 private final String DEFAULT_SA_ALIAS="fiteagleSA";
 private final String DEFAULT_SA_PASS="changeit";
-
+private final String DEFAULT_RESOURCE_STORE_LOCATION = System.getProperty("user.home")+System.getProperty("file.separator")+"fiteagle"+System.getProperty("file.separator")+"resourceCertificateStore";
+private final String DEFAULT_RESOURCE_STORE_PASS = "changeit";
 private static KeyStoreManagement keyStoreManagement;
+
+private enum StoreType{
+  KEYSTORE,TRUSTSTORE,RESOURCESTORE;
+}
 public static KeyStoreManagement getInstance(){
   if(keyStoreManagement == null)
     keyStoreManagement = new KeyStoreManagement();
@@ -87,38 +94,63 @@ private KeyStoreManagement(){
   if(preferences.get("sa_prkey_pass")==null)
     preferences.put("sa_prkey_pass", DEFAULT_SA_PASS);
   
+  if(preferences.get("resourceStore")==null)
+    preferences.put("resourceStore", DEFAULT_RESOURCE_STORE_LOCATION);
+  
+  if(preferences.get("resourceStore_pass")==null)
+    preferences.put("resourceStore_pass", DEFAULT_RESOURCE_STORE_PASS);
+  
 }
-  
+ 
 
-protected KeyStore loadKeyStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{
-   
-    KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-    FileInputStream fis = new FileInputStream(getKeyStorePath());
-    char[] pass = getKeyStorePassword();
-    ks.load(fis, pass);
-    return ks;
-  }
-  
-protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException{
-  KeyStore truststore = KeyStore.getInstance(KeyStore.getDefaultType());
-  FileInputStream fis = new FileInputStream(getTrustStorePath());
-  char[] pass = getTrustStorePassword();
-  truststore.load(fis, pass);
-  return truststore;
+protected KeyStore loadKeyStore(StoreType type) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{
+  KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+  FileInputStream fis = new FileInputStream(getStorePath(type));
+  char[] pass = getStorePass(type);
+  ks.load(fis, pass);
+  return ks;
 }
 
-
+  private char[] getStorePass(StoreType type) {
+    switch(type) {
+      case KEYSTORE:
+        return getKeyStorePassword();
+  
+      case TRUSTSTORE:
+        return getTrustStorePassword();
+        
+      case RESOURCESTORE:
+        return getResourceStorePass();
+      
+      default:
+        return getTrustStorePassword();
+      }
+}
+  private String getStorePath(StoreType type) {
+    switch(type) {
+    case KEYSTORE:
+      return getKeyStorePath();
+    case TRUSTSTORE:
+      return getTrustStorePath();
+      
+    case RESOURCESTORE:
+      return getResourceStorePath();
+    
+    default:
+      return getTrustStorePath();
+    }
+ }
   private char[] getTrustStorePassword() {
     return preferences.get("truststore_pass").toCharArray();
 }
   private String getTrustStorePath() {
     return preferences.get("truststore");
 }
-  protected void storeCertificate(String alias, X509Certificate cert) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-    KeyStore ks = loadTrustStore();
+  protected void storeCertificate(String alias, X509Certificate cert, StoreType type) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+    KeyStore ks = loadKeyStore(type);
     ks.setCertificateEntry(alias, cert);
-    FileOutputStream fos = new FileOutputStream(getTrustStorePath());
-    char[] pass = getTrustStorePassword();
+    FileOutputStream fos = new FileOutputStream(getStorePath(type));
+    char[] pass = getStorePass(type);
     ks.store(fos, pass);
     
   }
@@ -133,7 +165,6 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
     return preferences.get("keystore");
   }
 
-  //TODO !!!!!!!! public ???? how to make this at least a little bit more secure ???
   public char[] getPrivateKeyPassword(){
     return preferences.get("prk_pass").toCharArray();
   }
@@ -142,7 +173,7 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
   }
   public PrivateKey getCAPrivateKey() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableEntryException {
     PrivateKey privateKey = null;
-    KeyStore  ks = loadTrustStore();
+    KeyStore  ks = loadKeyStore(StoreType.TRUSTSTORE);
     PasswordProtection protection = new PasswordProtection(getCAPrivateKeyPassword());
     Entry keyStoreEntry = ks.getEntry(getCAAlias(), protection);
     if(keyStoreEntry instanceof PrivateKeyEntry){
@@ -159,14 +190,14 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
     return preferences.get("ca_prkey_pass").toCharArray();
   }
   protected X509Certificate getCACert() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException  {
-    KeyStore ks = loadTrustStore();
+    KeyStore ks = loadKeyStore(StoreType.TRUSTSTORE);
     X509Certificate caCert = (X509Certificate) ks.getCertificate(getCAAlias());
     return caCert;
   }
   
   protected List<X509Certificate> getTrustedCerts() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
    
-    KeyStore ks = loadTrustStore();
+    KeyStore ks = loadKeyStore(StoreType.TRUSTSTORE);
     List<X509Certificate> certificateList = new LinkedList<>();
     
     for(Enumeration<String> aliases=  ks.aliases(); aliases.hasMoreElements();){
@@ -214,7 +245,7 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
  
   public X509Certificate[] getStoredCertificate(String alias) {
     try {
-      KeyStore ks = loadKeyStore();
+      KeyStore ks = loadKeyStore(StoreType.KEYSTORE);
       Certificate[] certChain =  ks.getCertificateChain(alias);
       X509Certificate[] returnChain = new X509Certificate[certChain.length];
       for(int i = 0; i<certChain.length; i++){
@@ -226,18 +257,10 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
     }
   }
  
-  
-  public class PrivateKeyException extends RuntimeException {
-    private static final long serialVersionUID = 2842186524464171483L;
-    
-  }
-  public class CertificateNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = -3514307715237455008L;
-    
-  }
+
   public PrivateKey getServerPrivateKey() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableEntryException {
     PrivateKey privateKey = null;
-    KeyStore  ks = loadKeyStore();
+    KeyStore  ks = loadKeyStore(StoreType.KEYSTORE);
     PasswordProtection protection = new PasswordProtection(getPrivateKeyPassword());
     Entry keyStoreEntry = ks.getEntry(getServerAlias(), protection);
     if(keyStoreEntry instanceof PrivateKeyEntry){
@@ -254,12 +277,12 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
   }
   public X509Certificate getSliceAuthorityCert() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
       String sa_alias = preferences.get("SAAlias");
-      X509Certificate cert = (X509Certificate) loadTrustStore().getCertificate(sa_alias);
+      X509Certificate cert = (X509Certificate) loadKeyStore(StoreType.TRUSTSTORE).getCertificate(sa_alias);
       return cert;
   }
   public Key getSAPrivateKey() throws NoSuchAlgorithmException, CertificateException, KeyStoreException, IOException, UnrecoverableEntryException {
     PrivateKey privateKey = null;
-    KeyStore  ks = loadTrustStore();
+    KeyStore  ks = loadKeyStore(StoreType.TRUSTSTORE);
     PasswordProtection protection = new PasswordProtection(getSA_PrivateKeyPassword());
     Entry keyStoreEntry = ks.getEntry(getSAAlias(), protection);
     if(keyStoreEntry instanceof PrivateKeyEntry){
@@ -277,6 +300,41 @@ protected KeyStore loadTrustStore() throws NoSuchAlgorithmException, Certificate
   private char[] getSA_PrivateKeyPassword() {
     return preferences.get("sa_prkey_pass").toCharArray();
   }
+  public X509Certificate getResourceCertificate(String alias) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+    KeyStore userCertStore = loadKeyStore(StoreType.RESOURCESTORE);
+    if(userCertStore.containsAlias(alias)){
+      return (X509Certificate) userCertStore.getCertificate(alias);
+    }
+    throw new CertificateNotFoundException();
+  }
+  private char[] getResourceStorePass() {
+    return preferences.get("resourceStore_pass").toCharArray();
+  }
+  private String getResourceStorePath() {
+    return preferences.get("resourceStore");
+  }
+  public void storeResourceCertificate(X509Certificate cert) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+    String alias  = X509Util.getURN(cert);
+    storeCertificate(alias, cert, StoreType.RESOURCESTORE);
+  }
   
+  public class PrivateKeyException extends RuntimeException {
+    private static final long serialVersionUID = 2842186524464171483L;
+    
+  }
+  public class CertificateNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = -3514307715237455008L;
+    
+  }
+  public List<X509Certificate> getResourceCertificates(List<String> urns) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+   KeyStore ks = loadKeyStore(StoreType.RESOURCESTORE);
+   List<X509Certificate> certificates = new LinkedList<>();
+   for(String urn: urns){
+     if(ks.containsAlias(urn))
+       certificates.add((X509Certificate) ks.getCertificate(urn));
+   }
+   
+   return certificates;
+  }
   
 }
