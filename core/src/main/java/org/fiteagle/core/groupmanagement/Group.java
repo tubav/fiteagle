@@ -6,16 +6,21 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.adapter.common.ResourceAdapter;
 
 public class Group {
   
   private String groupId;
   private String groupOwnerId;
+  @JsonIgnore
   private List<ResourceAdapter> resources;
+  @JsonIgnore
   private List<String> authorizedUsers;
 
-  
+  public Group(){
+    
+  }
   public Group(String groupId, String groupOwnerId) {
     this.groupId = groupId;
     this.groupOwnerId = groupOwnerId;

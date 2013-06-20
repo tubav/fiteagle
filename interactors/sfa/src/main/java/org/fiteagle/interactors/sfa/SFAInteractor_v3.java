@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
@@ -34,6 +35,8 @@ import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
+import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
+import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
@@ -86,9 +89,10 @@ public class SFAInteractor_v3 implements ISFA {
 	}
 
   @Override
-  public String resolve(Object o1, Object o2) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Map<String, Object>> resolve(String urn, String credential) {
+    SFARequestProcessorFactory sfaRequestProcessorFactory = new SFARequestProcessorFactory();
+    ResolveRequestProcessor process =  sfaRequestProcessorFactory.createRequestProcessor(SFAv3MethodsEnum.RESOLVE);
+    return process.resolve(urn,credential);
   }
 
   @Override
@@ -196,6 +200,13 @@ public class SFAInteractor_v3 implements ISFA {
 
   public void setCertificate(X509Certificate certificate) {
     this.certificate = certificate;
+  }
+
+  @Override
+  public HashMap<String, Object> register(HashMap<String, Object> registerParameters) {
+    SFARequestProcessorFactory sfaRequestProcessorFactory = new SFARequestProcessorFactory();
+    RegisterRequestProcessor registerRequestProcessor = sfaRequestProcessorFactory.createRequestProcessor(SFAv3MethodsEnum.REGISTER);
+    return registerRequestProcessor.register(registerParameters);
   }
 
 

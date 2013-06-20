@@ -1,23 +1,19 @@
 package org.fiteagle.core;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.common.SSHAccessable;
-import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.groupmanagement.Group;
-import org.fiteagle.core.groupmanagement.GroupDatabase;
+import org.fiteagle.core.groupmanagement.GroupPersistable;
 import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
 
 public class ResourceAdapterManager {
@@ -25,10 +21,12 @@ public class ResourceAdapterManager {
   private static final String packageName = "org.fiteagle.adapter";
 
 private static ResourceAdapterManager manager=null;
-  
+
+
   private ResourceAdapterDatabase adapterInstancesDatabase;
   private ResourceAdapterDatabase adapterDatabase;
-  private GroupDatabase groups;
+  private GroupPersistable groups;
+
   
   private ResourceAdapterManager() {
     if (manager!=null) return;

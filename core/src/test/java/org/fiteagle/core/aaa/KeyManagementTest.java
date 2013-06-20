@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.junit.Before;
 import org.junit.Test;

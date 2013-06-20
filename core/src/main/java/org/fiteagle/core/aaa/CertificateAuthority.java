@@ -42,7 +42,7 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 
 public class CertificateAuthority {
@@ -123,17 +123,30 @@ public class CertificateAuthority {
   
   public String getCertficateEncoded(X509Certificate cert) throws Exception {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write("-----BEGIN CERTIFICATE-----\n".getBytes());
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.DO_BREAK_LINES));
-    bout.write("\n-----END CERTIFICATE-----\n".getBytes());
+    
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
+    String prefix = "-----BEGIN CERTIFICATE-----\n";
+    String suffix = "\n-----END CERTIFICATE-----\n";
     String encodedCert = new String(bout.toByteArray());
     bout.close();
-    return encodedCert;
+    int i = 0;
+    String returnCert="";
+    while(i< encodedCert.length()){
+      int max = i +64;
+      if(max < encodedCert.length()){
+        returnCert =returnCert +  encodedCert.subSequence(i, max)+"\n";
+      }else{
+        returnCert = returnCert + encodedCert.subSequence(i, encodedCert.length());
+      }
+      i+=64;
+    }
+    returnCert = prefix + returnCert + suffix;
+    return returnCert;
   }
   
   public String getCertificateBodyEncoded(X509Certificate cert) throws Exception {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.DO_BREAK_LINES));
+    bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
     String encodedCert = new String(bout.toByteArray());
     bout.close();
     return encodedCert;
@@ -168,6 +181,11 @@ public class CertificateAuthority {
   
   private X509Certificate[] getStoredCertificate(String alias) {
     return keyStoreManagement.getStoredCertificate(alias);
+  }
+  
+  public X509Certificate buildX509Certificate(String certString){
+    CertificateFactory certificateFactory = getCertifcateFactory();
+    return getX509Certificate(certificateFactory, certString);
   }
   
   private X509Certificate getX509Certificate(CertificateFactory cf, String certString) {
@@ -221,6 +239,12 @@ public class CertificateAuthority {
   
   public class CertificateNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
+  }
+
+  public X509Certificate createCertificate(X509Certificate xCert) throws Exception {
+    User user = getUserFromCert(xCert);
+    PublicKey pubkey = xCert.getPublicKey();
+    return createCertificate(user, pubkey);
   }
 
   

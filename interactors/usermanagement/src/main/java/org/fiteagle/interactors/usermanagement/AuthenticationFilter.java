@@ -14,8 +14,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.xml.bind.DatatypeConverter;
 
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
-public interface UserDB {
+public interface UserPersistable {
 
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException;
 	

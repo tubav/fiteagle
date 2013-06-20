@@ -157,11 +157,18 @@
     </dependency>
 
     <dependency>
+        <groupId>org.fiteagle.interactors</groupId>
+        <artifactId>groupmanagement</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+
+    <dependency>
       <groupId>org.fiteagle.interactors</groupId>
       <artifactId>api</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.fiteagle.interactors</groupId>
       <artifactId>certificates</artifactId>

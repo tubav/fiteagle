@@ -23,10 +23,7 @@ public class CertificateAuthorityTest {
     dummyUser = new User("dummy", "dummy", "dummy", "dummy@dummy.org", "blub");
   }
   
-  @After
-  public void afterTest(){
-    um.delete(dummyUser);
-  }
+ 
  
   @Test
   public void testCreateCertificateForDummyUser() throws Exception {

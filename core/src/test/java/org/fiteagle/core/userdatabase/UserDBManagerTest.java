@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 
-import org.fiteagle.core.userdatabase.UserDB.DatabaseException;
-import org.fiteagle.core.userdatabase.UserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.junit.Before;
 import org.junit.Test;
 

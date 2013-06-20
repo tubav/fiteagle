@@ -2,7 +2,7 @@ package org.fiteagle.core.groupmanagement;
 
 import java.util.List;
 
-public interface GroupDatabase {
+public interface GroupPersistable {
   
   public void addGroup(Group group);
   

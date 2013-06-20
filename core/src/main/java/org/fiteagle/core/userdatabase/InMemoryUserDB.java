@@ -2,7 +2,7 @@ package org.fiteagle.core.userdatabase;
 
 import java.util.HashMap;
 
-public class InMemoryUserDB implements UserDB {
+public class InMemoryUserDB implements UserPersistable {
 
 	private HashMap<String, User> users;
 

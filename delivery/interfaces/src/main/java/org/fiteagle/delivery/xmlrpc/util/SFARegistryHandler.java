@@ -32,10 +32,6 @@ public SFARegistryHandler(){
 	  SFAInteractor_v3 interactor = new SFAInteractor_v3();
     setInteractor(interactor);
 
-		
-		ArrayList<String> argumentsList = new ArrayList<String>();
-	
-		
 		Method calledMethod = getMethod(methodName,arguments);
 		Object response = calledMethod.invoke(this.interactor, arguments.toArray());
 		return response;
@@ -65,9 +61,6 @@ public SFARegistryHandler(){
     interactor.setCertificate(certificate);
     setInteractor(interactor);
 
-    
-    ArrayList<String> argumentsList = new ArrayList<String>();
-    
     
     Method calledMethod = getMethod(methodName, arguments);
     Object response = calledMethod.invoke(this.interactor, arguments.toArray());

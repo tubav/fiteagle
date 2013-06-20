@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class SQLiteDatabase {
-private static Connection connection;  
+private static Connection connection;
 private  final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
 protected FiteaglePreferences preferences;
 protected static Logger log = LoggerFactory.getLogger(SQLiteDatabase.class); 
@@ -26,22 +26,18 @@ static {
 }
 
 
- public SQLiteDatabase() throws SQLException{
+ public  SQLiteDatabase() throws SQLException{
    preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);
-   connection  = createConnection();
+  
  }
  
- 
-  private Connection createConnection() throws SQLException {
-    if(connection!=null){
-      connection.close();
-    }
+  
+  protected Connection getConnection() throws SQLException{
+    if(connection != null)
+        connection.close();
+    
     connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
     connection.setAutoCommit(false);
-    return connection;
-  }
-  
-  protected Connection getConnection(){
     return connection;
   }
   
@@ -61,9 +57,11 @@ static {
   }
   
   protected void createTable(String command) throws SQLException{
+    Connection connection = getConnection();
     Statement st = connection.createStatement();
     st.executeUpdate(command);
     st.close();
     connection.commit();
+    connection.close();
   }
 }
