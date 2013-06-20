@@ -163,16 +163,16 @@ public List<ResourceAdapter> getJavaInstances() {
 	return resourceAdapters;
 	
 	for (int i = 0; i < usernames.length; i++) {
-		SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(ips[i], usernames[i], passwords[i], sshKeys[i]);
+		SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(ips[i].trim(), usernames[i].trim(), passwords[i].trim(), sshKeys[i].trim());
 		
 		if(hardwareTypes!=null && i<hardwareTypes.length)
-		sshDeployAdapter.setHardwareType(hardwareTypes[i]);
+		sshDeployAdapter.setHardwareType(hardwareTypes[i].trim());
 		if(countries!=null && i<countries.length)
-		sshDeployAdapter.addProperty("country", countries[i]);
+		sshDeployAdapter.addProperty("country", countries[i].trim());
 		if(latitudes!=null && i<latitudes.length)
-		sshDeployAdapter.addProperty("latitude", latitudes[i]);
+		sshDeployAdapter.addProperty("latitude", latitudes[i].trim());
 		if(longitudes!=null && i<longitudes.length)
-		sshDeployAdapter.addProperty("longitude", longitudes[i]);
+		sshDeployAdapter.addProperty("longitude", longitudes[i].trim());
 		
 		sshDeployAdapter.setExclusive(true);
 		resourceAdapters.add(sshDeployAdapter);
