@@ -178,6 +178,10 @@ public class User {
 			this.publicKeys.add(publicKey);
 		}
 	}
+	
+	public void deletePublicKey(String publicKey){    
+    this.publicKeys.remove(publicKey);
+  }
 
 	@Override
 	public boolean equals(Object obj) {

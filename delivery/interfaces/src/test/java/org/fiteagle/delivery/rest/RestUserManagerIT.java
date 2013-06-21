@@ -12,7 +12,7 @@ import java.io.IOException;
 import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.delivery.rest.fiteagle.AuthenticationFilter;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,14 +33,6 @@ public class RestUserManagerIT {
     RestAssured.baseURI = "https://localhost";
     RestAssured.port = 8443;
     RestAssured.basePath = "/api/v1/user";    
-  }
-  
-  @Before
-  public void deleteUsers(){
-    given().auth().preemptive().basic("mnikolaus", "mitja").and()
-      .when().delete("mnikolaus");
-    given().auth().preemptive().basic("mnikolaus", "pass").and()
-      .when().delete("mnikolaus");
   }
   
   @Test
@@ -114,6 +106,14 @@ public class RestUserManagerIT {
   private void DeleteUser1() {
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
       .expect().statusCode(200)
+      .when().delete("mnikolaus");
+  }
+  
+  @After
+  public void deleteUsers(){
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+      .when().delete("mnikolaus");
+    given().auth().preemptive().basic("mnikolaus", "pass").and()
       .when().delete("mnikolaus");
   }
   

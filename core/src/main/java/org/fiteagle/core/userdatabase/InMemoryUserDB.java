@@ -72,7 +72,19 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 	
 	@Override
+	public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+	  if(key == null || key.length() == 0){
+      throw new InValidAttributeException();
+    }
+	  User u;
+    if((u=users.get(username)) == null){
+      throw new RecordNotFoundException();
+    }
+    u.deletePublicKey(key);
+	}
+	
+	@Override
 	public void deleteAllEntries(){
 		users = new HashMap<String, User>();
-	}
+	} 
 }

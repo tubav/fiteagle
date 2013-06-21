@@ -4,13 +4,14 @@ public interface UserPersistable {
 
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException;
 	
-	public void delete(String UID) throws DatabaseException;
+	public void delete(String username) throws DatabaseException;
 	public void delete(User u) throws DatabaseException;
 	
 	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException; 
-	public void addKey(String UID, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
+	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
+	public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
 	
-	public User get(String UID) throws RecordNotFoundException, DatabaseException;
+	public User get(String username) throws RecordNotFoundException, DatabaseException;
 	public User get(User u) throws RecordNotFoundException, DatabaseException;
 	
 	public int getNumberOfUsers() throws DatabaseException;
