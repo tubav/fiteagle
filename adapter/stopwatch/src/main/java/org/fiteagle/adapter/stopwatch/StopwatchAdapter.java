@@ -59,10 +59,10 @@ public class StopwatchAdapter extends ResourceAdapter {
 	@Override
 	public List<ResourceAdapter> getJavaInstances() {
 		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
-	    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
-	    dummyResourceAdapter.setExclusive(false);
-	    dummyResourceAdapter.setAvailable(true);
-	    resourceAdapters.add(dummyResourceAdapter);
+//	    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
+//	    dummyResourceAdapter.setExclusive(false);
+//	    dummyResourceAdapter.setAvailable(true);
+//	    resourceAdapters.add(dummyResourceAdapter);
 		
 		return resourceAdapters;
 	}
