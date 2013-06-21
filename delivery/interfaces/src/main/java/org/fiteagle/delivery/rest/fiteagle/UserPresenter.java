@@ -1,4 +1,4 @@
-package org.fiteagle.interactors.usermanagement;
+package org.fiteagle.delivery.rest.fiteagle;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -20,24 +20,24 @@ import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
-import org.fiteagle.core.userdatabase.UserDBManager;
+import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/user")
-public class RestUserManager implements RestUserManagement {
-  private static Logger log = LoggerFactory.getLogger(RestUserManager.class);
-  private static UserDBManager manager;
-  static {
-    try {
-      manager = UserDBManager.getInstance();
-    } catch (DatabaseException e) {
-      log.error(e.getMessage());
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    }
+import com.google.inject.Inject;
+
+@Path("v1/user")
+public class UserPresenter{
+  
+  private static Logger log = LoggerFactory.getLogger(UserPresenter.class);
+  
+  private final UserManagerBoundary manager;
+  
+  @Inject
+  public UserPresenter(final UserManagerBoundary manager){
+    this.manager = manager;
   }
-    
-  @Override
+  
   @GET
   @Path("{username}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -54,7 +54,6 @@ public class RestUserManager implements RestUserManagement {
     return user;
   }
   
-  @Override
   @PUT
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -71,7 +70,6 @@ public class RestUserManager implements RestUserManagement {
     return Response.status(201).build();
   }
 
-  @Override
   @POST
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -102,7 +100,6 @@ public class RestUserManager implements RestUserManagement {
     return user;
   }
   
-  @Override
   @POST
   @Path("{username}/pubkey/")
   @Consumes("text/plain")
@@ -120,7 +117,6 @@ public class RestUserManager implements RestUserManagement {
     return Response.status(200).build();
   }
   
-  @Override
   @DELETE
   @Path("{username}")
   public Response deleteUser(@PathParam("username") String username) {
@@ -133,7 +129,6 @@ public class RestUserManager implements RestUserManagement {
     return Response.status(200).build();
   }
   
-  @Override
   @POST
   @Path("{username}/certificate")
   @Consumes("text/plain")
@@ -149,7 +144,6 @@ public class RestUserManager implements RestUserManagement {
     }    
   }
   
-  @Override
   @POST
   @Path("{username}/certificate")
   public String getUserCertificate(@PathParam("username") String uid, String publicKeyEncoded) {

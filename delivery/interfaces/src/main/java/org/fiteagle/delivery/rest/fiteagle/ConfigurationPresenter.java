@@ -7,12 +7,15 @@ import javax.ws.rs.core.MediaType;
 
 import org.fiteagle.interactors.api.ConfigurationManagerBoundary;
 
-@Path("/config")
+import com.google.inject.Inject;
+
+@Path("v1/config")
 public class ConfigurationPresenter {
   
   private final ConfigurationManagerBoundary interactor;
   
-  public ConfigurationPresenter(ConfigurationManagerBoundary interactor) {
+  @Inject
+  public ConfigurationPresenter(final ConfigurationManagerBoundary interactor) {
     this.interactor = interactor;
   }
   

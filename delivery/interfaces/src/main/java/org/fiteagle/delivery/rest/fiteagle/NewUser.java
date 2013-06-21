@@ -1,4 +1,4 @@
-package org.fiteagle.interactors.usermanagement;
+package org.fiteagle.delivery.rest.fiteagle;
 
 import java.util.List;
 
