@@ -152,7 +152,7 @@ public class RegisterRequestProcessorTest {
     String urn = proc.getUrn(hashMap);
   }
   
-  @Ignore
+
   @Test
   public void getAndTestUrn(){
     String urn = proc.getUrn(hashMap);
