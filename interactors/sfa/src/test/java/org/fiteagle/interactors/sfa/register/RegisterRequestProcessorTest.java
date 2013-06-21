@@ -153,6 +153,7 @@ public class RegisterRequestProcessorTest {
   }
   
 
+  @Ignore
   @Test
   public void getAndTestUrn(){
     String urn = proc.getUrn(hashMap);
