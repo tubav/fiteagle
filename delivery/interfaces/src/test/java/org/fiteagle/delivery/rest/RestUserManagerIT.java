@@ -14,7 +14,6 @@ import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.delivery.rest.fiteagle.AuthenticationFilter;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RestUserManagerIT {
@@ -45,14 +44,12 @@ public class RestUserManagerIT {
   }
   
   @Test
-  @Ignore
   public void testPutAndGet() {
     PutUser1();
     GetUser1();   
   }
   
   @Test
-  @Ignore
   public void testPost() {
     PutUser1();
     PostUser2();
@@ -60,7 +57,6 @@ public class RestUserManagerIT {
   }
   
   @Test
-  @Ignore
   public void testDelete() {
     PutUser1();
     DeleteUser1();
@@ -69,7 +65,6 @@ public class RestUserManagerIT {
   }
   
   @Test
-  @Ignore
   public void testAuthorizationFailure(){
     PutUser1();
     given().auth().preemptive().basic("mnikolaus", "wrongpassword").and()
@@ -77,7 +72,6 @@ public class RestUserManagerIT {
   }
   
   @Test
-  @Ignore
   public void testCookieAuthentication() {
     PutUser1();
     
