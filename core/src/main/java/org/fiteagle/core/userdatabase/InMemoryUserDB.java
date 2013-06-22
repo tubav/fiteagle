@@ -76,8 +76,8 @@ public class InMemoryUserDB implements UserPersistable {
 	  if(key == null || key.length() == 0){
       throw new InValidAttributeException();
     }
-	  User u;
-    if((u=users.get(username)) == null){
+	  User u = users.get(username);
+    if(u == null){
       throw new RecordNotFoundException();
     }
     u.deletePublicKey(key);

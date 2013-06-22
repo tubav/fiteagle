@@ -121,7 +121,7 @@ public class AuthenticationFilter implements Filter{
   private boolean authenticateWithCookie(HttpServletRequest request){
     String username = getUsernameFromRequest(request);
     Cookie authCookieFromRequest = getAuthCookieFromRequest(request);
-    Cookie cookieFromStorage = cookies.get(username);
+    Cookie cookieFromStorage = (username == null)? null : cookies.get(username);
     if(authCookieFromRequest != null && cookieFromStorage != null && authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
       return true;
     }
@@ -143,7 +143,12 @@ public class AuthenticationFilter implements Filter{
   private String getUsernameFromRequest(HttpServletRequest req) {
     String path = req.getPathTranslated();
     String[] splitted = path.split("/");
-    return splitted[splitted.length -1];
+    for(int i = 0; i < splitted.length -1; i++){
+      if(splitted[i].equals("user")){
+        return splitted[i+1];
+      }
+    }
+    return null;
   }
   
   private Cookie createNewCookie(String username){

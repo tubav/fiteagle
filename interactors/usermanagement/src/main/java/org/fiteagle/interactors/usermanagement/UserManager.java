@@ -49,6 +49,11 @@ public class UserManager implements UserManagerBoundary{
     manager.addKey(username, key);
   }
 
+  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
+  InValidAttributeException {
+    manager.deleteKey(username, key);
+  }
+  
   @Override
   public User get(String username) throws RecordNotFoundException, DatabaseException {
     return manager.get(username);

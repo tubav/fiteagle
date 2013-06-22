@@ -1,5 +1,7 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
 
 import javax.ws.rs.Consumes;
@@ -111,6 +113,23 @@ public class UserPresenter{
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
+      log.error(e.getMessage());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    return Response.status(200).build();
+  }
+  
+  @DELETE
+  @Path("{username}/pubkey/{pubkey}")
+  public Response deletePublicKey(@PathParam("username") String username, @PathParam("pubkey") String pubkey) {    
+    try {
+      String decodedPublicKey = URLDecoder.decode(pubkey, "UTF-8");
+      manager.deleteKey(username, decodedPublicKey);
+    } catch (InValidAttributeException e){
+      throw new WebApplicationException(Response.status(422).build());
+    } catch (RecordNotFoundException e) {
+      throw new WebApplicationException(Response.Status.NOT_FOUND);
+    } catch (UnsupportedEncodingException | DatabaseException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }

@@ -95,6 +95,10 @@ public class UserDBManager {
     database.addKey(username, key);
   }
   
+  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+    database.deleteKey(username, key);
+  }
+  
   public User get(String username) throws RecordNotFoundException, DatabaseException {
     return database.get(username);
   }

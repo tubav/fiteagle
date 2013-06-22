@@ -26,6 +26,9 @@ public interface UserManagerBoundary {
   public abstract void addKey(String username, String key) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException;
   
+  public abstract void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
+      InValidAttributeException;
+  
   public abstract User get(String username) throws RecordNotFoundException, DatabaseException;
   
   public abstract User get(User u) throws RecordNotFoundException, DatabaseException;
