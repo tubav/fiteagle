@@ -25,12 +25,13 @@ public class AuthenticationHandlerTest {
   String unknownUserCertPath = "/org/fiteagle/core/certificates/testCertUnknownUser.pem";
   String wrongPkeyCertPath =   "/org/fiteagle/core/certificates/testCertWrongPKey.pem";
   String signedByFiteagleCertPath = "/org/fiteagle/core/certificates/testCertSignedByFiteagle.pem";
+  String certChainPath = "/org/fiteagle/core/certificates/chain.gid";
   String dummyPublicKey;
   
   @Before
   public void setUp() throws Exception {
    
-    testCertificateArray = loadTestCert(knowUserCertPath);
+    testCertificateArray = loadTestCert(certChainPath);
     authHandler = AuthenticationHandler.getInstance();
     dummyPublicKey = "AAAAB3NzaC1yc2EAAAADAQABAAABAQDFrEGAjMHYsmOeRmBaILZ6IbVW6v5bxYK24o45DTXBW/fxmP8quGiIlGY8Q4g50t5OR+tUTn0G4XMue5ahyyMVwLFhIC5JT2E3g9E1t5QlCOUmFOYzElcOlRUipAFRoRRgY4Te+JdcF+ZTwrHMYGPwPlnTsj8e3i/l1tLeb0nzsADn8oLdnps2XPVFFTF3hTPv7du/w1ewOBfVeWdkm3ugetGs8upq/g4ijxxAcaE+iyuqNxUvq0FzvcMi+Tmr9wGQXRcK50suh2ENLjl+pTLnfJNsBLkV3zgJpAJPm2cP4AkLZhFZqHNdK2Do9wLS9hsNbnogJtNqO6qxziKyP+LH";
   
@@ -43,6 +44,11 @@ public class AuthenticationHandlerTest {
     
     authHandler.authenticateCertificates(testCertificateArray);
     
+  }
+  
+  @Test
+  public void testAuthenticateChain() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, InvalidAlgorithmParameterException, CertPathValidatorException, IOException, SQLException{
+    authHandler.authenticateCertificates(testCertificateArray);
   }
  // @Test(expected = RecordNotFoundException.class)
   public void testAuthWithUnstoredPkeyAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException {
