@@ -16,7 +16,7 @@ private FiteaglePreferences preferences;
   private String DEFAULT_DOMAIN = "localhost";
   private String DEFAULT_AM_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+am";
   private String DEFAULT_SA_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+sa";
-  private String DEFAULT_HOSTNAME = "example.org";
+  private String DEFAULT_HOSTNAME = "localhost";
   private String DEFAULT_AM_URL = "https://localhost/api/sfa/am/v3";
   
 //  private String DEFAULT_TESTBED_DESCRIPTION = "FUSECO Playground. The independent testbed for FUture SEamless COmmunication";

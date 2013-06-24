@@ -14,4 +14,5 @@ public interface CertificateManagerBoundary {
   public abstract String getTrustedCertificate(String commonName) throws KeyStoreException, NoSuchAlgorithmException,
       CertificateException, IOException;
   
+  public abstract String getAllTrustedCertificates() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException;
 }
