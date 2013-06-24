@@ -15,9 +15,9 @@ import org.fiteagle.interactors.api.UserManagerBoundary;
 
 public class UserManager implements UserManagerBoundary{
 
-  private static UserDBManager manager;
+  private  UserDBManager manager;
   
-  static{
+  public UserManager(){
     manager = UserDBManager.getInstance();
   }
   

@@ -34,18 +34,19 @@ public class UserDBManager {
     InMemory, SQLite
   }
   
-  private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
+  private static final String DEFAULT_DATABASE_TYPE = databaseType.SQLite.name();
   private static UserDBManager dbManager = null;
   static Logger log = LoggerFactory.getLogger(UserDBManager.class);
   KeyManagement keyManager = null;
   
   public static UserDBManager getInstance(){
-    if(dbManager == null)
+    if(dbManager == null){
       try {
         dbManager =  new UserDBManager();
       } catch (DatabaseException | SQLException e) {
         log.error(e.getMessage(),e);
       }
+    }
     return dbManager;
   } 
   
@@ -58,8 +59,7 @@ public class UserDBManager {
       database = new SQLiteUserDB();
     } else {
       database = new InMemoryUserDB();
-      addDefaultUser();
-    }
+     }
   }
 
   private void addDefaultUser() {

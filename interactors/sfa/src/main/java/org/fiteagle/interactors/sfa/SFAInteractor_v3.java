@@ -10,14 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
 import org.fiteagle.interactors.sfa.common.AMCode;
-import org.fiteagle.interactors.sfa.common.AMResult;
-import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFARequestProcessorFactory;
 import org.fiteagle.interactors.sfa.common.SFAv3MethodsEnum;

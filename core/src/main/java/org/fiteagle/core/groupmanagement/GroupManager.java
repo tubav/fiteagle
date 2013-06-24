@@ -16,7 +16,7 @@ public class GroupManager {
   private static enum databaseType {
     InMemory, SQLite
   }
-  private static final String DEFAULT_DATABASE_TYPE = databaseType.InMemory.name();
+  private static final String DEFAULT_DATABASE_TYPE = databaseType.SQLite.name();
   private GroupManager() throws SQLException{
     if (preferences.get("databaseType") == null) {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
