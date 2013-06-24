@@ -234,6 +234,14 @@ protected KeyStore loadKeyStore(StoreType type) throws KeyStoreException, NoSuch
     return null;
   }
   
+  public String getAllTrustedCertificates() throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+    String all = "";
+    for(X509Certificate cert : getTrustedCerts()){
+        all+=convertToPem(cert);
+      }
+    return all;
+  }
+  
   private String convertToPem(X509Certificate cert) throws CertificateEncodingException, IOException{
     StringWriter sw = new StringWriter();
     PEMWriter pemwriter = new PEMWriter(sw);
