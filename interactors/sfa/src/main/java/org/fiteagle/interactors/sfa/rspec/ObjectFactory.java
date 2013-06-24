@@ -54,11 +54,10 @@ public class ObjectFactory {
 
     
     //Additional QNames for FITeagle resource description
-    private final static QName _Parameter_QNAME = new QName("https://www.fiteagle.org/api/v1/rspec/ext/1", "parameter");
-    private final static QName _Property_QNAME_FITEAGLE = new QName("https://www.fiteagle.org/api/v1/rspec/ext/1", "property");
-    private final static QName _Method_QNAME = new QName("https://www.fiteagle.org/api/v1/rspec/ext/1", "method");
-    private final static QName _Resource_QNAME = new QName("https://www.fiteagle.org/api/v1/rspec/ext/1", "resource");
-
+    private final static QName _Resource_QNAME = new QName("http://www.fiteagle.org/rspec/ext/1", "resource");
+    private final static QName _Property_QNAME_FITEAGLE = new QName("http://www.fiteagle.org/rspec/ext/1", "property");
+    private final static QName _Method_QNAME = new QName("http://www.fiteagle.org/rspec/ext/1", "method");
+    private final static QName _Parameter_QNAME = new QName("http://www.fiteagle.org/rspec/ext/1", "parameter");
     
     
     /**
@@ -509,19 +508,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Parameter }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Resource }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "https://www.fiteagle.org/api/v1/rspec/ext/1", name = "parameter")
-    public JAXBElement<Parameter> createParameter(Parameter value) {
-        return new JAXBElement<Parameter>(_Parameter_QNAME, Parameter.class, null, value);
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext/1", name = "resource")
+    public JAXBElement<Resource> createResource(Resource value) {
+        return new JAXBElement<Resource>(_Resource_QNAME, Resource.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Property }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "https://www.fiteagle.org/api/v1/rspec/ext/1", name = "property")
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext/1", name = "property")
     public JAXBElement<Property> createProperty(Property value) {
         return new JAXBElement<Property>(_Property_QNAME_FITEAGLE, Property.class, null, value);
     }
@@ -530,18 +529,18 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link Method }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "https://www.fiteagle.org/api/v1/rspec/ext/1", name = "method")
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext/1", name = "method")
     public JAXBElement<Method> createMethod(Method value) {
         return new JAXBElement<Method>(_Method_QNAME, Method.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Resource }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Parameter }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "https://www.fiteagle.org/api/v1/rspec/ext/1", name = "resource")
-    public JAXBElement<Resource> createResource(Resource value) {
-        return new JAXBElement<Resource>(_Resource_QNAME, Resource.class, null, value);
+    @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext/1", name = "parameter")
+    public JAXBElement<Parameter> createParameter(Parameter value) {
+        return new JAXBElement<Parameter>(_Parameter_QNAME, Parameter.class, null, value);
     }
     
 
