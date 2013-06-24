@@ -43,7 +43,7 @@ public class CertificatePresenter {
   @GET
   @Path("download/{commonName}")
   @Produces(MediaType.TEXT_PLAIN)
-  public String getCertificate(@PathParam("commonName") String commonName) {
+  public String getTrustedCertificate(@PathParam("commonName") String commonName) {
     String cert;
     try {
       cert = manager.getTrustedCertificate(commonName);
@@ -55,5 +55,19 @@ public class CertificatePresenter {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
     return cert;
+  }
+  
+  @GET
+  @Path("download")
+  @Produces(MediaType.TEXT_PLAIN)
+  public String getAllTrustedCertificates() {
+    String certs;
+    try {
+      certs = manager.getAllTrustedCertificates();
+    } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+      log.error(e.getMessage());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    return certs;
   }
 }

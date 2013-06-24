@@ -21,4 +21,9 @@ public class CertificateManager implements CertificateManagerBoundary {
   public String getTrustedCertificate(String commonName) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException{
     return manager.getTrustedCertificate(commonName);
   }
+
+  @Override
+  public String getAllTrustedCertificates() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+    return manager.getAllTrustedCertificates();
+  }
 }
