@@ -14,8 +14,6 @@ public class ResourceDefinition {
 	String resourceXsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 			"<schema targetNamespace=\"https://www.fiteagle.org/api/v1/rspec/ext/1\" elementFormDefault=\"qualified\" xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"https://www.fiteagle.org/api/v1/rspec/ext/1\">\n" + 
 			"\n" + 
-			"\n" + 
-			"\n" + 
 			"    <complexType name=\"parameter\">\n" + 
 			"    	<attribute name=\"name\" type=\"string\"></attribute>\n" + 
 			"    	<attribute name=\"type\" type=\"string\"></attribute>\n" + 
@@ -26,7 +24,6 @@ public class ResourceDefinition {
 			"    	<attribute name=\"type\" type=\"string\"></attribute>\n" + 
 			"    	<attribute name=\"value\" type=\"string\"></attribute>\n" + 
 			"    </complexType>\n" + 
-			"\n" + 
 			"\n" + 
 			"    <element name=\"parameter\" type=\"tns:parameter\"></element>\n" + 
 			"\n" + 
@@ -49,7 +46,6 @@ public class ResourceDefinition {
 			"    </complexType>\n" + 
 			"\n" + 
 			"    <element name=\"method\" type=\"tns:method\"></element>\n" + 
-			"\n" + 
 			"\n" + 
 			"    <element name=\"resource\" type=\"tns:resource\"></element>\n" + 
 			"</schema>";
