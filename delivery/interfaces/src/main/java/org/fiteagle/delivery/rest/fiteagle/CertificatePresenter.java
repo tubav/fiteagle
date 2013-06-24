@@ -1,4 +1,4 @@
-package org.fiteagle.interactors.certificates;
+package org.fiteagle.delivery.rest.fiteagle;
 
 import java.util.List;
 
@@ -19,13 +19,12 @@ import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/")
-public class RestCertificateManager implements RestCertificateManagement{
+@Path("fed4fire/v1/certificates")
+public class CertificatePresenter {
   
-  private Logger log = LoggerFactory.getLogger(RestCertificateManager.class);
+  private Logger log = LoggerFactory.getLogger(CertificatePresenter.class);
   private KeyStoreManagement manager = KeyStoreManagement.getInstance();
   
-  @Override
   @GET
   @Path("list")
   @Produces(MediaType.APPLICATION_JSON)
@@ -41,7 +40,6 @@ public class RestCertificateManager implements RestCertificateManagement{
     return certnames;
   }
 
-  @Override
   @GET
   @Path("download/{commonName}")
   @Produces(MediaType.TEXT_PLAIN)

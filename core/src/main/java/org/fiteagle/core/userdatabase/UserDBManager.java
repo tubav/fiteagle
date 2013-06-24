@@ -9,11 +9,6 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.security.auth.x500.X500Principal;
 
 import net.iharder.Base64;
 
@@ -63,15 +58,20 @@ public class UserDBManager {
       database = new SQLiteUserDB();
     } else {
       database = new InMemoryUserDB();
-      try {
-        String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
-        User u = new User("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
-        u.addPublicKey(key);
-        add(u);
-      } catch (DuplicateUsernameException | NoSuchAlgorithmException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      addDefaultUser();
+    }
+  }
+
+  private void addDefaultUser() {
+    try {
+      String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
+      User u = new User("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
+      u.addPublicKey(key);
+      add(u);
+    } catch (DuplicateUsernameException e) {
+      
+    } catch (NoSuchAlgorithmException e) {
+      log.error(e.getMessage());
     }
   }
   
@@ -93,6 +93,10 @@ public class UserDBManager {
   
   public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
     database.addKey(username, key);
+  }
+  
+  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+    database.deleteKey(username, key);
   }
   
   public User get(String username) throws RecordNotFoundException, DatabaseException {
@@ -143,8 +147,6 @@ public class UserDBManager {
     digest.update(salt);
     return digest.digest(password.getBytes());
   }
-  
- 
   
   public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
     String returnString = "";

@@ -105,8 +105,9 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
 
 
   private String getOwnerGID(String cert) throws Exception {
+    String theCertificate = parseSentCertificate(cert);
     CertificateAuthority ca = CertificateAuthority.getInstance();
-    X509Certificate xCert = ca.buildX509Certificate(cert);
+    X509Certificate xCert = ca.buildX509Certificate(theCertificate);
     X509Certificate returnCert = xCert;
     if(isSelfSigned(xCert) ){
       if (!userHasCertificate(xCert)){
@@ -120,6 +121,16 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor{
   }
 
  
+  private String parseSentCertificate(String cert) {
+    String startString = "-----BEGIN CERTIFICATE-----";
+    int start = cert.indexOf(startString);
+    String endString = "-----END CERTIFICATE-----";
+    int end = cert.lastIndexOf(endString);
+    String sub = cert.substring(start, end + endString.length());
+    return sub;
+  }
+   
+
   private void storeUserCert(X509Certificate returnCert) {
     KeyStoreManagement keyStoremanagement = KeyStoreManagement.getInstance();
     try {

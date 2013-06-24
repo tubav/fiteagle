@@ -336,31 +336,25 @@ public GeniAMHandler() {
       if (listCredentialsArray.size() > 0) {
         for (int i = 0; i < listCredentialsArray.size(); i++) {
           Object tmptest = listCredentialsArray.get(i);
-          Class<? extends Object> tmttestClass = tmptest.getClass();
+          String geni_type ="geni_sfa";
+          String geni_version ="3";
+          String geni_value = "";
+          if(tmptest instanceof String){
+            geni_value = (String) tmptest;
+          }else{
           XmlRpcStruct credentialsStruct = (XmlRpcStruct) listCredentialsArray
               .get(i);
+           geni_type = credentialsStruct.getString("geni_type");
+           geni_version = credentialsStruct.getString("geni_version");
+           geni_value =credentialsStruct.getString("geni_value");
+          }
           Credentials credentials = new Credentials();
-          if (credentialsStruct.getString("geni_type") != null) {
-            credentials.setGeni_type(credentialsStruct
-                .getString("geni_type"));
-          } else {
-//            throw new CredentialsNotValid();
-          }
-          if (credentialsStruct.getString("geni_version") != null) {
-            credentials.setGeni_version(credentialsStruct
-                .getString("geni_version"));
-          } else {
-//            throw new CredentialsNotValid();
-          }
-          if (credentialsStruct.getString("geni_value") != null) {
-            credentials.setGeni_value(credentialsStruct
-                .getString("geni_value"));
-          } else {
-//            throw new CredentialsNotValid();
-          }
-
+          credentials.setGeni_type(geni_type);
+          credentials.setGeni_version(geni_version);
+          credentials.setGeni_value(geni_value);
+          
           listCredentials.addCredentials(credentials);
-
+          
         }
       }
       

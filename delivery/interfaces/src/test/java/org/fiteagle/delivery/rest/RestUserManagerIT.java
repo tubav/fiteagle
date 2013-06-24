@@ -6,15 +6,17 @@ import com.jayway.restassured.response.Response;
 import static com.jayway.restassured.RestAssured.*;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
-import org.fiteagle.interactors.usermanagement.AuthenticationFilter;
-import org.junit.Before;
+import org.fiteagle.delivery.rest.fiteagle.AuthenticationFilter;
+import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RestUserManagerIT {
@@ -36,23 +38,13 @@ public class RestUserManagerIT {
     RestAssured.basePath = "/api/v1/user";    
   }
   
-  @Before
-  public void deleteUsers(){
-    given().auth().preemptive().basic("mnikolaus", "mitja").and()
-      .when().delete("mnikolaus");
-    given().auth().preemptive().basic("mnikolaus", "pass").and()
-      .when().delete("mnikolaus");
-  }
-  
   @Test
-  @Ignore
   public void testPutAndGet() {
     PutUser1();
     GetUser1();   
   }
   
   @Test
-  @Ignore
   public void testPost() {
     PutUser1();
     PostUser2();
@@ -60,7 +52,6 @@ public class RestUserManagerIT {
   }
   
   @Test
-  @Ignore
   public void testDelete() {
     PutUser1();
     DeleteUser1();
@@ -69,15 +60,23 @@ public class RestUserManagerIT {
   }
   
   @Test
-  @Ignore
-  public void testAuthorizationFailure(){
+  public void testDeletePublicKey() throws UnsupportedEncodingException {
+    PutUser1();
+    deletePubKey();
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+    .expect().statusCode(200)
+      .body("publicKeys", hasSize(0))      
+    .when().get("mnikolaus");
+  }
+
+  @Test
+  public void testAuthorizationFailure() {
     PutUser1();
     given().auth().preemptive().basic("mnikolaus", "wrongpassword").and()
       .expect().statusCode(401).when().get("mnikolaus");
   }
   
   @Test
-  @Ignore
   public void testCookieAuthentication() {
     PutUser1();
     
@@ -120,6 +119,22 @@ public class RestUserManagerIT {
   private void DeleteUser1() {
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
       .expect().statusCode(200)
+      .when().delete("mnikolaus");
+  }  
+
+  private void deletePubKey() throws UnsupportedEncodingException {
+    String publicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024";
+    String encodedPublicKey = URLEncoder.encode(publicKey, "UTF-8");
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+    .expect().statusCode(200)
+    .when().delete("mnikolaus/pubkey/"+encodedPublicKey);
+  }
+  
+  @After
+  public void deleteUsers(){
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+      .when().delete("mnikolaus");
+    given().auth().preemptive().basic("mnikolaus", "pass").and()
       .when().delete("mnikolaus");
   }
   

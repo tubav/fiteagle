@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
@@ -75,8 +76,8 @@ public class UserDBTest {
 	
 	@Test(expected=UserPersistable.RecordNotFoundException.class)
 	public void testDelete() throws DatabaseException{
-		database.add(USER1);
-		database.delete(USER1);
+		database.add(USER1);		
+		database.delete(USER1);		
 		database.get(USER1);
 	}
 		
@@ -112,6 +113,13 @@ public class UserDBTest {
 		database.add(USER1);		
 		database.addKey(USER1.getUsername(), KEYS1.get(0));
 		assertTrue(USER1.equals(database.get(USER1)));
+	}
+	
+	@Test
+	public void testDeleteKey() throws DatabaseException{
+	  database.add(USER2);
+	  database.deleteKey(USER2.getUsername(), KEYS2.get(0));
+	  assertTrue(database.get(USER2).getPublicKeys().isEmpty());
 	}
 	
 	@After
