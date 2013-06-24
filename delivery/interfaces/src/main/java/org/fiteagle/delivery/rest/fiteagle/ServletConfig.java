@@ -26,7 +26,9 @@ public class ServletConfig extends GuiceServletContextListener {
          protected void configureServlets() {            
            
             bind(UserPresenter.class).in(Scopes.SINGLETON);
-            bind(UserManagerBoundary.class).to(UserManager.class).in(Scopes.SINGLETON);            
+            bind(UserManagerBoundary.class).to(UserManager.class).in(Scopes.SINGLETON);
+            
+            bind(ResourceDefinitionPresenter.class).in(Scopes.SINGLETON);
 
             bind(ConfigurationPresenter.class).in(Scopes.SINGLETON);
             bind(ConfigurationManagerBoundary.class).to(ConfigurationManager.class).in(Scopes.SINGLETON);           

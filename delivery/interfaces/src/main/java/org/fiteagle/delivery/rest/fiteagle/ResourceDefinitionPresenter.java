@@ -1,15 +1,11 @@
-package org.fiteagle.interactors.configuration.fiteagleResourceDefinition;
+package org.fiteagle.delivery.rest.fiteagle;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
-import org.fiteagle.core.userdatabase.User;
-
-@Path("/rspec")
-public class ResourceDefinition implements ResourceDefinitionInterface{
+@Path("/v1/rspec")
+public class ResourceDefinitionPresenter {
 	
 	String resourceXsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 			"<schema targetNamespace=\"https://www.fiteagle.org/api/v1/rspec/ext/1\" elementFormDefault=\"qualified\" xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"https://www.fiteagle.org/api/v1/rspec/ext/1\">\n" + 
@@ -50,19 +46,11 @@ public class ResourceDefinition implements ResourceDefinitionInterface{
 			"    <element name=\"resource\" type=\"tns:resource\"></element>\n" + 
 			"</schema>";
 
-	@Override
 	@GET
 	@Path("/ext/1")
 	@Produces("application/xml")
 	public String getResourceDefinition() {
 		return resourceXsd;
 	}
-	
-//	@GET
-//	@Path("/ext/1")
-//	@Produces(MediaType.APPLICATION_XML)
-//	public String getResourceDefinition() {
-//		return resourceXsd;
-//	}
 
 }

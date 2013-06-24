@@ -40,16 +40,8 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>org.fiteagle.interactors.usermanagement; org.fiteagle.interactors.groupmanagement; org.fiteagle.interactors.configuration.fiteagleResourceDefinition</param-value>
+          <param-value>org.fiteagle.interactors.groupmanagement</param-value>
     </init-param>    
-    <init-param>
-      <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-      <param-value>org.fiteagle.interactors.usermanagement.AuthenticationFilter</param-value>
-    </init-param>
-    <init-param>
-      <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-      <param-value>org.fiteagle.interactors.usermanagement.AuthenticationFilter</param-value>
-    </init-param>
     <init-param>
         <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
         <param-value>true</param-value>
@@ -62,48 +54,24 @@
      <url-pattern>/api/v1/*</url-pattern>
   </servlet-mapping>  
 
+  <filter>
+    <filter-name>guiceFilter</filter-name>
+    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  </filter>
   
-  <servlet>
-    <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    <init-param>
-          <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>org.fiteagle.interactors.certificates</param-value>
-    </init-param>    
-    <init-param>
-        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-        <param-value>true</param-value>
-    </init-param>
-           <load-on-startup>1</load-on-startup>         
-  </servlet>
-  <servlet-mapping>
-     <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
-     <url-pattern>/api/fed4fire/v1/certificates/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
-    <servlet-name>FITeagle-REST</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    <init-param>
-          <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>org.fiteagle.delivery.rest.fiteagle</param-value>
-    </init-param>
-    <init-param>
-          <param-name>javax.ws.rs.core.Application</param-name>
-          <param-value>org.fiteagle.interactors.configuration.ConfigurationApp</param-value>
-    </init-param>
-    <init-param>
-        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-        <param-value>true</param-value>
-    </init-param>
-           <load-on-startup>1</load-on-startup>         
-  </servlet>
-
-  <servlet-mapping>
-     <servlet-name>FITeagle-REST</servlet-name>
-     <url-pattern>/api/v2/*</url-pattern>
-  </servlet-mapping>   
-
-
+  <filter-mapping>
+    <filter-name>guiceFilter</filter-name>
+    <url-pattern>/api/v1/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>guiceFilter</filter-name>
+    <url-pattern>/api/fed4fire/*</url-pattern>
+  </filter-mapping>
+  
+  <listener>
+   <listener-class>org.fiteagle.delivery.rest.fiteagle.ServletConfig</listener-class>
+  </listener>
+  
 </web-app>
 
