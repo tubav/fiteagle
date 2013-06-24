@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+  
+  <servlet>
+        <servlet-name>XmlRpcServlet</servlet-name>
+        <servlet-class>org.fiteagle.delivery.xmlrpc.FITeagleServlet</servlet-class>
+        <init-param>
+          <param-name>enabledForExtensions</param-name>
+          <param-value>true</param-value>
+        </init-param>
+  </servlet>
+  <servlet-mapping>
+        <servlet-name>XmlRpcServlet</servlet-name>
+        <url-pattern>/api/sfa/*</url-pattern>
+  </servlet-mapping>
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>XmlRpcServlet</web-resource-name>
+      <url-pattern>/api/sfa/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <welcome-file-list>
+    <welcome-file>gui/index.html</welcome-file>
+  </welcome-file-list>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/gui/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Jersey REST Servlet</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>org.fiteagle.interactors.usermanagement; org.fiteagle.interactors.groupmanagement; org.fiteagle.interactors.configuration.fiteagleResourceDefinition</param-value>
+    </init-param>    
+    <init-param>
+      <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+      <param-value>org.fiteagle.interactors.usermanagement.AuthenticationFilter</param-value>
+    </init-param>
+    <init-param>
+      <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+      <param-value>org.fiteagle.interactors.usermanagement.AuthenticationFilter</param-value>
+    </init-param>
+    <init-param>
+        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+        <param-value>true</param-value>
+    </init-param>
+           <load-on-startup>1</load-on-startup>         
+  </servlet>
+  <servlet-mapping>
+
+     <servlet-name>Jersey REST Servlet</servlet-name>
+     <url-pattern>/api/v1/*</url-pattern>
+  </servlet-mapping>  
+
+  
+  <servlet>
+    <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>org.fiteagle.interactors.certificates</param-value>
+    </init-param>    
+    <init-param>
+        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+        <param-value>true</param-value>
+    </init-param>
+           <load-on-startup>1</load-on-startup>         
+  </servlet>
+  <servlet-mapping>
+     <servlet-name>Jersey REST Certificates-Servlet</servlet-name>
+     <url-pattern>/api/fed4fire/v1/certificates/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>FITeagle-REST</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>org.fiteagle.delivery.rest.fiteagle</param-value>
+    </init-param>
+    <init-param>
+          <param-name>javax.ws.rs.core.Application</param-name>
+          <param-value>org.fiteagle.interactors.configuration.ConfigurationApp</param-value>
+    </init-param>
+    <init-param>
+        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+        <param-value>true</param-value>
+    </init-param>
+           <load-on-startup>1</load-on-startup>         
+  </servlet>
+
+  <servlet-mapping>
+     <servlet-name>FITeagle-REST</servlet-name>
+     <url-pattern>/api/v2/*</url-pattern>
+  </servlet-mapping>   
+
+
+</web-app>
+
