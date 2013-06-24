@@ -20,7 +20,9 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+	@JsonIgnore
 	private Date created;
+	@JsonIgnore
 	private Date last_modified;
 	@JsonIgnore
 	private String passwordHash;
@@ -37,7 +39,7 @@ public class User {
 		this.email = email;
 		this.passwordHash = passwordHash;
 		this.passwordSalt =  passwordSalt;
-		this.created =created;
+		this.created = created;
 		this.last_modified = lastModified;
 		if(publicKeys == null){
 		  this.publicKeys = new ArrayList<>();
@@ -52,7 +54,7 @@ public class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;    
-    this.created =Calendar.getInstance().getTime();
+    this.created = Calendar.getInstance().getTime();
     this.last_modified = created;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
@@ -66,7 +68,7 @@ public class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;    
-    this.created =Calendar.getInstance().getTime();
+    this.created = Calendar.getInstance().getTime();
     this.last_modified = created;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
@@ -176,6 +178,10 @@ public class User {
 			this.publicKeys.add(publicKey);
 		}
 	}
+	
+	public void deletePublicKey(String publicKey){    
+    this.publicKeys.remove(publicKey);
+  }
 
 	@Override
 	public boolean equals(Object obj) {
@@ -211,8 +217,8 @@ public class User {
 	
 	@Override
   public String toString() {
-    return "User [username=" + username + ", firstName=" + firstName + ", lastName="
-        + lastName + ", publicKeys=" + publicKeys + "]";
+    return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+        + ", created=" + created + ", last_modified=" + last_modified + ", publicKeys=" + publicKeys + "]";
   }
 
   public String getPasswordHash() {

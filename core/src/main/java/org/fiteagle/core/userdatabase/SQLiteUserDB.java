@@ -1,13 +1,11 @@
 package org.fiteagle.core.userdatabase;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.fiteagle.core.persistence.SQLiteDatabase;
@@ -24,7 +22,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	public SQLiteUserDB() throws DatabaseException, SQLException{
 	  try{
 	   
-  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt,created, lastModified , PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
   		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
   		
 	  } catch(SQLException e){
@@ -74,10 +72,10 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		}
 	}
 
-	private void addKeysToDatabase(String username, List<String> Keys) throws SQLException {	
+	private void addKeysToDatabase(String username, List<String> keys) throws SQLException {	
 	  Connection connection = getConnection();
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?)");
-		for(String key: Keys){
+		for(String key: keys){
 			ps.setString(1, username);
 			ps.setString(2, key);
 			ps.addBatch();
@@ -87,6 +85,18 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		connection.commit();
 		connection.close();
 	}
+	
+	private void deleteKeyFromDatabase(String username, String key) throws SQLException {
+	  Connection connection = getConnection();
+	  
+    PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=? AND key=?");
+    ps.setString(1, username);
+    ps.setString(2, key);
+    ps.execute();       
+    ps.close();
+    connection.commit();
+    connection.close();
+	}
 
 	@Override
 	public void delete(User u) throws DatabaseException {		
@@ -95,12 +105,9 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	@Override
 	public void delete(String username) throws DatabaseException {		
-		try {
-		  Connection connection = getConnection();
+		try {		  
       deleteUserFromDatabase(username);
-      deleteKeysFromDatabase(username);
-      connection.commit();
-      connection.close();
+      deleteKeysFromDatabase(username);    
     } catch (SQLException e) {
       throw new DatabaseException();
     }		
@@ -118,7 +125,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private void deleteUserFromDatabase(String username) throws SQLException {
-	  Connection connection =getConnection();
+	  Connection connection = getConnection();
 		PreparedStatement ps = connection.prepareStatement("DELETE FROM Users WHERE username=?");
 		ps.setString(1, username);
 		ps.execute();
@@ -132,13 +139,10 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  User oldUser = get(u.getUsername());
 	  u = User.createMergedUser(oldUser, u);
 	  u.checkAttributes();
-	  try{
-	    Connection connection = getConnection();
+	  try{	    
 	    updateUserInDatabase(u);
 	    deleteKeysFromDatabase(u.getUsername());    
-	    addKeysToDatabase(u.getUsername(), u.getPublicKeys());
-	    connection.commit();
-	    connection.close();
+	    addKeysToDatabase(u.getUsername(), u.getPublicKeys());	   
 	  } catch(SQLException e){
 	    throw new DatabaseException();
 	  }
@@ -147,13 +151,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	private void updateUserInDatabase(User u) throws SQLException {
 	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=?, last_modified=? WHERE username=?");
+		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?");
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
 		ps.setString(3, u.getEmail());
 		ps.setString(4, u.getPasswordHash());
-		ps.setString(5, u.getPasswordSalt());
-		ps.setDate(6, new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+		ps.setString(5, u.getPasswordSalt());		
+		java.util.Calendar now = java.util.Calendar.getInstance();
+		ps.setDate(6, new java.sql.Date(now.getTimeInMillis()));
 		ps.setString(7, u.getUsername());
 		if(ps.executeUpdate() == 0){
 			ps.close();
@@ -165,22 +170,42 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws DatabaseException, InValidAttributeException {
+	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
 	  if(key == null || key.length() == 0){
       throw new InValidAttributeException();
     }
+	  User user = get(username);
+	  if(user == null){
+	    throw new RecordNotFoundException();
+	  }
 	  try{
-  		if(!get(username).getPublicKeys().contains(key)){
+  		if(!user.getPublicKeys().contains(key)){
   			ArrayList<String> keys = new ArrayList<String>();			
   			keys.add(key);
-  			addKeysToDatabase(username,keys);
-  			
+  			addKeysToDatabase(username,keys);  			
   		}
 	  } catch(SQLException e){
 	    throw new DatabaseException();
 	  }
 	}
 
+  @Override
+  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
+      InValidAttributeException {
+    if(key == null || key.length() == 0){
+      throw new InValidAttributeException();
+    }
+    User user = get(username);
+    if(user == null){
+      throw new RecordNotFoundException();
+    }
+    try{
+      deleteKeyFromDatabase(username, key);
+    } catch(SQLException e){
+      throw new DatabaseException();
+    }    
+  }
+	
 	@Override
 	public User get(String username) throws RecordNotFoundException, DatabaseException {		
 		User u;
@@ -197,7 +222,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	private User getUserFromDatabase(String username) throws SQLException {
 		Connection connection = getConnection();
-	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt,Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
@@ -218,16 +243,16 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		String email = rs.getString(4);
 		String passwordHash = rs.getString(5);
 		String passwordSalt = rs.getString(6);
-		Date created = rs.getDate(7);
-		Date lastModified = rs.getDate(8);
+		java.util.Date created = new java.util.Date(rs.getDate(7).getTime());
+		java.util.Date lastModified = new java.util.Date(rs.getDate(8).getTime());
 		String key1 = rs.getString(9);
 		if(key1 != null){
 			keys.add(key1);
 		}
 		while(rs.next()){		
-			keys.add(rs.getString(7));
+			keys.add(rs.getString(9));
 		}			
-		return new User(username, firstname, lastname, email, passwordHash, passwordSalt,created,lastModified, keys);
+		return new User(username, firstname, lastname, email, passwordHash, passwordSalt, created, lastModified, keys);
 	}
 
 	@Override
@@ -267,4 +292,5 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	    throw new DatabaseException();
 	  }
 	}
+
 }
