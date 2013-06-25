@@ -20,6 +20,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 	public GetVersionResult processRequest() {
 		GetVersionResult getVersionResult = new GetVersionResult();
 		GetVersionValue value = getVersionValue();
+		value.addGenericAttribute("hrn", interfaceConfig.getAM_HRN());
 		value.addGenericAttribute("urn", interfaceConfig.getAM_URN());
 		value.addGenericAttribute("hostname", interfaceConfig.getHostname());
 		value.addGenericAttribute("fiteagle version", interfaceConfig.getCommitVersion());
