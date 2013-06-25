@@ -134,7 +134,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		}else
 		  advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 
-		String advertisedRspecSTR = this.getRSpecString(advertisedRspec);
+		String advertisedRspecSTR = this.getAdvertisedRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
 	}
