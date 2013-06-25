@@ -34,10 +34,12 @@ private FiteaglePreferences preferences;
   private String DEFAULT_TESTBED_PICTURE = "please set testbed picture over java preferences";
 //  private HashMap<String, String> DEFAULT_ENDORSED_TOOLS = new HashMap<String, String>();
   private String DEFAULT_ENDORSED_TOOL_NAMES="Please set tool names over java preferences (seperated by comma)";
-  private String DEFAULT_ENDORSED_TOOL_LOGOS = "Pleas set tool logos over java preferences (seperated by comma)";//TODO: set the links to the logos
-  private String DEFAULT_ENDORSED_TOOL_HOMEPAGES = "Please set your tool homepages over java preferences (seperated by comma)";//TODO: set the links to the homepages
-  private String DEFAULT_ENDORSED_TOOL_VERSIONS = "Please set your tool versions over java preferences (seperated by comma)";//TODO: set the versions
+  private String DEFAULT_ENDORSED_TOOL_LOGOS = "Pleas set tool logos over java preferences (seperated by comma)";
+  private String DEFAULT_ENDORSED_TOOL_HOMEPAGES = "Please set your tool homepages over java preferences (seperated by comma)";
+  private String DEFAULT_ENDORSED_TOOL_VERSIONS = "Please set your tool versions over java preferences (seperated by comma)";
   
+  private String DEFAULT_GENI_ALLOCATE = "2";
+
   private InterfaceConfiguration(){
     
    preferences = new FiteaglePreferencesXML(getClass());
@@ -91,6 +93,10 @@ private FiteaglePreferences preferences;
     
     if (preferences.get("endorsed_tool_versions")==null) {
     	preferences.put("endorsed_tool_versions", DEFAULT_ENDORSED_TOOL_VERSIONS);
+	}
+    
+    if (preferences.get("geni_allocate")==null) {
+    	preferences.put("geni_allocate", DEFAULT_GENI_ALLOCATE);
 	}
     
     
@@ -165,5 +171,10 @@ private FiteaglePreferences preferences;
   public String getEndorsed_tool_versions(){
 	  return preferences.get("endorsed_tool_versions");
   }
+  
+  public int getGeni_allocate(){
+	  return Integer.parseInt(preferences.get("geni_allocate"));
+  }
+  
   
 }

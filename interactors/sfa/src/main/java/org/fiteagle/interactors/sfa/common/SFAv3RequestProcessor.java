@@ -99,7 +99,7 @@ public abstract class SFAv3RequestProcessor {
 	      JAXBContext context = JAXBContext
 	          .newInstance("org.fiteagle.interactors.sfa.rspec");
 	      Marshaller marshaller = context.createMarshaller();
-	      marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.geni.net/resources/rspec/3 http://www.geni.net/resources/rspec/3/ad.xsd http://www.fiteagle.org/rspec/ext/1 http://www.fiteagle.org/rspec/ext/1");
+	      marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.geni.net/resources/rspec/3 http://www.geni.net/resources/rspec/3/ad.xsd http://fiteagle.org/rspec/ext/1 http://fiteagle.org/rspec/ext/1");
 	      StringWriter stringWriter = new StringWriter();
 	      marshaller.marshal(jaxbObject, stringWriter);
 

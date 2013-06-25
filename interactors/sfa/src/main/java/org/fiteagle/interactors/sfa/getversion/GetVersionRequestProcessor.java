@@ -27,7 +27,27 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		Map<String, String> peers = new HashMap<>();
 //		peers.put("fiteagle", interfaceConfig.getAM_URL());
 		value.addGenericAttribute("peers", peers);
+
+		int geniAllocate = interfaceConfig.getGeni_allocate();
+		switch (geniAllocate) {
+		case 0:
+			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_single);
+			break;
+
+		case 1:
+			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_disjoint);
+			break;
 		
+//		case 2:
+//			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_many);
+//			break;
+			
+		default:
+			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_many);
+			break;
+		}
+		
+//		value.addGenericAttribute("geni_allocate", );
 		//Set F4F extensions
 		value.setF4f_describe_testbed(interfaceConfig.getTestbed_description());
 		value.setF4f_testbed_homepage(interfaceConfig.getTestbed_homepage());

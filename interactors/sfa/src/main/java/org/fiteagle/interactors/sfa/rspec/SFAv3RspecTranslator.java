@@ -23,7 +23,7 @@ private static final String COMPONENT_MANAGER_ID = "urn:publicid:IDN+fiteagle.fu
   private final String requestRspecSchema = "http://www.geni.net/resources/rspec/3/request.xsd";
   private final ArrayList<String> requestRspecExtensions = new ArrayList<String>();
   
-  private final String RSPEC_EXTENSION = "http://www.fiteagle.org/rspec/ext/1";
+  private final String RSPEC_EXTENSION = "http://fiteagle.org/rspec/ext/1";
   
   public SFAv3RspecTranslator() {
     geni_rspec_version = new Geni_RSpec_Version();
