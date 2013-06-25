@@ -18,6 +18,7 @@ private FiteaglePreferences preferences;
   private String DEFAULT_SA_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+sa";
   private String DEFAULT_HOSTNAME = "localhost";
   private String DEFAULT_AM_URL = "https://localhost/api/sfa/am/v3";
+  private String DEFAULT_HRN = DEFAULT_HOSTNAME;
   
 //  private String DEFAULT_TESTBED_DESCRIPTION = "FUSECO Playground. The independent testbed for FUture SEamless COmmunication";
 //  private String DEFAULT_TESTBED_HOMEPAGE="https://fuseco.fokus.fraunhofer.de";
@@ -33,13 +34,18 @@ private FiteaglePreferences preferences;
   private String DEFAULT_TESTBED_PICTURE = "please set testbed picture over java preferences";
 //  private HashMap<String, String> DEFAULT_ENDORSED_TOOLS = new HashMap<String, String>();
   private String DEFAULT_ENDORSED_TOOL_NAMES="Please set tool names over java preferences (seperated by comma)";
-  private String DEFAULT_ENDORSED_TOOL_LOGOS = "Pleas set tool logos over java preferences (seperated by comma)";//TODO: set the links to the logos
-  private String DEFAULT_ENDORSED_TOOL_HOMEPAGES = "Please set your tool homepages over java preferences (seperated by comma)";//TODO: set the links to the homepages
-  private String DEFAULT_ENDORSED_TOOL_VERSIONS = "Please set your tool versions over java preferences (seperated by comma)";//TODO: set the versions
+  private String DEFAULT_ENDORSED_TOOL_LOGOS = "Pleas set tool logos over java preferences (seperated by comma)";
+  private String DEFAULT_ENDORSED_TOOL_HOMEPAGES = "Please set your tool homepages over java preferences (seperated by comma)";
+  private String DEFAULT_ENDORSED_TOOL_VERSIONS = "Please set your tool versions over java preferences (seperated by comma)";
   
+  private String DEFAULT_GENI_ALLOCATE = "2";
+
   private InterfaceConfiguration(){
     
    preferences = new FiteaglePreferencesXML(getClass());
+    if(preferences.get("hrn")== null)
+      preferences.put("hrn", DEFAULT_HRN);
+      
     if(preferences.get("am_urn")== null)
       preferences.put("am_urn", DEFAULT_AM_URN);
     
@@ -89,6 +95,10 @@ private FiteaglePreferences preferences;
     	preferences.put("endorsed_tool_versions", DEFAULT_ENDORSED_TOOL_VERSIONS);
 	}
     
+    if (preferences.get("geni_allocate")==null) {
+    	preferences.put("geni_allocate", DEFAULT_GENI_ALLOCATE);
+	}
+    
     
    configurator = new Configurator();
   };
@@ -106,6 +116,9 @@ private FiteaglePreferences preferences;
     return configurator.getCommitVersion();
   }
   
+  public String getAM_HRN(){
+    return preferences.get("hrn");
+  }
   
   public String getAM_URN(){
     return preferences.get("am_urn");
@@ -158,5 +171,10 @@ private FiteaglePreferences preferences;
   public String getEndorsed_tool_versions(){
 	  return preferences.get("endorsed_tool_versions");
   }
+  
+  public int getGeni_allocate(){
+	  return Integer.parseInt(preferences.get("geni_allocate"));
+  }
+  
   
 }

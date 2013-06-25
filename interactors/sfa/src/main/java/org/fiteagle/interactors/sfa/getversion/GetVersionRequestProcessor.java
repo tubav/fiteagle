@@ -20,13 +20,34 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 	public GetVersionResult processRequest() {
 		GetVersionResult getVersionResult = new GetVersionResult();
 		GetVersionValue value = getVersionValue();
+		value.addGenericAttribute("hrn", interfaceConfig.getAM_HRN());
 		value.addGenericAttribute("urn", interfaceConfig.getAM_URN());
 		value.addGenericAttribute("hostname", interfaceConfig.getHostname());
 		value.addGenericAttribute("fiteagle version", interfaceConfig.getCommitVersion());
 		Map<String, String> peers = new HashMap<>();
 //		peers.put("fiteagle", interfaceConfig.getAM_URL());
 		value.addGenericAttribute("peers", peers);
+
+		int geniAllocate = interfaceConfig.getGeni_allocate();
+		switch (geniAllocate) {
+		case 0:
+			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_single);
+			break;
+
+		case 1:
+			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_disjoint);
+			break;
 		
+//		case 2:
+//			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_many);
+//			break;
+			
+		default:
+			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_many);
+			break;
+		}
+		
+//		value.addGenericAttribute("geni_allocate", );
 		//Set F4F extensions
 		value.setF4f_describe_testbed(interfaceConfig.getTestbed_description());
 		value.setF4f_testbed_homepage(interfaceConfig.getTestbed_homepage());
@@ -100,7 +121,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		
 		//Set GENI ad rspec versions;
 		
-		value.setGeni_single_allocation(false);
+		value.setGeni_single_allocation(0);
 		List<GeniAdRSpecVersions> geni_ad_rspec_versions_list = getGeniAdRspecVersionsList(translator);
 		value.setGeni_ad_rspec_versions(geni_ad_rspec_versions_list);
 		

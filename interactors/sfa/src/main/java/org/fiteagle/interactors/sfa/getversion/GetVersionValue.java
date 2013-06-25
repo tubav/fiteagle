@@ -18,7 +18,7 @@ public class GetVersionValue extends AMValue {
 	private List<GeniAdRSpecVersions> geni_ad_rspec_versions = new ArrayList<>();
 	// add in GAPI_AM_API_V3
 	private List<GeniCredentialType> geni_credential_types = new ArrayList<>();
-	private boolean geni_single_allocation;
+	private int geni_single_allocation;
 	private String geni_allocate;
 
 	private int geni_api;
@@ -47,11 +47,11 @@ public class GetVersionValue extends AMValue {
 	public Map<String, Object> any(){
 		return genericAttributes;
 	}
-	public boolean isGeni_single_allocation() {
+	public int getGeni_single_allocation() {
 		return geni_single_allocation;
 	}
 
-	public void setGeni_single_allocation(boolean geni_single_allocation) {
+	public void setGeni_single_allocation(int geni_single_allocation) {
 		this.geni_single_allocation = geni_single_allocation;
 	}
 
