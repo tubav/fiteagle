@@ -18,6 +18,7 @@ private FiteaglePreferences preferences;
   private String DEFAULT_SA_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+sa";
   private String DEFAULT_HOSTNAME = "localhost";
   private String DEFAULT_AM_URL = "https://localhost/api/sfa/am/v3";
+  private String DEFAULT_HRN = DEFAULT_HOSTNAME;
   
 //  private String DEFAULT_TESTBED_DESCRIPTION = "FUSECO Playground. The independent testbed for FUture SEamless COmmunication";
 //  private String DEFAULT_TESTBED_HOMEPAGE="https://fuseco.fokus.fraunhofer.de";
@@ -40,6 +41,9 @@ private FiteaglePreferences preferences;
   private InterfaceConfiguration(){
     
    preferences = new FiteaglePreferencesXML(getClass());
+    if(preferences.get("hrn")== null)
+      preferences.put("hrn", DEFAULT_HRN);
+      
     if(preferences.get("am_urn")== null)
       preferences.put("am_urn", DEFAULT_AM_URN);
     
@@ -106,6 +110,9 @@ private FiteaglePreferences preferences;
     return configurator.getCommitVersion();
   }
   
+  public String getAM_HRN(){
+    return preferences.get("hrn");
+  }
   
   public String getAM_URN(){
     return preferences.get("am_urn");

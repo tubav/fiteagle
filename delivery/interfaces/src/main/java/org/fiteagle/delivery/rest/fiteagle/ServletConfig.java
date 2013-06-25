@@ -3,9 +3,11 @@ package org.fiteagle.delivery.rest.fiteagle;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.fiteagle.interactors.api.CertificateManagerBoundary;
 import org.fiteagle.interactors.api.ConfigurationManagerBoundary;
+import org.fiteagle.interactors.api.GroupManagerBoundary;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.certificates.CertificateManager;
 import org.fiteagle.interactors.configuration.ConfigurationManager;
+import org.fiteagle.interactors.groupmanagement.GroupManager;
 import org.fiteagle.interactors.usermanagement.UserManager;
 
 import com.google.inject.Guice;
@@ -38,6 +40,8 @@ public class ServletConfig extends GuiceServletContextListener {
             
             bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
             
+            bind(GroupPresenter.class).in(Scopes.SINGLETON);
+            bind(GroupManagerBoundary.class).to(GroupManager.class).in(Scopes.SINGLETON);
             filter("/api/v1/user/*").through(new AuthenticationFilter());
             
             serve("/api/*").with(GuiceContainer.class);

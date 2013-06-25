@@ -40,7 +40,7 @@ public class AuthenticationHandler {
   public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException,
       NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException,
       CertPathValidatorException, SQLException {
-    
+   
     X509Certificate cert = certificates[0];
     if (cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())) {
       
@@ -110,6 +110,8 @@ public class AuthenticationHandler {
     KeyManagement keydecoder = KeyManagement.getInstance();
     if (identifiedUser.getPublicKeys() == null || identifiedUser.getPublicKeys().size() == 0) {
       identifiedUser.addPublicKey(keydecoder.encodePublicKey(certificate.getPublicKey()));
+      UserDBManager userDBManager = UserDBManager.getInstance();
+      userDBManager.addKey(identifiedUser.getUsername(), identifiedUser.getPublicKeys().get(0));
     }
     for (String pubKeyString : identifiedUser.getPublicKeys()) {
       
