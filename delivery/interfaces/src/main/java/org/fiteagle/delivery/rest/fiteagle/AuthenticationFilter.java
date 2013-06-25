@@ -48,7 +48,7 @@ public class AuthenticationFilter implements Filter{
       response.setStatus(Response.Status.BAD_REQUEST.getStatusCode());      
       return;   
     }
-    
+    //ONLY PUT && USER is allowed without password // TODO refactor
     String method = request.getMethod(); 
     if(method.equals("PUT")){
       chain.doFilter(req, resp);
@@ -60,7 +60,7 @@ public class AuthenticationFilter implements Filter{
         return;
       }
       
-      String username = getUsernameFromRequest(request); 
+      String username = getTargetFromRequest(request); 
       if(username != null && getAuthCookieFromRequest(request) == null){
         response.addCookie(createNewCookie(username));
       }
@@ -96,7 +96,7 @@ public class AuthenticationFilter implements Filter{
       return false;
     }
 
-    if(!getUsernameFromRequest(request).equals(credentials[0])){
+    if(!getTargetFromRequest(request).equals(credentials[0])){
       response.setStatus(Response.Status.FORBIDDEN.getStatusCode());      
       return false;
     }
@@ -119,7 +119,7 @@ public class AuthenticationFilter implements Filter{
   }
 
   private boolean authenticateWithCookie(HttpServletRequest request){
-    String username = getUsernameFromRequest(request);
+    String username = getTargetFromRequest(request);
     Cookie authCookieFromRequest = getAuthCookieFromRequest(request);
     Cookie cookieFromStorage = (username == null)? null : cookies.get(username);
     if(authCookieFromRequest != null && cookieFromStorage != null && authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
@@ -140,8 +140,8 @@ public class AuthenticationFilter implements Filter{
     return null;
   }
 
-  private String getUsernameFromRequest(HttpServletRequest req) {
-    String path = req.getPathTranslated();
+  private String getTargetFromRequest(HttpServletRequest req) {
+    String path = req.getRequestURI();
     String[] splitted = path.split("/");
     for(int i = 0; i < splitted.length -1; i++){
       if(splitted[i].equals("user")){
