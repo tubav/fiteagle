@@ -55,7 +55,7 @@ public class ObjectFactory {
     
     //Additional QNames for FITeagle resource description
     private final static QName _Resource_QNAME = new QName("http://www.fiteagle.org/rspec/ext/1", "resource");
-    private final static QName _Property_QNAMEFITeagle = new QName("http://www.fiteagle.org/rspec/ext/1", "property");
+    private final static QName _Property_QNAME_FITEAGLE = new QName("http://www.fiteagle.org/rspec/ext/1", "property");
     private final static QName _Method_QNAME = new QName("http://www.fiteagle.org/rspec/ext/1", "method");
     private final static QName _Parameter_QNAME = new QName("http://www.fiteagle.org/rspec/ext/1", "parameter");
     
@@ -475,8 +475,6 @@ public class ObjectFactory {
     
     
     //FITeagle specific resource description!!!!!!!!!!!!!!!!!!!!
-    
-
     /**
      * Create an instance of {@link Parameter }
      * 
@@ -524,7 +522,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "http://www.fiteagle.org/rspec/ext/1", name = "property")
     public JAXBElement<Property> createProperty(Property value) {
-        return new JAXBElement<Property>(_Property_QNAMEFITeagle, Property.class, null, value);
+        return new JAXBElement<Property>(_Property_QNAME_FITEAGLE, Property.class, null, value);
     }
 
     /**
@@ -544,6 +542,7 @@ public class ObjectFactory {
     public JAXBElement<Parameter> createParameter(Parameter value) {
         return new JAXBElement<Parameter>(_Parameter_QNAME, Parameter.class, null, value);
     }
+    
 
     
     

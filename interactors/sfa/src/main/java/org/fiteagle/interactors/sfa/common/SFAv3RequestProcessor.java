@@ -77,6 +77,38 @@ public abstract class SFAv3RequestProcessor {
 	}
 	
 	
+	public String getAdvertisedRSpecString(RSpecContents rspec) {
+	    String advertisedRspecSTR = "";
+	    
+
+	    JAXBElement<RSpecContents> rspecElem = new ObjectFactory()
+	        .createRspec(rspec);
+
+	    try {
+	      advertisedRspecSTR = getAdvertisedString(rspecElem);
+	    } catch (JAXBException e) {
+	       setRuntimeReturnCode(GENI_CodeEnum.ERROR);
+	       setOutput("Internal Server Error!");
+	    }
+
+	    // result.setValue(advertisedRspecSTR);
+	    return advertisedRspecSTR;
+	  }
+	
+	private String getAdvertisedString(Object jaxbObject) throws JAXBException {
+	      JAXBContext context = JAXBContext
+	          .newInstance("org.fiteagle.interactors.sfa.rspec");
+	      Marshaller marshaller = context.createMarshaller();
+	      marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.geni.net/resources/rspec/3 http://www.geni.net/resources/rspec/3/ad.xsd http://www.fiteagle.org/rspec/ext/1 http://www.fiteagle.org/rspec/ext/1");
+	      StringWriter stringWriter = new StringWriter();
+	      marshaller.marshal(jaxbObject, stringWriter);
+
+	      return stringWriter.toString();
+
+	    }
+	
+	
+	
 	 public String getRSpecString(RSpecContents rspec) {
 	    String advertisedRspecSTR = "";
 	    
