@@ -35,6 +35,7 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupPersista
       connection.close();
     } catch (SQLException e) {
         log.error(e.getMessage(),e);
+        throw new CouldNotCreateGroup();
     } finally {
       try {
         ps.close();
@@ -98,7 +99,7 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupPersista
       connection.close();
     } catch(SQLException e){
       log.error(e.getMessage(),e);
-      throw new RuntimeException(e);
+      throw new CouldNotDeleteGroup();
     }
   }
   
@@ -111,5 +112,13 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupPersista
       super(message);
     }
     
+  }
+  
+  public class CouldNotCreateGroup extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+  }
+  
+  public class CouldNotDeleteGroup extends RuntimeException {
+    private static final long serialVersionUID = 2L;
   }
 }

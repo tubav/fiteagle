@@ -7,11 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class GroupManagerTest {
-  GroupManager gm;
+  GroupDBManager gm;
   Group group ;
   @Before
   public void setUp() throws Exception {
-    gm = GroupManager.getInstance();
+    gm = GroupDBManager.getInstance();
     group = new Group("testGroupId", "testOwnerID");
     gm.addGroup(group);
   }

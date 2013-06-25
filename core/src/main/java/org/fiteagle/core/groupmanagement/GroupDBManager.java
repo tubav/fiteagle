@@ -4,12 +4,13 @@ import java.sql.SQLException;
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GroupManager {
+public class GroupDBManager {
 
-  private static GroupManager gm = null;
+  private static GroupDBManager gm = null;
   private GroupPersistable groupDatabase;
   private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
   private Logger log = LoggerFactory.getLogger(getClass());
@@ -17,7 +18,7 @@ public class GroupManager {
     InMemory, SQLite
   }
   private static final String DEFAULT_DATABASE_TYPE = databaseType.SQLite.name();
-  private GroupManager() throws SQLException{
+  private GroupDBManager() throws SQLException{
     if (preferences.get("databaseType") == null) {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
     }
@@ -27,7 +28,7 @@ public class GroupManager {
       groupDatabase = new InMemoryGroupDatabase();
     }
   }
-  public void addGroup(Group group) {
+  public void addGroup(Group group) throws CouldNotCreateGroup {
     
     groupDatabase.addGroup(group);
   }
@@ -40,9 +41,13 @@ public class GroupManager {
       groupDatabase.deleteGroup(groupId);
   }
   
-  public static GroupManager getInstance() throws SQLException {
+  public static GroupDBManager getInstance()  {
     if(gm == null ){
-      gm = new GroupManager();
+      try {
+        gm = new GroupDBManager();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
     }
     return gm;
   }
