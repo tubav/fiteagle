@@ -100,7 +100,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		
 		//Set GENI ad rspec versions;
 		
-		value.setGeni_single_allocation(false);
+		value.setGeni_single_allocation(0);
 		List<GeniAdRSpecVersions> geni_ad_rspec_versions_list = getGeniAdRspecVersionsList(translator);
 		value.setGeni_ad_rspec_versions(geni_ad_rspec_versions_list);
 		
