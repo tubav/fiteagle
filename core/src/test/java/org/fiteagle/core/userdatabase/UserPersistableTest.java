@@ -5,19 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class UserDBTest {
+public abstract class UserPersistableTest {
 
-	private static UserPersistable database;
+	protected static UserPersistable database;
 	
 	private static final ArrayList<String> KEYS1 = new ArrayList<String>();
 	private static final ArrayList<String> KEYS2 = new ArrayList<String>();	
@@ -29,24 +27,30 @@ public class UserDBTest {
 	@BeforeClass
 	public static void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException{
 	  KEYS1.add("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-    KEYS1.add("ssh-rsa AAAAB3NzaC1yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-    KEYS2.add("ssh-rsa AAAAB3NzaC1yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+    KEYS1.add("ssh-rsa AAAAB3NzaC2yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+    KEYS2.add("ssh-rsa AAAAB3NzaC3yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
 	  USER1 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassword", KEYS1);
 	  USER2 = new User("hschmidt", "hans", "herbert", "hschmidt@test.org", "hansPassword", KEYS2);
 	  USER3 = new User("hschmidt", "herbert", "herbert", "hschmidt@test.org", "herbertsPassword", KEYS1);
-	  USER4 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassword", new ArrayList<String>());
+	  USER4 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasPassword", new ArrayList<String>());	  
 	}
 	
 	@Before
-	public void setUp() throws DatabaseException{
-		database = new InMemoryUserDB();
-	}
+	public void cleanUp() throws DatabaseException{
+	  setUp();
+    database.delete(USER1);
+    database.delete(USER2);
+    database.delete(USER3);
+    database.delete(USER4);
+  } 
 	
-	@Test
+	protected abstract void setUp();
+
+  @Test
 	public void testAdd() throws DatabaseException{
-		assertEquals(0,database.getNumberOfUsers());
+		int numberOfUsers = database.getNumberOfUsers();
 		database.add(USER1);
-		assertEquals(1,database.getNumberOfUsers());
+		assertEquals(numberOfUsers+1,database.getNumberOfUsers());
 	}
 	
 	@Test(expected=UserPersistable.DuplicateUsernameException.class)
@@ -120,10 +124,5 @@ public class UserDBTest {
 	  database.add(USER2);
 	  database.deleteKey(USER2.getUsername(), KEYS2.get(0));
 	  assertTrue(database.get(USER2).getPublicKeys().isEmpty());
-	}
-	
-	@After
-	public void cleanUp() throws DatabaseException{
-		database.deleteAllEntries();
 	}	
 }
