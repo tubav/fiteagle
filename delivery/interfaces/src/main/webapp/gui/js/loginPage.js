@@ -99,7 +99,7 @@ function(require,Validation,Registration,Utils,Cookie){
 			type: "GET",
 			async: false,
 			dataType: "json",
-			url : "https://localhost:8443/api/v1/user/"+username,
+			url : "/api/v1/user/"+username,
 			beforeSend: function(xhr){
             xhr.setRequestHeader("Authorization",
                 "Basic " + btoa(username + ":" + password)); // TODO Base64 support

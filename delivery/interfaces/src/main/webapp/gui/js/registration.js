@@ -171,7 +171,7 @@ function(Validation, Utils, MainPage){
 			cache: false,
 			type: "PUT",
 			async: false,
-			url: "https://localhost:8443/api/v1/user/"+userName,
+			url: "/api/v1/user/"+userName,
 			data: JSON.stringify(newUser),
 			contentType: "application/json",
 			dataType: "json",
