@@ -172,5 +172,12 @@ public class UserPresenter{
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
   } 
+  
+  @DELETE
+  @Path("{username}/cookie")
+  public Response deleteCookie(@PathParam("username") String username){
+    AuthenticationFilter.getInstance().deleteCookie(username);
+    return Response.status(200).build();
+  }
 
 }

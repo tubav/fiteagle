@@ -38,11 +38,12 @@ public class ServletConfig extends GuiceServletContextListener {
             bind(CertificatePresenter.class).in(Scopes.SINGLETON);
             bind(CertificateManagerBoundary.class).to(CertificateManager.class).in(Scopes.SINGLETON);
             
-            bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
-            
             bind(GroupPresenter.class).in(Scopes.SINGLETON);
             bind(GroupManagerBoundary.class).to(GroupManager.class).in(Scopes.SINGLETON);
-            filter("/api/v1/user/*").through(new AuthenticationFilter());
+            
+            bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
+            
+            filter("/api/v1/user/*").through(AuthenticationFilter.getInstance());
             
             serve("/api/*").with(GuiceContainer.class);
          }

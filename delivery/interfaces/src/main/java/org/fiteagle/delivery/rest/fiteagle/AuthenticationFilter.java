@@ -34,6 +34,13 @@ public class AuthenticationFilter implements Filter{
   
   private Logger log = LoggerFactory.getLogger(getClass());
   
+  private static AuthenticationFilter authenticationFilter;
+  public static AuthenticationFilter getInstance(){
+    if(authenticationFilter == null){
+      authenticationFilter = new AuthenticationFilter();
+    }
+    return authenticationFilter;
+  }
   
   @Override
   public void destroy() {   
@@ -53,7 +60,7 @@ public class AuthenticationFilter implements Filter{
     if(method.equals("PUT")){
       chain.doFilter(req, resp);
       return;
-    }
+    }    
     
     if(!authenticateWithCookie(request)){
       if(!authenticateWithUsernameAndPassword(request, response)){
@@ -67,8 +74,6 @@ public class AuthenticationFilter implements Filter{
     }
     
     chain.doFilter(req, resp);
-    
-    //TODO: when to remove cookie?
   }
 
   @Override
@@ -152,15 +157,17 @@ public class AuthenticationFilter implements Filter{
   }
   
   private Cookie createNewCookie(String username){
-    String authToken = createRandomAuthToken();
+    String authToken = createRandomAuthToken(username);
     Cookie cookie = new Cookie(COOKIE_NAME, authToken);
     cookie.setSecure(true);
+    cookie.setMaxAge(1800);
     cookies.put(username, cookie);
     return cookie;
   }
 
-  private String createRandomAuthToken() {
-    String u = UUID.randomUUID().toString();    
+  private String createRandomAuthToken(String username) {
+    String u = UUID.randomUUID().toString();
+    u+="-username:"+username;
     return new String(Base64.encode(u.getBytes()));
   }
   
@@ -168,4 +175,7 @@ public class AuthenticationFilter implements Filter{
     return COOKIE_NAME;
   }
   
+  protected void deleteCookie(String username){
+    cookies.remove(username);
+  }
 }
