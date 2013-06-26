@@ -29,7 +29,7 @@ public class ServletConfig extends GuiceServletContextListener {
            
             bind(UserPresenter.class).in(Scopes.SINGLETON);
             bind(UserManagerBoundary.class).to(UserManager.class).in(Scopes.SINGLETON);
-            
+            filter("/api/v1/user/*").through(new UserAuthenticationFilter());
             bind(ResourceDefinitionPresenter.class).in(Scopes.SINGLETON);
 
             bind(ConfigurationPresenter.class).in(Scopes.SINGLETON);
@@ -42,7 +42,7 @@ public class ServletConfig extends GuiceServletContextListener {
             
             bind(GroupPresenter.class).in(Scopes.SINGLETON);
             bind(GroupManagerBoundary.class).to(GroupManager.class).in(Scopes.SINGLETON);
-            filter("/api/v1/user/*").through(new AuthenticationFilter());
+            filter("/api/v1/group/*").through(new GroupAuthenticationFilter());
             
             serve("/api/*").with(GuiceContainer.class);
          }

@@ -18,7 +18,6 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements GroupPersista
    
     
   }
-  
   @Override
   public void addGroup(Group group) {
     PreparedStatement ps =null;
