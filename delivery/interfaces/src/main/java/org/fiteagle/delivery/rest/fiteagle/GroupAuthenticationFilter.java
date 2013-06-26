@@ -19,7 +19,7 @@ import org.fiteagle.core.userdatabase.UserDBManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GroupAuthenticationFilter extends TempAuthenticationFilter {
+public class GroupAuthenticationFilter extends AuthenticationFilter {
   Logger log = LoggerFactory.getLogger(getClass());
   UserDBManager userManager;
   GroupDBManager groupManager;

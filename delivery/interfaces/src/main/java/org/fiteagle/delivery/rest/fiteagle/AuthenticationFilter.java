@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.core.util.Base64;
 
-public abstract class TempAuthenticationFilter implements Filter {
+public abstract class AuthenticationFilter implements Filter {
   
   private UserDBManager manager;
   private Logger log = LoggerFactory.getLogger(getClass());

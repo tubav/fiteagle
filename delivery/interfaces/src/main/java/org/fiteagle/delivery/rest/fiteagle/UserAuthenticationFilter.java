@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.core.util.Base64;
 
-public class UserAuthenticationFilter extends TempAuthenticationFilter{
+public class UserAuthenticationFilter extends AuthenticationFilter{
 
   private final static String COOKIE_NAME = "fiteagle_user_cookie";
   private HashMap<String, Cookie> cookies = new HashMap<>();
