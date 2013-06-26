@@ -62,13 +62,18 @@ public class AuthenticationFilter implements Filter{
       return;
     }    
     
-    if(!authenticateWithCookie(request)){
-      if(!authenticateWithUsernameAndPassword(request, response)){
+    String username = getTargetFromRequest(request);
+    if(username == null){
+      response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());      
+      return;
+    }
+    
+    if(!authenticateWithCookie(username, request)){
+      if(!authenticateWithUsernameAndPassword(username, request, response)){
         return;
-      }
-      
-      String username = getTargetFromRequest(request); 
-      if(username != null && getAuthCookieFromRequest(request) == null){
+      }      
+     
+      if(getAuthCookieFromRequest(request) == null){
         response.addCookie(createNewCookie(username));
       }
     }
@@ -92,7 +97,7 @@ public class AuthenticationFilter implements Filter{
     return new String(decoded).split(":", 2);
   }
   
-  private boolean authenticateWithUsernameAndPassword(HttpServletRequest request, HttpServletResponse response){
+  private boolean authenticateWithUsernameAndPassword(String username, HttpServletRequest request, HttpServletResponse response){
     String auth = request.getHeader("authorization");  
 
     String[] credentials = decode(auth);    
@@ -101,7 +106,7 @@ public class AuthenticationFilter implements Filter{
       return false;
     }
 
-    if(!getTargetFromRequest(request).equals(credentials[0])){
+    if(!username.equals(credentials[0])){
       response.setStatus(Response.Status.FORBIDDEN.getStatusCode());      
       return false;
     }
@@ -123,10 +128,9 @@ public class AuthenticationFilter implements Filter{
     return true;
   }
 
-  private boolean authenticateWithCookie(HttpServletRequest request){
-    String username = getTargetFromRequest(request);
+  private boolean authenticateWithCookie(String username, HttpServletRequest request){    
     Cookie authCookieFromRequest = getAuthCookieFromRequest(request);
-    Cookie cookieFromStorage = (username == null)? null : cookies.get(username);
+    Cookie cookieFromStorage = cookies.get(username);
     if(authCookieFromRequest != null && cookieFromStorage != null && authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
       return true;
     }
