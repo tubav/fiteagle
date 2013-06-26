@@ -29,7 +29,14 @@ public class UserAuthenticationFilter extends TempAuthenticationFilter{
 
   private final static String COOKIE_NAME = "fiteagle_user_cookie";
   private HashMap<String, Cookie> cookies = new HashMap<>();
+  private static UserAuthenticationFilter filter = null;
   
+  public static UserAuthenticationFilter getInstance(){
+    if(filter == null){
+      filter = new UserAuthenticationFilter();
+    }
+    return filter;
+  }
  
   @Override
   public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
@@ -47,12 +54,16 @@ public class UserAuthenticationFilter extends TempAuthenticationFilter{
       return;
     }
     
+    String username = getTarget(request);
+    if(username == null){
+      response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());      
+      return;
+    }
     if(!authenticateWithCookie(request)){
       if(!authenticateWithUsernamePassword(request, response)){
         return;
       }
       
-      String username = getTarget(request); 
       if(username != null && getAuthCookieFromRequest(request) == null){
         response.addCookie(createNewCookie(username));
       }
@@ -88,9 +99,10 @@ public class UserAuthenticationFilter extends TempAuthenticationFilter{
 
   
   private Cookie createNewCookie(String username){
-    String authToken = createRandomAuthToken();
+    String authToken = createRandomAuthToken("-username:"+username);
     Cookie cookie = new Cookie(COOKIE_NAME, authToken);
     cookie.setSecure(true);
+    cookie.setMaxAge(1800);
     cookies.put(username, cookie);
     return cookie;
   }
@@ -117,6 +129,9 @@ public class UserAuthenticationFilter extends TempAuthenticationFilter{
   }
 
 
+  protected void deleteCookie(String username){
+    cookies.remove(username);
+  }
 
 
 

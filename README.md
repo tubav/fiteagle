@@ -21,3 +21,4 @@ FAQ
 ---
 * Q: FITeagle tests seem to hang while testing cryptography methods on Linux
 * A: Setup rng-tools (it should e.g. use /dev/urandom)
+

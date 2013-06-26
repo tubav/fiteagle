@@ -87,8 +87,9 @@ public abstract class TempAuthenticationFilter implements Filter {
     return null;
   }
   
-  protected String createRandomAuthToken() {
+  protected String createRandomAuthToken(String postfix) {
     String u = UUID.randomUUID().toString();
+    u+=postfix;
     return new String(Base64.encode(u.getBytes()));
   }
   

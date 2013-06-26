@@ -61,7 +61,7 @@ public class GroupAuthenticationFilter extends TempAuthenticationFilter {
   
   private Cookie createAndStoreCookie(HttpServletRequest request) {
     String target = getTarget(request);
-    Cookie cookie = new Cookie(COOKIE_NAME, createRandomAuthToken());
+    Cookie cookie = new Cookie(COOKIE_NAME, createRandomAuthToken("-group:"+target));
     cookie.setSecure(true);
     cookie.setMaxAge(120);
     saveCookie(target, cookie);

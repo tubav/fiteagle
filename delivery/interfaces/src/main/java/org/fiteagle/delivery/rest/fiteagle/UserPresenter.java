@@ -68,6 +68,8 @@ public class UserPresenter{
     } catch (DatabaseException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    } catch (NotEnoughAttributesException | InValidAttributeException e) {
+      throw new WebApplicationException(Response.status(422).build());
     }
     return Response.status(201).build();
   }
@@ -84,6 +86,8 @@ public class UserPresenter{
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);      
+    } catch (NotEnoughAttributesException | InValidAttributeException e) {
+      throw new WebApplicationException(Response.status(422).build());
     }
     return Response.status(200).build();
   }
@@ -93,8 +97,6 @@ public class UserPresenter{
     try {
       user = new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
           newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
-    } catch (InValidAttributeException | NotEnoughAttributesException e){
-       throw new WebApplicationException(Response.status(422).build());
     } catch (NoSuchAlgorithmException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
@@ -172,5 +174,12 @@ public class UserPresenter{
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }
   } 
+  
+  @DELETE
+  @Path("{username}/cookie")
+  public Response deleteCookie(@PathParam("username") String username){
+    UserAuthenticationFilter.getInstance().deleteCookie(username);
+    return Response.status(200).build();
+  }
 
 }

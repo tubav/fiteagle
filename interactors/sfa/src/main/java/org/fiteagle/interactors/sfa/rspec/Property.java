@@ -11,6 +11,7 @@ package org.fiteagle.interactors.sfa.rspec;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -33,8 +34,9 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "property")
+@XmlType(name = "property", namespace = "http://fiteagle.org/rspec/ext/1")
 public class Property {
 
     @XmlAttribute(name = "name")

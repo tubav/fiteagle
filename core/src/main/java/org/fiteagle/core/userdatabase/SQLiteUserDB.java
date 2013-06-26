@@ -19,6 +19,18 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
 
+	private static SQLiteUserDB sqliteUserDB;
+	public static SQLiteUserDB getInstance() throws DatabaseException{
+	  if(sqliteUserDB == null){
+	    try{
+	      sqliteUserDB = new SQLiteUserDB();
+	    } catch (SQLException e){
+	      throw new DatabaseException();
+	    }
+	  }
+	  return sqliteUserDB;
+	}
+	
 	public SQLiteUserDB() throws DatabaseException, SQLException{
 	  try{
 	   
