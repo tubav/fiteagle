@@ -178,7 +178,7 @@ public class UserPresenter{
   @DELETE
   @Path("{username}/cookie")
   public Response deleteCookie(@PathParam("username") String username){
-    AuthenticationFilter.getInstance().deleteCookie(username);
+    UserAuthenticationFilter.getInstance().deleteCookie(username);
     return Response.status(200).build();
   }
 

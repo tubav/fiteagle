@@ -14,7 +14,7 @@ import java.net.URLEncoder;
 
 import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
-import org.fiteagle.delivery.rest.fiteagle.AuthenticationFilter;
+import org.fiteagle.delivery.rest.fiteagle.UserAuthenticationFilter;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class RestUserManagerIT {
   
   private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\"]}";
   private final static String USER_1_UPDATE_JSON = "{\"lastName\":\"nicolaus\",\"password\":\"pass\"}";
-
+  
   @BeforeClass
   public static void setUp() throws IllegalArgumentException, IOException{    
     RestAssured.keystore(KEYSTORE_DIRECTORY, KEYSTORE_PASSWORD);
@@ -79,9 +79,9 @@ public class RestUserManagerIT {
     PutUser1();
     
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus");
-    String cookieValue = response.getCookie(AuthenticationFilter.getCookieName());
+    String cookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
     
-    given().cookie(AuthenticationFilter.getCookieName(),cookieValue).and()
+    given().cookie(UserAuthenticationFilter.getCookieName(),cookieValue).and()
       .expect().statusCode(200).when().delete("mnikolaus");
   }
 
