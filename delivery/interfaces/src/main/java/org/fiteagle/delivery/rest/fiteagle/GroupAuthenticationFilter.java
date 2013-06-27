@@ -1,7 +1,6 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -23,7 +22,6 @@ public class GroupAuthenticationFilter extends AuthenticationFilter {
   Logger log = LoggerFactory.getLogger(getClass());
   UserDBManager userManager;
   GroupDBManager groupManager;
-  private HashMap<String, Cookie> cookies = new HashMap<>();
   private final static String COOKIE_NAME = "fiteagle_group_cookie";
   
   @Override
@@ -52,11 +50,6 @@ public class GroupAuthenticationFilter extends AuthenticationFilter {
         return;
       }
     }
-  }
-  
-  protected void saveCookie(String target, Cookie cookie) {
-    cookies.put(target, cookie);
-    
   }
   
   private Cookie createAndStoreCookie(HttpServletRequest request) {

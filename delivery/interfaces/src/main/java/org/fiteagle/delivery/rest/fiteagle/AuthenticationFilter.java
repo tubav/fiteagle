@@ -2,11 +2,13 @@ package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
@@ -24,6 +26,8 @@ public abstract class AuthenticationFilter implements Filter {
   
   private UserDBManager manager;
   private Logger log = LoggerFactory.getLogger(getClass());
+  
+  protected HashMap<String, Cookie> cookies = new HashMap<>();
   
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -91,6 +95,10 @@ public abstract class AuthenticationFilter implements Filter {
     String u = UUID.randomUUID().toString();
     u+=postfix;
     return new String(Base64.encode(u.getBytes()));
+  }
+  
+  protected void saveCookie(String target, Cookie cookie) {
+    cookies.put(target, cookie);    
   }
   
   abstract boolean isUserAuthorizedForTarget(String user, String target);

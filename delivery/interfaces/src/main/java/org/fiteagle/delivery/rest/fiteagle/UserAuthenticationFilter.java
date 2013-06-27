@@ -1,7 +1,7 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,10 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class UserAuthenticationFilter extends AuthenticationFilter{
 
   private final static String COOKIE_NAME = "fiteagle_user_cookie";
-  private HashMap<String, Cookie> cookies = new HashMap<>();
+  
+  private Logger log = LoggerFactory.getLogger(getClass());
+  
   private static UserAuthenticationFilter filter = null;
   
   public static UserAuthenticationFilter getInstance(){
@@ -41,6 +46,13 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
       return;
     }
     
+    if(!(request.getSession(false) == null)){
+      log.info("authenticated with session!");
+      log.info("Created: "+new Date(request.getSession().getCreationTime()).toString());
+      log.info("Last Accessed: "+new Date(request.getSession().getLastAccessedTime()).toString());
+      chain.doFilter(req, resp);
+    }
+    
     String username = getTarget(request);
     if(username == null){
       response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());      
@@ -57,7 +69,15 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
       }
     }
     
+    request.getSession(true);
     chain.doFilter(req, resp);
+    deleteSessionOnLogout(request);
+  }
+
+  private void deleteSessionOnLogout(HttpServletRequest request) {
+    if(request.getMethod().equals("DELETE") && request.getRequestURI().endsWith("/cookie")){
+      request.getSession().invalidate();
+    }    
   }
 
   private boolean authenticateWithCookie(HttpServletRequest request){
@@ -86,7 +106,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     String authToken = createRandomAuthToken("-username:"+username);
     Cookie cookie = new Cookie(COOKIE_NAME, authToken);
     cookie.setSecure(true);
-    cookie.setMaxAge(1800);
+//  TODO  cookie.setHttpOnly(true);
     cookies.put(username, cookie);
     return cookie;
   } 

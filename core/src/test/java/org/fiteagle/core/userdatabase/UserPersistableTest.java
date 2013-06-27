@@ -10,6 +10,7 @@ import java.util.Date;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,15 +38,20 @@ public abstract class UserPersistableTest {
 	}
 	
 	@Before
-	public void cleanUp() throws DatabaseException{
+	public void setUpAndCleanUp() throws DatabaseException{
 	  setUp();
+    cleanUp();
+  }
+	
+	protected abstract void setUp();
+	
+	@AfterClass
+  public static void cleanUp() {
     database.delete(USER1);
     database.delete(USER2);
     database.delete(USER3);
     database.delete(USER4);
   } 
-	
-	protected abstract void setUp();
 
   @Test
 	public void testAdd() throws DatabaseException{
