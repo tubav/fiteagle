@@ -42,8 +42,7 @@ static {
   }
   
   private void updatePreferences() {
-   this.preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);
-    
+   this.preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);    
   }
   
   private String getDatabasePath() {

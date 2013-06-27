@@ -4,6 +4,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 
 public class InMemoryUserDBTest extends UserPersistableTest {
   
+  @Override
   public void setUp() throws DatabaseException{
     database = InMemoryUserDB.getInstance();
   }

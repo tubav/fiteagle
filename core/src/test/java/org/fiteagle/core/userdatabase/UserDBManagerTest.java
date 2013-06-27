@@ -22,7 +22,7 @@ public class UserDBManagerTest {
   
   @Test
   public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException {
-    User u = new User("test", "test", "testName", "test@test.org", "password");
+    User u = new User("test", "test", "testName", "test@test.org", "testAffiliation", "password");
  
     Assert.assertEquals("test", u.getFirstName());
     Assert.assertEquals("test", u.getUsername());
@@ -33,7 +33,7 @@ public class UserDBManagerTest {
   }  
  
   public void testVerifyPassword() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException{
-    User u = new User("test", "test", "testName", "test@test.org", "password", new ArrayList<String>());
+    User u = new User("test", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<String>());
     Assert.assertTrue(userDBManager.verifyPassword("password",u.getPasswordHash(),u.getPasswordSalt()));    
   }
   

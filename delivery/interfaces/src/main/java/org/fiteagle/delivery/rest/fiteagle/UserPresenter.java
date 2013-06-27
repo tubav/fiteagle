@@ -96,7 +96,7 @@ public class UserPresenter{
     User user = null;
     try {
       user = new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
-          newUser.getEmail(), newUser.getPassword(), newUser.getPublicKeys());
+          newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), newUser.getPublicKeys());
     } catch (NoSuchAlgorithmException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);

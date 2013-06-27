@@ -25,11 +25,9 @@ public class RestUserManagerIT {
   private final static String KEYSTORE_DIRECTORY = keystorePrefs.get("keystore");
   private final static String KEYSTORE_PASSWORD = keystorePrefs.get("keystore_pass");
   
-  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"publicKeys\":[\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\"]}";
+  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\"]}";
   private final static String USER_1_UPDATE_JSON = "{\"lastName\":\"nicolaus\",\"password\":\"pass\"}";
 
-  private String cookieValue;
-  
   @BeforeClass
   public static void setUp() throws IllegalArgumentException, IOException{    
     RestAssured.keystore(KEYSTORE_DIRECTORY, KEYSTORE_PASSWORD);
@@ -81,7 +79,7 @@ public class RestUserManagerIT {
     PutUser1();
     
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus");
-    cookieValue = response.getCookie(AuthenticationFilter.getCookieName());
+    String cookieValue = response.getCookie(AuthenticationFilter.getCookieName());
     
     given().cookie(AuthenticationFilter.getCookieName(),cookieValue).and()
       .expect().statusCode(200).when().delete("mnikolaus");

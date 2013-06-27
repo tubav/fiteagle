@@ -9,6 +9,7 @@ public class NewUser {
   private String firstName;
   private String lastName;
   private String email;
+  private String affiliation;
   private String password;
   private List<String> publicKeys;
   
@@ -39,6 +40,14 @@ public class NewUser {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getAffiliation() {
+    return affiliation;
+  }
+
+  public void setAffiliation(String affiliation) {
+    this.affiliation = affiliation;
   }
 
   public String getPassword() {

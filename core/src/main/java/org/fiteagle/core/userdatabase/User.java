@@ -20,6 +20,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String affiliation;
 	@JsonIgnore
 	private Date created;
 	@JsonIgnore
@@ -32,11 +33,12 @@ public class User {
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
 	
-	public User(String username, String firstName, String lastName, String email, String passwordHash, String passwordSalt, Date created, Date lastModified, List<String> publicKeys){
+	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<String> publicKeys){
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.affiliation = affiliation;
 		this.passwordHash = passwordHash;
 		this.passwordSalt =  passwordSalt;
 		this.created = created;
@@ -49,11 +51,12 @@ public class User {
 		}		
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String password) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password) throws NoSuchAlgorithmException{ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.email = email;    
+    this.email = email;
+    this.affiliation = affiliation;
     this.created = Calendar.getInstance().getTime();
     this.last_modified = created;
     byte[] salt = generatePasswordSalt();
@@ -63,11 +66,12 @@ public class User {
     this.publicKeys = new ArrayList<String>();
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String password, List<String> publicKeys) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<String> publicKeys) throws NoSuchAlgorithmException{ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.email = email;    
+    this.email = email;
+    this.affiliation = affiliation;
     this.created = Calendar.getInstance().getTime();
     this.last_modified = created;
     byte[] salt = generatePasswordSalt();
@@ -83,11 +87,11 @@ public class User {
 	}
 	
 	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException{  
-    if(username == null || firstName == null || lastName == null || email == null || passwordHash == null || passwordSalt == null){
+    if(username == null || firstName == null || lastName == null || email == null || affiliation == null || passwordHash == null || passwordSalt == null){
       throw new UserPersistable.NotEnoughAttributesException();
     }
     if(username.length() == 0 || firstName.length() == 0 || lastName.length() == 0 || email.length() == 0 ||
-        !email.contains("@") || passwordHash.length() == 0 || passwordSalt.length() == 0){
+        !email.contains("@") || affiliation.length() == 0 || passwordHash.length() == 0 || passwordSalt.length() == 0){
       throw new UserPersistable.InValidAttributeException();
     }
   }
@@ -125,6 +129,9 @@ public class User {
     }
     if(newUser.getEmail() == null){
       newUser.setEmail(oldUser.getEmail());
+    }
+    if(newUser.getAffiliation() == null){
+      newUser.setAffiliation(oldUser.getAffiliation());
     }
     if(newUser.getPasswordSalt() == null || newUser.getPasswordHash() == null){
       newUser.setPasswordSalt(oldUser.getPasswordSalt());
@@ -165,61 +172,13 @@ public class User {
     this.email = email;
   }
 
-  public List<String> getPublicKeys() {
-		return publicKeys;
-	}
-
-	public void setPublicKeys(List<String> publicKeys) {
-		this.publicKeys = publicKeys;
-	}
-	
-	public void addPublicKey(String publicKey){
-		if(!this.publicKeys.contains(publicKey)){
-			this.publicKeys.add(publicKey);
-		}
-	}
-	
-	public void deletePublicKey(String publicKey){    
-    this.publicKeys.remove(publicKey);
+  public String getAffiliation() {
+    return affiliation;
   }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		if (publicKeys == null) {
-			if (other.publicKeys != null)
-				return false;
-		} else if (!publicKeys.equals(other.publicKeys))
-			return false;
-		return true;
-	}
-	
-	@Override
-  public String toString() {
-    return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-        + ", created=" + created + ", last_modified=" + last_modified + ", publicKeys=" + publicKeys + "]";
-  }
+  public void setAffiliation(String affiliation) {
+    this.affiliation = affiliation;
+  }  
 
   public String getPasswordHash() {
     return passwordHash;
@@ -248,6 +207,82 @@ public class User {
   public Date getCreated() {
     return created;
   }
-  
+
+  public List<String> getPublicKeys() {
+		return publicKeys;
+	}
+
+	public void setPublicKeys(List<String> publicKeys) {
+		this.publicKeys = publicKeys;
+	}
+	
+	public void addPublicKey(String publicKey){
+		if(!this.publicKeys.contains(publicKey)){
+			this.publicKeys.add(publicKey);
+		}
+	}
+	
+	public void deletePublicKey(String publicKey){    
+    this.publicKeys.remove(publicKey);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    User other = (User) obj;
+    if (affiliation == null) {
+      if (other.affiliation != null)
+        return false;
+    } else if (!affiliation.equals(other.affiliation))
+      return false;
+    if (email == null) {
+      if (other.email != null)
+        return false;
+    } else if (!email.equals(other.email))
+      return false;
+    if (firstName == null) {
+      if (other.firstName != null)
+        return false;
+    } else if (!firstName.equals(other.firstName))
+      return false;
+    if (lastName == null) {
+      if (other.lastName != null)
+        return false;
+    } else if (!lastName.equals(other.lastName))
+      return false;
+    if (passwordHash == null) {
+      if (other.passwordHash != null)
+        return false;
+    } else if (!passwordHash.equals(other.passwordHash))
+      return false;
+    if (passwordSalt == null) {
+      if (other.passwordSalt != null)
+        return false;
+    } else if (!passwordSalt.equals(other.passwordSalt))
+      return false;
+    if (publicKeys == null) {
+      if (other.publicKeys != null)
+        return false;
+    } else if (!publicKeys.equals(other.publicKeys))
+      return false;
+    if (username == null) {
+      if (other.username != null)
+        return false;
+    } else if (!username.equals(other.username))
+      return false;
+    return true;
+  }
+	
+	@Override
+  public String toString() {
+    return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+        + ", affiliation=" + affiliation + ", created=" + created + ", last_modified=" + last_modified
+        + ", publicKeys=" + publicKeys + "]";
+  }
   
 }

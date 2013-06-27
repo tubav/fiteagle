@@ -20,6 +20,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
 
 	private static SQLiteUserDB sqliteUserDB;
+	
 	public static SQLiteUserDB getInstance() throws DatabaseException{
 	  if(sqliteUserDB == null){
 	    try{
@@ -32,17 +33,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 	
 	public SQLiteUserDB() throws DatabaseException, SQLException{
-	  try{
-	   
-  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
-  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
-  		
-	  } catch(SQLException e){
+	  try{	   
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");  		
+	  } catch(SQLException e){	    
 	    log.error(e.getMessage(),e);
 	    throw new DatabaseException();
 	  }
-	}				
-	
+	}
 	
 	@Override
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
@@ -58,15 +56,16 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	private void addUserToDatabase(User u) throws SQLException {
 	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)");
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)");
 		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getFirstName());
 		ps.setString(3, u.getLastName());
 		ps.setString(4, u.getEmail());
-		ps.setString(5, u.getPasswordHash());
-		ps.setString(6, u.getPasswordSalt());
-		ps.setDate(7, new java.sql.Date(u.getCreated().getTime()));
-		ps.setDate(8, new java.sql.Date(u.getLast_modified().getTime()));
+		ps.setString(5, u.getAffiliation());
+		ps.setString(6, u.getPasswordHash());
+		ps.setString(7, u.getPasswordSalt());
+		ps.setDate(8, new java.sql.Date(u.getCreated().getTime()));
+		ps.setDate(9, new java.sql.Date(u.getLast_modified().getTime()));
 		
 		try{
 			ps.execute();
@@ -123,7 +122,6 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     } catch (SQLException e) {
       throw new DatabaseException();
     }		
-		
 	}
 
 	private void deleteKeysFromDatabase(String username) throws SQLException {
@@ -163,15 +161,16 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	private void updateUserInDatabase(User u) throws SQLException {
 	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?");
+		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, affiliation=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?");
 		ps.setString(1, u.getFirstName());
 		ps.setString(2, u.getLastName());
 		ps.setString(3, u.getEmail());
-		ps.setString(4, u.getPasswordHash());
-		ps.setString(5, u.getPasswordSalt());		
+		ps.setString(4, u.getAffiliation());
+		ps.setString(5, u.getPasswordHash());
+		ps.setString(6, u.getPasswordSalt());		
 		java.util.Calendar now = java.util.Calendar.getInstance();
-		ps.setDate(6, new java.sql.Date(now.getTimeInMillis()));
-		ps.setString(7, u.getUsername());
+		ps.setDate(7, new java.sql.Date(now.getTimeInMillis()));
+		ps.setString(8, u.getUsername());
 		if(ps.executeUpdate() == 0){
 			ps.close();
 			throw new RecordNotFoundException();
@@ -234,7 +233,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	private User getUserFromDatabase(String username) throws SQLException {
 		Connection connection = getConnection();
-	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.affiliation, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
@@ -253,18 +252,19 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		String firstname = rs.getString(2);
 		String lastname = rs.getString(3);
 		String email = rs.getString(4);
-		String passwordHash = rs.getString(5);
-		String passwordSalt = rs.getString(6);
-		java.util.Date created = new java.util.Date(rs.getDate(7).getTime());
-		java.util.Date lastModified = new java.util.Date(rs.getDate(8).getTime());
-		String key1 = rs.getString(9);
+		String affiliation = rs.getString(5);
+		String passwordHash = rs.getString(6);
+		String passwordSalt = rs.getString(7);
+		java.util.Date created = new java.util.Date(rs.getDate(8).getTime());
+		java.util.Date lastModified = new java.util.Date(rs.getDate(9).getTime());
+		String key1 = rs.getString(10);
 		if(key1 != null){
 			keys.add(key1);
 		}
 		while(rs.next()){		
-			keys.add(rs.getString(9));
+			keys.add(rs.getString(10));
 		}			
-		return new User(username, firstname, lastname, email, passwordHash, passwordSalt, created, lastModified, keys);
+		return new User(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, keys);
 	}
 
 	@Override

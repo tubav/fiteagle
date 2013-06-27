@@ -61,19 +61,6 @@ public class UserDBManager {
       database = new InMemoryUserDB();
      }
   }
-
-  private void addDefaultUser() {
-    try {
-      String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
-      User u = new User("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
-      u.addPublicKey(key);
-      add(u);
-    } catch (DuplicateUsernameException e) {
-      
-    } catch (NoSuchAlgorithmException e) {
-      log.error(e.getMessage());
-    }
-  }
   
   public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
     database.add(u);

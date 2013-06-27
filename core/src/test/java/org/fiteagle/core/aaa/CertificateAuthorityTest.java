@@ -20,7 +20,7 @@ public class CertificateAuthorityTest {
   public void setUp() throws Exception {
     CA =CertificateAuthority.getInstance();
     um = UserDBManager.getInstance();
-    dummyUser = new User("dummy", "dummy", "dummy", "dummy@dummy.org", "blub");
+    dummyUser = new User("dummy", "dummy", "dummy", "dummy@dummy.org", "dummyAffiliation", "blub");
   }
   
  
