@@ -1,13 +1,9 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.UUID;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,15 +11,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.DatatypeConverter;
-
-import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sun.jersey.core.util.Base64;
 
 public class UserAuthenticationFilter extends AuthenticationFilter{
 
