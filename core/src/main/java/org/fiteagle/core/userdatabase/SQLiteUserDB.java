@@ -291,18 +291,4 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  }
 	}	
 
-	public void deleteAllEntries() throws DatabaseException{
-	  try{
-	    Connection connection = getConnection();
-  		Statement st = connection.createStatement();
-  		st.executeUpdate("DELETE FROM Users");	
-  		st.executeUpdate("DELETE FROM Keys");	
-  		st.close();
-  		connection.commit();
-  		connection.close();
-	  } catch(SQLException e){
-	    throw new DatabaseException();
-	  }
-	}
-
 }

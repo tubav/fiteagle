@@ -91,8 +91,4 @@ public class InMemoryUserDB implements UserPersistable {
     u.deletePublicKey(key);
 	}
 	
-	@Override
-	public void deleteAllEntries(){
-		users = new HashMap<String, User>();
-	} 
 }

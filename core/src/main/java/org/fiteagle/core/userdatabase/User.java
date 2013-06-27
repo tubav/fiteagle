@@ -137,6 +137,7 @@ public class User {
       newUser.setPasswordSalt(oldUser.getPasswordSalt());
       newUser.setPasswordHash(oldUser.getPasswordHash());
     }
+    newUser.setLast_modified(Calendar.getInstance().getTime());
     return newUser;    
   }
   

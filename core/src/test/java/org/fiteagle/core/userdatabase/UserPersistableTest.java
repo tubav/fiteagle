@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
@@ -88,8 +89,11 @@ public abstract class UserPersistableTest {
 	@Test
 	public void testUpdate() throws DatabaseException{
 		database.add(USER2);
+		Date created = USER2.getCreated();
 		database.update(USER3);
-		assertTrue(USER3.equals(database.get(USER3)));
+		User updatedUser = database.get(USER3);
+		assertTrue(USER3.equals(updatedUser));
+		assertTrue(created.before(updatedUser.getLast_modified()));
 	}
 	
 	@Test
