@@ -46,21 +46,19 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
       response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());      
       return;
     }
+    
     if(!authenticateWithCookie(request)){
       if(!authenticateWithUsernamePassword(request, response)){
         return;
       }
       
-      if(username != null && getAuthCookieFromRequest(request) == null){
+      if(getAuthCookieFromRequest(request) == null){
         response.addCookie(createNewCookie(username));
       }
     }
     
     chain.doFilter(req, resp);
-    
-    //TODO: when to remove cookie?
   }
-
 
   private boolean authenticateWithCookie(HttpServletRequest request){
     String username = getTarget(request);
@@ -83,7 +81,6 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     }
     return null;
   }
-
   
   private Cookie createNewCookie(String username){
     String authToken = createRandomAuthToken("-username:"+username);
@@ -92,36 +89,25 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     cookie.setMaxAge(1800);
     cookies.put(username, cookie);
     return cookie;
-  }
-
- 
+  } 
   
   public static String getCookieName(){
     return COOKIE_NAME;
   }
 
-
   @Override
   String getTarget(HttpServletRequest request) {
     String path = request.getRequestURI();
     return getTargetNameFromURI(path, "user");
-  }
-
-
- 
+  } 
 
   @Override
   boolean isUserAuthorizedForTarget(String user, String target) {
     return user.equals(target);
   }
 
-
   protected void deleteCookie(String username){
     cookies.remove(username);
   }
-
-
-
-  
   
 }
