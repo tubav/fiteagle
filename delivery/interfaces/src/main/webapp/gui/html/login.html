@@ -1,9 +1,10 @@
 <head>
   <title>FITeagle | Future Internet Testbed Experimentation and Management Framework</title>
   
-  <link rel="stylesheet" type="text/css" href="css/FITeagle.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" media="screen" />
+  
+   <link rel="stylesheet" type="text/css" href="css/FITeagle.css" media="screen" />
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -29,7 +30,7 @@
 
 <!------------------- NAVIGATION TOOLBAR ------------------------------>	
 	<div id="navigation" class="row-fluid">
-		<div id="navs" class="span8 offset3">
+		<div id="navs" class="span6 offset3">
 			<ul class="nav nav-pills">
 				<li class="active">
 					<a href="#home" data-toggle="tab">Home</a>
@@ -51,10 +52,12 @@
 		<div id="loginPages" class="tab-content">
 			<div id="home" class="row-fluid tab-pane active">
 					<div  class="span6 offset3 ">
-						<div id="FITeagleInfo" class="row-fluid">
+						<div id="FITeagleInfo" class="page-header">
 							<h3>
 								Welcome to FITeagle Portal !
-							</h3>
+							</h3>					
+						</div>
+						<div class="row-fluid">
 							<h4>
 								New to FITeagle? Please <a id="registrationLink" href="#" data-toggle="tab">register</a> or learn more about the project.
 							</h4>
@@ -62,11 +65,11 @@
 								FITeagle is an extensible and distributed open source experimentation and management framework for federated Future Internet testbeds.
 							</p>
 						</div>
-						<div id="loginContainer" class="row-fluid">
+						<div id="loginContainer" class="row-fluid top10">
 							<div id="fancyLogins" class="span5" >
 								<h4>Federated Log In</h4>
-								<div id="fancyLoginList" align="left">
-									<ul>
+								<div id="fancyLoginList"  align="left">
+									<ul class="top20">
 										<li><a id="openidLoginBtn" href="#"><img src="img/openidB.png" alt=""/></a></li>
 										<li><a id="googleLoginBtn" href="#"><img src="img/googleB.png" alt="" /></a></li>
 										<li><a id="facebookLoginBtn" href="#"><img src="img/facebookB.png" alt="" /></a></li>
@@ -76,9 +79,9 @@
 							</div>	
 							<div id="loginForm" class="span7">
 								<h4>Log In</h4>
-									<div class="errorMessages">
-									</div>
-								<div class="row-fluid">
+								<div id="loginErrors" class="row-fluid top20">
+								</div>
+								<div class="row-fluid ">
 									<label class="span3" for="username">Username</label>
 									<input class="span9" type="email" id="username" placeholder="Username" autocomplete="on" required>
 								</div>
@@ -103,21 +106,31 @@
 			<div id="registration" class="row-fluid tab-pane">
 					<div  class="span6 offset3 ">
 						<div class="row-fluid">
-							<div class="span12">
+							<div class="page-header">
 								<h3>
 									Welcome to FITeagle Registration Page!
+								<br/>
+								<small>Please fill in our registration form below for registering.</small>
 								</h3>
 							</div>
 						</div>
-						<hr />
 						<div class="row-fluid">
 							<div id="registrationForm">
 								<div class="row-fluid">
+									<p></p>
+								</div>
+								<div class="row-fluid">
 									<p class="alert alert-info">* required fields</p>
+								</div>
+								<div id="registrationErrors" class="row-fluid">									
 								</div>
 								<div class="row-fluid">
 									<label class="span3" for="inputUsername">Username*</label>
-									<input class="span6" type="text" id="inputUsername" placeholder="Username" required>
+									<input class="span6"
+										id="inputUsername"
+										type="text"  
+										placeholder="Username" 
+									required>
 								</div>
 								<div class="row-fluid">
 									<label class="span3" for="inputFirstName">First Name</label>
@@ -131,19 +144,16 @@
 								<div class="row-fluid">
 									<label class="span3" for="inputEmail">Email*</label>
 									<input class="span6" type="email" id="inputEmail" 
-										onblur="Registration.checkUserEntries();"
 										placeholder="Email" required>
 								</div>
 								<div class="row-fluid">
 									<label class="span3" for="inputPassword">Password*</label>
 									<input class="span6" type="password" 
-										onblur="Registration.checkUserPasswords();"
 										id="inputPassword" placeholder="Password" required>
 								</div>
 								<div class="row-fluid">
 									<label class="span3" for="inputEmail">Confirm Password*</label>
 									<input class="span6" type="password" id="inputConfirmPassword" 
-										onblur="Registration.checkUserPasswords();"
 										placeholder="Confirm Password" required>
 								</div>
 								<div class="row-fluid">
@@ -157,7 +167,70 @@
 				</div>
 			<div id="aboutUs" class="row-fluid tab-pane">
 				<div  class="span6 offset3 ">
-					<h3>About Us Section</h3> 
+					<div class="page-header">
+						<h3>About FITeagle</h3>
+					</div>
+						<section id="about" class="main_content inner ">
+							
+
+							<h4>In Short</h4>
+							<p>FITeagle is an extensible and distributed open source experimentation and management framework for federated Future Internet testbeds.</p>
+							
+							<h4>Longer Description</h4>
+							<p>Within the context of <a href="http://en.wikipedia.org/wiki/Future_Internet">Future
+							Internet</a> research activities different approaches are in the
+							process of being developed. Starting with incremental
+							evolutionary attempts onwards to complete revolutionary
+							ideas.</p>
+							<p>In order to evaluate new protocols and architectures testbeds
+							with a wide range of heterogeneous resources and variability in
+							terms of size and complexity are needed.</p>
+							<p>Although there are several existing wireless and wired testbeds to
+							run experiments on, they are - in terms of user management,
+							experiment control, connectivity, ... - independent of each
+							other.</p>
+							<p>FITeagle provides an extensible framework to seamlessly
+							interconnect and control experiments with arbitrary resources in
+							a wide range of available testbeds. This includes the
+							interoperability with other federated testbed management and
+							experimentation frameworks.</p>
+							<p>FITeagle is mainly based on the <a href="http://www.fire-teagle.org">FIRE-Teagle</a> developments
+							and therefore inherits its basic conceptional architecture.
+							FIRE-Teagle was successfully deployed and used in the <a href="http://www.panlab.net/">Panlab</a> project and is currently
+							going to be extended within the <a href="http://www.ict-openlab.eu/">OpenLab</a> and <a href="http://fed4fire.eu">Fed4FIRE</a> project.</p>
+						<div class="row-fluid">
+							<h4>Architectural Overview</h4>
+							<p>
+								<a title="General Architectural Overview" class="thumbnail span8 offset2" href="images/federation.png">
+									<img src="images/federation.png" alt="federation">
+								</a>
+							</p>
+						</div>
+
+						<div class="row-fluid top20">
+							<h4>Projects &amp; Sponsors</h4>
+
+							<ul class="horizontal top20">
+								<li>
+									<a href="http://www.panlab.net/" class="thumbnail span4">
+										<img src="images/logo_project_panlab.png" alt="panlab">
+									</a>
+								</li>
+								<li>
+									<a href="http://www.ict-openlab.eu/" class="thumbnail span4">
+										<img src="images/logo_project_openlab.png" alt="openlab">
+									</a>
+								</li>
+								<li>
+									<a href="http://cordis.europa.eu/fp7" class="thumbnail span4">
+										<img src="images/logo_sponsor_fp7.png" alt="fp7">
+									</a>
+								</li>
+							</ul>
+						</div>
+						<br/><br/>
+						</section>	
+					</div>
 				</div>
 			</div>
 		</div>	

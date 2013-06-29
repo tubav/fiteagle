@@ -19,7 +19,7 @@ function(){
 	* @param{String} text - to be checked
 	**/
 	Validation._isEmpty = function(text){
-		if(!text)
+		if(!text || text.length == 0)
 			return true;
 		return false;
 	};

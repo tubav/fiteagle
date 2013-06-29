@@ -1,8 +1,8 @@
-define(['validation','utils','mainPage'],
+define(['validation','utils','mainPage','messages'],
 /**
  * @lends Registration
  */ 
-function(Validation, Utils, MainPage){
+function(Validation, Utils, MainPage,Messages){
 	
 	Registration = {};
 	
@@ -11,7 +11,7 @@ function(Validation, Utils, MainPage){
 	* Gets the username from the ristration form
 	* @returns value from an element with the id "inputFirstName" 
 	*/
-	Registration.getUsername = function(){
+	Registration._getUsername = function(){
 		var _username = $('#inputUsername').val();
 		return _username;
 	};
@@ -46,15 +46,6 @@ function(Validation, Utils, MainPage){
 	};
 			
 	/**
-	* Gets an username value provided by the user within a registration form.
-	* @returns value from an element by '#inputUsername'.
-	*/
-	Registration._getUsername = function(){
-		var _username = $('#inputUsername').val();
-		return _username;
-	};
-			
-	/**
 	* Gets a password value provided by the user within a registration form. 
 	* @returns value from an element by '#inputPassword'.
 	*/
@@ -78,19 +69,35 @@ function(Validation, Utils, MainPage){
 	* @returns true if the username is valid (word length between three and 20 signs, point sign is alowed), otherwise false is returned.
 	**/
 	Registration.checkUsername = function(){
-		var isValid = Validation._isName(this._getUsername());
-		Utils.highlightField('#inputUsername',isValid);
-		return isValid;	
+		
+		var isValidUsername = Utils.checkInputField(
+								"#inputUsername",
+								"#registrationErrors",
+								Validation._isName,
+								Messages.emptyUsername,
+								Messages.wrongUsername
+								);
+		
+		return isValidUsername;	
 	};
+
+	
+
 			
 	/**
 	* Checks if the user's first name is valid. Highlights the appopriate input element '#inputFirstName' if it's not correct.
 	* @returns true if the first name is valid (not empty word without digits and special signs), otherwise false is returned.
 	**/
 	Registration.checkFirstName = function(){
-		var isValid = Validation._isName(this._getFirstName());
-		Utils.highlightField('#inputFirstName',isValid);
-		return isValid;		
+		
+		var isValidFirstName = Utils.checkInputField(
+								"#inputFirstName",
+								"#registrationErrors",
+								Validation._isName,
+								Messages.emptyFirstName,
+								Messages.wrongFirstName);
+		
+		return isValidFirstName;		
 	};
 			
 	/**
@@ -98,9 +105,15 @@ function(Validation, Utils, MainPage){
 	* @returns true if the last name is valid (not empty word without digits and special signs), otherwise false is returned.
 	**/
 	Registration.checkLastName = function(){
-		var isValid = Validation._isName(this._getLastName());
-		Utils.highlightField('#inputLastName',isValid);
-		return isValid;
+		
+		var isValidLastName = Utils.checkInputField(
+								"#inputLastName",
+								"#registrationErrors",
+								Validation._isName,
+								Messages.emptyLastName,
+								Messages.wrongLastName);
+		
+		return isValidLastName;	
 	};
 
 	/**
@@ -108,10 +121,46 @@ function(Validation, Utils, MainPage){
 	* @returns true if the user's email address is valid one, otherwise false is returned.
 	**/	
 	Registration.checkEmail = function(){
-		var isValid = Validation._isEmail(this._getEmail());
-		Utils.highlightField('#inputEmail',isValid);
-		return isValid;	
+		
+		var isValidEmail = Utils.checkInputField(
+								"#inputEmail",
+								"#registrationErrors",
+								Validation._isEmail,
+								Messages.emptyEmailAddress,
+								Messages.wrongEmailAddress);
+		
+		return isValidEmail;	
 	};
+	
+	
+	Registration.checkPassword = function(){
+		
+		var isValidPassword = Utils.checkInputField(
+								"#inputPassword",
+								"#registrationErrors",
+								Validation._isPassword,
+								Messages.emptyPassword,
+								Messages.wrongPassword
+								);
+								
+		return isValidPassword;
+							
+	};
+	
+	Registration.checkConfirmPassword = function(){
+		
+		var isValidConfirmPassword = Utils.checkInputField(
+									"#inputConfirmPassword",
+									"#registrationErrors",
+									Validation._isPassword,
+									Messages.emptyConfirmPassword,
+									Messages.wrongConfirmPassword	
+									);
+									
+		return isValidConfirmPassword;
+	};
+	
+	
 			
 	/**
 	* Checks if password and its confirmation providede by a user consits. 
@@ -121,42 +170,54 @@ function(Validation, Utils, MainPage){
 	Registration._arePasswordInputsConsist = function(){
 		var p1 = this._getPassword();
 		var p2 = this._getConfirmPassword();
-		if(p1 && p2 && p1 === p2) return true;		
+		if(p1 && p2 && p1 === p2){ 
+			return true;
+			Utils.highlightField("#inputPassword",false);
+			Utils.highlightField("#inputConfirmPassword",false);	
+		}else{
+			Utils.addErrorMessageTo("#registrationErrors",Messages.passwordsAreInconsistent);
+			Utils.highlightField("#inputPassword",true);
+			Utils.highlightField("#inputConfirmPassword",true);
+		}	
 		return false;
 	};
 			
 	Registration.checkUserPasswords = function(){
-		var areConsists = this._arePasswordInputsConsist();
-		Utils.highlightField("#inputPassword",areConsists);
-		Utils.highlightField("#inputConfirmPassword",areConsists);
-		return areConsists;
+		
+		var areValid = false;
+		
+		if(this.checkPassword() & this.checkConfirmPassword()){
+			var areValid = this._arePasswordInputsConsist();
+		}
+
+		return areValid;
 	};
 
-	Registration.checkUserEntries = function(){
-		this.checkUsername();
-		this.checkFirstName();
-		this.checkLastName();
-		this.checkEmail();
-	};
-			
-	Registration.areAllEntriesValid = function(){		
-		var invalids = $("#registrationForm").find(".invalid");
-			if(invalids.length > 0) return false;	
-		return true;
+	Registration.checkRequiredUserEntries = function(){
+		
+		var allEntriesValid = 
+					this.checkUsername()    &
+					this.checkEmail()       &
+					//this.checkFirstName() &
+					//this.checkLastName()  &
+					this.checkUserPasswords();
+					
+		return allEntriesValid; 
 	};
 
 	Registration.registerNewUser = function(){
 		console.log("Registration clicked ");
-		this.checkUserEntries();
-		this.checkUserPasswords();
-		if(this.areAllEntriesValid()){
-			var firstName = this._getFirstName();
-			var lastName = this._getLastName();
-			var password = this._getPassword();
-			var email = this._getEmail();
+		var allEntriesValid = this.checkRequiredUserEntries();
+		if(allEntriesValid){		
+			var newUser = this._createNewUser(
+							this._getUsername(),
+							this._getFirstName(),
+							this._getLastName(),
+							this._getPassword(),
+							this._getEmail()
+						  );
+						  
 			
-			var newUser = this._createNewUser(firstName,lastName,password,email);
-					
 			Registration.registerUserOnServer(newUser);
 		}
 	};
@@ -164,15 +225,14 @@ function(Validation, Utils, MainPage){
 	Registration.registerUserOnServer = function(newUser){
 		
 		console.log("Registering a new user on a server...");
-		
-		var userName = Registration._getUsername();
-				
+		var userToJSON = JSON.stringify(newUser);
+		console.log("New USER "+ userToJSON);			
 		$.ajax({
 			cache: false,
 			type: "PUT",
 			async: false,
-			url: "/api/v1/user/"+userName,
-			data: JSON.stringify(newUser),
+			url: "/api/v1/user/"+newUser.username,
+			data: userToJSON,
 			contentType: "application/json",
 			dataType: "json",
 			success: function(data,status){
@@ -184,21 +244,29 @@ function(Validation, Utils, MainPage){
 								console.log(status);
 			},
 			statusCode:{
+				
 				200: function(){
 					console.log("New user is successfully registered");
 				},
+				
 				201: function(){
 					console.log("New user: "+ newUser.firstName +" "+newUser.lastName+ " has been successfully created.");
 					Utils.setCurrentUser(newUser);
 					MainPage.load();
 					
 				},
+				
 				401: function(){
 					 console.log("Unauthorized access by user registration");
 				},
 				
 				409: function(){
 					console.log("User already exists");
+				},
+				
+				422: function(){
+					alert("422 ERROR !");
+				
 				},
 				
 				500 : function(){
@@ -209,15 +277,19 @@ function(Validation, Utils, MainPage){
 		
 	};
 		
-	Registration._createNewUser = function(firstName,lastName,password,email){		
+	Registration._createNewUser = function(username,firstName,lastName,password,email){		
+		
 		var newUser = new Object();
+		
+		newUser.userName = username;
 		newUser.firstName = firstName;
 		newUser.lastName = lastName;
-		newUser.password = password;
 		newUser.email = email;
+		newUser.password = password;
 		newUser.publicKeys = [];
-		console.log(newUser);
-		console.log(JSON.stringify(newUser));
+
+		//console.log(JSON.stringify(newUser));
+		
 		return newUser;
 	};
 
@@ -229,10 +301,40 @@ function(Validation, Utils, MainPage){
 		Utils.changeFocusOnEnterClick('#inputPassword','#inputConfirmPassword');
 		Utils.addOnEnterClickEvent('#inputConfirmPassword',"#registerBtn");
 		
+		Registration.initRegistrationFormHints();
+		Registration.initRegisterNewUserButton();
+
+	};
+	
+	Registration.initRegisterNewUserButton = function(){
 		$("#registerBtn").click(function(){
+			Registration.clearAllErrorMessages();
 			Registration.registerNewUser();
 		});
 	};
+	
+	Registration.initRegistrationFormHints = function(){
+		
+		var position;
+		var trigger = "focus";
+		// show hint on top of input field for tablets and smartphones
+		($(window).width() < 767)? position = "top":position = "right";
+		
+
+		Utils.initTooltipFor("#inputUsername",Messages.usernameHint,position,trigger);
+		Utils.initTooltipFor("#inputFirstName",Messages.firstNameHint,position,trigger);
+		Utils.initTooltipFor("#inputLastName",Messages.firstNameHint,position,trigger);
+		Utils.initTooltipFor("#inputLastName",Messages.lastNameHint,position,trigger);
+		Utils.initTooltipFor("#inputEmail",Messages.emailHint,position,trigger);
+		Utils.initTooltipFor("#inputPassword",Messages.passwordHint,position,trigger);
+		Utils.initTooltipFor("#inputConfirmPassword",Messages.confirmPasswordHint,position,trigger);
+		
+	};
+
+	
+	Registration.clearAllErrorMessages = function(){
+		Utils.clearErrorMessagesFrom("#registrationErrors");
+	}
 
 	return Registration;
 });

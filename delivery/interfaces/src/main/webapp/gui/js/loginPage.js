@@ -1,7 +1,7 @@
-define(['require','validation','registration','utils','cookie'],
+define(['require','validation','registration','utils','cookie','messages'],
 
 /** @lends Login */ 
-function(require,Validation,Registration,Utils,Cookie){
+function(require,Validation,Registration,Utils,Cookie,Messages){
 	
 	console.log("loginPage.js is loaded");
 	
@@ -48,15 +48,27 @@ function(require,Validation,Registration,Utils,Cookie){
 
 	Login.checkUsername = function(){
 		//log("checking email");
-		var isValidUsername = Validation._isName(this._getUsername());
-		Utils.highlightField("#username",isValidUsername);
+		
+		var isValidUsername = Utils.checkInputField(
+								"#username",
+								"#loginErrors",
+								Validation._isName,
+								Messages.emptyUsername,
+								Messages.wrongUsername
+		);
+		
 		return isValidUsername;
 	};
 
 	Login.checkPassword = function(){
 		//log("checking password");
-		var isValidPassword = Validation._isPassword(this._getPassword());
-		Utils.highlightField("#password",isValidPassword);
+		var isValidPassword = Utils.checkInputField(
+								"#password",
+								"#loginErrors",
+								Validation._isPassword,
+								Messages.emptyPassword,
+								Messages.wrongPassword
+		);
 		return isValidPassword;
 	};
 
@@ -64,36 +76,37 @@ function(require,Validation,Registration,Utils,Cookie){
 		
 		console.log('trying to login user...');
 		
-		Utils.clearErrorMessagesFrom("#loginForm .errorMessages");
+		Login.clearAllErrorMessages();
 		
-		var isValidEmail = Login.checkUsername();
+		var isValidUsername = Login.checkUsername();
 		var isValidPassword = Login.checkPassword();
 		
-		if(isValidEmail && isValidPassword){
+		if(isValidUsername && isValidPassword){
 				console.log("email and password are correct");			
-				var username = null;
-				username = Login._getUsername();
-				var password = null;
-				password = Login._getPassword();
-				window.setTimeout(function(){
-						Login.sendLoginInformation(username,password);
-				},200);
+				
+				var username = Login._getUsername();
+				var password = Login._getPassword();
+				
+				Login.sendLoginInformation(username,password);
+				
 		}else{
 				console.log("username or password are NOT correct");	
-				if(!isValidEmail){
-					Utils.addErrorMessageTo("#loginForm .errorMessages", "Wrong username");
+				if(!isValidUsername){
+					Login.showErrorMessage("Wrong username syntax");
 				}
 				if(!isValidPassword){
-					Utils.addErrorMessageTo("#loginForm .errorMessages", "Password too short");
+					Login.showErrorMessage("Password too short");
 				}
 			}
+	};
+	
+	Login.clearAllErrorMessages = function(){
+		Utils.clearErrorMessagesFrom("#loginForm .errorMessages");
 	};
 	
 	Login.sendLoginInformation = function(username, password){
 		
 		console.log("Sending login information to the server...");
-		console.log("username " + username);
-		console.log("password "  + password);
 		$.ajax({
 			cache: false,
 			type: "GET",
@@ -101,37 +114,51 @@ function(require,Validation,Registration,Utils,Cookie){
 			dataType: "json",
 			url : "/api/v1/user/"+username,
 			beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization",
+				Login.showLoadingSign();
+				xhr.setRequestHeader("Authorization",
                 "Basic " + btoa(username + ":" + password)); // TODO Base64 support
 			},
+			complete: function(){
+				Login.hideLoadingSign();
+			},
 			success: function(user,status,xhr){
-				console.log(user);
-				Utils.setCurrentUser(user);
-				console.log(status);
-				console.log(xhr.responseText);
-				console.log("SET COOKIE ===> " + xhr.getResponseHeader('Set-Cookie'));
-								
+				Utils.setCurrentUser(user);						
 				require('mainPage').load();
 			},
 			error: function(xhr,status,thrown){
 				console.log("Response " + xhr.responseText);
 				console.log(status);
 				console.log(thrown);
+			},
+			statusCode:{		
+				404: function(){
+					Utils.addErrorMessageTo("#loginErrors", Messages.userNotFound);	
+				}
 			}
 		});
 	};
 
 
 	Login.initLoginPage = function(){
+		this.initRegisterLink();
+		this.initLoginForm();
+		this.initSignInBtn();
+		this.initShowCookie();
+		Registration.initRegistrationForm();
+	};
+	
+	Login.initLoginForm = function(){
 		$("#fiteagle").removeClass("hidden");
 		Utils.changeFocusOnEnterClick("#username","#password");
 		Utils.addOnEnterClickEvent("#password","#signIn");
 		
-		Login.initRegisterLink();
-		Login.initSignInBtn();
-		Login.initShowCookie();
-
-		Registration.initRegistrationForm();
+		var screenWidth = $(window).width();
+		var position;
+		
+		(screenWidth < 767) ? position = "top" : position = "right";
+				
+		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
+		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
 	};
 	
 	
@@ -142,10 +169,10 @@ function(require,Validation,Registration,Utils,Cookie){
 		});
 	}
 	
-	Login.initSignInBtn = function(){
-		
+	Login.initSignInBtn = function(){	
 		$("#signIn").on('click',function(){
 			 console.log("SignIn button clicked !");
+			 Utils.clearErrorMessagesFrom("#loginErrors");
 			 Login.loginUser();
 		});	
 	};
@@ -171,10 +198,11 @@ function(require,Validation,Registration,Utils,Cookie){
 	Login.initShowCookie= function(){
 		
 		$("#showCookie").on('click',function(){
-				console.log(Utils.listCookies());
+				console.log(Messages.wrongCredentials);
+				alert(document.cookie.length);
 		});
 	};
-	
+
 	
 	return Login;
 

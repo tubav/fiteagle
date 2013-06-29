@@ -1,8 +1,17 @@
 .hidden{display:none}
 body{
-	background: #f7f7f7;
 	padding:0 !important;
-	color: #585858;
+	background: #f7f7f7;
+	background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -webkit-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -ms-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -o-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: linear-gradient(top, #f7f7f7, #e1e1e1);
+	color: #373737 !important;
+	font-size: 16px !important;
+	font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif !important;
+	font-family: "proxima-nova-1","proxima-nova-2",sans-serif !important;
+	line-height: 1.5 !important;
 }
 label {margin-top:3px;}
 
@@ -22,19 +31,24 @@ i[class^=icon-]{margin-right: 10px;}
 
 .left20{margin-left: 20px}
 .top10{margin-top:10px}
+.top20{margin-top:20px}
 .errorMessage{margin-bottom:20px}
 
-#main{margin-bottom: 20px !important}
+.horizontal{list-style-type: none}
+
+.horizontal li {display:inline}
+
+#main{margin-bottom: 20px !important;}
 #toolbar{color:black;}
 #toolbar .pull-right{
 		cursor: pointer;
 		margin-right: 20px}
 
 #userInfoPanel{ margin: 10px 0px 5px 0}
-#fancyLoginList{ border-right: 1px solid #dddddd}
+#fancyLoginList{ border-right: 1px solid #d1d1d1}
 #fancyLoginList > ul > li{margin-top:10px; list-style:none;}
 #fancyLogins  li:first{margin-top:0}
-#aside{border-right: 1px solid #dddddd;}
+#aside{border-right: 1px solid #d1d1d1;}
 #desktop{margin-left:0px !important}		
 #logoImg{ margin-top:15px}
 #logoTxt{ margin-left:5px;}
@@ -90,11 +104,16 @@ i[class^=icon-]{margin-right: 10px;}
 .invalid{
 	border: 1px solid red !important;
 }
-.pageHeader  {
-	margin:20px 0 0 10px; 
-	font-size:1.4em;
-	cursor: pointer;
+.page-header  {
+	margin-bottom:10px !important;
+	border-bottom:1px solid #D1D1D1 !important;
 }
+
+.thumbnail {
+    border: 0 none !important;
+    box-shadow: none !important;
+}
+
 #mainArea{ height: 500px;}
 #aside hr{margin:10px 0 0 0;}
 #aside .search-query{margin-top:10px;}
@@ -162,6 +181,11 @@ i[class^=icon-]{margin-right: 10px;}
 		line-height: 1.5;
 		font-size: 14px;
 		margin-top: 3px;
+	}
+	
+	
+	#main{
+		margin: 0 20px 40px 20px;
 	}	
 }
  

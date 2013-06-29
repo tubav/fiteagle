@@ -17,6 +17,8 @@ function(){
 				$(triggerOn).click();
 			}
 		});
+		
+		$(selectorOn).focus();
 	};
 
 	/**
@@ -38,7 +40,7 @@ function(){
 	* @param {JQuery Selector} bool - boolean value. If the value is true then ".invalid" class is added otherwise it is removed.
 	**/
 	Utils.highlightField =function(selector,bool){
-		if(bool){
+		if(!bool){
 			$(selector).removeClass("invalid");
 		}else{
 			$(selector).addClass("invalid");
@@ -91,6 +93,7 @@ function(){
 	};
 
 	Utils.clearErrorMessagesFrom = function(selector){
+		console.log("Clearing all error messages from "+ selector);
 		var errorMessages = $(selector).find(".errorMessage");
 		errorMessages.remove();
 	};	
@@ -153,6 +156,37 @@ function(){
 		
 		return aString;
 	};
+	
+	
+	Utils.initTooltipFor = function(selector,title,placement,trigger){
+		if(selector){
+			$(selector).tooltip({
+				'title': title,
+				'placement':placement, 
+				'trigger' : trigger	
+			});
+		}
+	};
+	
+	Utils.checkInputField = function(inputFieldSelector,errorFieldSelector,validationFunction,emptyFieldMsg,validationErrorMessage){
+		
+		var inputFieldValue = $(inputFieldSelector).val();
+		
+		if(Validation._isEmpty(inputFieldValue)){		
+			Utils.highlightField(inputFieldSelector,true);
+			Utils.addErrorMessageTo(errorFieldSelector,emptyFieldMsg);
+		}else{
+			var isValid = validationFunction(inputFieldValue);
+			if(!isValid){
+				Utils.addErrorMessageTo(errorFieldSelector,validationErrorMessage);
+				Utils.highlightField(inputFieldSelector,true);	
+			}else{
+				Utils.highlightField(inputFieldSelector,false);	
+			}
+		}		
+		return isValid;		
+	};
+
 		
 	return Utils;
 });
