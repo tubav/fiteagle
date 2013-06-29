@@ -55,6 +55,11 @@ function(){
 		//log("password is valid "+ isValidPassword);
 		return isValidPassword;
 	};
+	
+	
+	Validation._isAffiliation = function(){
+		return true; //TODO
+	};
 
 	return Validation;
 });

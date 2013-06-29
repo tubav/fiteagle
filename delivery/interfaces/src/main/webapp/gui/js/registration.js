@@ -44,6 +44,12 @@ function(Validation, Utils, MainPage,Messages){
 		var _email = $('#inputEmail').val();
 		return _email;
 	};
+	
+	
+	Registration._getAffiliation = function(){
+		var _affiliation = $("#inputAffiliation").val();
+		return _affiliation;
+	};
 			
 	/**
 	* Gets a password value provided by the user within a registration form. 
@@ -133,6 +139,30 @@ function(Validation, Utils, MainPage,Messages){
 	};
 	
 	
+	Registration.checkAffiliation = function(){
+		
+		var isValidAffiliation = Utils.checkInputField(
+									"#inputAffiliation",
+									"#registrationErrors",
+									Validation._isAffiliation,
+									Messages.emptyAffiliation,
+									Messages.wrongAffiliation
+									);
+		return isValidAffiliation;
+	};
+	
+	Registration.enableRegisterBtn = function(){
+		$("#registerBtn").removeClass("disabled");
+	};
+	
+	Registration.disableRegisterBtn = function(){
+		var regBtn = $("#registerBtn");
+		if(!regBtn.hasClass("disabled")){
+			$("#registerBtn").addClass("disabled");
+		}
+	};
+	
+	
 	Registration.checkPassword = function(){
 		
 		var isValidPassword = Utils.checkInputField(
@@ -170,16 +200,18 @@ function(Validation, Utils, MainPage,Messages){
 	Registration._arePasswordInputsConsist = function(){
 		var p1 = this._getPassword();
 		var p2 = this._getConfirmPassword();
+		var areConsists;
 		if(p1 && p2 && p1 === p2){ 
-			return true;
 			Utils.highlightField("#inputPassword",false);
-			Utils.highlightField("#inputConfirmPassword",false);	
+			Utils.highlightField("#inputConfirmPassword",false);
+			areConsists = true;	
 		}else{
 			Utils.addErrorMessageTo("#registrationErrors",Messages.passwordsAreInconsistent);
 			Utils.highlightField("#inputPassword",true);
 			Utils.highlightField("#inputConfirmPassword",true);
+			areConsists = false;
 		}	
-		return false;
+		return areConsists;
 	};
 			
 	Registration.checkUserPasswords = function(){
@@ -196,10 +228,11 @@ function(Validation, Utils, MainPage,Messages){
 	Registration.checkRequiredUserEntries = function(){
 		
 		var allEntriesValid = 
-					this.checkUsername()    &
-					this.checkEmail()       &
-					//this.checkFirstName() &
-					//this.checkLastName()  &
+					this.checkUsername()     &
+					this.checkEmail()        &
+					this.checkFirstName()    &
+					this.checkLastName()     &
+					this.checkAffiliation()  &
 					this.checkUserPasswords();
 					
 		return allEntriesValid; 
@@ -208,11 +241,12 @@ function(Validation, Utils, MainPage,Messages){
 	Registration.registerNewUser = function(){
 		console.log("Registration clicked ");
 		var allEntriesValid = this.checkRequiredUserEntries();
+		console.log("All entries are valid !" + allEntriesValid);
 		if(allEntriesValid){		
 			var newUser = this._createNewUser(
-							this._getUsername(),
 							this._getFirstName(),
 							this._getLastName(),
+							this._getAffiliation(),
 							this._getPassword(),
 							this._getEmail()
 						  );
@@ -231,7 +265,7 @@ function(Validation, Utils, MainPage,Messages){
 			cache: false,
 			type: "PUT",
 			async: false,
-			url: "/api/v1/user/"+newUser.username,
+			url: "/api/v1/user/"+Registration._getUsername(),
 			data: userToJSON,
 			contentType: "application/json",
 			dataType: "json",
@@ -251,6 +285,7 @@ function(Validation, Utils, MainPage,Messages){
 				
 				201: function(){
 					console.log("New user: "+ newUser.firstName +" "+newUser.lastName+ " has been successfully created.");
+					newUser.username = Registration._getUsername();
 					Utils.setCurrentUser(newUser);
 					MainPage.load();
 					
@@ -277,14 +312,14 @@ function(Validation, Utils, MainPage,Messages){
 		
 	};
 		
-	Registration._createNewUser = function(username,firstName,lastName,password,email){		
+	Registration._createNewUser = function(firstName,lastName,affiliation,password,email){		
 		
 		var newUser = new Object();
 		
-		newUser.userName = username;
 		newUser.firstName = firstName;
 		newUser.lastName = lastName;
 		newUser.email = email;
+		newUser.affiliation = affiliation;
 		newUser.password = password;
 		newUser.publicKeys = [];
 
@@ -323,8 +358,8 @@ function(Validation, Utils, MainPage,Messages){
 
 		Utils.initTooltipFor("#inputUsername",Messages.usernameHint,position,trigger);
 		Utils.initTooltipFor("#inputFirstName",Messages.firstNameHint,position,trigger);
-		Utils.initTooltipFor("#inputLastName",Messages.firstNameHint,position,trigger);
 		Utils.initTooltipFor("#inputLastName",Messages.lastNameHint,position,trigger);
+		Utils.initTooltipFor("#inputAffiliation",Messages.affiliationHint,position,trigger);
 		Utils.initTooltipFor("#inputEmail",Messages.emailHint,position,trigger);
 		Utils.initTooltipFor("#inputPassword",Messages.passwordHint,position,trigger);
 		Utils.initTooltipFor("#inputConfirmPassword",Messages.confirmPasswordHint,position,trigger);

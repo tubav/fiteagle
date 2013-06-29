@@ -13,6 +13,33 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
      * @return Login Object
      */
 	Login = {}; 
+	
+	
+	Login.setCurrentTab = function(currentTab){
+		if(typeof(Storage)!=="undefined"){
+			sessionStorage.currentTab = currentTab;
+		  }
+		else{
+			console.log("Session storage is no supported !");
+		}
+	};
+	
+	Login.getCurrentTab = function(){
+		return sessionStorage.currentTab;
+	};
+	
+	Login.initNavigationMenu = function(){	
+		$("#homeTab").on('click',function(){
+			Login.setCurrentTab("#homeTab");
+		});
+		$("#registrationTab").on('click',function(){
+			Login.setCurrentTab("#registrationTab");
+		});	
+		$("#aboutUsTab").on('click',function(){
+			Login.setCurrentTab("#aboutUsTab");
+		});
+		
+	};
 
 	/**
       * .... description goes here ...
@@ -78,30 +105,15 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		
 		Login.clearAllErrorMessages();
 		
-		var isValidUsername = Login.checkUsername();
-		var isValidPassword = Login.checkPassword();
-		
-		if(isValidUsername && isValidPassword){
-				console.log("email and password are correct");			
+		if(this.checkUsername() & Login.checkPassword()){
+				console.log("email and password are correct");					
+				Login.sendLoginInformation(Login._getUsername(),Login._getPassword());
 				
-				var username = Login._getUsername();
-				var password = Login._getPassword();
-				
-				Login.sendLoginInformation(username,password);
-				
-		}else{
-				console.log("username or password are NOT correct");	
-				if(!isValidUsername){
-					Login.showErrorMessage("Wrong username syntax");
-				}
-				if(!isValidPassword){
-					Login.showErrorMessage("Password too short");
-				}
-			}
+		}
 	};
 	
 	Login.clearAllErrorMessages = function(){
-		Utils.clearErrorMessagesFrom("#loginForm .errorMessages");
+		Utils.clearErrorMessagesFrom("#loginErrors");
 	};
 	
 	Login.sendLoginInformation = function(username, password){
@@ -140,11 +152,20 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 
 
 	Login.initLoginPage = function(){
+		this.initNavigationMenu();
 		this.initRegisterLink();
 		this.initLoginForm();
 		this.initSignInBtn();
 		this.initShowCookie();
 		Registration.initRegistrationForm();
+		
+		this.showCurrentTab();
+	};
+	
+	
+	Login.showCurrentTab = function(){
+		var tab = 	Login.getCurrentTab();
+		$(tab).click();
 	};
 	
 	Login.initLoginForm = function(){
@@ -198,7 +219,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	Login.initShowCookie= function(){
 		
 		$("#showCookie").on('click',function(){
-				console.log(Messages.wrongCredentials);
+				console.log("cookie -)");
 				alert(document.cookie.length);
 		});
 	};

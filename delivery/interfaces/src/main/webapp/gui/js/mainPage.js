@@ -43,8 +43,10 @@ function(require,Utils,LoginPage){
 		var user = Utils.getCurrentUser();
 		
 		console.log(user);
+		$("#inputUsername").val(user.username);
 		$("#inputFirstName").val(user.firstName);
 		$("#inputLastName").val(user.lastName);
+		$("#inputAffiliation").val(user.affiliation);
 		$("#inputEmail").val(user.email);
 		$("#inputUsername").val(user.username);
 	};
