@@ -2,7 +2,9 @@ package org.fiteagle.delivery.rest.fiteagle;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NewUser {
   
   private String username;
