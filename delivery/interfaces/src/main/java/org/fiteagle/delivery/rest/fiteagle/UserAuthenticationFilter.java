@@ -1,7 +1,6 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,6 +9,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -46,48 +46,84 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
       return;
     }
     
-    if(!(request.getSession(false) == null)){
-      log.info("authenticated with session!");
-      log.info("Created: "+new Date(request.getSession().getCreationTime()).toString());
-      log.info("Last Accessed: "+new Date(request.getSession().getLastAccessedTime()).toString());
-      chain.doFilter(req, resp);
-    }
-    
     String username = getTarget(request);
     if(username == null){
       response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());      
       return;
     }
     
-    if(!authenticateWithCookie(request)){
-      if(!authenticateWithUsernamePassword(request, response)){
-        return;
-      }
-      
-      if(getAuthCookieFromRequest(request) == null){
-        response.addCookie(createNewCookie(username));
-      }
+    if(!authenticateWithSession(request) && !authenticateWithCookie(request) && !authenticateWithUsernamePassword(request, response)){
+      return;
     }
     
-    request.getSession(true);
+    addCookieOnLogin(request, response);
+    createSession(request);    
     chain.doFilter(req, resp);
-    deleteSessionOnLogout(request);
+    deleteSessionAndCookieOnLogout(request, response);
   }
 
-  private void deleteSessionOnLogout(HttpServletRequest request) {
+  private void createSession(HttpServletRequest request) {
+    HttpSession session = request.getSession(true);
+    if(session != null){
+      session.setAttribute("username", getTarget(request));
+    }
+  }
+
+  private void addCookieOnLogin(HttpServletRequest request, HttpServletResponse response) {    
+    boolean setCookie = Boolean.parseBoolean(request.getParameter("setCookie"));
+    if(request.getMethod().equals("GET") && setCookie == true && getAuthCookieFromRequest(request) == null){      
+      response.addCookie(createNewCookie(getTarget(request)));      
+    }
+  }
+
+  private void deleteSessionAndCookieOnLogout(HttpServletRequest request, HttpServletResponse response) {
     if(request.getMethod().equals("DELETE") && request.getRequestURI().endsWith("/cookie")){
-      request.getSession().invalidate();
+      request.getSession().invalidate();      
+      addNullCookies(request, response);
+    }
+  }
+
+  private void addNullCookies(HttpServletRequest request, HttpServletResponse response) {
+    Cookie authCookie = getAuthCookieFromRequest(request);
+    if(authCookie != null){
+      authCookie.setMaxAge(0);
+      authCookie.setValue(null);
+      authCookie.setPath("/api/v1/user");
+      response.addCookie(authCookie);
     }    
+    
+    Cookie sessionCookie = getSessionCookieFromRequest(request);
+    if(sessionCookie != null){
+      sessionCookie.setMaxAge(0);
+      sessionCookie.setValue(null);
+      sessionCookie.setPath("/api/v1/user");
+      response.addCookie(sessionCookie);
+    }
+  }
+  
+  private boolean authenticateWithSession(HttpServletRequest request){
+    HttpSession session = request.getSession(false);    
+    if(session == null){
+      return false;
+    }
+    if (!isUserAuthorizedForTarget(session.getAttribute("username").toString(), getTarget(request))) {
+      return false;
+    }    
+    return true;
   }
 
   private boolean authenticateWithCookie(HttpServletRequest request){
     String username = getTarget(request);
     Cookie authCookieFromRequest = getAuthCookieFromRequest(request);
     Cookie cookieFromStorage = (username == null)? null : cookies.get(username);
-    if(authCookieFromRequest != null && cookieFromStorage != null && authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
-      return true;
-    }
-    return false;
+    
+    if(authCookieFromRequest == null || cookieFromStorage == null){
+      return false;
+    }    
+    if(!authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
+      return false;
+    }    
+    return true;
   }
 
   private Cookie getAuthCookieFromRequest(HttpServletRequest request) {
@@ -102,11 +138,25 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     return null;
   }
   
+  private Cookie getSessionCookieFromRequest(HttpServletRequest request) {
+    Cookie[] cookiesFromRequest = request.getCookies();
+    if(cookiesFromRequest != null){
+      for(Cookie cookie : cookiesFromRequest){
+        if(cookie.getName().equals("JSESSIONID")){
+          return cookie;
+        }
+      }
+    }
+    return null;
+  }
+  
   private Cookie createNewCookie(String username){
     String authToken = createRandomAuthToken("-username:"+username);
     Cookie cookie = new Cookie(COOKIE_NAME, authToken);
     cookie.setSecure(true);
-//  TODO  cookie.setHttpOnly(true);
+//  TODO:  cookie.setHttpOnly(true);
+    cookie.setMaxAge(365 * 24 * 60 * 60);
+    cookie.setPath("/api/v1/user");
     cookies.put(username, cookie);
     return cookie;
   } 

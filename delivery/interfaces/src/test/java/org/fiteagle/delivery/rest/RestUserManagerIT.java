@@ -34,6 +34,11 @@ public class RestUserManagerIT {
     RestAssured.baseURI = "https://localhost";
     RestAssured.port = 8443;
     RestAssured.basePath = "/api/v1/user";    
+    
+    given().auth().preemptive().basic("mnikolaus", "mitja")
+    .when().delete("mnikolaus");
+    given().auth().preemptive().basic("mnikolaus", "pass")
+    .when().delete("mnikolaus");
   }
   
   @Test
@@ -75,10 +80,21 @@ public class RestUserManagerIT {
   }
   
   @Test
-  public void testCookieAuthentication() {
+  public void testSessionAuthentication() {
     PutUser1();
     
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus");
+    String cookieValue = response.getSessionId();
+    
+    given().cookie("JSESSIONID",cookieValue).and()
+      .expect().statusCode(200).when().delete("mnikolaus");
+  }
+  
+  @Test
+  public void testCookieAuthentication() {
+    PutUser1();
+    
+    Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus?setCookie=true");
     String cookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
     
     given().cookie(UserAuthenticationFilter.getCookieName(),cookieValue).and()
@@ -130,9 +146,9 @@ public class RestUserManagerIT {
   
   @After
   public void deleteUsers(){
-    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+    given().auth().preemptive().basic("mnikolaus", "mitja")
       .when().delete("mnikolaus");
-    given().auth().preemptive().basic("mnikolaus", "pass").and()
+    given().auth().preemptive().basic("mnikolaus", "pass")
       .when().delete("mnikolaus");
   }
   

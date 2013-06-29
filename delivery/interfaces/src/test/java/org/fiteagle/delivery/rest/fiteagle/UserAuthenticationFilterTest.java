@@ -63,13 +63,13 @@ public class UserAuthenticationFilterTest {
     expectLastCall().times(3);
     
     expect(req.getMethod()).andReturn("GET");
-    expectLastCall().times(2);
+    expectLastCall().times(3);
     
+    expect(req.getParameter("setCookie")).andReturn(null);
     expect(req.getSession(false)).andReturn(null);
     expect(req.getSession(true)).andReturn(null);
     
     expect(req.getCookies()).andReturn(null);
-    expectLastCall().times(2);
     
     chain.doFilter(req, resp);
     
@@ -85,7 +85,7 @@ public class UserAuthenticationFilterTest {
     filter.saveCookie("test", cookie);  
     
     expect(req.getMethod()).andReturn("GET");
-    expectLastCall().times(2);
+    expectLastCall().times(3);
     
     expect(req.isSecure()).andReturn(true);
     
@@ -94,6 +94,7 @@ public class UserAuthenticationFilterTest {
     expect(req.getRequestURI()).andReturn("/api/v1/user/test");
     expectLastCall().times(2);
     
+    expect(req.getParameter("setCookie")).andReturn(null);
     expect(req.getSession(false)).andReturn(null);
     expect(req.getSession(true)).andReturn(null);
     
