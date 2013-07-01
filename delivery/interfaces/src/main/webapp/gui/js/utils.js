@@ -17,6 +17,8 @@ function(){
 				$(triggerOn).click();
 			}
 		});
+		
+		$(selectorOn).focus();
 	};
 
 	/**
@@ -38,7 +40,7 @@ function(){
 	* @param {JQuery Selector} bool - boolean value. If the value is true then ".invalid" class is added otherwise it is removed.
 	**/
 	Utils.highlightField =function(selector,bool){
-		if(bool){
+		if(!bool){
 			$(selector).removeClass("invalid");
 		}else{
 			$(selector).addClass("invalid");
@@ -91,6 +93,7 @@ function(){
 	};
 
 	Utils.clearErrorMessagesFrom = function(selector){
+		console.log("Clearing all error messages from "+ selector);
 		var errorMessages = $(selector).find(".errorMessage");
 		errorMessages.remove();
 	};	
@@ -125,6 +128,7 @@ function(){
 			}
 			return null;
 	};
+	
 
 	Utils.resetUser = function(){
 		sessionStorage.clear();
@@ -153,7 +157,127 @@ function(){
 		
 		return aString;
 	};
+	
+	
+	Utils.initTooltipFor = function(selector,title,placement,trigger){
+		if(selector){
+			$(selector).tooltip({
+				'title': title,
+				'placement':placement, 
+				'trigger' : trigger	
+			});
+		}
+	};
+	
+	Utils.checkInputField = function(inputFieldSelector,errorFieldSelector,validationFunction,emptyFieldMsg,validationErrorMessage){
 		
+		var inputFieldValue = $(inputFieldSelector).val();
+		
+		if(Validation._isEmpty(inputFieldValue)){		
+			Utils.highlightField(inputFieldSelector,true);
+			Utils.addErrorMessageTo(errorFieldSelector,emptyFieldMsg);
+		}else{
+			var isValid = validationFunction(inputFieldValue);
+			if(!isValid){
+				Utils.addErrorMessageTo(errorFieldSelector,validationErrorMessage);
+				Utils.highlightField(inputFieldSelector,true);	
+			}else{
+				Utils.highlightField(inputFieldSelector,false);	
+			}
+		}		
+		return isValid;		
+	};
+	
+	Utils.getCurrentTab = function(){
+		var tab;
+		if(typeof(Storage)!=="undefined"){
+			tab = sessionStorage.currentTab;
+			if(typeof tab == "undefined"){
+				 tab = "#manageProfileMenu";
+			}
+		}else{
+			console.log("Session storage is not supported !");
+		}
+		return tab;
+	};
+	
+	Utils.setCurrentTab = function(currentTab){
+		sessionStorage.currentTab = currentTab;
+	};
+	
+	Utils.showCurrentTab = function(){
+		//console.log("CURRENT " +this.getCurrentTab());
+		$(this.getCurrentTab()).click();
+	};
+	
+	Utils.setCredentials = function(username,password){
+		sessionStorage.credentials = btoa(username + ":" + password);
+	}; 
+	
+	Utils.getCredentials = function(){
+		return sessionStorage.credentials;
+	};
+	
+	
+	Utils.getUserFromServer = function(username){
+		
+		var userFromServer = null;
+		
+		$.ajax({
+			cache: false,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			url : "/api/v1/user/"+username,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(user,status,xhr){
+				userFromServer = user;
+			},
+			error: function(xhr,status,thrown){
+				console.log("Response " + xhr.responseText);
+				console.log(status);
+				console.log(thrown);
+			}
+		});
+	
+		return userFromServer;
+	};
+	
+	Utils.updateUserOnServer = function(user){
+		$.ajax({
+			cache: false,
+			type: "POST",
+			async: false,
+			url: "/api/v1/user/"+user.username,
+			data: JSON.stringify(user),
+			contentType: "application/json",
+			dataType: "json",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(data,status){
+				console.log("UPDATING DATA " + data);
+				console.log(status);
+			},
+			error: function(xhl,status){
+				console.log(xhl.responseText);
+				console.log(status);
+			},
+			statusCode:{			
+				200: function(){
+					console.log("User has been successfully updated on server");
+					var updatedUser = Utils.getUserFromServer(user.username);
+					Utils.setCurrentUser(updatedUser);
+					initAddRemoveKeysForm();
+				}
+			}
+		});
+	};	
+	
 	return Utils;
 });
 

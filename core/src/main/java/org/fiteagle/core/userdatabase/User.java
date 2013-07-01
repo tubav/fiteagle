@@ -32,6 +32,10 @@ public class User {
 	private List<String> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
+	private final static int MINIMUM_USERNAME_LENGTH = 3;
+	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 3;
+  private final static int MINIMUM_AFFILITAION_LENGTH = 2;
+
 	
 	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<String> publicKeys){
 		this.username = username;
@@ -87,13 +91,40 @@ public class User {
 	}
 	
 	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException{  
-    if(username == null || firstName == null || lastName == null || email == null || affiliation == null || passwordHash == null || passwordSalt == null){
-      throw new UserPersistable.NotEnoughAttributesException();
+	  if(username == null){
+	    throw new UserPersistable.NotEnoughAttributesException("no username given");
+	  }
+	  if(firstName == null){
+	    throw new UserPersistable.NotEnoughAttributesException("no firstName given");
+	  }
+	  if(lastName == null){
+      throw new UserPersistable.NotEnoughAttributesException("no lastName given");
     }
-    if(username.length() == 0 || firstName.length() == 0 || lastName.length() == 0 || email.length() == 0 ||
-        !email.contains("@") || affiliation.length() == 0 || passwordHash.length() == 0 || passwordSalt.length() == 0){
-      throw new UserPersistable.InValidAttributeException();
+	  if(email == null){
+      throw new UserPersistable.NotEnoughAttributesException("no email given");
     }
+	  if(affiliation == null){
+      throw new UserPersistable.NotEnoughAttributesException("no affiliation given");
+    }	  
+	  if(passwordHash == null){
+      throw new UserPersistable.NotEnoughAttributesException("no password given or password too short");
+    }   
+	  
+	  if(username.length() < MINIMUM_USERNAME_LENGTH){
+	    throw new UserPersistable.InValidAttributeException("username too short");
+	  }
+	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
+      throw new UserPersistable.InValidAttributeException("firstName too short");
+    }
+	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
+      throw new UserPersistable.InValidAttributeException("lastName too short");
+    }
+	  if(!email.contains("@") || !email.contains(".")){
+      throw new UserPersistable.InValidAttributeException("an email needs to contain \"@\" and \".\"");
+    }
+	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
+      throw new UserPersistable.InValidAttributeException("affiliation too short");
+    }	 
   }
 	
 	private byte[] generatePasswordSalt(){
@@ -103,7 +134,7 @@ public class User {
 	
 	private String generatePasswordHash(byte[] salt, String password) throws NoSuchAlgorithmException{
 	  if(password == null || password.length() < MINIMUM_PASSWORD_LENGTH){
-      return null;
+	    return null;
 	  }
     
 	  byte[] passwordBytes = createHash(salt, password);

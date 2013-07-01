@@ -182,7 +182,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	@Override
 	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
 	  if(key == null || key.length() == 0){
-      throw new InValidAttributeException();
+      throw new InValidAttributeException("no valid key");
     }
 	  User user = get(username);
 	  if(user == null){
@@ -203,7 +203,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
   public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException {
     if(key == null || key.length() == 0){
-      throw new InValidAttributeException();
+      throw new InValidAttributeException("no valid key");
     }
     User user = get(username);
     if(user == null){

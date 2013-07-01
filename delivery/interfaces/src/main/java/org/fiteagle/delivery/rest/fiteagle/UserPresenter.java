@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Path("v1/user")
 public class UserPresenter{
@@ -70,7 +71,7 @@ public class UserPresenter{
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     } catch (NotEnoughAttributesException | InValidAttributeException e) {
-      throw new WebApplicationException(Response.status(422).build());
+      throw new FiteagleWebApplicationException(422, e.getMessage());
     }
     return Response.status(201).build();
   }
@@ -88,7 +89,7 @@ public class UserPresenter{
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);      
     } catch (NotEnoughAttributesException | InValidAttributeException e) {
-      throw new WebApplicationException(Response.status(422).build());
+      throw new FiteagleWebApplicationException(422, e.getMessage());
     }
     return Response.status(200).build();
   }
@@ -112,7 +113,7 @@ public class UserPresenter{
     try {
       manager.addKey(username, pubkey);
     } catch (InValidAttributeException e){
-      throw new WebApplicationException(Response.status(422).build());
+      throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DatabaseException e) {
@@ -129,7 +130,7 @@ public class UserPresenter{
       String decodedPublicKey = URLDecoder.decode(pubkey, "UTF-8");
       manager.deleteKey(username, decodedPublicKey);
     } catch (InValidAttributeException e){
-      throw new WebApplicationException(Response.status(422).build());
+      throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (UnsupportedEncodingException | DatabaseException e) {
@@ -156,7 +157,7 @@ public class UserPresenter{
   @Consumes("text/plain")
   public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
     if(passphrase == null || passphrase.length() == 0){
-      throw new WebApplicationException(Response.status(422).build());
+      throw new FiteagleWebApplicationException(422, "no passphrase given or passphrase too short");
     }
     try {      
       return manager.createUserPrivateKeyAndCertAsString(username, passphrase);
@@ -183,4 +184,12 @@ public class UserPresenter{
     return Response.status(200).build();
   }
 
+  
+  public class FiteagleWebApplicationException extends WebApplicationException {  
+    private static final long serialVersionUID = 5823637635206011675L;
+    public FiteagleWebApplicationException(int status, String message){
+      super(new ResponseBuilderImpl().status(status).entity(message).build()); 
+    }   
+  }   
+  
 }
