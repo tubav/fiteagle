@@ -131,8 +131,9 @@ public abstract class UserPersistableTest {
 	
 	@Test
 	public void testDeleteKey() throws DatabaseException{
+	  String key = KEYS2.get(0);
 	  database.add(USER2);
-	  database.deleteKey(USER2.getUsername(), KEYS2.get(0));
-	  assertTrue(!database.get(USER2).getPublicKeys().contains(KEYS2.get(0)));
+	  database.deleteKey(USER2.getUsername(), key);
+	  assertTrue(!database.get(USER2).getPublicKeys().contains(key));
 	}	
 }
