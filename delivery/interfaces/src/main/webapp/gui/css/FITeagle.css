@@ -19,6 +19,8 @@ body * { outline:none !important}
 
 form{margin:0;}
 
+p{text-align:justify}
+
 #loginPages a{
 	text-decoration: none;
 	color: #f09030;
@@ -40,12 +42,20 @@ form{margin:0;}
 	text-shadow: #d07010 0px 0px 2px;
 }
 
-#navs ul li a{ text-align: center; padding-left:30px; padding-right:30px}
+#navs ul li{display:table;
+    margin:0px auto 0px auto;}
+
+#navs ul li a{ text-align: center; padding-left:40px; padding-right:40px}
+
+#navs .btn-navbar{margin-right:4%; margin-bottom:20px}
 
 #mainArea ul{list-style-type:square;}
 
 ul li a{color: #585858}
 ul li a:hover, ul li a:focus{text-decoration: none;}
+
+#managePubliKeys ul li textarea{color: black}
+#managePublicKeys ul{list-style-type:none;}
 
 hr{ border-top: 1px solid #D1D1D1}
 h4{margin-bottom:20px}
@@ -151,6 +161,15 @@ i[class^=icon-]{margin-right: 10px;}
 }
 
 #availableSlicesList > ul > li{ margin-top:10px}
+
+.centered-pills { text-align:center; }
+.centered-pills ul.nav-pills { display:inline-block; }
+.centered-pills li { display:inline; }
+.centered-pills a { float:left; }
+
+@media (max-width:979px){
+		#navs ul {margin-bottom: 20px}
+}
 
 /* Portrait tablet to landscape and desktop */
 @media (min-width: 768px) and (max-width: 979px) {

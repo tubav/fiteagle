@@ -128,6 +128,7 @@ function(){
 			}
 			return null;
 	};
+	
 
 	Utils.resetUser = function(){
 		sessionStorage.clear();
@@ -186,7 +187,29 @@ function(){
 		}		
 		return isValid;		
 	};
+	
+	Utils.getCurrentTab = function(){
+		var tab;
+		if(typeof(Storage)!=="undefined"){
+			tab = sessionStorage.currentTab;
+			if(typeof tab == "undefined"){
+				 tab = "#manageProfileMenu";
+			}
+		}else{
+			console.log("Session storage is not supported !");
+		}
+		return tab;
+	};
+	
+	Utils.setCurrentTab = function(currentTab){
+		sessionStorage.currentTab = currentTab;
+	};
+	
+	Utils.showCurrentTab = function(){
+		console.log("CURRENT " +this.getCurrentTab());
 
+		$(this.getCurrentTab()).click();
+	}; 
 		
 	return Utils;
 });

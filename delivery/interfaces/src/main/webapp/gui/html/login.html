@@ -30,18 +30,25 @@
 
 <!------------------- NAVIGATION TOOLBAR ------------------------------>	
 	<div id="navigation" class="row-fluid">
-		<div id="navs" class="span4 offset4">
-			<ul class="nav nav-pills">
-				<li class="active">
-					<a id="homeTab" href="#home" data-toggle="tab">Home</a>
-				</li>
-				<li>
-					<a id="registrationTab" href="#registration" data-toggle="tab">Registration</a>
-				</li>
-				<li>
-					<a id="aboutUsTab" href="#aboutUs" data-toggle="tab">About Us</a>
-				</li>
-			</ul>
+		<div id="navs" class="span12">
+			<a class="btn btn-inverse btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse">
+				<i class="icon-reorder"></i>
+			</a>
+			<div class="nav-collapse collapse">
+				<div class="span6 offset3 centered-pills">
+					<ul class="nav nav-pills">
+						<li class="active">
+							<a id="homeTab" href="#home" data-toggle="tab">Home</a>
+						</li>
+						<li>
+							<a id="registrationTab" href="#registration" data-toggle="tab">Registration</a>
+						</li>
+						<li>
+							<a id="aboutUsTab" href="#aboutUs" data-toggle="tab">About Us</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>	
 	</div>
 	
@@ -51,7 +58,7 @@
 	<div id="main">
 		<div id="loginPages" class="tab-content">
 			<div id="home" class="row-fluid tab-pane active">
-					<div  class="span6 offset3 ">
+					<div  class="span10 offset1 ">
 						<div id="FITeagleInfo" class="page-header">
 							<h3>
 								Welcome to FITeagle Portal !
@@ -104,7 +111,7 @@
 					</div>
 				</div>
 			<div id="registration" class="row-fluid tab-pane">
-					<div  class="span6 offset3 ">
+					<div  class="span10 offset1 ">
 						<div class="row-fluid">
 							<div class="page-header">
 								<h3>
@@ -115,7 +122,7 @@
 							</div>
 						</div>
 						<div class="row-fluid">
-							<div id="registrationForm">
+							<div id="registrationForm" class="span10 offset1">
 								<div class="row-fluid">
 									<p></p>
 								</div>
@@ -171,7 +178,7 @@
 					</div>
 				</div>
 			<div id="aboutUs" class="row-fluid tab-pane">
-				<div  class="span6 offset3 ">
+				<div  class="span10 offset1 ">
 					<div class="page-header">
 						<h3>About FITeagle</h3>
 					</div>

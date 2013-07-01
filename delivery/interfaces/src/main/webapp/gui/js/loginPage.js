@@ -15,30 +15,33 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	Login = {}; 
 	
 	
-	Login.setCurrentTab = function(currentTab){
+	setCurrentTab = function(currentTab){
 		if(typeof(Storage)!=="undefined"){
 			sessionStorage.currentTab = currentTab;
 		  }
 		else{
-			console.log("Session storage is no supported !");
+			console.log("Session storage is not supported !");
 		}
 	};
 	
-	Login.getCurrentTab = function(){
+	getCurrentTab = function(){
 		return sessionStorage.currentTab;
 	};
 	
-	Login.initNavigationMenu = function(){	
-		$("#homeTab").on('click',function(){
-			Login.setCurrentTab("#homeTab");
-		});
-		$("#registrationTab").on('click',function(){
-			Login.setCurrentTab("#registrationTab");
+	
+	initNavigationMenu = function(){
+		toggleNavigationBtn();
+		$("#navigation ul li a").on('click',function(){
+			Utils.setCurrentTab("#"+$(this).attr("id"));
 		});	
-		$("#aboutUsTab").on('click',function(){
-			Login.setCurrentTab("#aboutUsTab");
-		});
-		
+	};
+	
+	toggleNavigationBtn = function(){
+		if($(window).width() > 979){
+			$('.btn-navbar').addClass('hidden');
+		}else{
+			$('.btn-navbar').removeClass('hidden');
+		}
 	};
 
 	/**
@@ -152,23 +155,22 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 
 
 	Login.initLoginPage = function(){
-		this.initNavigationMenu();
-		this.initRegisterLink();
-		this.initLoginForm();
-		this.initSignInBtn();
-		this.initShowCookie();
-		Registration.initRegistrationForm();
-		
-		this.showCurrentTab();
+		initOnWindowResizeEvent();
+		initNavigationMenu();
+		initRegisterLink();
+		initLoginForm();
+		initSignInBtn();
+		Registration.initRegistrationForm();	
+		Utils.showCurrentTab();
 	};
 	
+	initOnWindowResizeEvent = function(){
+		$(window).resize(function(){
+			toggleNavigationBtn();
+		});
+	}
 	
-	Login.showCurrentTab = function(){
-		var tab = 	Login.getCurrentTab();
-		$(tab).click();
-	};
-	
-	Login.initLoginForm = function(){
+	initLoginForm = function(){
 		$("#fiteagle").removeClass("hidden");
 		Utils.changeFocusOnEnterClick("#username","#password");
 		Utils.addOnEnterClickEvent("#password","#signIn");
@@ -183,14 +185,14 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	};
 	
 	
-	Login.initRegisterLink = function(){
+	initRegisterLink = function(){
 		$("#registrationLink").on('click',function(e){
 			e.preventDefault();
 			$("#registrationTab").click();
 		});
 	}
 	
-	Login.initSignInBtn = function(){	
+	initSignInBtn = function(){	
 		$("#signIn").on('click',function(){
 			 console.log("SignIn button clicked !");
 			 Utils.clearErrorMessagesFrom("#loginErrors");

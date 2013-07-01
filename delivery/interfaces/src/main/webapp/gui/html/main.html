@@ -35,7 +35,7 @@
 				</span>
 				<ul id="userInfoDropdown" class="dropdown-menu" >
 					<li><a id="manageProfileMenu" href="#manageProfile" data-toggle="tab"><i class="icon-wrench"></i>Manage Profile</a></li>
-					<li><a id="addRemoveKeysMenu" href="#addRemoveKeys" data-toggle="tab"><i class="icon-key"></i>Add/Remove keys</a></li>
+					<li><a id="managePublicKeysMenu" href="#managePublicKeys" data-toggle="tab"><i class="icon-key"></i>Add/Remove keys</a></li>
 					<li><a id="downloadCertificateMenu" href="#downloadCertificate" data-toggle="tab"><i class="icon-cloud-download"></i>Download certificate</a></li>
 					<li><a id="signOut" href="#"><i class="icon-signout"></i>Sign Out</a></li>
 				</ul>
@@ -104,8 +104,9 @@
 			<div id="desktop" class="span9 tab-content">
 				<div id="manageProfile" class="row-fluid tab-pane">
 					<div class="span12">
-						<h2 class="left20"><i class="icon-wrench"></i>Manage User Profile</h2>
-						<hr/>
+						<div class="page-header">
+							<h2 class="left20"><i class="icon-wrench"></i>Manage User Profile</h2>
+						</div>
 						<div class="row-fluid">
 							<div class="span10 offset1">
 								<div class="row-fluid errorMessages">			
@@ -136,27 +137,35 @@
 						</div>
 					</div>
 				</div>	
-				<div id="addRemoveKeys" class="row-fluid tab-pane">
+				<div id="managePublicKeys" class="row-fluid tab-pane">
 					<div class="span12">
-						<h2 class="left20"><i class="icon-key"></i>Add/Remove Public Keys</h2>
-						<hr/>
+						<div class="page-header">
+							<h2 class="left20"><i class="icon-key"></i>Manage Public Keys</h2>
+						</div>
 						<div class="row-fluid">
 							<div class="span10 offset1">
-								<div class="row-fluid">
-									<div class="span10">
-										<label class="span2" for="publicKeyArea">Public Key</label>
-										<textarea id="publicKeyArea" row="3" class="span10" placeholder="Public Key"></textarea>
-										<button class="btn btn-inverse pull-right"><i class="icon-circle-arrow-up"></i>Upload</button>
+								<div class="page-header">
+									<h3>Existing user keys</h3>
+								</div>
+								<div class="row-fluid top20">
+									<div class="span12">
+										<ul id="publicKeysList">
+					
+										</ul>	
 									</div>
 								</div>
-								
+								<div class="page-header">
+									<h3>New user keys</h3>
+								</div>
 								<div class="row-fluid">
 									<div class="span2">
 										<button id="selectFromFile" class="btn btn-success"><i class=""></i>Select from File</button>
+										<input type="file" class="hidden" id="selectFromFileInput"></input>
 									</div>
-									<div class="span3 top10">
-										<label id="currentFileName" for= "selectFromFile">Current File: testKey.ppa</label>
+									<div class="span6 top10">
+										<label id="currentFileName">No file is selected</label>
 									</div>
+									<button id="uploadNewPublicKey" class="btn btn-inverse span2 pull-right hidden"><i class="icon-circle-arrow-up"></i>Upload</button>
 								</div>	
 							</div>
 						</div>
