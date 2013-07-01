@@ -2,8 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>FITeagle :: Interactors</name>
-    <artifactId>interactors</artifactId>
+	<name>FITeagle :: Clients</name>
+    <artifactId>clients</artifactId>
+	<groupId>org.fiteagle</groupId>
     <packaging>pom</packaging>
 	
 	<parent>
@@ -13,13 +14,7 @@
 	</parent>
 
 	<modules>
-		<module>sfa</module>
-		<module>usermanagement</module>
-		<module>certificates</module>
-		<module>groupmanagement</module>
-		<module>configuration</module>
-		<module>api</module>
-		<module>monitoring</module>
+		<module>xipiClient</module>
 	</modules>
 
    <repositories>
@@ -29,3 +24,4 @@
     </repository>
   </repositories>
 </project>
+ 
