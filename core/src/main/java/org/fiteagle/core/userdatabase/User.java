@@ -117,28 +117,28 @@ public class User {
     return digest.digest(password.getBytes());
   }
 	
-  public static User createMergedUser(User oldUser, User newUser){
-    if(newUser.getFirstName() == null){
-      newUser.setFirstName(oldUser.getFirstName());
+  public void mergeWithUser(User newUser){
+    if(newUser.getFirstName() != null){
+     this.firstName = newUser.getFirstName();
     }
-    if(newUser.getLastName() == null){
-      newUser.setLastName(oldUser.getLastName());
+    if(newUser.getLastName() != null){
+      this.lastName = newUser.getLastName();
     }
-    if(newUser.getPublicKeys() == null || newUser.getPublicKeys().size() == 0){
-      newUser.setPublicKeys(oldUser.getPublicKeys());
+    if(newUser.getPublicKeys() != null && newUser.getPublicKeys().size() != 0){
+      this.publicKeys = newUser.getPublicKeys();
     }
-    if(newUser.getEmail() == null){
-      newUser.setEmail(oldUser.getEmail());
+    if(newUser.getEmail() != null){
+      this.email = newUser.getEmail();
     }
-    if(newUser.getAffiliation() == null){
-      newUser.setAffiliation(oldUser.getAffiliation());
+    if(newUser.getAffiliation() != null){
+      this.affiliation = newUser.getAffiliation();
     }
-    if(newUser.getPasswordSalt() == null || newUser.getPasswordHash() == null){
-      newUser.setPasswordSalt(oldUser.getPasswordSalt());
-      newUser.setPasswordHash(oldUser.getPasswordHash());
+    if(newUser.getPasswordHash() != null){
+      this.passwordSalt = newUser.getPasswordSalt();
+      this.passwordHash = newUser.getPasswordHash();
     }
-    newUser.setLast_modified(Calendar.getInstance().getTime());
-    return newUser;    
+    this.setLast_modified(Calendar.getInstance().getTime());
+    this.checkAttributes();      
   }
   
 	public String getUsername() {

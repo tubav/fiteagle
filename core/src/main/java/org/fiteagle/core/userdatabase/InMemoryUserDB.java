@@ -48,10 +48,9 @@ public class InMemoryUserDB implements UserPersistable {
 		if(users.get(u.getUsername()) == null)
 			throw new RecordNotFoundException();
 		else{
-		  User oldUser = get(u.getUsername());
-		  u = User.createMergedUser(oldUser, u);
-		  u.checkAttributes();
-		  users.put(u.getUsername(), u);    
+		  User newUser = get(u.getUsername());
+		  newUser.mergeWithUser(u);		 
+		  users.put(u.getUsername(), newUser);    
 		}
 			
 	}
