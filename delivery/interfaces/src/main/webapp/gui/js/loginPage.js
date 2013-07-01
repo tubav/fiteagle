@@ -109,8 +109,9 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Login.clearAllErrorMessages();
 		
 		if(this.checkUsername() & Login.checkPassword()){
-				console.log("email and password are correct");					
-				Login.sendLoginInformation(Login._getUsername(),Login._getPassword());
+				console.log("email and password are correct");
+				Utils.setCredentials(Login._getUsername(),Login._getPassword());					
+				Login.sendLoginInformation(Login._getUsername());
 				
 		}
 	};
@@ -119,7 +120,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Utils.clearErrorMessagesFrom("#loginErrors");
 	};
 	
-	Login.sendLoginInformation = function(username, password){
+	Login.sendLoginInformation = function(username){
 		
 		console.log("Sending login information to the server...");
 		$.ajax({
@@ -131,7 +132,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 			beforeSend: function(xhr){
 				Login.showLoadingSign();
 				xhr.setRequestHeader("Authorization",
-                "Basic " + btoa(username + ":" + password)); // TODO Base64 support
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
 			},
 			complete: function(){
 				Login.hideLoadingSign();
@@ -145,7 +146,10 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 				console.log(status);
 				console.log(thrown);
 			},
-			statusCode:{		
+			statusCode:{
+				401: function(){
+					Utils.addErrorMessageTo("#loginErrors",Messages.wrongPasswordKey);
+				},
 				404: function(){
 					Utils.addErrorMessageTo("#loginErrors", Messages.userNotFound);	
 				}
@@ -174,6 +178,8 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		$("#fiteagle").removeClass("hidden");
 		Utils.changeFocusOnEnterClick("#username","#password");
 		Utils.addOnEnterClickEvent("#password","#signIn");
+		
+		$('#signIn').focus();
 		
 		var screenWidth = $(window).width();
 		var position;
@@ -225,7 +231,6 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 				alert(document.cookie.length);
 		});
 	};
-
 	
 	return Login;
 

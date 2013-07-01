@@ -54,7 +54,7 @@ p{text-align:justify}
 ul li a{color: #585858}
 ul li a:hover, ul li a:focus{text-decoration: none;}
 
-#managePubliKeys ul li textarea{color: black}
+#managePubliKeys ul li textarea{color: black;}
 #managePublicKeys ul{list-style-type:none;}
 
 hr{ border-top: 1px solid #D1D1D1}
@@ -65,19 +65,31 @@ i[class^=icon-]{margin-right: 10px;}
 .left20{margin-left: 20px}
 .top10{margin-top:10px}
 .top20{margin-top:20px}
+.padding20{padding:0 20px 0 20px}
 .errorMessage{margin-bottom:20px}
+.nomargin{margin:0 !important;}
 
 .horizontal{list-style-type: none}
 
 .horizontal li {display:inline}
 
+
+input.search-query{height:24px !important;}
+
+#aside{height:100%}
+
 #main{margin-bottom: 20px !important;}
 #toolbar{color:black;}
 #toolbar .pull-right{
 		cursor: pointer;
-		margin-right: 20px}
+		padding-right: 20px}
+		
+#toolbar .form-search{
+	margin:0 !important;
+	padding-top:5px;
+}
 
-#userInfoPanel{ margin: 10px 0px 5px 0}
+#userInfoPanel{ padding: 10px 0px 5px 0}
 #fancyLoginList{ border-right: 1px solid #d1d1d1}
 #fancyLoginList > ul > li{margin-top:10px; list-style:none;}
 #fancyLogins  li:first{margin-top:0}
@@ -147,7 +159,6 @@ i[class^=icon-]{margin-right: 10px;}
     box-shadow: none !important;
 }
 
-#mainArea{ height: 500px;}
 #aside hr{margin:10px 0 0 0;}
 #aside .search-query{margin-top:10px;}
 #aside{margin:10px 0 0 0px;}

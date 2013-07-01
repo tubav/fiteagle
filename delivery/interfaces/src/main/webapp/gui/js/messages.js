@@ -53,7 +53,9 @@ define([],function(){
 	
 	Messages.passwordsAreInconsistent = "Passwors are inconsistent.";
 	
-	Messages.userNotFound = "Current user isn't found";
+	Messages.userNotFound = "Current user isn't found.";
+	
+	Messages.wrongPasswordKey = "Wrong password.";
 	
 	return Messages;
 

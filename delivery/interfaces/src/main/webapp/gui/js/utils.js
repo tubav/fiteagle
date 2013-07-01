@@ -206,11 +206,78 @@ function(){
 	};
 	
 	Utils.showCurrentTab = function(){
-		console.log("CURRENT " +this.getCurrentTab());
-
+		//console.log("CURRENT " +this.getCurrentTab());
 		$(this.getCurrentTab()).click();
+	};
+	
+	Utils.setCredentials = function(username,password){
+		sessionStorage.credentials = btoa(username + ":" + password);
 	}; 
+	
+	Utils.getCredentials = function(){
+		return sessionStorage.credentials;
+	};
+	
+	
+	Utils.getUserFromServer = function(username){
 		
+		var userFromServer = null;
+		
+		$.ajax({
+			cache: false,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			url : "/api/v1/user/"+username,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(user,status,xhr){
+				userFromServer = user;
+			},
+			error: function(xhr,status,thrown){
+				console.log("Response " + xhr.responseText);
+				console.log(status);
+				console.log(thrown);
+			}
+		});
+	
+		return userFromServer;
+	};
+	
+	Utils.updateUserOnServer = function(user){
+		$.ajax({
+			cache: false,
+			type: "POST",
+			async: false,
+			url: "/api/v1/user/"+user.username,
+			data: JSON.stringify(user),
+			contentType: "application/json",
+			dataType: "json",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(data,status){
+				console.log("UPDATING DATA " + data);
+				console.log(status);
+			},
+			error: function(xhl,status){
+				console.log(xhl.responseText);
+				console.log(status);
+			},
+			statusCode:{			
+				200: function(){
+					console.log("User has been successfully updated on server");
+					var updatedUser = Utils.getUserFromServer(user.username);
+					Utils.setCurrentUser(updatedUser);
+					initAddRemoveKeysForm();
+				}
+			}
+		});
+	};	
+	
 	return Utils;
 });
 
