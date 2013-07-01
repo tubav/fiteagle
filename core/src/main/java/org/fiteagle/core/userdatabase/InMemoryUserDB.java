@@ -71,7 +71,7 @@ public class InMemoryUserDB implements UserPersistable {
 	@Override
 	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException {
 	  if(key == null || key.length() == 0){
-	    throw new InValidAttributeException();
+	    throw new InValidAttributeException("no valid key");
 	  }
 	  User u;
 		if((u=users.get(username)) == null)
@@ -82,7 +82,7 @@ public class InMemoryUserDB implements UserPersistable {
 	@Override
 	public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
 	  if(key == null || key.length() == 0){
-      throw new InValidAttributeException();
+      throw new InValidAttributeException("no valid key");
     }
 	  User u = users.get(username);
     if(u == null){

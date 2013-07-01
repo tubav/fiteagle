@@ -30,9 +30,25 @@ public interface UserPersistable {
   
   public class NotEnoughAttributesException extends RuntimeException {
     private static final long serialVersionUID = -8279867183643310351L;
+    
+    public NotEnoughAttributesException(){
+      super();
+    }
+    
+    public NotEnoughAttributesException(String message){
+      super(message);
+    }
   }
   
   public class InValidAttributeException extends RuntimeException {
     private static final long serialVersionUID = -1299121776233955847L;
+    
+    public InValidAttributeException(){
+      super();
+    }
+    
+    public InValidAttributeException(String message){
+      super(message);      
+    }
   }
 }
