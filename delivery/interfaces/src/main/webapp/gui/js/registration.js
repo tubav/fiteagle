@@ -256,8 +256,7 @@ function(Validation, Utils, MainPage,Messages){
 		}
 	};
 	
-	Registration.registerUserOnServer = function(newUser){
-		
+	Registration.registerUserOnServer = function(newUser){	
 		console.log("Registering a new user on a server...");
 		var userToJSON = JSON.stringify(newUser);
 		console.log("New USER "+ userToJSON);			
@@ -333,22 +332,17 @@ function(Validation, Utils, MainPage,Messages){
 		});
 	};
 	
-	Registration.initRegistrationFormHints = function(){
-		
+	Registration.initRegistrationFormHints = function(){	
 		var position;
 		var trigger = "focus";
-		// show hint on top of input field for tablets and smartphones
-		($(window).width() < 767)? position = "top":position = "right";
-		
-
-		Utils.initTooltipFor("#inputUsername",Messages.usernameHint,position,trigger);
-		Utils.initTooltipFor("#inputFirstName",Messages.firstNameHint,position,trigger);
-		Utils.initTooltipFor("#inputLastName",Messages.lastNameHint,position,trigger);
-		Utils.initTooltipFor("#inputAffiliation",Messages.affiliationHint,position,trigger);
-		Utils.initTooltipFor("#inputEmail",Messages.emailHint,position,trigger);
-		Utils.initTooltipFor("#inputPassword",Messages.passwordHint,position,trigger);
-		Utils.initTooltipFor("#inputConfirmPassword",Messages.confirmPasswordHint,position,trigger);
-		
+		(Utils.isSmallScreen())? position = "top":position = "right";		
+		selectors = [
+			"#inputUsername","#inputFirstName","#inputLastName","#inputAffiliation",
+			"#inputEmail","#inputPassword","#inputConfirmPassword"
+		];		
+		for(var i=0; i < selectors.length; i++){
+			Utils.initTooltipFor(selectors[i],Messages.confirmPasswordHint,position,trigger);
+		}
 	};
 
 	

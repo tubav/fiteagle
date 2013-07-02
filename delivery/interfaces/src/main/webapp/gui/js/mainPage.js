@@ -4,7 +4,7 @@ define(['require','utils',],
  */ 
 function(require,Utils,LoginPage){
 	
-	console.log("mainPage.js is loaded");
+	//console.log("mainPage.js is loaded");
 	
 	Main = {};
 	
@@ -66,7 +66,7 @@ function(require,Utils,LoginPage){
 	
 	initCollapseSigns = function(){
 		var icons = $('.collapseSign');
-		console.log("INIT COLLAPSE _______________");
+		//console.log("INIT COLLAPSE _______________");
 		icons.each(function(){
 			var t = $(this);
 			initCollapseSignFor(t);
@@ -75,9 +75,9 @@ function(require,Utils,LoginPage){
 	
 	initCollapseSignFor = function(obj){
 		var selector = obj.closest('div').attr('data-target');
-		wasOpen  = $(selector).hasClass('in');
-			console.log("selector" + selector + " was open " + wasOpen);
-			if(!wasOpen){
+		isOpen  = $(selector).hasClass('in');
+			//console.log("selector" + selector + " is open " + isOpen);
+			if(isOpen){
 					obj.attr('class','');
 					obj.addClass('collapseSign icon-chevron-down');
 			}else{

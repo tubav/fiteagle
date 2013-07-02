@@ -3,7 +3,7 @@ define(['require','validation','registration','utils','cookie','messages'],
 /** @lends Login */ 
 function(require,Validation,Registration,Utils,Cookie,Messages){
 	
-	console.log("loginPage.js is loaded");
+	//console.log("loginPage.js is loaded");
 	
 	 /** 
      * Login class
@@ -28,6 +28,16 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		return sessionStorage.currentTab;
 	};
 	
+	
+	disableFederatedLinks = function(){
+		var a = $("#fancyLoginList").find('li a');
+		a.each(function(){
+			$(this).on('click',function(e){
+				e.preventDefault();
+			});
+		});
+
+	};
 	
 	initNavigationMenu = function(){
 		toggleNavigationBtn();
@@ -159,6 +169,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 
 
 	Login.initLoginPage = function(){
+		disableFederatedLinks();
 		initOnWindowResizeEvent();
 		initNavigationMenu();
 		initRegisterLink();

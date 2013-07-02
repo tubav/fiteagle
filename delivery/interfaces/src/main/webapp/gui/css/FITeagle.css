@@ -45,7 +45,7 @@ p{text-align:justify}
 #navs ul li{display:table;
     margin:0px auto 0px auto;}
 
-#navs ul li a{ text-align: center; padding-left:40px; padding-right:40px}
+#navs ul li a{ text-align: center; padding-left:25%; padding-right:25%}
 
 #navs .btn-navbar{margin-right:4%; margin-bottom:20px}
 
