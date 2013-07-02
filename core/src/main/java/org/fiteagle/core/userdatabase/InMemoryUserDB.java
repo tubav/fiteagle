@@ -4,15 +4,7 @@ import java.util.HashMap;
 
 public class InMemoryUserDB implements UserPersistable {
 
-  private static InMemoryUserDB inMemoryUserDB;
-  public static InMemoryUserDB getInstance(){
-    if(inMemoryUserDB == null){
-      inMemoryUserDB = new InMemoryUserDB();
-    }
-    return inMemoryUserDB;
-  }
-  
-	private HashMap<String, User> users;
+  private HashMap<String, User> users;
 
 	public InMemoryUserDB(){
 		users = new HashMap<String, User>();

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
@@ -51,6 +52,7 @@ public abstract class UserPersistableTest {
     database.delete(USER2);
     database.delete(USER3);
     database.delete(USER4);
+    USER1 = USER2 = USER3 = USER4 = null;
   } 
 
   @Test
@@ -93,12 +95,15 @@ public abstract class UserPersistableTest {
 	}
 		
 	@Test
-	public void testUpdate() throws DatabaseException{
-		database.add(USER2);		
+	public void testUpdate() throws DatabaseException, InterruptedException{
+		database.add(USER2);
+		Thread.sleep(1);
 		database.update(USER3);
 		User updatedUser = database.get(USER3);
 		assertTrue(USER3.equals(updatedUser));
-		assertTrue(updatedUser.getCreated().before(updatedUser.getLast_modified()));
+		Date created = updatedUser.getCreated();
+		Date lastModified = updatedUser.getLast_modified();
+		assertTrue(created.before(lastModified));
 	}
 	
 	@Test

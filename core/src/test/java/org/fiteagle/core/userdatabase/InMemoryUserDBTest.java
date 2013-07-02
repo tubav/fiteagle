@@ -6,7 +6,7 @@ public class InMemoryUserDBTest extends UserPersistableTest {
   
   @Override
   public void setUp() throws DatabaseException{
-    database = InMemoryUserDB.getInstance();
+    database = new InMemoryUserDB();
   }
   
 }
