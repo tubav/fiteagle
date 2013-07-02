@@ -11,24 +11,25 @@ import java.util.Date;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public abstract class UserPersistableTest {
 
 	protected static UserPersistable database;
 	
-	private static final ArrayList<String> KEYS1 = new ArrayList<String>();
-	private static final ArrayList<String> KEYS2 = new ArrayList<String>();	
-	private static User USER1;
-	private static User USER2;
-	private static User USER3;
-	private static User USER4;
+	private ArrayList<String> KEYS1;
+	private ArrayList<String> KEYS2;	
+	private User USER1;
+	private User USER2;
+	private User USER3;
+	private User USER4;
 	
-	@BeforeClass
-	public static void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException{
+	@Before
+	public void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException{
+	  KEYS1 = new ArrayList<String>();
+	  KEYS2 = new ArrayList<String>(); 
 	  KEYS1.add("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
     KEYS1.add("ssh-rsa AAAAB3NzaC2yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
     KEYS2.add("ssh-rsa AAAAB3NzaC3yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
@@ -41,13 +42,12 @@ public abstract class UserPersistableTest {
 	@Before
 	public void setUpAndCleanUp() throws DatabaseException{
 	  setUp();
-    cleanUp();
   }
 	
 	protected abstract void setUp();
 	
-	@AfterClass
-  public static void cleanUp() {
+	@After
+  public void cleanUp() {
     database.delete(USER1);
     database.delete(USER2);
     database.delete(USER3);
@@ -126,7 +126,6 @@ public abstract class UserPersistableTest {
 	@Test(expected = DuplicatePublicKeyException.class)
 	public void testAddDuplicateKeys() throws DatabaseException{
 		database.add(USER1);	
-		System.out.println(database.get(USER1).getPublicKeys().toString());
 		database.addKey(USER1.getUsername(), KEYS1.get(0));
 	}
 	
