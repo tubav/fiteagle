@@ -47,42 +47,6 @@ function(){
 		}
 	};
 
-	Utils.updateUsersData = function(newFirstName, newLastName, newAffiliation, newEmail){
-		Session.set("profileEditing", true);
-		Meteor.users.update(Meteor.userId(), 
-			{
-				$set:{
-					/*emails : [{
-						address: newEmail,
-						verified: false		
-					}],*/
-					profile: {
-						firstName : newFirstName,
-						lastName  : newLastName,
-						affiliation : newAffiliation
-					}
-				}
-			},
-		//calback after updating
-		function(error){
-			Session.set("profileEditing", false);
-			if (!error) {
-				Template.userProfileInformation.error = function(){
-					return false;
-				};
-			} else {
-				Session.set('profile_edit', 'error');
-				Template.userProfileInformation.error = function(){
-					return true;
-				};
-				Template.userProfileInformation.errorMessage = function() {
-					return error.reason;
-				};
-			}
-		}
-	);
-	}
-
 	Utils.addErrorMessageTo = function(selector, message){
 		console.log('adding error message ['+message+']'+" to "+selector);
 		var errorDIV = $("<div>").addClass("row-fluid errorMessage");
@@ -158,7 +122,7 @@ function(){
 	
 	Utils.listCookies = function() {
 		/*var theCookies = document.cookie.split(';');
-		console.log("Total cookie number " + theCookies.length);
+		console.log("Total cookie number " + theCookies.length);U
 		var aString = '';
 		for (var i = 1 ; i <= theCookies.length; i++) {
 			aString += i + ' ' + theCookies[i-1] + "\n";

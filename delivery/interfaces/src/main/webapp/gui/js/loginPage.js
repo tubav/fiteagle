@@ -15,6 +15,20 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	Login = {}; 
 	
 	
+	
+	Login.initLoginPage = function(){
+		disableFederatedLinks();
+		initOnWindowResizeEvent();
+		initNavigationMenu();
+		initRegisterLink();
+		initLoginForm();
+		initSignInBtn();
+		Registration.initRegistrationForm();	
+		Utils.showCurrentTab();
+		
+		initOnResizeEvents();
+	};
+	
 	setCurrentTab = function(currentTab){
 		if(typeof(Storage)!=="undefined"){
 			sessionStorage.currentTab = currentTab;
@@ -47,10 +61,10 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	};
 	
 	toggleNavigationBtn = function(){
-		if($(window).width() > 979){
-			$('.btn-navbar').addClass('hidden');
-		}else{
+		if(Utils.isSmallScreen()){
 			$('.btn-navbar').removeClass('hidden');
+		}else{
+			$('.btn-navbar').addClass('hidden');
 		}
 	};
 
@@ -167,38 +181,32 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		});
 	};
 
-
-	Login.initLoginPage = function(){
-		disableFederatedLinks();
-		initOnWindowResizeEvent();
-		initNavigationMenu();
-		initRegisterLink();
-		initLoginForm();
-		initSignInBtn();
-		Registration.initRegistrationForm();	
-		Utils.showCurrentTab();
-	};
-	
 	initOnWindowResizeEvent = function(){
 		$(window).resize(function(){
 			toggleNavigationBtn();
+			initLoginForm();
 		});
 	}
 	
 	initLoginForm = function(){
-		$("#fiteagle").removeClass("hidden");
+		Utils.unhideBody();
 		Utils.changeFocusOnEnterClick("#username","#password");
 		Utils.addOnEnterClickEvent("#password","#signIn");
+		$('#main').scrollTop(0);
+		$('#username').focus();
 		
-		$('#signIn').focus();
-		
-		var screenWidth = $(window).width();
+		$(function() { // when the DOM is ready...
+			//  Move the window's scrollTop to the offset position of #now
+			$(window).scrollTop($('#header').offset().top);
+		});
+
 		var position;
-		
-		(screenWidth < 767) ? position = "top" : position = "right";
+		(Utils.isSmallScreen()) ? position = "top" : position = "right";
 				
 		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
 		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
+		
+		$('#main').addClass('row-fluid');
 	};
 	
 	

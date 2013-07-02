@@ -339,9 +339,17 @@ function(Validation, Utils, MainPage,Messages){
 		selectors = [
 			"#inputUsername","#inputFirstName","#inputLastName","#inputAffiliation",
 			"#inputEmail","#inputPassword","#inputConfirmPassword"
-		];		
+		];
+		
+		messages=[
+			Messages.usernameHint, Messages.firstNameHint, Messages.lastNameHint,
+			Messages.affiliationHint, Messages.emailHint, Messages.passwordHint,
+			Messages.confirmPasswordHint		
+		];
+				
 		for(var i=0; i < selectors.length; i++){
-			Utils.initTooltipFor(selectors[i],Messages.confirmPasswordHint,position,trigger);
+			console.log(messages[i]);
+			Utils.initTooltipFor(selectors[i],messages[i],position,trigger);
 		}
 	};
 
