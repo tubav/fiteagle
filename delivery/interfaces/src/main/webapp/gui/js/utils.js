@@ -100,13 +100,24 @@ function(){
 
 
 	Utils.unhideBody = function(){
-		$("#fiteagle").removeClass("hidden");
+		this.unhideElement('#fiteagle');
 	};	
 
 	Utils.hideBody = function(){
-		$("#fiteagle").addClass("hidden");
+		this.hideElement("#fiteagle")
 	};
-
+	
+	Utils.hideElement = function(selector){
+		var toHide = $(selector);
+		//console.log("Hiding "+ toHide.attr('class'));
+		if(!toHide.hasClass('hidden')){
+				toHide.addClass('hidden');
+		}
+	};
+	
+	Utils.unhideElement = function(selector){
+		$(selector).removeClass('hidden');
+	};
 
 	Utils.setCurrentUser = function(user){
 				
@@ -246,13 +257,14 @@ function(){
 		return userFromServer;
 	};
 	
-	Utils.updateUserOnServer = function(user){
+	Utils.updateUserOnServer = function(userToUpdate){
+		var user = Utils.getCurrentUser();
 		$.ajax({
 			cache: false,
 			type: "POST",
 			async: false,
 			url: "/api/v1/user/"+user.username,
-			data: JSON.stringify(user),
+			data: JSON.stringify(userToUpdate),
 			contentType: "application/json",
 			dataType: "json",
 			beforeSend: function(xhr){
@@ -270,12 +282,35 @@ function(){
 			statusCode:{			
 				200: function(){
 					console.log("User has been successfully updated on server");
-					var updatedUser = Utils.getUserFromServer(user.username);
-					Utils.setCurrentUser(updatedUser);
+					Utils.setCurrentUser(Utils.getUserFromServer(userToUpdate.username));
 					initAddRemoveKeysForm();
 				}
 			}
 		});
+	};
+	
+	Utils.createNewUser = function(firstName,lastName,affiliation,password,email){		
+		
+		var newUser = new Object();
+		
+		newUser.firstName = firstName;
+		newUser.lastName = lastName;
+		newUser.email = email;
+		newUser.affiliation = affiliation;
+		newUser.password = password;
+		newUser.publicKeys = [];
+
+		//console.log(JSON.stringify(newUser));
+		
+		return newUser;
+	};
+	
+	Utils.isSmallScreen = function(){
+		var width = $(window).width();
+		if(width < 979){
+			return true;
+		}
+		return false;
 	};	
 	
 	return Utils;

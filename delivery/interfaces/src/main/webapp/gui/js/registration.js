@@ -243,7 +243,7 @@ function(Validation, Utils, MainPage,Messages){
 		var allEntriesValid = this.checkRequiredUserEntries();
 		console.log("All entries are valid !" + allEntriesValid);
 		if(allEntriesValid){		
-			var newUser = this._createNewUser(
+			var newUser = Utils.createNewUser(
 							this._getFirstName(),
 							this._getLastName(),
 							this._getAffiliation(),
@@ -281,6 +281,7 @@ function(Validation, Utils, MainPage,Messages){
 				
 				200: function(){
 					console.log("New user is successfully registered");
+					Utils.setCredentials(newUser.username,newUser.password);
 				},
 				
 				201: function(){
@@ -310,22 +311,6 @@ function(Validation, Utils, MainPage,Messages){
 			}
 		});
 		
-	};
-		
-	Registration._createNewUser = function(firstName,lastName,affiliation,password,email){		
-		
-		var newUser = new Object();
-		
-		newUser.firstName = firstName;
-		newUser.lastName = lastName;
-		newUser.email = email;
-		newUser.affiliation = affiliation;
-		newUser.password = password;
-		newUser.publicKeys = [];
-
-		//console.log(JSON.stringify(newUser));
-		
-		return newUser;
 	};
 
 	Registration.initRegistrationForm = function(){
