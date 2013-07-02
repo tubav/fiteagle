@@ -118,8 +118,8 @@ public abstract class UserPersistableTest {
 	@Test
 	public void testAddKey() throws DatabaseException{
 	  database.add(USER1);		
-		database.addKey(USER1.getUsername(), KEYS2.get(0));
-		assertEquals(KEYS2.get(0), database.get(USER1).getPublicKeys().get(2));
+		database.addKey(USER1.getUsername(), "this is a new public key");
+		assertTrue(database.get(USER1).getPublicKeys().contains("this is a new public key"));
 	}
 		
 	@Test
@@ -131,8 +131,9 @@ public abstract class UserPersistableTest {
 	
 	@Test
 	public void testDeleteKey() throws DatabaseException{
+	  String key = KEYS2.get(0);
 	  database.add(USER2);
-	  database.deleteKey(USER2.getUsername(), KEYS2.get(0));
-	  assertTrue(database.get(USER2).getPublicKeys().isEmpty());
+	  database.deleteKey(USER2.getUsername(), key);
+	  assertTrue(!database.get(USER2).getPublicKeys().contains(key));
 	}	
 }

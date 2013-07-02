@@ -146,17 +146,16 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
 	@Override
 	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
-	  User oldUser = get(u.getUsername());
-	  u = User.createMergedUser(oldUser, u);
-	  u.checkAttributes();
+	  User newUser = get(u.getUsername());
+    newUser.mergeWithUser(u);        	  
+	  
 	  try{	    
-	    updateUserInDatabase(u);
-	    deleteKeysFromDatabase(u.getUsername());    
-	    addKeysToDatabase(u.getUsername(), u.getPublicKeys());	   
+	    updateUserInDatabase(newUser);
+	    deleteKeysFromDatabase(newUser.getUsername());    
+	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
 	  } catch(SQLException e){
 	    throw new DatabaseException();
-	  }
-		
+	  }		
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
