@@ -19,14 +19,9 @@
 <!------------------- NAVIGATION TOOLBAR ------------------------------>	
 	<div id="navigation" class="row-fluid">
 		<div id="toolbar" class="row-fluid">
-			<div id="search" class="pull-left left20">
-				<form class="form-search">
-					<div class="input-append">
-							<input type="text" class="search-query top10" placeholder="Search">
-							<button type="submit" class="btn btn-inverse"><i class="icon-search"></i></button>
-					</div>
-				</form>
-			</div>
+			<a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse">
+				<i class="icon-reorder"></i>
+			</a>
 			<div id="userInfoPanel" class="dropdown pull-right">
 				<span class="dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="icon-user icon-2x"></i>
@@ -39,6 +34,17 @@
 					<li><a id="downloadCertificateMenu" href="#downloadCertificate" data-toggle="tab"><i class="icon-cloud-download"></i>Download certificate</a></li>
 					<li><a id="signOut" href="#"><i class="icon-signout"></i>Sign Out</a></li>
 				</ul>
+			</div>
+			
+			<div class="nav-collapse collapse">
+				<div id="search" class="margin3pc">
+					<form class="form-search">
+						<div class="input-append span4">
+								<input type="text" class="search-query top10" placeholder="Search">
+								<button type="submit" class="btn btn-inverse"><i class="icon-search"></i></button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div> 
 
@@ -56,10 +62,9 @@
 				</div>
 				<div id="yourSlices" class="row-fluid">
 					<div class="offset1 span10">
-						<div class="pageHeader" data-toggle="collapse" data-target="#yourSliceList">
-							<b><i class="icon-puzzle-piece"></i>Your Slices</b>
-						</div>
-						<hr />						
+						<div data-toggle="collapse" data-target="#yourSliceList">
+							<h3 class="collapseHeader"><i class="icon-puzzle-piece"></i>Your Slices<i class="collapseSign"></i></h3>
+						</div>					
 						<div id="yourSliceList" class="collapse in">
 							<a href="#" class="btn btn-inverse"><i class="icon-cogs"></i>Manage Slices</a>
 							<ul>
@@ -69,13 +74,13 @@
 							</ul>
 						</div>
 					</div>
-				</div>				
+				</div>
+				<hr/>				
 				<div id="availableSlices" class="row-fluid">
 					<div class="offset1 span10">
-						<div class="pageHeader" data-toggle="collapse" data-target="#availableSlicesList">
-							<b><i class="icon-beaker"></i>Available Testbeds</b>
+						<div data-toggle="collapse" data-target="#availableSlicesList">
+							<h3 class="collapseHeader"><i class="icon-beaker"></i>Available Testbeds<i class="collapseSign"></i></h3>
 						</div>
-						<hr />
 						<div id="availableSlicesList" class="collapse in">
 							<ul>
 								<li data-toggle="collapse" data-target="#AV">AV</li>
@@ -99,16 +104,18 @@
 						
 						</div>
 					</div>
-				</div>			
+				</div>
+				<hr />			
 			</div>
 			<div id="desktop" class="span9 tab-content">
 				<div id="manageProfile" class="row-fluid tab-pane">
 					<div class="span12">
-						<div class="page-header">
-							<h2 class="left20"><i class="icon-wrench"></i>Manage User Profile</h2>
+						<div class="collapseHeader" data-toggle='collapse' data-target='#manageProfileContainer'>
+							<h3><i class="icon-wrench"></i>Manage User Profile<i class="collapseSign"></i></h3>
 						</div>
-						<div class="row-fluid">
-							<div class="top20 padding20">
+						<hr/>
+						<div id="manageProfileContainer" class="row-fluid collapse in">
+							<div class="top20 padding3pc">
 								<div class="row-fluid errorMessages">			
 								</div>
 								<div class="row-fluid">
@@ -131,7 +138,7 @@
 									<label class="span2" for="inputEmail">Email</label>
 									<input class="span8" type="email" id="inputEmail">
 								</div>
-								<button id="saveProfileInfo" class="btn btn-inverse disabled"><i class="icon-save"></i>Save</button>
+								<button id="saveProfileInfo" class="btn btn-inverse"><i class="icon-save"></i>Save</button>
 								<i class="icon-spin icon-spiner"></i>
 							</div>
 						</div>
@@ -139,36 +146,41 @@
 				</div>	
 				<div id="managePublicKeys" class="row-fluid tab-pane">
 					<div class="span12">
-						<div class="page-header">
-							<h2 class="left20"><i class="icon-key"></i>Manage Public Keys</h2>
+						<div class="collapseHeader" data-toggle="collapse"  data-target='#managePublicKeysContainer'>
+							<h3><i class="icon-key"></i>Manage Public Keys<i class="collapseSign"></i></h3>
 						</div>
-						<div class="row-fluid">
-							<div class="padding20">
-								<div class="page-header">
-									<h3>Existing user keys</h3>
+						<hr/>
+						<div id="managePublicKeysContainer" class="row-fluid collapse in">
+							<div class="padding3pc">
+								<div>
+									<h4>Existing user keys</h4>
 								</div>
+								<hr/>
 								<div class="row-fluid top20">
 									<div class="span12">
-										<ul id="publicKeysList">
-					
-										</ul>	
+										<div id="publicKeysList">
+											
+										</div>	
 									</div>
 								</div>
-								<div class="page-header">
-									<h3>New user keys</h3>
+								<div class="top20">
+									<h4>New user keys</h4>
+								</div>
+								<hr/>
+								<div class="row-fluid">
+									<button id="selectFromFile" class="span2 btn btn-success"><i class="icon-file-text"></i>Select from File</button>
+									<input type="file" class="hidden" id="selectFromFileInput"></input>
 								</div>
 								<div class="row-fluid">
-									<div class="span2">
-										<button id="selectFromFile" class="btn btn-success"><i class=""></i>Select from File</button>
-										<input type="file" class="hidden" id="selectFromFileInput"></input>
-									</div>
 									<div class="span6 top10">
-										<label id="currentFileName">No file selected</label>
+										<label id="currentFileName" class="top20">No file selected</label>
 									</div>
-									<button id="uploadNewPublicKey" class="btn btn-inverse span2 pull-right hidden"><i class="icon-circle-arrow-up"></i>Upload</button>
 								</div>
-								<div id="publicKeyFromFile" class="row-fluid">
-
+								<div id="publicKeyFromFile" class="row-fluid"></div>
+								<div class="row-fluid">
+									<button id="uploadNewPublicKey" class="btn btn-inverse span2 hidden">
+										<i class="icon-circle-arrow-up"></i> Upload
+									</button>
 								</div>	
 							</div>
 						</div>
@@ -176,11 +188,13 @@
 				</div>	
 				<div id="downloadCertificate" class="row-fluid tab-pane">
 					<div class="span12">
-						<h2 class="left20"><i class="icon-cloud-download"></i>Download Certificate</h2>
+						<div class="collapseHeader" data-toggle="collapse"  data-target='#downloadCertificateContainer'>
+							<h3><i class="icon-cloud-download"></i>Download Certificate<i class="collapseSign"></i></h3>
+						</div>
 						<hr/>
-						<div class="row-fluid">
+						<div id="downloadCertificateContainer" class="row-fluid collapse in">
 							<div class="span10 offset1">
-								<label class="span2" for="certificates">Select Certificat</label>
+								<label class="span3" for="certificates">Select Certificat</label>
 								<select id="certificates">
 									<option>TU Berlin Certificat</option>
 									<option>AV Certificat</option>

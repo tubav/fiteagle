@@ -4,18 +4,96 @@ define(['require','utils',],
  */ 
 function(require,Utils,LoginPage){
 	
-	console.log("mainPage.js is loaded");
+	//console.log("mainPage.js is loaded");
 	
 	Main = {};
 	
 	initMainPage = function(){
-		Utils.unhideBody();
 
+
+		performScreenAdjustments();
+		Utils.unhideBody();
 		Utils.showCurrentTab();
 		//initAsideSection();
 		initUserInfoPanel();
 		initManageUserProfileForm();
 		initAddRemoveKeysForm();
+		
+		initOnWindowResizeEvents();
+	};
+	
+	performScreenAdjustments = function(){
+		initCollapseHeaders();
+		
+		if(Utils.isSmallScreen()){
+			initForSmallScreens();
+		}else{
+			initForLargeScreens();
+		}
+		initCollapseSigns();
+	};
+	
+	initOnWindowResizeEvents = function(){
+		$(window).resize(function(){
+				performScreenAdjustments();
+		});			
+	};
+	
+	collapseAsideSections = function(bool){
+		var sliceList = $("#yourSliceList");
+		var availableSlices  = $('#availableSlicesList');
+		if(bool){
+			sliceList.removeClass('in');
+			availableSlices.removeClass('in');
+		}else{
+			if(!sliceList.hasClass('in')){
+					sliceList.addClass('in');
+			}
+			if(!availableSlices.hasClass('in')){
+					availableSlices.addClass('in');
+			}	
+		}
+	};
+	
+	initCollapseHeaders = function(){
+		$('.collapseHeader').on('click',function(){
+			var icon = $(this).find('.collapseSign');
+			window.setTimeout(function(){
+				initCollapseSignFor(icon);
+			},100);
+		});
+	};
+	
+	initCollapseSigns = function(){
+		var icons = $('.collapseSign');
+		//console.log("INIT COLLAPSE _______________");
+		icons.each(function(){
+			var t = $(this);
+			initCollapseSignFor(t);
+		});		
+	};
+	
+	initCollapseSignFor = function(obj){
+		var selector = obj.closest('div').attr('data-target');
+		isOpen  = $(selector).hasClass('in');
+			//console.log("selector" + selector + " is open " + isOpen);
+			if(isOpen){
+					obj.attr('class','');
+					obj.addClass('collapseSign icon-chevron-down');
+			}else{
+					obj.attr('class','');
+					obj.addClass('collapseSign icon-chevron-right');
+		}
+	};
+	
+	initForSmallScreens = function(){
+		collapseAsideSections(true);	
+		Utils.unhideElement('#toolbar .btn-navbar');		
+	};
+	
+	initForLargeScreens = function(){
+		collapseAsideSections(false);	
+		Utils.hideElement('#toolbar .btn-navbar');
 	};
 
 	initAsideSection = function(){
@@ -33,7 +111,7 @@ function(require,Utils,LoginPage){
 		console.log("init User Info Panel");
 		var user = Utils.getCurrentUser();
 		console.log('current user '+ Utils.userToString());
-		$("#userName").text(user.email);
+		$("#userName").text(user.firstName +" " + user.lastName);
 			
 		// workaroud for BOOTSTRAP's DropDown bug ("active" class for li elements removed)
 		$("#userInfoDropdown a").click(function(){
@@ -54,12 +132,29 @@ function(require,Utils,LoginPage){
 		var user = Utils.getCurrentUser();
 		
 		console.log(user);
-		$("#inputUsername").val(user.username);
+		$("#inputUsername")
+			.val(user.username);
 		$("#inputFirstName").val(user.firstName);
 		$("#inputLastName").val(user.lastName);
 		$("#inputAffiliation").val(user.affiliation);
 		$("#inputEmail").val(user.email);
 		$("#inputUsername").val(user.username);
+		
+		$('#manageProfile input').on('change',enableSaveProfileBtn);
+		initSaveProfileInfoBtn();
+	};
+	
+	enableSaveProfileBtn = function(){
+		console.log("enabling");
+		$('#saveProfileInfo').removeClass('disabled');
+	};
+	
+	initSaveProfileInfoBtn = function(){
+		var user = Utils.getCurrentUser();
+		user.firstName = "Name changed";
+		$("#saveProfileInfo").on('click',function(){
+			Utils.updateUserOnServer(user);
+		});
 	};
 	
 	initAddRemoveKeysForm = function(){
@@ -89,6 +184,10 @@ function(require,Utils,LoginPage){
 			data: publicKey,
 			contentType: "text/plain",
 			dataType: "json",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
 			success: function(data,status){
 				console.log(data);
 				console.log(status);
@@ -128,7 +227,7 @@ function(require,Utils,LoginPage){
 	};
 	
 	createNewPublicKeysListItem = function(labelValue,textareaValue, itemNumber){
-		var li = $("<li>");
+		var div = $("<div>").addClass('row-fluid');
 		var label = $('<label class="span2"></label>').html(labelValue);
 	
 		var textArea =$('<textarea style="resize:none" rows="3" class="span8" disabled ></textarea>')
@@ -139,14 +238,14 @@ function(require,Utils,LoginPage){
 						.addClass('span2 pull-right');
 		
 		var downloadBtn = $('<button>')
-							.addClass('btn btn-success span3 ')
+							.addClass('btn btn-success span5 ')
 							.html('<i class="icon-download nomargin"></i>');
 							
 		downloadBtn.tooltip({'title': "Download",'placement':"top"});
 		
 		var deleteKey = $('<button>')
 							.attr('data-number',itemNumber)
-							.addClass('btn btn-danger span3 offset2 ')
+							.addClass('btn btn-danger span5 offset2 ')
 							.html('<i class="icon-remove nomargin"></i>');
 							
 		deleteKey.tooltip({'title':"Remove", 'placement':'top'});
@@ -166,11 +265,11 @@ function(require,Utils,LoginPage){
 		keyContols.append(downloadBtn);
 		keyContols.append(deleteKey);
 		
-		li.append(label);
-		li.append(textArea);
-		li.append(keyContols);
+		div.append(label);
+		div.append(textArea);
+		div.append(keyContols);
 		
-		return li;
+		return div;
 		
 	};
 	
@@ -178,21 +277,23 @@ function(require,Utils,LoginPage){
 	
 		console.log("File handling");
 		
-		var files = evt.target.files; // FileList object
+		var f = evt.target.files[0]; // FileList object
 		
 		// files is a FileList of File objects. List some properties.
 		var output = [];
-		for (var i = 0, f; f = files[i]; i++) {
-			output.push('<strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-					  f.size, ' bytes, last modified: ',
-					  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
-			
+		
+		if (!f) {
+			alert("Failed to load file");
+		}else {	
 			var reader = new FileReader();
 			reader.readAsText(f);
 			reader.onload = function(e){
 				contents = e.target.result;
 				setPublicKeyFromFile(contents);
 			};
+			output.push('<strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+				  f.size, ' bytes, last modified: ',
+				  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
 		}
 		
 		if(output.length > 0){
@@ -206,7 +307,7 @@ function(require,Utils,LoginPage){
   
 	setPublicKeyFromFile = function(text){
 	  var container = $("#publicKeyFromFile");
-	  var content = $('<textarea class="span8 offset2" rows=3 disabled style="resize:none"></div>');
+	  var content = $('<textarea class="span8" rows=3 disabled style="resize:none"></textarea>');
 	  content.html(text);
 	  container.find('textarea').remove();
 	  container.append(content);
@@ -222,11 +323,9 @@ function(require,Utils,LoginPage){
 		
 	Main.load = function(){
 			console.log("loading main Page...");
-			//Login.showLoadingSign();
 			var url = "html/main.html";
 			$("#navigation").load(url + " #toolbar",
 				function(){
-					//Login.hideLoadingSign();
 					$("#main").load(url + " #mainArea",
 						function(){								
 							initMainPage(); 

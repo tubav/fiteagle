@@ -45,7 +45,7 @@ p{text-align:justify}
 #navs ul li{display:table;
     margin:0px auto 0px auto;}
 
-#navs ul li a{ text-align: center; padding-left:40px; padding-right:40px}
+#navs ul li a{ text-align: center; padding-left:25%; padding-right:25%}
 
 #navs .btn-navbar{margin-right:4%; margin-bottom:20px}
 
@@ -65,13 +65,16 @@ i[class^=icon-]{margin-right: 10px;}
 .left20{margin-left: 20px}
 .top10{margin-top:10px}
 .top20{margin-top:20px}
-.padding20{padding:0 20px 0 20px}
+.padding3pc{padding:0 3% 0 3%}
+.margin3pc{margin: 0 3% 0 3%}
 .errorMessage{margin-bottom:20px}
 .nomargin{margin:0 !important;}
 
 .horizontal{list-style-type: none}
 
 .horizontal li {display:inline}
+
+.collapseHeader h3{margin-left:2%;}
 
 
 input.search-query{height:24px !important;}
@@ -89,6 +92,8 @@ input.search-query{height:24px !important;}
 	padding-top:5px;
 }
 
+#toolbar .btn-navbar{margin: 0 2% 0 2%}
+
 #userInfoPanel{ padding: 10px 0px 5px 0}
 #fancyLoginList{ border-right: 1px solid #d1d1d1}
 #fancyLoginList > ul > li{margin-top:10px; list-style:none;}
@@ -96,7 +101,6 @@ input.search-query{height:24px !important;}
 #aside{border-right: 1px solid #d1d1d1;}
 #desktop{margin-left:0px !important}		
 #logoImg{ margin-top:15px}
-#logoTxt{ margin-left:5px;}
 #loginErrorField{margin-bottom: 20px;}
 
 #project_title{
@@ -150,9 +154,12 @@ input.search-query{height:24px !important;}
 	border: 1px solid red !important;
 }
 .page-header  {
-	margin-bottom:10px !important;
-	border-bottom:1px solid #D1D1D1 !important;
+	padding: 0 0 0 0 !important;
+	margin:0px ;
+	border-bottom: none !important;
 }
+
+.page-header h3{ margin: 5px 0 5px 0}
 
 .thumbnail {
     border: 0 none !important;
@@ -161,7 +168,7 @@ input.search-query{height:24px !important;}
 
 #aside hr{margin:10px 0 0 0;}
 #aside .search-query{margin-top:10px;}
-#aside{margin:10px 0 0 0px;}
+#aside{margin:0px;}
 
 #search i {margin-left:4px}
 
@@ -178,8 +185,20 @@ input.search-query{height:24px !important;}
 .centered-pills li { display:inline; }
 .centered-pills a { float:left; }
 
+
+.collapseHeader i.collapseSign{float:right; padding-top:8px;}
+
 @media (max-width:979px){
 		#navs ul {margin-bottom: 20px}
+		
+		#aside{height:auto}
+		
+		h2{font-size:20}
+		h3{font-size:18}
+		
+		.collapseHeader h3{margin-left:0%;}
+		
+		#search .form-search{text-align: left; margin-bottom:20px !important}
 }
 
 /* Portrait tablet to landscape and desktop */
@@ -197,16 +216,27 @@ input.search-query{height:24px !important;}
 		font-size: 15px;
 		margin-top: -10px;
 	}
+	
+	#navs ul li.span3{ width: 100%;}
+	#navs ul {margin-left:0 !important}
 }
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
 
+	.tab-content{padding:10px 20px 0px 20px}
+
+	.wrapper{padding: 0 20px 20px 20px}
+	
+	.collapseHeader i.collapseSign{margin-right:2%;}
+	
+	.thumbnail{margin-bottom:20px}
+	.thumbnail.last{margin-bottom:0px}
+
 	#main{
 		overflow-x: hidden;
 	}
 	#aside{border-right: none;}
-	#mainArea{		padding: 0 10px 0 10px;}
 	
 	#fancyLoginList{ border-right: none; padding-bottom:20px; border-bottom: 1px solid #d1d1d1;}
 	#loginForm {margin-top:10px;}
@@ -234,11 +264,6 @@ input.search-query{height:24px !important;}
 		line-height: 1.5;
 		font-size: 14px;
 		margin-top: 3px;
-	}
-	
-	
-	#main{
-		margin: 0 20px 40px 20px;
 	}	
 }
  
