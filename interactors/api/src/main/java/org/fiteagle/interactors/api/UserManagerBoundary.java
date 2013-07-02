@@ -6,6 +6,7 @@ import java.security.cert.X509Certificate;
 
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
@@ -24,7 +25,7 @@ public interface UserManagerBoundary {
       InValidAttributeException;
   
   public abstract void addKey(String username, String key) throws RecordNotFoundException, DatabaseException,
-      InValidAttributeException;
+      InValidAttributeException, DuplicatePublicKeyException;
   
   public abstract void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException;

@@ -249,9 +249,10 @@ public class User {
 	}
 	
 	public void addPublicKey(String publicKey){
-		if(!this.publicKeys.contains(publicKey)){
-			this.publicKeys.add(publicKey);
+		if(this.publicKeys.contains(publicKey)){
+			throw new UserPersistable.DuplicatePublicKeyException();
 		}
+		this.publicKeys.add(publicKey);
 	}
 	
 	public void deletePublicKey(String publicKey){    

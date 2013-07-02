@@ -68,7 +68,7 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException {
+	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
 	  if(key == null || key.length() == 0){
 	    throw new InValidAttributeException("no valid key");
 	  }

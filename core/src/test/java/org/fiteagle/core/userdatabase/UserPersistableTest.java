@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -122,11 +123,11 @@ public abstract class UserPersistableTest {
 		assertTrue(database.get(USER1).getPublicKeys().contains("this is a new public key"));
 	}
 		
-	@Test
+	@Test(expected = DuplicatePublicKeyException.class)
 	public void testAddDuplicateKeys() throws DatabaseException{
-		database.add(USER1);		
+		database.add(USER1);	
+		System.out.println(database.get(USER1).getPublicKeys().toString());
 		database.addKey(USER1.getUsername(), KEYS1.get(0));
-		assertTrue(USER1.equals(database.get(USER1)));
 	}
 	
 	@Test

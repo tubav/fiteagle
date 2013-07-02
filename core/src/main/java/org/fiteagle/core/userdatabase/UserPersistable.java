@@ -8,7 +8,7 @@ public interface UserPersistable {
 	public void delete(User u) throws DatabaseException;
 	
 	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException; 
-	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
+	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
 	public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
 	
 	public User get(String username) throws RecordNotFoundException, DatabaseException;
@@ -22,6 +22,10 @@ public interface UserPersistable {
 	
 	public class DuplicateUsernameException extends RuntimeException {
 		private static final long serialVersionUID = -7242105025265481986L;		
+	}
+	
+	public class DuplicatePublicKeyException extends RuntimeException {
+    private static final long serialVersionUID = -8863826365649086008L;	  
 	}
 	
   public class DatabaseException extends RuntimeException {
