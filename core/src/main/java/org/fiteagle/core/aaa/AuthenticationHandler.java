@@ -109,12 +109,12 @@ public class AuthenticationHandler {
     boolean verified = false;
     KeyManagement keydecoder = KeyManagement.getInstance();
     if (identifiedUser.getPublicKeys() == null || identifiedUser.getPublicKeys().size() == 0) {
-      identifiedUser.addPublicKey(keydecoder.encodePublicKey(certificate.getPublicKey()));
+      identifiedUser.addPublicKey(new org.fiteagle.core.userdatabase.PublicKey(keydecoder.encodePublicKey(certificate.getPublicKey())));
       UserDBManager userDBManager = UserDBManager.getInstance();
       userDBManager.addKey(identifiedUser.getUsername(), identifiedUser.getPublicKeys().get(0));
     }
-    for (String pubKeyString : identifiedUser.getPublicKeys()) {
-      
+    for (org.fiteagle.core.userdatabase.PublicKey publicKey : identifiedUser.getPublicKeys()) {
+      String pubKeyString = publicKey.getPublicKey();
       PublicKey pubKey = null;
       try {
         pubKey = keydecoder.decodePublicKey(pubKeyString);

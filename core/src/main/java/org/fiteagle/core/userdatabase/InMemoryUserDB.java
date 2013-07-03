@@ -15,7 +15,7 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException {
+	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) != null){
 			throw new DuplicateUsernameException();
 		}
@@ -36,7 +36,7 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, NotEnoughAttributesException, InValidAttributeException {
+	public void update(User u) throws RecordNotFoundException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) == null)
 			throw new RecordNotFoundException();
 		else{
@@ -60,8 +60,8 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
-	  if(key == null || key.length() == 0){
+	public void addKey(String username, PublicKey key) throws RecordNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
+	  if(key == null || key.getPublicKey().length() == 0){
 	    throw new InValidAttributeException("no valid key");
 	  }
 	  User u;
@@ -71,15 +71,15 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 	
 	@Override
-	public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-	  if(key == null || key.length() == 0){
-      throw new InValidAttributeException("no valid key");
+	public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+	  if(description == null || description.length() == 0){
+      throw new InValidAttributeException("no valid description");
     }
 	  User u = users.get(username);
     if(u == null){
       throw new RecordNotFoundException();
     }
-    u.deletePublicKey(key);
+    u.deletePublicKey(description);
 	}
 	
 }

@@ -13,48 +13,41 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyExceptio
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public abstract class UserPersistableTest {
 
 	protected static UserPersistable database;
 	
-	private ArrayList<String> KEYS1;
-	private ArrayList<String> KEYS2;	
-	private User USER1;
-	private User USER2;
-	private User USER3;
-	private User USER4;
+	protected static ArrayList<PublicKey> KEYS1;
+	protected static ArrayList<PublicKey> KEYS2;	
+	protected static User USER1;
+	protected static User USER2;
+	protected static User USER3;
+	protected static User USER4;
 	
-	@Before
-	public void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException{
-	  KEYS1 = new ArrayList<String>();
-	  KEYS2 = new ArrayList<String>(); 
-	  KEYS1.add("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-    KEYS1.add("ssh-rsa AAAAB3NzaC2yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
-    KEYS2.add("ssh-rsa AAAAB3NzaC3yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370");
+	@BeforeClass
+	public static void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException{
+	  KEYS1 = new ArrayList<PublicKey>();
+	  KEYS2 = new ArrayList<PublicKey>(); 
+	  KEYS1.add(new PublicKey("ssh-rsa AAAAB3NzaC1ydzkACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKwsghCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeD3iRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370"));
+    KEYS1.add(new PublicKey("ssh-rsa AAAAB3NzaC2yc2EACAADATZCAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFd34gesatWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370"));
+    KEYS2.add(new PublicKey("ssh-rsa AAAAB3NzaC3yc2EACAADAQABAAABAQCybYW812Eb9aTxrXnFgIG7etEijX3/+pWlurrYpvqXi6rl0LZWnotWaC0TeBKWMwDAwPDnSeMxGtYDrZXQJNurrdsmYtzJSL79hhLJqsQCv4s5tK+d/GPRsPSfsGI0A+ckDiQ7yXErUSIgcmGXC4Jo6tuN0QI3x3wIlivDMwkVxZm4m82LwqVECtodnvzbct13a9rIhgjGTRyXXsLVt+X1MB45OlQJ+CWWkaO3emRHDDktZAjkhXNXYKeDtXj4yIhy+jPLTSKiObJnCQD79U+sQEDY+RBPu7Td5GzQx8tFdFAjghZaWgeDiRmpcr8tukR+jG1ynL0zrzumFf4Cg359 mitja@mitja-Precision-WorkStation-370"));
 	  USER1 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjasAffiliation", "mitjasPassword", KEYS1);
 	  USER2 = new User("hschmidt", "hans", "herbert", "hschmidt@test.org", "hansAffiliation", "hansPassword", KEYS2);
 	  USER3 = new User("hschmidt", "herbert", "herbert", "hschmidt@test.org", "herbertAffiliation", "herbertsPassword", KEYS1);
-	  USER4 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword", new ArrayList<String>());	  
+	  USER4 = new User("mnikolaus", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword", new ArrayList<PublicKey>());	  
 	}
 	
 	@Before
-	public void setUpAndCleanUp() throws DatabaseException{
+	public void setUpAndCleanUp() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException{
 	  setUp();
+	  createUsers();
   }
 	
 	protected abstract void setUp();
 	
-	@After
-  public void cleanUp() {
-    database.delete(USER1);
-    database.delete(USER2);
-    database.delete(USER3);
-    database.delete(USER4);
-    USER1 = USER2 = USER3 = USER4 = null;
-  } 
-
   @Test
 	public void testAdd() throws DatabaseException{
 		int numberOfUsers = database.getNumberOfUsers();
@@ -70,8 +63,8 @@ public abstract class UserPersistableTest {
 	
 	@Test
 	public void testGet() throws DatabaseException{		
-		database.add(USER1);
-		assertTrue(USER1.equals(database.get(USER1)));
+		database.add(USER1);		
+		assertTrue(USER1.equals(database.get(USER1)));		
 	}
 
 	@Test
@@ -122,8 +115,8 @@ public abstract class UserPersistableTest {
 	@Test
 	public void testAddKey() throws DatabaseException{
 	  database.add(USER1);		
-		database.addKey(USER1.getUsername(), "this is a new public key");
-		assertTrue(database.get(USER1).getPublicKeys().contains("this is a new public key"));
+		database.addKey(USER1.getUsername(), new PublicKey("this is a new public key"));
+		assertTrue(database.get(USER1).getPublicKeys().contains(new PublicKey("this is a new public key")));
 	}
 		
 	@Test(expected = DuplicatePublicKeyException.class)
@@ -132,9 +125,16 @@ public abstract class UserPersistableTest {
 		database.addKey(USER1.getUsername(), KEYS1.get(0));
 	}
 	
+	@Test(expected = DuplicatePublicKeyException.class)
+  public void testAddDuplicateKeysWithOtherDescription() throws DatabaseException{
+    database.add(USER1);  
+    database.addKey(USER1.getUsername(), new PublicKey("this is a new public key"));
+    database.addKey(USER1.getUsername(), new PublicKey("this is a new public key"));
+  }
+	
 	@Test
 	public void testDeleteKey() throws DatabaseException{
-	  String key = KEYS2.get(0);
+	  String key = KEYS2.get(0).getDescription();
 	  database.add(USER2);
 	  database.deleteKey(USER2.getUsername(), key);
 	  assertTrue(!database.get(USER2).getPublicKeys().contains(key));

@@ -3,6 +3,7 @@ package org.fiteagle.delivery.rest.fiteagle;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.fiteagle.core.userdatabase.PublicKey;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NewUser {
@@ -13,7 +14,7 @@ public class NewUser {
   private String email;
   private String affiliation;
   private String password;
-  private List<String> publicKeys;
+  private List<NewPublicKey> publicKeys;
   
   public NewUser(){};
   
@@ -60,12 +61,12 @@ public class NewUser {
     this.password = password;
   }
   
-  public List<String> getPublicKeys() {
-	return publicKeys;
+  public List<NewPublicKey> getPublicKeys() {
+    return publicKeys;
   }
 
-  public void setPublicKeys(List<String> publicKeys) {
-	this.publicKeys = publicKeys;
+  public void setPublicKeys(List<NewPublicKey> publicKeys) {
+    this.publicKeys = publicKeys;
   }
  
 }

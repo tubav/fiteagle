@@ -63,7 +63,7 @@ public class UserDBManager {
      }
   }
   
-  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.add(u);
   }
   
@@ -75,16 +75,16 @@ public class UserDBManager {
     database.delete(u);
   }
   
-  public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+  public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.update(u);
   }
   
-  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
+  public void addKey(String username, org.fiteagle.core.userdatabase.PublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
     database.addKey(username, key);
   }
   
-  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-    database.deleteKey(username, key);
+  public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+    database.deleteKey(username, description);
   }
   
   public User get(String username) throws RecordNotFoundException, DatabaseException {
@@ -142,7 +142,7 @@ public class UserDBManager {
     KeyPair keypair = keyManager.generateKeyPair();
     String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, pubKeyEncoded);
+    addKey(username, new org.fiteagle.core.userdatabase.PublicKey(pubKeyEncoded));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
     returnString = privateKeyEncoded + "\n" + userCertString;
    
@@ -152,11 +152,9 @@ public class UserDBManager {
   public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
     String returnString = "";
     PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
-    addKey(uid, publicKeyEncoded);
+    addKey(uid, new org.fiteagle.core.userdatabase.PublicKey(publicKeyEncoded));
     returnString = createUserCertificate(returnString, pkey);
     return returnString;
-  }
-
-  
+  }  
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import net.iharder.Base64;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 
@@ -29,7 +30,7 @@ public class User {
 	private String passwordHash;
 	@JsonIgnore
 	private String passwordSalt;
-	private List<String> publicKeys;
+	private List<PublicKey> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
 	private final static int MINIMUM_USERNAME_LENGTH = 3;
@@ -37,7 +38,7 @@ public class User {
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
 
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<String> publicKeys){
+	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<PublicKey> publicKeys){
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -67,10 +68,10 @@ public class User {
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
     
-    this.publicKeys = new ArrayList<String>();
+    this.publicKeys = new ArrayList<PublicKey>();
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<String> publicKeys) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<PublicKey> publicKeys) throws NoSuchAlgorithmException{ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -90,7 +91,7 @@ public class User {
     }   
 	}
 	
-	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException{  
+	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
 	  if(username == null){
 	    throw new UserPersistable.NotEnoughAttributesException("no username given");
 	  }
@@ -124,7 +125,17 @@ public class User {
     }
 	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
       throw new UserPersistable.InValidAttributeException("affiliation too short");
-    }	 
+    }
+	  
+	  for(PublicKey publicKey : publicKeys){
+	    String description = publicKey.getDescription();
+	    String publicKeyValue = publicKey.getPublicKey();
+	    for(PublicKey key : publicKeys){
+	      if(key != publicKey && (key.getDescription().equals(description) || key.getPublicKey().equals(publicKeyValue))){
+	        throw new UserPersistable.DuplicatePublicKeyException();
+	      }
+	    }
+	  }
   }
 	
 	private byte[] generatePasswordSalt(){
@@ -148,7 +159,7 @@ public class User {
     return digest.digest(password.getBytes());
   }
 	
-  public void mergeWithUser(User newUser){
+  public void mergeWithUser(User newUser) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
     if(newUser.getFirstName() != null){
      this.firstName = newUser.getFirstName();
     }
@@ -240,23 +251,37 @@ public class User {
     return created;
   }
 
-  public List<String> getPublicKeys() {
+  public List<PublicKey> getPublicKeys() {
 		return publicKeys;
 	}
 
-	public void setPublicKeys(List<String> publicKeys) {
+	public void setPublicKeys(List<PublicKey> publicKeys) {
 		this.publicKeys = publicKeys;
 	}
 	
-	public void addPublicKey(String publicKey){
+	public void addPublicKey(PublicKey publicKey){
 		if(this.publicKeys.contains(publicKey)){
 			throw new UserPersistable.DuplicatePublicKeyException();
+		}
+		String description = publicKey.getDescription();
+		for(PublicKey key : publicKeys){
+		  if(key.getDescription().equals(description)){
+		    throw new UserPersistable.DuplicatePublicKeyException();
+		  }
 		}
 		this.publicKeys.add(publicKey);
 	}
 	
-	public void deletePublicKey(String publicKey){    
-    this.publicKeys.remove(publicKey);
+	public void deletePublicKey(String description){ 
+	  PublicKey keyToRemove = null;
+	  for(PublicKey key : this.publicKeys){
+	    if(key.getDescription().equals(description)){
+	      keyToRemove = key;
+	    }
+	  }    
+	  if(keyToRemove != null){
+	    this.publicKeys.remove(keyToRemove);
+	  }
   }
 
   @Override
@@ -301,7 +326,7 @@ public class User {
     if (publicKeys == null) {
       if (other.publicKeys != null)
         return false;
-    } else if (!publicKeys.equals(other.publicKeys))
+    } else if (!publicKeys.containsAll(other.publicKeys) || publicKeys.size() != other.publicKeys.size())
       return false;
     if (username == null) {
       if (other.username != null)

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
+import org.fiteagle.core.userdatabase.PublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
@@ -24,7 +25,7 @@ public class UserManager implements UserManagerBoundary{
   
   @Override
   public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException,
-      InValidAttributeException {
+      InValidAttributeException, DuplicatePublicKeyException {
     manager.add(u);    
   }
 
@@ -40,19 +41,19 @@ public class UserManager implements UserManagerBoundary{
 
   @Override
   public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException,
-      InValidAttributeException {
+      InValidAttributeException, DuplicatePublicKeyException {
     manager.update(u);
   }
 
   @Override
-  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException,
+  public void addKey(String username, PublicKey key) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException, DuplicatePublicKeyException {
     manager.addKey(username, key);
   }
 
-  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
+  public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException,
   InValidAttributeException {
-    manager.deleteKey(username, key);
+    manager.deleteKey(username, description);
   }
   
   @Override

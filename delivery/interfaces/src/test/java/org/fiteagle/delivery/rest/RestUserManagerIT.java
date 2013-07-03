@@ -27,9 +27,9 @@ public class RestUserManagerIT {
   private final static String KEYSTORE_DIRECTORY = keystorePrefs.get("keystore");
   private final static String KEYSTORE_PASSWORD = keystorePrefs.get("keystore_pass");
   
-  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\"]}";
+  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[{\"publicKey\":\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\",\"description\":\"my first key\"}]}";
   private final static String USER_1_UPDATE_JSON = "{\"lastName\":\"nicolaus\",\"email\":\"nicolaus@test.de\"}";
-  private final static String USER_1_INCOMPLETE_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@testde\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\"]}";
+  private final static String USER_1_INCOMPLETE_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@testde\",\"affiliation\":\"mitjasAffiliation\"}";
   
   @BeforeClass
   public static void setUp() throws IllegalArgumentException, IOException{    
@@ -154,15 +154,15 @@ public class RestUserManagerIT {
   }
 
   private void deletePubKey() throws UnsupportedEncodingException {
-    String publicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024";
-    String encodedPublicKey = URLEncoder.encode(publicKey, "UTF-8");
+    String description = "my first key";
+    String encodedDescription = URLEncoder.encode(description, "UTF-8");
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
     .expect().statusCode(200)
-    .when().delete("mnikolaus/pubkey/"+encodedPublicKey);
+    .when().delete("mnikolaus/pubkey/"+encodedDescription);
   }
   
   private void user1ShouldHaveNoKeys() {
-    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+   given().auth().preemptive().basic("mnikolaus", "mitja").and()
     .expect().statusCode(200)
       .body("publicKeys", hasSize(0))      
     .when().get("mnikolaus");

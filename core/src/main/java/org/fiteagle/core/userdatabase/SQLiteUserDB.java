@@ -26,7 +26,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	    try{
 	      sqliteUserDB = new SQLiteUserDB();
 	    } catch (SQLException e){
-	      throw new DatabaseException();
+	      throw new DatabaseException(e.getMessage());
 	    }
 	  }
 	  return sqliteUserDB;
@@ -35,22 +35,21 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	public SQLiteUserDB() throws DatabaseException, SQLException{
 	  try{	   
   		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
-  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key, PRIMARY KEY (key))");  		
+  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, description, key, created, PRIMARY KEY (username, key), UNIQUE (username, description))");  		
 	  } catch(SQLException e){	    
 	    log.error(e.getMessage(),e);
-	    throw new DatabaseException();
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}
 	
 	@Override
-	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 	  u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
-
 	  } catch(SQLException e){
-	    throw new DatabaseException();
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}
 
@@ -83,8 +82,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		}
 	}
 
-	private void addKeysToDatabase(String username, List<String> keys) throws SQLException {	 		
-		for(String key: keys){
+	private void addKeysToDatabase(String username, List<PublicKey> keys) throws SQLException {	 		
+		for(PublicKey key: keys){
 		  try{
 		    addKeyToDatabase(username, key);			
 		  } catch(DuplicatePublicKeyException e){		    
@@ -92,18 +91,22 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		}				
 	}
 
-  private void addKeyToDatabase(String username, String key) throws SQLException {
+  private void addKeyToDatabase(String username, PublicKey key) throws SQLException {
     Connection connection = getConnection();
-    PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?)");
+    PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?,?,?)");
     ps.setString(1, username);
-    ps.setString(2, key);
+    ps.setString(2, key.getDescription());
+    ps.setString(3, key.getPublicKey());
+    ps.setDate(4, new java.sql.Date(key.getCreated().getTime()));
     try{
       ps.execute();
     } catch(SQLException e){
-      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column key is not unique)")){
+      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, description are not unique)")
+          || e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, key are not unique)")){
         throw new DuplicatePublicKeyException();
       }
       else{
+        log.error(e.getMessage());
         throw e;
       }
     } finally {
@@ -113,11 +116,11 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     }
   }
 	
-	private void deleteKeyFromDatabase(String username, String key) throws SQLException {
+	private void deleteKeyFromDatabase(String username, String description) throws SQLException {
 	  Connection connection = getConnection();	  
-    PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=? AND key=?");
+    PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=? AND description=?");
     ps.setString(1, username);
-    ps.setString(2, key);
+    ps.setString(2, description);
     ps.execute();       
     ps.close();
     connection.commit();
@@ -135,7 +138,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
       deleteUserFromDatabase(username);
       deleteKeysFromDatabase(username);    
     } catch (SQLException e) {
-      throw new DatabaseException();
+      throw new DatabaseException(e.getMessage());
     }		
 	}
 
@@ -160,7 +163,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 	  User newUser = get(u.getUsername());
     newUser.mergeWithUser(u);        	  
 	  
@@ -169,7 +172,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	    deleteKeysFromDatabase(newUser.getUsername());    
 	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
 	  } catch(SQLException e){
-	    throw new DatabaseException();
+	    throw new DatabaseException(e.getMessage());
 	  }		
 	}
 
@@ -195,8 +198,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
-	  if(key == null || key.length() == 0){
+	public void addKey(String username, PublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
+	  if(key == null || key.getPublicKey().length() == 0){
       throw new InValidAttributeException("no valid key");
     }
 	  User user = get(username);
@@ -206,14 +209,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  try{  		
   		addKeyToDatabase(username,key);  		
 	  } catch(SQLException e){
-	    throw new DatabaseException();
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}
 
   @Override
-  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
+  public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException {
-    if(key == null || key.length() == 0){
+    if(description == null || description.length() == 0){
       throw new InValidAttributeException("no valid key");
     }
     User user = get(username);
@@ -221,9 +224,9 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
       throw new RecordNotFoundException();
     }
     try{
-      deleteKeyFromDatabase(username, key);
+      deleteKeyFromDatabase(username, description);
     } catch(SQLException e){
-      throw new DatabaseException();
+      throw new DatabaseException(e.getMessage());
     }    
   }
 	
@@ -233,7 +236,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     try {
       u = getUserFromDatabase(username);
     } catch (SQLException e) {
-      throw new DatabaseException();
+      throw new DatabaseException(e.getMessage());
     }
 		if(u == null){
 			throw new UserPersistable.RecordNotFoundException();
@@ -243,7 +246,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	private User getUserFromDatabase(String username) throws SQLException {
 		Connection connection = getConnection();
-	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.affiliation, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.affiliation, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.description, Keys.key, Keys.created FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();		
 		User u = null;
@@ -257,7 +260,6 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private User evaluateResultSet(ResultSet rs) throws SQLException {
-		ArrayList<String> keys = new ArrayList<String>();
 		String username = rs.getString(1);
 		String firstname = rs.getString(2);
 		String lastname = rs.getString(3);
@@ -267,15 +269,27 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		String passwordSalt = rs.getString(7);
 		java.util.Date created = new java.util.Date(rs.getDate(8).getTime());
 		java.util.Date lastModified = new java.util.Date(rs.getDate(9).getTime());
-		String key1 = rs.getString(10);
-		if(key1 != null){
-			keys.add(key1);
-		}
-		while(rs.next()){		
-			keys.add(rs.getString(10));
-		}			
-		return new User(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, keys);
+		List<PublicKey> publicKeys = getPublicKeysFromResultSet(rs);	
+		return new User(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
 	}
+
+  private List<PublicKey> getPublicKeysFromResultSet(ResultSet rs) throws SQLException {
+    ArrayList<PublicKey> keys = new ArrayList<>();    
+		String key = rs.getString(11);	
+		String description = rs.getString(10);
+		java.util.Date created;
+    if(key != null){     
+      created = new java.util.Date(rs.getDate(12).getTime());
+      keys.add(new PublicKey(key, description, created));
+    }
+    while(rs.next()){  
+      description = rs.getString(10);
+      key = rs.getString(11);
+      created = new java.util.Date(rs.getDate(12).getTime());  
+      keys.add(new PublicKey(key, description, created));
+    } 
+    return keys;
+  }
 
 	@Override
 	public User get(User u) throws RecordNotFoundException, DatabaseException {		
@@ -297,7 +311,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
   		connection.close();
   		return size;
 	  } catch(SQLException e){
-	    throw new DatabaseException();
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}	
 
