@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 import org.fiteagle.core.aaa.AuthenticationHandler.KeyDoesNotMatchException;
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 

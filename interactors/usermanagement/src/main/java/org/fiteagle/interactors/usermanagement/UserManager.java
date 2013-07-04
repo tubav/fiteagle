@@ -12,7 +12,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyExceptio
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 
 public class UserManager implements UserManagerBoundary{
@@ -40,29 +40,28 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException,
+  public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException {
     manager.update(u);
   }
 
   @Override
-  public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException,
+  public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException,
       InValidAttributeException, DuplicatePublicKeyException {
     manager.addKey(username, key);
   }
 
-  public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException,
-  InValidAttributeException {
+  public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException {
     manager.deleteKey(username, description);
   }
   
   @Override
-  public User get(String username) throws RecordNotFoundException, DatabaseException {
+  public User get(String username) throws UserNotFoundException, DatabaseException {
     return manager.get(username);
   }
 
   @Override
-  public User get(User u) throws RecordNotFoundException, DatabaseException {
+  public User get(User u) throws UserNotFoundException, DatabaseException {
     return manager.get(u);
   }
 
@@ -79,7 +78,7 @@ public class UserManager implements UserManagerBoundary{
 
   @Override
   public boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException, IOException,
-      RecordNotFoundException, DatabaseException {
+      UserNotFoundException, DatabaseException {
     return manager.verifyCredentials(username, password);
   }
 

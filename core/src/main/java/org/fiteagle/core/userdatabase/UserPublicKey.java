@@ -121,6 +121,5 @@ public class UserPublicKey {
 
   public void setPublicKeyString(String publicKeyString) {
     this.publicKeyString = publicKeyString;
-  }
-  
+  }  
 }

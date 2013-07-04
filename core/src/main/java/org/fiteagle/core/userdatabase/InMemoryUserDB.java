@@ -33,36 +33,34 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+	public void update(User u) throws UserNotFoundException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) == null)
-			throw new RecordNotFoundException();
+			throw new UserNotFoundException();
 	  User newUser = get(u.getUsername());
 	  newUser.mergeWithUser(u);		 
 	  users.put(u.getUsername(), newUser);    
 	}
 
 	@Override
-	public User get(String username) throws RecordNotFoundException {
+	public User get(String username) throws UserNotFoundException {
 		if(users.get(username) == null)
-			throw new RecordNotFoundException();
+			throw new UserNotFoundException();
 		return users.get(username);		
 	}
 
 	@Override
-	public User get(User u) throws RecordNotFoundException {
+	public User get(User u) throws UserNotFoundException {
 		return get(u.getUsername());		
 	}
 
 	@Override
-	public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
+	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
 	  User u = get(username);		
 		u.addPublicKey(key);
 	}
 	
 	@Override
-	public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-	  if(description == null || description.length() == 0)
-      throw new InValidAttributeException("no valid description");    
+	public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException{	  
 	  User u = get(username);    
     u.deletePublicKey(description);
 	}	

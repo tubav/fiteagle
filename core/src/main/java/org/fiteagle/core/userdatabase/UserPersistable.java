@@ -7,17 +7,21 @@ public interface UserPersistable {
 	public void delete(String username) throws DatabaseException;
 	public void delete(User u) throws DatabaseException;
 	
-	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException; 
-	public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
-	public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
+	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException; 
+	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
+	public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
 	
-	public User get(String username) throws RecordNotFoundException, DatabaseException;
-	public User get(User u) throws RecordNotFoundException, DatabaseException;
+	public User get(String username) throws UserNotFoundException, DatabaseException;
+	public User get(User u) throws UserNotFoundException, DatabaseException;
 	
 	public int getNumberOfUsers() throws DatabaseException;	
 		
-	public static class RecordNotFoundException extends RuntimeException {		
+	public static class UserNotFoundException extends RuntimeException {		
 		private static final long serialVersionUID = 2315125279537534064L;
+		
+		public UserNotFoundException(){
+		  super("no user with this username could be found in the database");
+		}
 	}
 	
 	public class DuplicateUsernameException extends RuntimeException {

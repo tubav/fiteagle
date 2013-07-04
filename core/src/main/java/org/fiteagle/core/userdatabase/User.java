@@ -14,6 +14,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class User {
 	
@@ -37,6 +39,7 @@ public class User {
 	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 3;
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
 
+  static Logger log = LoggerFactory.getLogger(UserDBManager.class);
 	
 	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
 		this.username = username;
@@ -48,15 +51,13 @@ public class User {
 		this.passwordSalt =  passwordSalt;
 		this.created = created;
 		this.last_modified = lastModified;
+		this.publicKeys = publicKeys;
 		if(publicKeys == null){
 		  this.publicKeys = new ArrayList<>();
 		}
-		else{
-		  this.publicKeys = publicKeys;
-		}		
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String password) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password){ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -66,12 +67,11 @@ public class User {
     this.last_modified = created;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
-    this.passwordHash = generatePasswordHash(salt, password);
-    
+    this.passwordHash = generatePasswordHash(salt, password);    
     this.publicKeys = new ArrayList<UserPublicKey>();
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys){ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -82,49 +82,46 @@ public class User {
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
-    
+    this.publicKeys = publicKeys;
     if(publicKeys == null){
       this.publicKeys = new ArrayList<>();
     }
-    else{
-      this.publicKeys = publicKeys;
-    }   
 	}
 	
 	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
 	  if(username == null){
-	    throw new UserPersistable.NotEnoughAttributesException("no username given");
+	    throw new NotEnoughAttributesException("no username given");
 	  }
 	  if(firstName == null){
-	    throw new UserPersistable.NotEnoughAttributesException("no firstName given");
+	    throw new NotEnoughAttributesException("no firstName given");
 	  }
 	  if(lastName == null){
-      throw new UserPersistable.NotEnoughAttributesException("no lastName given");
+      throw new NotEnoughAttributesException("no lastName given");
     }
 	  if(email == null){
-      throw new UserPersistable.NotEnoughAttributesException("no email given");
+      throw new NotEnoughAttributesException("no email given");
     }
 	  if(affiliation == null){
-      throw new UserPersistable.NotEnoughAttributesException("no affiliation given");
+      throw new NotEnoughAttributesException("no affiliation given");
     }	  
 	  if(passwordHash == null){
-      throw new UserPersistable.NotEnoughAttributesException("no password given or password too short");
+      throw new NotEnoughAttributesException("no password given or password too short");
     }   
 	  
 	  if(username.length() < MINIMUM_USERNAME_LENGTH){
-	    throw new UserPersistable.InValidAttributeException("username too short");
+	    throw new InValidAttributeException("username too short");
 	  }
 	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
-      throw new UserPersistable.InValidAttributeException("firstName too short");
+      throw new InValidAttributeException("firstName too short");
     }
 	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
-      throw new UserPersistable.InValidAttributeException("lastName too short");
+      throw new InValidAttributeException("lastName too short");
     }
 	  if(!email.contains("@") || !email.contains(".")){
-      throw new UserPersistable.InValidAttributeException("an email needs to contain \"@\" and \".\"");
+      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
     }
 	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
-      throw new UserPersistable.InValidAttributeException("affiliation too short");
+      throw new InValidAttributeException("affiliation too short");
     }
 	  
 	  for(UserPublicKey userPublicKey : publicKeys){
@@ -132,7 +129,7 @@ public class User {
 	    String publicKeyString = userPublicKey.getPublicKeyString();
 	    for(UserPublicKey key : publicKeys){
 	      if(key != userPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
-	        throw new UserPersistable.DuplicatePublicKeyException();
+	        throw new DuplicatePublicKeyException();
 	      }
 	    }
 	  }
@@ -143,12 +140,17 @@ public class User {
     return random.generateSeed(20);
 	}
 	
-	private String generatePasswordHash(byte[] salt, String password) throws NoSuchAlgorithmException{
+	private String generatePasswordHash(byte[] salt, String password){
 	  if(password == null || password.length() < MINIMUM_PASSWORD_LENGTH){
 	    return null;
 	  }
     
-	  byte[] passwordBytes = createHash(salt, password);
+	  byte[] passwordBytes = null;
+    try {
+      passwordBytes = createHash(salt, password);
+    } catch (NoSuchAlgorithmException e) {
+      log.error(e.getMessage());
+    }
     return Base64.encodeBytes(passwordBytes);
 	}
 	
@@ -181,90 +183,14 @@ public class User {
     }
     this.setLast_modified(Calendar.getInstance().getTime());
     this.checkAttributes();      
-  }
-  
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	
-	public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getAffiliation() {
-    return affiliation;
-  }
-
-  public void setAffiliation(String affiliation) {
-    this.affiliation = affiliation;
-  }  
-
-  public String getPasswordHash() {
-    return passwordHash;
-  }
-
-  public String getPasswordSalt() {
-    return passwordSalt;
-  }
-    
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
-  }
-
-  public void setPasswordSalt(String passwordSalt) {
-    this.passwordSalt = passwordSalt;
-  }
-
-  public Date getLast_modified() {
-    return last_modified;
-  }
-
-  public void setLast_modified(Date last_modified) {
-    this.last_modified = last_modified;
-  }
-
-  public Date getCreated() {
-    return created;
-  }
-
-  public List<UserPublicKey> getPublicKeys() {
-		return publicKeys;
-	}
-
-	public void setPublicKeys(List<UserPublicKey> publicKeys) {
-		this.publicKeys = publicKeys;
-	}
+  }	
 	
 	public void addPublicKey(UserPublicKey userPublicKey){		
 		String description = userPublicKey.getDescription();
 		String publicKeyString = userPublicKey.getPublicKeyString();
 		for(UserPublicKey key : publicKeys){
 		  if(key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString)){
-		    throw new UserPersistable.DuplicatePublicKeyException();
+		    throw new DuplicatePublicKeyException();
 		  }
 		}
 		this.publicKeys.add(userPublicKey);
@@ -340,5 +266,80 @@ public class User {
         + ", affiliation=" + affiliation + ", created=" + created + ", last_modified=" + last_modified
         + ", publicKeys=" + publicKeys + "]";
   }
+	
+	public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
   
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getAffiliation() {
+    return affiliation;
+  }
+
+  public void setAffiliation(String affiliation) {
+    this.affiliation = affiliation;
+  }  
+
+  public String getPasswordHash() {
+    return passwordHash;
+  }
+
+  public String getPasswordSalt() {
+    return passwordSalt;
+  }
+    
+  public void setPasswordHash(String passwordHash) {
+    this.passwordHash = passwordHash;
+  }
+
+  public void setPasswordSalt(String passwordSalt) {
+    this.passwordSalt = passwordSalt;
+  }
+
+  public Date getLast_modified() {
+    return last_modified;
+  }
+
+  public void setLast_modified(Date last_modified) {
+    this.last_modified = last_modified;
+  }
+
+  public Date getCreated() {
+    return created;
+  }
+
+  public List<UserPublicKey> getPublicKeys() {
+    return publicKeys;
+  }
+
+  public void setPublicKeys(List<UserPublicKey> publicKeys) {
+    this.publicKeys = publicKeys;
+  }  
 }

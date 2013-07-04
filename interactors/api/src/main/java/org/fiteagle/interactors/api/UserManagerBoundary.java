@@ -11,7 +11,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyExceptio
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 
 public interface UserManagerBoundary {
   
@@ -22,18 +22,17 @@ public interface UserManagerBoundary {
   
   public abstract void delete(User u) throws DatabaseException;
   
-  public abstract void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException,
+  public abstract void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException;
   
-  public abstract void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException,
+  public abstract void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException,
       InValidAttributeException, DuplicatePublicKeyException;
   
-  public abstract void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException,
-      InValidAttributeException;
+  public abstract void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
   
-  public abstract User get(String username) throws RecordNotFoundException, DatabaseException;
+  public abstract User get(String username) throws UserNotFoundException, DatabaseException;
   
-  public abstract User get(User u) throws RecordNotFoundException, DatabaseException;
+  public abstract User get(User u) throws UserNotFoundException, DatabaseException;
   
   public abstract User getUserFromCert(X509Certificate userCert);
   
@@ -41,7 +40,7 @@ public interface UserManagerBoundary {
       NoSuchAlgorithmException;
   
   public abstract boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException,
-      IOException, RecordNotFoundException, DatabaseException;
+      IOException, UserNotFoundException, DatabaseException;
   
   public abstract String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception;
   

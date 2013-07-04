@@ -9,6 +9,7 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 
 import net.iharder.Base64;
 
@@ -22,7 +23,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyExceptio
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,23 +76,23 @@ public class UserDBManager {
     database.delete(u);
   }
   
-  public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+  public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.update(u);
   }
   
-  public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
+  public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
     database.addKey(username, key);
   }
   
-  public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+  public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException {
     database.deleteKey(username, description);
   }
   
-  public User get(String username) throws RecordNotFoundException, DatabaseException {
+  public User get(String username) throws UserNotFoundException, DatabaseException {
     return database.get(username);
   }
   
-  public User get(User u) throws RecordNotFoundException, DatabaseException {
+  public User get(User u) throws UserNotFoundException, DatabaseException {
     return database.get(u);
   }
   
@@ -106,7 +107,6 @@ public class UserDBManager {
       throw new RuntimeException(e1);
     }
   }
-
     
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
       NoSuchAlgorithmException {
@@ -116,7 +116,7 @@ public class UserDBManager {
     return Arrays.equals(passwordHashBytes, proposedDigest);
   }
   
-  public boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException, IOException, RecordNotFoundException, DatabaseException{
+  public boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException, IOException, UserNotFoundException, DatabaseException{
     User user = get(username);
     return verifyPassword(password, user.getPasswordHash(), user.getPasswordSalt());
   }
@@ -128,8 +128,7 @@ public class UserDBManager {
     return X509Util.getCertficateEncoded(cert);
   }
     
-  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {
-    
+  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {    
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
     digest.reset();
     digest.update(salt);
@@ -137,24 +136,21 @@ public class UserDBManager {
   }
   
   public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
-    String returnString = "";
-   
+    String returnString = "";   
     KeyPair keypair = keyManager.generateKeyPair();
     String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, new UserPublicKey(pubKeyEncoded, null));
+    addKey(username, new UserPublicKey(pubKeyEncoded, "created at"+new Date().toString()));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
-    returnString = privateKeyEncoded + "\n" + userCertString;
-   
+    returnString = privateKeyEncoded + "\n" + userCertString;   
     return returnString;
   }
 
-  public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
+  public String createUserCertificate(String username, String publicKeyEncoded) throws Exception {
     String returnString = "";
     PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
-    addKey(uid, new UserPublicKey(publicKeyEncoded, null));
-    returnString = createUserCertificate(returnString, pkey);
+    addKey(username, new UserPublicKey(publicKeyEncoded, "created at"+new Date().toString()));
+    returnString = createUserCertificate(username, pkey);
     return returnString;
-  }  
-
+  }
 }
