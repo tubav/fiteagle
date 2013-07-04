@@ -79,7 +79,7 @@ public class UserDBManager {
     database.update(u);
   }
   
-  public void addKey(String username, org.fiteagle.core.userdatabase.PublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
+  public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
     database.addKey(username, key);
   }
   
@@ -142,7 +142,7 @@ public class UserDBManager {
     KeyPair keypair = keyManager.generateKeyPair();
     String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, new org.fiteagle.core.userdatabase.PublicKey(pubKeyEncoded));
+    addKey(username, new UserPublicKey(pubKeyEncoded, null));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
     returnString = privateKeyEncoded + "\n" + userCertString;
    
@@ -152,7 +152,7 @@ public class UserDBManager {
   public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
     String returnString = "";
     PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
-    addKey(uid, new org.fiteagle.core.userdatabase.PublicKey(publicKeyEncoded));
+    addKey(uid, new UserPublicKey(publicKeyEncoded, null));
     returnString = createUserCertificate(returnString, pkey);
     return returnString;
   }  

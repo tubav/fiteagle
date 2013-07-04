@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
-import org.fiteagle.core.userdatabase.PublicKey;
+import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
@@ -46,7 +46,7 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public void addKey(String username, PublicKey key) throws RecordNotFoundException, DatabaseException,
+  public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException, DuplicatePublicKeyException {
     manager.addKey(username, key);
   }

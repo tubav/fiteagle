@@ -8,7 +8,7 @@ public interface UserPersistable {
 	public void delete(User u) throws DatabaseException;
 	
 	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException; 
-	public void addKey(String username, PublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
+	public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
 	public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException;
 	
 	public User get(String username) throws RecordNotFoundException, DatabaseException;

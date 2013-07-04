@@ -19,6 +19,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
 
   private final static String COOKIE_NAME = "fiteagle_user_cookie";
   
+  @SuppressWarnings("unused")
   private Logger log = LoggerFactory.getLogger(getClass());
   
   private static UserAuthenticationFilter filter = null;

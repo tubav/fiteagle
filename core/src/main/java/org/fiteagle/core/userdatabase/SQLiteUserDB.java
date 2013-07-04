@@ -1,5 +1,8 @@
 package org.fiteagle.core.userdatabase;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,7 +51,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
-	  } catch(SQLException e){
+	  } catch(IOException | SQLException e){
 	    throw new DatabaseException(e.getMessage());
 	  }
 	}
@@ -82,21 +85,18 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		}
 	}
 
-	private void addKeysToDatabase(String username, List<PublicKey> keys) throws SQLException {	 		
-		for(PublicKey key: keys){
-		  try{
-		    addKeyToDatabase(username, key);			
-		  } catch(DuplicatePublicKeyException e){		    
-		  }
+	private void addKeysToDatabase(String username, List<UserPublicKey> keys) throws SQLException, IOException {	 		
+		for(UserPublicKey key: keys){		  
+		  addKeyToDatabase(username, key);			  
 		}				
 	}
 
-  private void addKeyToDatabase(String username, PublicKey key) throws SQLException {
+  private void addKeyToDatabase(String username, UserPublicKey key) throws SQLException, IOException {
     Connection connection = getConnection();
     PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?,?,?)");
     ps.setString(1, username);
     ps.setString(2, key.getDescription());
-    ps.setString(3, key.getPublicKey());
+    ps.setString(3, key.getPublicKeyString());
     ps.setDate(4, new java.sql.Date(key.getCreated().getTime()));
     try{
       ps.execute();
@@ -171,7 +171,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	    updateUserInDatabase(newUser);
 	    deleteKeysFromDatabase(newUser.getUsername());    
 	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
-	  } catch(SQLException e){
+	  } catch(IOException | SQLException e){
 	    throw new DatabaseException(e.getMessage());
 	  }		
 	}
@@ -198,17 +198,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	@Override
-	public void addKey(String username, PublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
-	  if(key == null || key.getPublicKey().length() == 0){
-      throw new InValidAttributeException("no valid key");
-    }
+	public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
 	  User user = get(username);
 	  if(user == null){
 	    throw new RecordNotFoundException();
 	  }
 	  try{  		
   		addKeyToDatabase(username,key);  		
-	  } catch(SQLException e){
+	  } catch(IOException | SQLException e){
 	    throw new DatabaseException(e.getMessage());
 	  }
 	}
@@ -217,7 +214,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
   public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException {
     if(description == null || description.length() == 0){
-      throw new InValidAttributeException("no valid key");
+      throw new InValidAttributeException("no valid description");
     }
     User user = get(username);
     if(user == null){
@@ -269,24 +266,29 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 		String passwordSalt = rs.getString(7);
 		java.util.Date created = new java.util.Date(rs.getDate(8).getTime());
 		java.util.Date lastModified = new java.util.Date(rs.getDate(9).getTime());
-		List<PublicKey> publicKeys = getPublicKeysFromResultSet(rs);	
+		List<UserPublicKey> publicKeys;
+    try {
+      publicKeys = getPublicKeysFromResultSet(rs);
+    } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
+      throw new DatabaseException(e.getMessage());
+    }	
 		return new User(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
 	}
 
-  private List<PublicKey> getPublicKeysFromResultSet(ResultSet rs) throws SQLException {
-    ArrayList<PublicKey> keys = new ArrayList<>();    
+  private List<UserPublicKey> getPublicKeysFromResultSet(ResultSet rs) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+    ArrayList<UserPublicKey> keys = new ArrayList<>();    
 		String key = rs.getString(11);	
 		String description = rs.getString(10);
 		java.util.Date created;
     if(key != null){     
       created = new java.util.Date(rs.getDate(12).getTime());
-      keys.add(new PublicKey(key, description, created));
+      keys.add(new UserPublicKey(key, description, created));
     }
     while(rs.next()){  
       description = rs.getString(10);
       key = rs.getString(11);
       created = new java.util.Date(rs.getDate(12).getTime());  
-      keys.add(new PublicKey(key, description, created));
+      keys.add(new UserPublicKey(key, description, created));
     } 
     return keys;
   }

@@ -1,8 +1,10 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.fiteagle.core.userdatabase.PublicKey;
+import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
+import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
@@ -104,7 +107,7 @@ public class UserPresenter{
 
   private User createUser(NewUser newUser){
     User user = null;    
-    List<PublicKey> publicKeys = createPublicKeys(newUser.getPublicKeys());
+    List<UserPublicKey> publicKeys = createPublicKeys(newUser.getPublicKeys());
     try {
       user = new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(),
           newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);
@@ -115,13 +118,20 @@ public class UserPresenter{
     return user;
   }
 
-  private ArrayList<PublicKey> createPublicKeys(List<NewPublicKey> keys) {
+  private ArrayList<UserPublicKey> createPublicKeys(List<NewPublicKey> keys) {
     if(keys == null){
       return null;
     }
-    ArrayList<PublicKey> publicKeys = new ArrayList<>();
+    ArrayList<UserPublicKey> publicKeys = new ArrayList<>();
     for(NewPublicKey key : keys){
-      publicKeys.add(new PublicKey(key.getPublicKey(), key.getDescription()));
+      try {
+        publicKeys.add(new UserPublicKey(key.getPublicKey(), key.getDescription()));
+      } catch (CouldNotParse e) {
+        throw new FiteagleWebApplicationException(422, e.getMessage());
+      } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
+        log.error(e.getMessage());
+        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+      }
     }
     return publicKeys;
   }
@@ -130,16 +140,16 @@ public class UserPresenter{
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addPublicKey(@PathParam("username") String username, NewPublicKey pubkey) {    
     try {
-      manager.addKey(username, new PublicKey(pubkey.getPublicKey(), pubkey.getDescription()));
-    } catch (InValidAttributeException e){
+      manager.addKey(username, new UserPublicKey(pubkey.getPublicKey(), pubkey.getDescription()));
+    } catch (CouldNotParse | InValidAttributeException | NotEnoughAttributesException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (RecordNotFoundException e) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     } catch (DuplicatePublicKeyException e){
       throw new FiteagleWebApplicationException(409, e.getMessage());
-    } catch (DatabaseException e) {
+    } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | DatabaseException e) {
       log.error(e.getMessage());
-      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);    
     }
     return Response.status(200).build();
   }

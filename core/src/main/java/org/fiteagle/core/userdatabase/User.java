@@ -30,7 +30,7 @@ public class User {
 	private String passwordHash;
 	@JsonIgnore
 	private String passwordSalt;
-	private List<PublicKey> publicKeys;
+	private List<UserPublicKey> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
 	private final static int MINIMUM_USERNAME_LENGTH = 3;
@@ -38,7 +38,7 @@ public class User {
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
 
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<PublicKey> publicKeys){
+	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -68,10 +68,10 @@ public class User {
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
     
-    this.publicKeys = new ArrayList<PublicKey>();
+    this.publicKeys = new ArrayList<UserPublicKey>();
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<PublicKey> publicKeys) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws NoSuchAlgorithmException{ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -127,11 +127,11 @@ public class User {
       throw new UserPersistable.InValidAttributeException("affiliation too short");
     }
 	  
-	  for(PublicKey publicKey : publicKeys){
-	    String description = publicKey.getDescription();
-	    String publicKeyValue = publicKey.getPublicKey();
-	    for(PublicKey key : publicKeys){
-	      if(key != publicKey && (key.getDescription().equals(description) || key.getPublicKey().equals(publicKeyValue))){
+	  for(UserPublicKey userPublicKey : publicKeys){
+	    String description = userPublicKey.getDescription();
+	    String publicKeyString = userPublicKey.getPublicKeyString();
+	    for(UserPublicKey key : publicKeys){
+	      if(key != userPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
 	        throw new UserPersistable.DuplicatePublicKeyException();
 	      }
 	    }
@@ -251,30 +251,28 @@ public class User {
     return created;
   }
 
-  public List<PublicKey> getPublicKeys() {
+  public List<UserPublicKey> getPublicKeys() {
 		return publicKeys;
 	}
 
-	public void setPublicKeys(List<PublicKey> publicKeys) {
+	public void setPublicKeys(List<UserPublicKey> publicKeys) {
 		this.publicKeys = publicKeys;
 	}
 	
-	public void addPublicKey(PublicKey publicKey){
-		if(this.publicKeys.contains(publicKey)){
-			throw new UserPersistable.DuplicatePublicKeyException();
-		}
-		String description = publicKey.getDescription();
-		for(PublicKey key : publicKeys){
-		  if(key.getDescription().equals(description)){
+	public void addPublicKey(UserPublicKey userPublicKey){		
+		String description = userPublicKey.getDescription();
+		String publicKeyString = userPublicKey.getPublicKeyString();
+		for(UserPublicKey key : publicKeys){
+		  if(key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString)){
 		    throw new UserPersistable.DuplicatePublicKeyException();
 		  }
 		}
-		this.publicKeys.add(publicKey);
+		this.publicKeys.add(userPublicKey);
 	}
 	
 	public void deletePublicKey(String description){ 
-	  PublicKey keyToRemove = null;
-	  for(PublicKey key : this.publicKeys){
+	  UserPublicKey keyToRemove = null;
+	  for(UserPublicKey key : this.publicKeys){
 	    if(key.getDescription().equals(description)){
 	      keyToRemove = key;
 	    }

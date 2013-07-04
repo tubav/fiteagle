@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
 import javax.net.ssl.SSLEngine;
@@ -47,7 +48,7 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
     Log.debug("checkClientTrusted 2");
     try{
       authenticationHandler.authenticateCertificates(chain);
-    }catch(IOException | KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | CertPathValidatorException | SQLException  e){
+    }catch(InvalidKeySpecException | IOException | KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | CertPathValidatorException | SQLException  e){
       throw new ServerException();
     }
     

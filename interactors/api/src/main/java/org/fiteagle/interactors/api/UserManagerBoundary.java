@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
-import org.fiteagle.core.userdatabase.PublicKey;
+import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
@@ -25,7 +25,7 @@ public interface UserManagerBoundary {
   public abstract void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException;
   
-  public abstract void addKey(String username, PublicKey key) throws RecordNotFoundException, DatabaseException,
+  public abstract void addKey(String username, UserPublicKey key) throws RecordNotFoundException, DatabaseException,
       InValidAttributeException, DuplicatePublicKeyException;
   
   public abstract void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException,

@@ -8,13 +8,16 @@ import java.security.PublicKey;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.security.auth.x500.X500Principal;
 
+import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
+import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,7 @@ public class AuthenticationHandler {
   
   public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException,
       NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException,
-      CertPathValidatorException, SQLException {
+      CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse {
    
     X509Certificate cert = certificates[0];
     if (cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())) {
@@ -105,22 +108,17 @@ public class AuthenticationHandler {
     throw new CertificateNotTrustedException();
   }
   
-  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) throws IOException {
+  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, CouldNotParse {
     boolean verified = false;
     KeyManagement keydecoder = KeyManagement.getInstance();
     if (identifiedUser.getPublicKeys() == null || identifiedUser.getPublicKeys().size() == 0) {
-      identifiedUser.addPublicKey(new org.fiteagle.core.userdatabase.PublicKey(keydecoder.encodePublicKey(certificate.getPublicKey())));
+      identifiedUser.addPublicKey(new UserPublicKey(keydecoder.encodePublicKey(certificate.getPublicKey()), null));
       UserDBManager userDBManager = UserDBManager.getInstance();
       userDBManager.addKey(identifiedUser.getUsername(), identifiedUser.getPublicKeys().get(0));
     }
-    for (org.fiteagle.core.userdatabase.PublicKey publicKey : identifiedUser.getPublicKeys()) {
-      String pubKeyString = publicKey.getPublicKey();
-      PublicKey pubKey = null;
-      try {
-        pubKey = keydecoder.decodePublicKey(pubKeyString);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+    for (UserPublicKey userPublicKey : identifiedUser.getPublicKeys()) {      
+      PublicKey pubKey = userPublicKey.getPublicKey();
+      
       verified = verifyCertificateWithPublicKey(certificate, pubKey);
       if (verified) {
         return;

@@ -33,7 +33,7 @@ public class UserDBManagerTest {
   }  
  
   public void testVerifyPassword() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException{
-    User u = new User("test", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<PublicKey>());
+    User u = new User("test", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<UserPublicKey>());
     Assert.assertTrue(userDBManager.verifyPassword("password",u.getPasswordHash(),u.getPasswordSalt()));    
   }
   

@@ -10,9 +10,11 @@ import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
 import org.fiteagle.core.aaa.AuthenticationHandler.KeyDoesNotMatchException;
+import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
 import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,29 +42,29 @@ public class AuthenticationHandlerTest {
  
   
  // @Test
-  public void testAuthenticateCertificates() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException {
+  public void testAuthenticateCertificates() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse {
     
     authHandler.authenticateCertificates(testCertificateArray);
     
   }
   
   @Test
-  public void testAuthenticateChain() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, InvalidAlgorithmParameterException, CertPathValidatorException, IOException, SQLException{
+  public void testAuthenticateChain() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, InvalidAlgorithmParameterException, CertPathValidatorException, IOException, SQLException, InvalidKeySpecException, CouldNotParse{
     authHandler.authenticateCertificates(testCertificateArray);
   }
  // @Test(expected = RecordNotFoundException.class)
-  public void testAuthWithUnstoredPkeyAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException {
+  public void testAuthWithUnstoredPkeyAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse {
     
     authHandler.authenticateCertificates(loadTestCert(unknownUserCertPath));
     
   }
   //@Test(expected = KeyDoesNotMatchException.class)
-  public void testAuthWithWrongPkeyForUserAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException{
+  public void testAuthWithWrongPkeyForUserAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse{
     authHandler.authenticateCertificates(loadTestCert(wrongPkeyCertPath));
   }
   
   // @Test
-  public void testAuthWithCertByFiteagleCA() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException{
+  public void testAuthWithCertByFiteagleCA() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse{
     authHandler.authenticateCertificates(loadTestCert(signedByFiteagleCertPath));
     
   }

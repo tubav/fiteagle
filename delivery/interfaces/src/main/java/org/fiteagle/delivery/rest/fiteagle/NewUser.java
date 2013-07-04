@@ -3,7 +3,6 @@ package org.fiteagle.delivery.rest.fiteagle;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.fiteagle.core.userdatabase.PublicKey;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NewUser {
