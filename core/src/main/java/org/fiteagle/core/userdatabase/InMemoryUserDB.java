@@ -16,13 +16,10 @@ public class InMemoryUserDB implements UserPersistable {
 
 	@Override
 	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-		if(users.get(u.getUsername()) != null){
+		if(users.get(u.getUsername()) != null)
 			throw new DuplicateUsernameException();
-		}
-		else{
-		  u.checkAttributes();
-			users.put(u.getUsername(), u);
-		}
+	  u.checkAttributes();
+		users.put(u.getUsername(), u);
 	}
 
 	@Override
@@ -39,12 +36,9 @@ public class InMemoryUserDB implements UserPersistable {
 	public void update(User u) throws RecordNotFoundException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) == null)
 			throw new RecordNotFoundException();
-		else{
-		  User newUser = get(u.getUsername());
-		  newUser.mergeWithUser(u);		 
-		  users.put(u.getUsername(), newUser);    
-		}
-			
+	  User newUser = get(u.getUsername());
+	  newUser.mergeWithUser(u);		 
+	  users.put(u.getUsername(), newUser);    
 	}
 
 	@Override
@@ -61,22 +55,15 @@ public class InMemoryUserDB implements UserPersistable {
 
 	@Override
 	public void addKey(String username, UserPublicKey key) throws RecordNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
-	  User u;
-		if((u=users.get(username)) == null)
-			throw new RecordNotFoundException();
+	  User u = get(username);		
 		u.addPublicKey(key);
 	}
 	
 	@Override
 	public void deleteKey(String username, String description) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-	  if(description == null || description.length() == 0){
-      throw new InValidAttributeException("no valid description");
-    }
-	  User u = users.get(username);
-    if(u == null){
-      throw new RecordNotFoundException();
-    }
+	  if(description == null || description.length() == 0)
+      throw new InValidAttributeException("no valid description");    
+	  User u = get(username);    
     u.deletePublicKey(description);
-	}
-	
+	}	
 }

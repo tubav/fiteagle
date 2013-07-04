@@ -16,11 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
-
-	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
+	@SuppressWarnings("unused")
+  private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
 
 	private static SQLiteUserDB sqliteUserDB;
 	
@@ -35,12 +34,11 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	  return sqliteUserDB;
 	}
 	
-	public SQLiteUserDB() throws DatabaseException, SQLException{
+	private SQLiteUserDB() throws DatabaseException, SQLException{
 	  try{	   
   		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
   		createTable("CREATE TABLE IF NOT EXISTS Keys (username, description, key, created, PRIMARY KEY (username, key), UNIQUE (username, description))");  		
 	  } catch(SQLException e){	    
-	    log.error(e.getMessage(),e);
 	    throw new DatabaseException(e.getMessage());
 	  }
 	}
@@ -57,33 +55,56 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
-	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)");
-		ps.setString(1, u.getUsername());
-		ps.setString(2, u.getFirstName());
-		ps.setString(3, u.getLastName());
-		ps.setString(4, u.getEmail());
-		ps.setString(5, u.getAffiliation());
-		ps.setString(6, u.getPasswordHash());
-		ps.setString(7, u.getPasswordSalt());
-		ps.setDate(8, new java.sql.Date(u.getCreated().getTime()));
-		ps.setDate(9, new java.sql.Date(u.getLast_modified().getTime()));
-		
-		try{
-			ps.execute();
-		} catch(SQLException e){
-		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
-		      throw new DuplicateUsernameException();
-		    }
-		    else{
-		      throw e;
-		    }
-		} finally{
-			ps.close();
-			connection.commit();
-			connection.close();
-		}
-	}
+    ArrayList<Object> params = new ArrayList<>();
+    params.add(u.getUsername());
+    params.add(u.getFirstName());
+    params.add(u.getLastName());
+    params.add(u.getEmail());
+    params.add(u.getAffiliation());
+    params.add(u.getPasswordHash());
+    params.add(u.getPasswordSalt());
+    params.add(new java.sql.Date(u.getCreated().getTime()));
+    params.add(new java.sql.Date(u.getLast_modified().getTime()));
+    try{
+      executeSQLString("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)", params);    
+    } catch(SQLException e){
+      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
+        throw new DuplicateUsernameException();
+      }
+      else{
+        throw e;
+      }
+    }
+  }
+	
+//	private void addUserToDatabase(User u) throws SQLException {
+//	  Connection connection = getConnection();
+//		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)");
+//		ps.setString(1, u.getUsername());
+//		ps.setString(2, u.getFirstName());
+//		ps.setString(3, u.getLastName());
+//		ps.setString(4, u.getEmail());
+//		ps.setString(5, u.getAffiliation());
+//		ps.setString(6, u.getPasswordHash());
+//		ps.setString(7, u.getPasswordSalt());
+//		ps.setDate(8, new java.sql.Date(u.getCreated().getTime()));
+//		ps.setDate(9, new java.sql.Date(u.getLast_modified().getTime()));
+//		
+//		try{
+//			ps.execute();
+//		} catch(SQLException e){
+//		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
+//		      throw new DuplicateUsernameException();
+//		    }
+//		    else{
+//		      throw e;
+//		    }
+//		} finally{
+//			ps.close();
+//			connection.commit();
+//			connection.close();
+//		}
+//	}
 
 	private void addKeysToDatabase(String username, List<UserPublicKey> keys) throws SQLException, IOException {	 		
 		for(UserPublicKey key: keys){		  
@@ -106,7 +127,6 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
         throw new DuplicatePublicKeyException();
       }
       else{
-        log.error(e.getMessage());
         throw e;
       }
     } finally {
@@ -316,5 +336,17 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	    throw new DatabaseException(e.getMessage());
 	  }
 	}	
+	
+	private void executeSQLString(String SQLString, List<Object> params) throws SQLException {
+    Connection connection = getConnection();
+    PreparedStatement ps = connection.prepareStatement(SQLString);
+    for(int i = 0; i < params.size(); i++){
+      ps.setObject(i+1, params.get(i));
+    }
+    ps.execute();
+    ps.close();
+    connection.commit();
+    connection.close();
+  }
 
 }

@@ -57,7 +57,7 @@ public class UserDBManager {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
     }
     if (preferences.get("databaseType").equals(databaseType.SQLite.name())) {
-      database = new SQLiteUserDB();
+      database = SQLiteUserDB.getInstance();
     } else {
       database = new InMemoryUserDB();
      }
