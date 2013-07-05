@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
+import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
@@ -115,7 +116,7 @@ public class UserPresenter{
     ArrayList<UserPublicKey> publicKeys = new ArrayList<>();
     for(NewPublicKey key : keys){
       try {
-        publicKeys.add(new UserPublicKey(key.getPublicKey(), key.getDescription()));
+        publicKeys.add(new UserPublicKey(key.getPublicKeyString(), key.getDescription()));
       } catch (CouldNotParse e) {
         throw new FiteagleWebApplicationException(422, e.getMessage());
       } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
@@ -130,7 +131,7 @@ public class UserPresenter{
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addPublicKey(@PathParam("username") String username, NewPublicKey pubkey) {    
     try {
-      manager.addKey(username, new UserPublicKey(pubkey.getPublicKey(), pubkey.getDescription()));
+      manager.addKey(username, new UserPublicKey(pubkey.getPublicKeyString(), pubkey.getDescription()));
     } catch (CouldNotParse | InValidAttributeException | NotEnoughAttributesException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (UserNotFoundException e) {
@@ -148,8 +149,7 @@ public class UserPresenter{
   @Path("{username}/pubkey/{description}")
   public Response deletePublicKey(@PathParam("username") String username, @PathParam("description") String description) {    
     try {
-      String decodedDescription = decodeDescription(description);
-      manager.deleteKey(username, decodedDescription);
+      manager.deleteKey(username, decode(description));
     } catch (InValidAttributeException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (UserNotFoundException e) {
@@ -161,9 +161,9 @@ public class UserPresenter{
     return Response.status(200).build();
   }
   
-  private String decodeDescription(String description){    
+  private String decode(String string){    
     try {
-      return URLDecoder.decode(description, "UTF-8");
+      return URLDecoder.decode(string, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
@@ -185,26 +185,27 @@ public class UserPresenter{
   @POST
   @Path("{username}/certificate")
   @Consumes("text/plain")
-  public String getUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
-    if(passphrase == null || passphrase.length() == 0){
-      throw new FiteagleWebApplicationException(422, "no passphrase given or passphrase too short");
-    }
+  public String createUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
     try {      
-      return manager.createUserPrivateKeyAndCertAsString(username, passphrase);
+      return manager.createUserPrivateKeyAndCertAsString(username, decode(passphrase));
     } catch (Exception e) {
       log.error(e.getMessage());
-      throw new RuntimeException(e.getCause());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
     }    
   }
   
-  @POST
-  @Path("{username}/certificate")
-  public String getUserCertificate(@PathParam("username") String uid, String publicKeyEncoded) {
+  @GET
+  @Path("{username}/pubkey/{description}/certificate")
+  @Produces(MediaType.TEXT_PLAIN)
+  public String getUserCertificateForPublicKey(@PathParam("username") String username, @PathParam("description") String description) {
     try {
-      return manager.createUserCertificate(uid, publicKeyEncoded);
+      return manager.createUserCertificateForPublicKey(username, decode(description));
+    } catch (PublicKeyNotFoundException e){
+      throw new FiteagleWebApplicationException(404, e.getMessage());
     } catch (Exception e) {
+      log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    }
+    }    
   } 
   
   @DELETE

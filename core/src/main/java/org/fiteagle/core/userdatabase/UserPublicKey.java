@@ -65,7 +65,7 @@ public class UserPublicKey {
   
   private void checkPublicKeyString() throws NotEnoughAttributesException {
     if(publicKeyString == null || publicKeyString.length() == 0){
-      throw new NotEnoughAttributesException("no public key given");
+      throw new NotEnoughAttributesException("no publicKeyString given");
     }
   }   
   

@@ -2,6 +2,7 @@ package org.fiteagle.core.userdatabase;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -266,6 +267,15 @@ public class User {
         + ", affiliation=" + affiliation + ", created=" + created + ", last_modified=" + last_modified
         + ", publicKeys=" + publicKeys + "]";
   }
+	
+	public PublicKey getPublicKey(String description){
+	  for(UserPublicKey key : publicKeys){
+	    if(key.getDescription().equals(description)){
+	      return key.getPublicKey();
+	    }
+	  }
+	  throw new UserPersistable.PublicKeyNotFoundException();
+	}
 	
 	public String getUsername() {
     return username;

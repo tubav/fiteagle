@@ -51,31 +51,31 @@ public abstract class AuthenticationFilter implements Filter {
     return new String(decoded).split(":", 2);
   }
   
-  protected boolean authenticateWithUsernamePassword(HttpServletRequest request, HttpServletResponse response) {
+  protected boolean authenticateWithUsernamePassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String auth = request.getHeader("authorization");
     String[] credentials = decode(auth);
     if (credentials == null || credentials.length != 2) {
-      response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
+      response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());
       return false;
     }
     
     if (!isUserAuthorizedForTarget(credentials[0], getTarget(request))) {
-      response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
+      response.sendError(Response.Status.FORBIDDEN.getStatusCode());
       return false;
     }
     
     manager = UserDBManager.getInstance();
     try {
       if (!manager.verifyCredentials(credentials[0], credentials[1])) {
-        response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
+        response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());
         return false;
       }
     } catch (NoSuchAlgorithmException | IOException | DatabaseException e) {
       log.error(e.getMessage());
-      response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+      response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
       return false;
     } catch (UserNotFoundException e) {
-      response.setStatus(Response.Status.NOT_FOUND.getStatusCode());
+      response.sendError(Response.Status.NOT_FOUND.getStatusCode(), "User Not Found");
       return false;
     }
     return true;

@@ -67,4 +67,12 @@ public interface UserPersistable {
       super(message);      
     }
   }
+  
+  public class PublicKeyNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 4906415519200726744L;  
+    
+    public PublicKeyNotFoundException(){
+      super("no public key with this description could be found in the database");
+    }
+  }
 }

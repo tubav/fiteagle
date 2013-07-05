@@ -22,7 +22,10 @@ public class UserDBManagerTest {
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
     testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password");
-    userDBManager.add(testUser);
+    try{
+      userDBManager.add(testUser);
+    } catch(DuplicateUsernameException e){      
+    }
   }
   
   @Test
@@ -51,9 +54,10 @@ public class UserDBManagerTest {
   }  
   
   @Test
-  public void testCreateCert() throws Exception{
-    String key = new UserPublicKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCarsTCyAf8gYXwei8rhJnLTqYI6P88weRaY5dW9j3DT4mvfQPna79Bjq+uH4drmjbTD2n3s3ytqupFfNko1F0+McstA2EEkO8pAo5NEPcreygUcB2d49So032GKGPETB8chRkDsaBCm/KKL2vXdQoicofli8JJRPK2kXfUW34qww==", "key1").getPublicKeyString();
-    Assert.assertNotNull(userDBManager.createUserCertificate(testUser.getUsername(), key));
+  public void testCreateCertForPublicKey() throws Exception{
+    UserPublicKey key = new UserPublicKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCarsTCyAf8gYXwei8rhJnLTqYI6P88weRaY5dW9j3DT4mvfQPna79Bjq+uH4drmjbTD2n3s3ytqupFfNko1F0+McstA2EEkO8pAo5NEPcreygUcB2d49So032GKGPETB8chRkDsaBCm/KKL2vXdQoicofli8JJRPK2kXfUW34qww==", "my first key");
+    userDBManager.addKey(testUser.getUsername(), key);
+    Assert.assertNotNull(userDBManager.createUserCertificateForPublicKey(testUser.getUsername(), key.getDescription()));
   }
   
   @After

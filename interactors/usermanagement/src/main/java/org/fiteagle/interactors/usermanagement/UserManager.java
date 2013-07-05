@@ -12,6 +12,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyExceptio
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 
@@ -88,8 +89,8 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
-    return manager.createUserCertificate(uid, publicKeyEncoded);
+  public String createUserCertificateForPublicKey(String uid, String description) throws Exception, PublicKeyNotFoundException {
+    return manager.createUserCertificateForPublicKey(uid, description);
   }
   
 }

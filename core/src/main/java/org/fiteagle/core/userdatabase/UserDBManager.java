@@ -24,6 +24,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,21 +137,16 @@ public class UserDBManager {
   }
   
   public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
-    String returnString = "";   
     KeyPair keypair = keyManager.generateKeyPair();
-    String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
+    String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, new UserPublicKey(pubKeyEncoded, "created at"+new Date().toString()));
+    addKey(username, new UserPublicKey(pubKeyEncoded, "created at "+new Date().toString()));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
-    returnString = privateKeyEncoded + "\n" + userCertString;   
-    return returnString;
+    return privateKeyEncoded + "\n" + userCertString;   
   }
 
-  public String createUserCertificate(String username, String publicKeyEncoded) throws Exception {
-    String returnString = "";
-    PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
-    addKey(username, new UserPublicKey(publicKeyEncoded, "created at"+new Date().toString()));
-    returnString = createUserCertificate(username, pkey);
-    return returnString;
+  public String createUserCertificateForPublicKey(String username, String description) throws Exception, PublicKeyNotFoundException {
+    PublicKey publicKey = get(username).getPublicKey(description);
+    return createUserCertificate(username, publicKey);
   }
 }

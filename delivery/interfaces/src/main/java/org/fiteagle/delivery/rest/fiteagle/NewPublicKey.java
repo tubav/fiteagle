@@ -6,17 +6,17 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NewPublicKey {
   
-  private String publicKey;  
+  private String publicKeyString;  
   private String description;  
   
   public NewPublicKey(){};   
 
-  public String getPublicKey() {
-    return publicKey;
+  public String getPublicKeyString() {
+    return publicKeyString;
   }
   
-  public void setPublicKey(String publicKey) {
-    this.publicKey = publicKey;
+  public void setPublicKeyString(String publicKey) {
+    this.publicKeyString = publicKey;
   }
 
   public String getDescription() {

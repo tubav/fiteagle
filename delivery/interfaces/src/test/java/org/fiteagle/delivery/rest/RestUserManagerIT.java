@@ -27,9 +27,10 @@ public class RestUserManagerIT {
   private final static String KEYSTORE_DIRECTORY = keystorePrefs.get("keystore");
   private final static String KEYSTORE_PASSWORD = keystorePrefs.get("keystore_pass");
   
-  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[{\"publicKey\":\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\",\"description\":\"my first key\"}]}";
+  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[{\"publicKeyString\":\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\",\"description\":\"my first key\"}]}";
   private final static String USER_1_UPDATE_JSON = "{\"lastName\":\"nicolaus\",\"email\":\"nicolaus@test.de\"}";
   private final static String USER_1_INCOMPLETE_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@testde\",\"affiliation\":\"mitjasAffiliation\"}";
+  private final static String USER_1_PUBLIC_KEY = "{\"publicKeyString\":\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\",\"description\":\"my first key\"}";
   
   @BeforeClass
   public static void setUp() throws IllegalArgumentException, IOException{    
@@ -65,9 +66,20 @@ public class RestUserManagerIT {
   }
 
   @Test
-  public void testDeletePublicKey() throws UnsupportedEncodingException {
+  public void testDeleteAndAddPublicKey() throws UnsupportedEncodingException {
     deletePubKey();
     user1ShouldHaveNoKeys();
+    addPubKey();
+  }
+  
+  @Test
+  public void testCreateCertificate() throws UnsupportedEncodingException {
+    String description = "my first key";
+    String encodedDescription = URLEncoder.encode(description, "UTF-8");
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+    .expect().statusCode(200)
+      .body(containsString("-----BEGIN CERTIFICATE-----"))
+      .when().get("mnikolaus/pubkey/"+encodedDescription+"/certificate");
   }
   
   @Test
@@ -114,7 +126,7 @@ public class RestUserManagerIT {
   }
 
   private void PutUser1() {
-    given().contentType("application/json").body(USER_1_JSON)      
+    given().contentType("application/json").body(USER_1_JSON)   
       .when().put("mnikolaus");
   }
   
@@ -159,6 +171,13 @@ public class RestUserManagerIT {
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
     .expect().statusCode(200)
     .when().delete("mnikolaus/pubkey/"+encodedDescription);
+  }
+  
+  private void addPubKey() {
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+      .contentType("application/json").body(USER_1_PUBLIC_KEY) 
+      .expect().statusCode(200)
+      .when().post("mnikolaus/pubkey");
   }
   
   private void user1ShouldHaveNoKeys() {

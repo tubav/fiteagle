@@ -37,7 +37,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) resp;
     if(!request.isSecure()){
-      response.setStatus(Response.Status.BAD_REQUEST.getStatusCode());      
+      response.sendError(Response.Status.BAD_REQUEST.getStatusCode());      
       return;   
     }
     
@@ -49,7 +49,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     
     String username = getTarget(request);
     if(username == null){
-      response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());      
+      response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());      
       return;
     }
     
@@ -107,7 +107,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     if(session == null){
       return false;
     }
-    if (!isUserAuthorizedForTarget(session.getAttribute("username").toString(), getTarget(request))) {
+    if(!isUserAuthorizedForTarget(session.getAttribute("username").toString(), getTarget(request))) {
       return false;
     }    
     return true;
