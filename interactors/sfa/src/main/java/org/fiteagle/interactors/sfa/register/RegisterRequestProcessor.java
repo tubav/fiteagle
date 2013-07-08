@@ -1,23 +1,21 @@
 package org.fiteagle.interactors.sfa.register;
 
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.HashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
-
-import com.jcabi.urn.URN;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RegisterRequestProcessor extends SFAv3RequestProcessor{
-
+Logger log = LoggerFactory.getLogger(getClass()); 
   @Override
   public AMResult processRequest(ListCredentials credentials, Object... specificArgs) {
     
@@ -27,8 +25,16 @@ public class RegisterRequestProcessor extends SFAv3RequestProcessor{
   public HashMap<String, Object> register(HashMap<String, Object> parameters){
     String urn = getUrn(parameters);
     String type = getType(parameters);
+    String credentialString = getCredential(parameters);
+    SignedCredential cred = null;
+    try {
+       cred =buildCredential(credentialString);
+    } catch (JAXBException e) {
+      log.error(e.getMessage(),e);
+    }
     
     if(isSliceType(type) && isURN(urn)){
+     
       return new HashMap<String, Object>();
     }
     else {
@@ -56,7 +62,7 @@ public class RegisterRequestProcessor extends SFAv3RequestProcessor{
   }
 
   public boolean isURN(String urn) {
-    return URN.isValid(urn);
+    return true;
   }
 
   public String getCredential(HashMap<String, Object> hashMap) {
