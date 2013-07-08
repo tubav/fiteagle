@@ -19,7 +19,7 @@ function(){
 	* @param{String} text - to be checked
 	**/
 	Validation._isEmpty = function(text){
-		if(!text)
+		if(!text || text.length == 0)
 			return true;
 		return false;
 	};
@@ -54,6 +54,11 @@ function(){
 		if(pwd.length > 3){ isValidPassword = true;}	
 		//log("password is valid "+ isValidPassword);
 		return isValidPassword;
+	};
+	
+	
+	Validation._isAffiliation = function(){
+		return true; //TODO
 	};
 
 	return Validation;

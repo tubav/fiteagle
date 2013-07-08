@@ -4,15 +4,7 @@ import java.util.HashMap;
 
 public class InMemoryUserDB implements UserPersistable {
 
-  private static InMemoryUserDB inMemoryUserDB;
-  public static InMemoryUserDB getInstance(){
-    if(inMemoryUserDB == null){
-      inMemoryUserDB = new InMemoryUserDB();
-    }
-    return inMemoryUserDB;
-  }
-  
-	private HashMap<String, User> users;
+  private HashMap<String, User> users;
 
 	public InMemoryUserDB(){
 		users = new HashMap<String, User>();
@@ -23,14 +15,11 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException {
-		if(users.get(u.getUsername()) != null){
+	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+		if(users.get(u.getUsername()) != null)
 			throw new DuplicateUsernameException();
-		}
-		else{
-		  u.checkAttributes();
-			users.put(u.getUsername(), u);
-		}
+	  u.checkAttributes();
+		users.put(u.getUsername(), u);
 	}
 
 	@Override
@@ -44,55 +33,35 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, NotEnoughAttributesException, InValidAttributeException {
+	public void update(User u) throws UserNotFoundException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) == null)
-			throw new RecordNotFoundException();
-		else{
-		  User oldUser = get(u.getUsername());
-		  u = User.createMergedUser(oldUser, u);
-		  u.checkAttributes();
-		  users.put(u.getUsername(), u);    
-		}
-			
+			throw new UserNotFoundException();
+	  User newUser = get(u.getUsername());
+	  newUser.mergeWithUser(u);		 
+	  users.put(u.getUsername(), newUser);    
 	}
 
 	@Override
-	public User get(String username) throws RecordNotFoundException {
+	public User get(String username) throws UserNotFoundException {
 		if(users.get(username) == null)
-			throw new RecordNotFoundException();
+			throw new UserNotFoundException();
 		return users.get(username);		
 	}
 
 	@Override
-	public User get(User u) throws RecordNotFoundException {
+	public User get(User u) throws UserNotFoundException {
 		return get(u.getUsername());		
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException, InValidAttributeException {
-	  if(key == null || key.length() == 0){
-	    throw new InValidAttributeException();
-	  }
-	  User u;
-		if((u=users.get(username)) == null)
-			throw new RecordNotFoundException();
+	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, InValidAttributeException, DuplicatePublicKeyException {
+	  User u = get(username);		
 		u.addPublicKey(key);
 	}
 	
 	@Override
-	public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-	  if(key == null || key.length() == 0){
-      throw new InValidAttributeException();
-    }
-	  User u = users.get(username);
-    if(u == null){
-      throw new RecordNotFoundException();
-    }
-    u.deletePublicKey(key);
-	}
-	
-	@Override
-	public void deleteAllEntries(){
-		users = new HashMap<String, User>();
-	} 
+	public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException{	  
+	  User u = get(username);    
+    u.deletePublicKey(description);
+	}	
 }

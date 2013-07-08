@@ -2,15 +2,18 @@ package org.fiteagle.delivery.rest.fiteagle;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NewUser {
   
   private String username;
   private String firstName;
   private String lastName;
   private String email;
+  private String affiliation;
   private String password;
-  private List<String> publicKeys;
+  private List<NewPublicKey> publicKeys;
   
   public NewUser(){};
   
@@ -41,6 +44,14 @@ public class NewUser {
     this.email = email;
   }
 
+  public String getAffiliation() {
+    return affiliation;
+  }
+
+  public void setAffiliation(String affiliation) {
+    this.affiliation = affiliation;
+  }
+
   public String getPassword() {
     return password;
   }
@@ -49,12 +60,12 @@ public class NewUser {
     this.password = password;
   }
   
-  public List<String> getPublicKeys() {
-	return publicKeys;
+  public List<NewPublicKey> getPublicKeys() {
+    return publicKeys;
   }
 
-  public void setPublicKeys(List<String> publicKeys) {
-	this.publicKeys = publicKeys;
+  public void setPublicKeys(List<NewPublicKey> publicKeys) {
+    this.publicKeys = publicKeys;
   }
  
 }

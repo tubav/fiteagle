@@ -17,6 +17,8 @@ function(){
 				$(triggerOn).click();
 			}
 		});
+		
+		$(selectorOn).focus();
 	};
 
 	/**
@@ -38,48 +40,12 @@ function(){
 	* @param {JQuery Selector} bool - boolean value. If the value is true then ".invalid" class is added otherwise it is removed.
 	**/
 	Utils.highlightField =function(selector,bool){
-		if(bool){
+		if(!bool){
 			$(selector).removeClass("invalid");
 		}else{
 			$(selector).addClass("invalid");
 		}
 	};
-
-	Utils.updateUsersData = function(newFirstName, newLastName, newAffiliation, newEmail){
-		Session.set("profileEditing", true);
-		Meteor.users.update(Meteor.userId(), 
-			{
-				$set:{
-					/*emails : [{
-						address: newEmail,
-						verified: false		
-					}],*/
-					profile: {
-						firstName : newFirstName,
-						lastName  : newLastName,
-						affiliation : newAffiliation
-					}
-				}
-			},
-		//calback after updating
-		function(error){
-			Session.set("profileEditing", false);
-			if (!error) {
-				Template.userProfileInformation.error = function(){
-					return false;
-				};
-			} else {
-				Session.set('profile_edit', 'error');
-				Template.userProfileInformation.error = function(){
-					return true;
-				};
-				Template.userProfileInformation.errorMessage = function() {
-					return error.reason;
-				};
-			}
-		}
-	);
-	}
 
 	Utils.addErrorMessageTo = function(selector, message){
 		console.log('adding error message ['+message+']'+" to "+selector);
@@ -91,19 +57,31 @@ function(){
 	};
 
 	Utils.clearErrorMessagesFrom = function(selector){
+		console.log("Clearing all error messages from "+ selector);
 		var errorMessages = $(selector).find(".errorMessage");
 		errorMessages.remove();
 	};	
 
 
 	Utils.unhideBody = function(){
-		$("#fiteagle").removeClass("hidden");
+		this.unhideElement('#fiteagle');
 	};	
 
 	Utils.hideBody = function(){
-		$("#fiteagle").addClass("hidden");
+		this.hideElement("#fiteagle")
 	};
-
+	
+	Utils.hideElement = function(selector){
+		var toHide = $(selector);
+		//console.log("Hiding "+ toHide.attr('class'));
+		if(!toHide.hasClass('hidden')){
+				toHide.addClass('hidden');
+		}
+	};
+	
+	Utils.unhideElement = function(selector){
+		$(selector).removeClass('hidden');
+	};
 
 	Utils.setCurrentUser = function(user){
 				
@@ -125,6 +103,7 @@ function(){
 			}
 			return null;
 	};
+	
 
 	Utils.resetUser = function(){
 		sessionStorage.clear();
@@ -143,7 +122,7 @@ function(){
 	
 	Utils.listCookies = function() {
 		/*var theCookies = document.cookie.split(';');
-		console.log("Total cookie number " + theCookies.length);
+		console.log("Total cookie number " + theCookies.length);U
 		var aString = '';
 		for (var i = 1 ; i <= theCookies.length; i++) {
 			aString += i + ' ' + theCookies[i-1] + "\n";
@@ -153,7 +132,151 @@ function(){
 		
 		return aString;
 	};
+	
+	
+	Utils.initTooltipFor = function(selector,title,placement,trigger){
+		if(selector){
+			$(selector).tooltip({
+				'title': title,
+				'placement':placement, 
+				'trigger' : trigger	
+			});
+		}
+	};
+	
+	Utils.checkInputField = function(inputFieldSelector,errorFieldSelector,validationFunction,emptyFieldMsg,validationErrorMessage){
 		
+		var inputFieldValue = $(inputFieldSelector).val();
+		
+		if(Validation._isEmpty(inputFieldValue)){		
+			Utils.highlightField(inputFieldSelector,true);
+			Utils.addErrorMessageTo(errorFieldSelector,emptyFieldMsg);
+		}else{
+			var isValid = validationFunction(inputFieldValue);
+			if(!isValid){
+				Utils.addErrorMessageTo(errorFieldSelector,validationErrorMessage);
+				Utils.highlightField(inputFieldSelector,true);	
+			}else{
+				Utils.highlightField(inputFieldSelector,false);	
+			}
+		}		
+		return isValid;		
+	};
+	
+	Utils.getCurrentTab = function(){
+		var tab;
+		if(typeof(Storage)!=="undefined"){
+			tab = sessionStorage.currentTab;
+			if(typeof tab == "undefined"){
+				 tab = "#manageProfileMenu";
+			}
+		}else{
+			console.log("Session storage is not supported !");
+		}
+		return tab;
+	};
+	
+	Utils.setCurrentTab = function(currentTab){
+		sessionStorage.currentTab = currentTab;
+	};
+	
+	Utils.showCurrentTab = function(){
+		//console.log("CURRENT " +this.getCurrentTab());
+		$(this.getCurrentTab()).click();
+	};
+	
+	Utils.setCredentials = function(username,password){
+		sessionStorage.credentials = btoa(username + ":" + password);
+	}; 
+	
+	Utils.getCredentials = function(){
+		return sessionStorage.credentials;
+	};
+	
+	
+	Utils.getUserFromServer = function(username){
+		
+		var userFromServer = null;
+		
+		$.ajax({
+			cache: false,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			url : "/api/v1/user/"+username,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(user,status,xhr){
+				userFromServer = user;
+			},
+			error: function(xhr,status,thrown){
+				console.log("Response " + xhr.responseText);
+				console.log(status);
+				console.log(thrown);
+			}
+		});
+	
+		return userFromServer;
+	};
+	
+	Utils.updateUserOnServer = function(userToUpdate){
+		var user = Utils.getCurrentUser();
+		$.ajax({
+			cache: false,
+			type: "POST",
+			async: false,
+			url: "/api/v1/user/"+user.username,
+			data: JSON.stringify(userToUpdate),
+			contentType: "application/json",
+			dataType: "json",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(data,status){
+				console.log("UPDATING DATA " + data);
+				console.log(status);
+			},
+			error: function(xhl,status){
+				console.log(xhl.responseText);
+				console.log(status);
+			},
+			statusCode:{			
+				200: function(){
+					console.log("User has been successfully updated on server");
+					Utils.setCurrentUser(Utils.getUserFromServer(userToUpdate.username));
+					initAddRemoveKeysForm();
+				}
+			}
+		});
+	};
+	
+	Utils.createNewUser = function(firstName,lastName,affiliation,password,email){		
+		
+		var newUser = new Object();
+		
+		newUser.firstName = firstName;
+		newUser.lastName = lastName;
+		newUser.email = email;
+		newUser.affiliation = affiliation;
+		newUser.password = password;
+		newUser.publicKeys = [];
+
+		//console.log(JSON.stringify(newUser));
+		
+		return newUser;
+	};
+	
+	Utils.isSmallScreen = function(){
+		var width = $(window).width();
+		if(width < 979){
+			return true;
+		}
+		return false;
+	};	
+	
 	return Utils;
 });
 
