@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
@@ -15,9 +16,11 @@ import java.util.List;
 import javax.security.auth.x500.X500Principal;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,27 +56,49 @@ public class AuthenticationHandler {
       
     } else {
       
-      isValid(0, certificates, certificates[0].getSubjectX500Principal());
-      // X500Principal issuerX500Principal = cert.getIssuerX500Principal();
-      // PublicKey issuerPublicKey = getTrustedIssuerPublicKey(issuerX500Principal);
-      //
-      // verifyCertificateWithPublicKey(cert, issuerPublicKey);
+      if(isValid(0, certificates, certificates[0].getSubjectX500Principal())){
+//        if(userIsUnknown(cert))
+          storeNewUser(cert);
+      }
+
     }
     
   }
   
   
+  private void storeNewUser(X509Certificate certificate) {
+    // TODO Auto-generated method stub
+    
+  }
+
+//  private boolean userIsUnknown(X509Certificate certificate) throws CertificateParsingException {
+//    UserDBManager  userDBManager = UserDBManager.getInstance();
+//    String userName = X509Util.getUserNameFromX509Certificate(certificate);
+//    String domain = X509Util.getDomain(certificate);
+//    try{
+//      User u = userDBManager.get(userName);
+//      return true;
+//    }catch(UserNotFoundException e){
+//      return false;
+//    }
+//    
+//  }
+
   private boolean isValid(int i, X509Certificate[] certificates, X500Principal x500Principal) throws KeyStoreException,
       NoSuchAlgorithmException, CertificateException, IOException {
+    boolean valid = false;
     if (i < certificates.length && x500Principal.equals(certificates[i].getSubjectX500Principal())) {
       
       if (i == certificates.length - 1) {
-        return isTrustworthy(certificates[i]);
+        valid=  isTrustworthy(certificates[i]);
+        
       } else {
-        return isValid(i + 1, certificates, certificates[i].getIssuerX500Principal());
+        valid = isValid(i + 1, certificates, certificates[i].getIssuerX500Principal());
       }
       
-    } else {
+    }if(valid){
+      return valid;
+    }else {
       throw new CertificateNotTrustedException();
     }
     
@@ -82,12 +107,15 @@ public class AuthenticationHandler {
   private boolean isTrustworthy(X509Certificate trustworthyCert) throws KeyStoreException, NoSuchAlgorithmException,
       CertificateException, IOException {
     List<X509Certificate> storedCerts = keyStoreManagement.getTrustedCerts();
+   
     for (X509Certificate cert : storedCerts) {
       if (cert.getIssuerX500Principal().equals(trustworthyCert.getIssuerX500Principal())) {
+        
         try {
           trustworthyCert.verify(cert.getPublicKey());
           return true;
         } catch (Exception e) {
+          log.error(e.getMessage(),e);
           return false;
         }
       }
