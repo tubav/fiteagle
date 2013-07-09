@@ -73,13 +73,14 @@ function(){
 	
 	Utils.hideElement = function(selector){
 		var toHide = $(selector);
-		//console.log("Hiding "+ toHide.attr('class'));
+		//console.log("Hiding Element"+ selector);
 		if(!toHide.hasClass('hidden')){
-				toHide.addClass('hidden');
+				toHide.addClass('hidden');			
 		}
 	};
 	
 	Utils.unhideElement = function(selector){
+		//console.log("Unhiding Element " + selector);
 		$(selector).removeClass('hidden');
 	};
 
@@ -109,7 +110,7 @@ function(){
 		sessionStorage.clear();
 	};
 
-	Utils.userToString = function(){
+	Utils.userToString = function(usr){
 			var user = this.getCurrentUser();
 			var userToString = '';
 			if(user !=null){
@@ -136,7 +137,10 @@ function(){
 	
 	Utils.initTooltipFor = function(selector,title,placement,trigger){
 		if(selector){
-			$(selector).tooltip({
+			var s = $(selector);
+			s.tooltip('destroy');
+			console.log("Tooltip for " + selector + ' placement '+ placement);
+			s.tooltip({
 				'title': title,
 				'placement':placement, 
 				'trigger' : trigger	
@@ -221,17 +225,20 @@ function(){
 		return userFromServer;
 	};
 	
-	Utils.updateUserOnServer = function(userToUpdate){
-		var user = Utils.getCurrentUser();
+	Utils.updateUserOnServer = function(userToUpdate, loadingSign){
+		console.log("credentials" + Utils.getCredentials());
+		var data = JSON.stringify(userToUpdate);
+		var message;
 		$.ajax({
 			cache: false,
 			type: "POST",
 			async: false,
-			url: "/api/v1/user/"+user.username,
-			data: JSON.stringify(userToUpdate),
+			url: "/api/v1/user/"+userToUpdate.username,
+			data: data,
 			contentType: "application/json",
 			dataType: "json",
 			beforeSend: function(xhr){
+				Utils.unhideElement(loadingSign);
 				xhr.setRequestHeader("Authorization",
                 "Basic " + Utils.getCredentials()); // TODO Base64 support
 			},
@@ -245,12 +252,26 @@ function(){
 			},
 			statusCode:{			
 				200: function(){
-					console.log("User has been successfully updated on server");
+					var msg = "User has been successfully updated on server";
 					Utils.setCurrentUser(Utils.getUserFromServer(userToUpdate.username));
 					initAddRemoveKeysForm();
+					message = createSuccessMessage(msg);
 				}
+			},
+			complete: function(){
+				Utils.hideElement(loadingSign);
 			}
 		});
+		
+		return message;
+	};
+	
+	createSuccessMessage = function(msg){
+		var div = $('<div>').addClass("row-fluid errorMessage");
+		var span = $('<span>').addClass('alert alert-success').html(msg);
+		div.append(span);
+		console.log("Success msg " + div)
+		return div;
 	};
 	
 	Utils.createNewUser = function(firstName,lastName,affiliation,password,email){		

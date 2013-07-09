@@ -279,14 +279,14 @@ function(Validation, Utils, MainPage,Messages){
 			statusCode:{
 				
 				200: function(){
-					console.log("New user is successfully registered");
-					Utils.setCredentials(newUser.username,newUser.password);
+					console.log("New user is successfully registered");		
 				},
 				
 				201: function(){
 					console.log("New user: "+ newUser.firstName +" "+newUser.lastName+ " has been successfully created.");
 					newUser.username = Registration._getUsername();
 					Utils.setCurrentUser(newUser);
+					Utils.setCredentials(newUser.username,newUser.password);
 					MainPage.load();
 					
 				},
@@ -348,7 +348,7 @@ function(Validation, Utils, MainPage,Messages){
 		];
 				
 		for(var i=0; i < selectors.length; i++){
-			console.log(messages[i]);
+			//console.log(messages[i]);
 			Utils.initTooltipFor(selectors[i],messages[i],position,trigger);
 		}
 	};

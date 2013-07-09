@@ -58,7 +58,7 @@ ul li a:hover, ul li a:focus{text-decoration: none;}
 #managePublicKeys ul{list-style-type:none;}
 
 hr{ border-top: 1px solid #D1D1D1}
-h4{margin-bottom:20px}
+h4{margin-bottom:5px !important}
 
 i[class^=icon-]{margin-right: 10px;}
 
@@ -74,7 +74,7 @@ i[class^=icon-]{margin-right: 10px;}
 
 .horizontal li {display:inline}
 
-.collapseHeader h3{margin-left:2%;}
+#desktop .collapseHeader {margin-left:2%;}
 
 
 input.search-query{height:24px !important;}
@@ -166,7 +166,6 @@ input.search-query{height:24px !important;}
     box-shadow: none !important;
 }
 
-#aside hr{margin:10px 0 0 0;}
 #aside .search-query{margin-top:10px;}
 #aside{margin:0px;}
 
@@ -186,7 +185,7 @@ input.search-query{height:24px !important;}
 .centered-pills a { float:left; }
 
 
-.collapseHeader i.collapseSign{float:right; padding-top:8px;}
+.collapseHeader i.collapseSign{float:right; padding-top:1px;}
 
 @media (max-width:979px){
 		#navs ul {margin-bottom: 20px}
@@ -199,6 +198,8 @@ input.search-query{height:24px !important;}
 		.collapseHeader h3{margin-left:0%;}
 		
 		#search .form-search{text-align: left; margin-bottom:20px !important}
+		
+		#aside .collapseHeader{padding-right: 20px}
 }
 
 /* Portrait tablet to landscape and desktop */

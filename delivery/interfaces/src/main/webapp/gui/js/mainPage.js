@@ -102,10 +102,7 @@ function(require,Utils,LoginPage){
 		$('#aside');
 	};
 
-	signOut = function(){
-		sessionStorage.clear();
-		require('loginPage').load();
-	};
+
 
 	initUserInfoPanel = function(){
 		console.log("init User Info Panel");
@@ -130,17 +127,14 @@ function(require,Utils,LoginPage){
 		Utils.clearErrorMessagesFrom("#manageProfile .errorMessages");
 		
 		var user = Utils.getCurrentUser();
-		
-		console.log(user);
-		$("#inputUsername")
-			.val(user.username);
+	
+		$("#inputUsername").val(user.username);
 		$("#inputFirstName").val(user.firstName);
 		$("#inputLastName").val(user.lastName);
 		$("#inputAffiliation").val(user.affiliation);
 		$("#inputEmail").val(user.email);
 		$("#inputUsername").val(user.username);
 		
-		$('#manageProfile input').on('change',enableSaveProfileBtn);
 		initSaveProfileInfoBtn();
 	};
 	
@@ -150,11 +144,60 @@ function(require,Utils,LoginPage){
 	};
 	
 	initSaveProfileInfoBtn = function(){
-		var user = Utils.getCurrentUser();
-		user.firstName = "Name changed";
 		$("#saveProfileInfo").on('click',function(){
-			Utils.updateUserOnServer(user);
+			if(checkUserProfileEntries()){
+				var msg = Utils.updateUserOnServer(getUserFromProfile(),"#saveProfileLoadingSign");
+				$('#userProfileErrors').append(msg);
+				initUserInfoPanel();
+			}
 		});
+	};
+	
+	checkUserProfileEntries = function(){
+		
+		Utils.clearErrorMessagesFrom("#userProfileErrors");
+		
+		var fn  = Utils.checkInputField(
+								"#inputFirstName",
+								"#userProfileErrors",
+								Validation._isName,
+								Messages.emptyUsername,
+								Messages.wrongUsername
+								);
+		var ln = Utils.checkInputField(
+								"#inputLastName",
+								"#userProfileErrors",
+								Validation._isName,
+								Messages.emptyLastName,
+								Messages.wrongLastName);
+								
+		var aff =  Utils.checkInputField(
+									"#inputAffiliation",
+									"#userProfileErrors",
+									Validation._isAffiliation,
+									Messages.emptyAffiliation,
+									Messages.wrongAffiliation
+									);
+		var email = Utils.checkInputField(
+								"#inputEmail",
+								"#userProfileErrors",
+								Validation._isEmail,
+								Messages.emptyEmailAddress,
+								Messages.wrongEmailAddress);
+								
+		return (fn && ln && aff && email);
+	};
+	
+	getUserFromProfile = function(){
+		user = new Object();
+		
+		user.username = $('#inputUsername').val();
+		user.firstName = $('#inputFirstName').val();
+		user.lastName = $('#inputLastName').val();
+		user.affiliation = $('#inputAffiliation').val();
+		user.email = $('#inputEmail').val();
+		
+		return user;
 	};
 	
 	initAddRemoveKeysForm = function(){
@@ -314,11 +357,17 @@ function(require,Utils,LoginPage){
 	};
 
 	initSignOutBtn = function(){
-		$("#signOut").click(function(){
+		$("#signOut").on('click',function(e){
+			e.preventDefault();
 			console.log("signOut clicked");
 			Utils.resetUser();
 			signOut();
 		});
+	};
+	
+	signOut = function(){
+		sessionStorage.clear();
+		require('loginPage').load();
 	};
 		
 	Main.load = function(){

@@ -26,7 +26,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Registration.initRegistrationForm();	
 		Utils.showCurrentTab();
 		
-		initOnResizeEvents();
+		initOnWindowResizeEvent();
 	};
 	
 	setCurrentTab = function(currentTab){
@@ -184,7 +184,8 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	initOnWindowResizeEvent = function(){
 		$(window).resize(function(){
 			toggleNavigationBtn();
-			initLoginForm();
+			initLoginFormHints();
+			Registration.initRegistrationFormHints();
 		});
 	}
 	
@@ -200,15 +201,17 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 			$(window).scrollTop($('#header').offset().top);
 		});
 
-		var position;
-		(Utils.isSmallScreen()) ? position = "top" : position = "right";
-				
-		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
-		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
+		initLoginFormHints();
 		
 		$('#main').addClass('row-fluid');
 	};
 	
+	initLoginFormHints = function(){
+		var position;
+		(Utils.isSmallScreen()) ? position = "top" : position = "right";			
+		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
+		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
+	};
 	
 	initRegisterLink = function(){
 		$("#registrationLink").on('click',function(e){
