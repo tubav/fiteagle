@@ -2,6 +2,7 @@ package org.fiteagle.core.userdatabase;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,8 +12,11 @@ import java.util.List;
 import net.iharder.Base64;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class User {
 	
@@ -20,6 +24,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String affiliation;
 	@JsonIgnore
 	private Date created;
 	@JsonIgnore
@@ -28,68 +33,107 @@ public class User {
 	private String passwordHash;
 	@JsonIgnore
 	private String passwordSalt;
-	private List<String> publicKeys;
+	private List<UserPublicKey> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
+	private final static int MINIMUM_USERNAME_LENGTH = 3;
+	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 3;
+  private final static int MINIMUM_AFFILITAION_LENGTH = 2;
+
+  static Logger log = LoggerFactory.getLogger(UserDBManager.class);
 	
-	public User(String username, String firstName, String lastName, String email, String passwordHash, String passwordSalt, Date created, Date lastModified, List<String> publicKeys){
+	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.affiliation = affiliation;
 		this.passwordHash = passwordHash;
 		this.passwordSalt =  passwordSalt;
 		this.created = created;
 		this.last_modified = lastModified;
+		this.publicKeys = publicKeys;
 		if(publicKeys == null){
 		  this.publicKeys = new ArrayList<>();
 		}
-		else{
-		  this.publicKeys = publicKeys;
-		}		
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String password) throws NoSuchAlgorithmException{ 
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password){ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.email = email;    
+    this.email = email;
+    this.affiliation = affiliation;
+    this.created = Calendar.getInstance().getTime();
+    this.last_modified = created;
+    byte[] salt = generatePasswordSalt();
+    this.passwordSalt = Base64.encodeBytes(salt);        
+    this.passwordHash = generatePasswordHash(salt, password);    
+    this.publicKeys = new ArrayList<UserPublicKey>();
+	}
+	
+	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys){ 
+	  this.username = username;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.affiliation = affiliation;
     this.created = Calendar.getInstance().getTime();
     this.last_modified = created;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
-    
-    this.publicKeys = new ArrayList<String>();
-	}
-	
-	public User(String username, String firstName, String lastName, String email, String password, List<String> publicKeys) throws NoSuchAlgorithmException{ 
-	  this.username = username;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;    
-    this.created = Calendar.getInstance().getTime();
-    this.last_modified = created;
-    byte[] salt = generatePasswordSalt();
-    this.passwordSalt = Base64.encodeBytes(salt);        
-    this.passwordHash = generatePasswordHash(salt, password);
-    
+    this.publicKeys = publicKeys;
     if(publicKeys == null){
       this.publicKeys = new ArrayList<>();
     }
-    else{
-      this.publicKeys = publicKeys;
-    }   
 	}
 	
-	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException{  
-    if(username == null || firstName == null || lastName == null || email == null || passwordHash == null || passwordSalt == null){
-      throw new UserPersistable.NotEnoughAttributesException();
+	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
+	  if(username == null){
+	    throw new NotEnoughAttributesException("no username given");
+	  }
+	  if(firstName == null){
+	    throw new NotEnoughAttributesException("no firstName given");
+	  }
+	  if(lastName == null){
+      throw new NotEnoughAttributesException("no lastName given");
     }
-    if(username.length() == 0 || firstName.length() == 0 || lastName.length() == 0 || email.length() == 0 ||
-        !email.contains("@") || passwordHash.length() == 0 || passwordSalt.length() == 0){
-      throw new UserPersistable.InValidAttributeException();
+	  if(email == null){
+      throw new NotEnoughAttributesException("no email given");
     }
+	  if(affiliation == null){
+      throw new NotEnoughAttributesException("no affiliation given");
+    }	  
+	  if(passwordHash == null){
+      throw new NotEnoughAttributesException("no password given or password too short");
+    }   
+	  
+	  if(username.length() < MINIMUM_USERNAME_LENGTH){
+	    throw new InValidAttributeException("username too short");
+	  }
+	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
+      throw new InValidAttributeException("firstName too short");
+    }
+	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
+      throw new InValidAttributeException("lastName too short");
+    }
+	  if(!email.contains("@") || !email.contains(".")){
+      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
+    }
+	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
+      throw new InValidAttributeException("affiliation too short");
+    }
+	  
+	  for(UserPublicKey userPublicKey : publicKeys){
+	    String description = userPublicKey.getDescription();
+	    String publicKeyString = userPublicKey.getPublicKeyString();
+	    for(UserPublicKey key : publicKeys){
+	      if(key != userPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
+	        throw new DuplicatePublicKeyException();
+	      }
+	    }
+	  }
   }
 	
 	private byte[] generatePasswordSalt(){
@@ -97,12 +141,17 @@ public class User {
     return random.generateSeed(20);
 	}
 	
-	private String generatePasswordHash(byte[] salt, String password) throws NoSuchAlgorithmException{
+	private String generatePasswordHash(byte[] salt, String password){
 	  if(password == null || password.length() < MINIMUM_PASSWORD_LENGTH){
-      return null;
+	    return null;
 	  }
     
-	  byte[] passwordBytes = createHash(salt, password);
+	  byte[] passwordBytes = null;
+    try {
+      passwordBytes = createHash(salt, password);
+    } catch (NoSuchAlgorithmException e) {
+      log.error(e.getMessage());
+    }
     return Base64.encodeBytes(passwordBytes);
 	}
 	
@@ -113,51 +162,146 @@ public class User {
     return digest.digest(password.getBytes());
   }
 	
-  public static User createMergedUser(User oldUser, User newUser){
-    if(newUser.getFirstName() == null){
-      newUser.setFirstName(oldUser.getFirstName());
+  public void mergeWithUser(User newUser) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
+    if(newUser.getFirstName() != null){
+     this.firstName = newUser.getFirstName();
     }
-    if(newUser.getLastName() == null){
-      newUser.setLastName(oldUser.getLastName());
+    if(newUser.getLastName() != null){
+      this.lastName = newUser.getLastName();
     }
-    if(newUser.getPublicKeys() == null || newUser.getPublicKeys().size() == 0){
-      newUser.setPublicKeys(oldUser.getPublicKeys());
+    if(newUser.getPublicKeys() != null && newUser.getPublicKeys().size() != 0){
+      this.publicKeys = newUser.getPublicKeys();
     }
-    if(newUser.getEmail() == null){
-      newUser.setEmail(oldUser.getEmail());
+    if(newUser.getEmail() != null){
+      this.email = newUser.getEmail();
     }
-    if(newUser.getPasswordSalt() == null || newUser.getPasswordHash() == null){
-      newUser.setPasswordSalt(oldUser.getPasswordSalt());
-      newUser.setPasswordHash(oldUser.getPasswordHash());
+    if(newUser.getAffiliation() != null){
+      this.affiliation = newUser.getAffiliation();
     }
-    return newUser;    
-  }
-  
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+    if(newUser.getPasswordHash() != null){
+      this.passwordSalt = newUser.getPasswordSalt();
+      this.passwordHash = newUser.getPasswordHash();
+    }
+    this.setLast_modified(Calendar.getInstance().getTime());
+    this.checkAttributes();      
+  }	
+	
+	public void addPublicKey(UserPublicKey userPublicKey){		
+		String description = userPublicKey.getDescription();
+		String publicKeyString = userPublicKey.getPublicKeyString();
+		for(UserPublicKey key : publicKeys){
+		  if(key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString)){
+		    throw new DuplicatePublicKeyException();
+		  }
+		}
+		this.publicKeys.add(userPublicKey);
 	}
 	
-	public String getEmail() {
+	public void deletePublicKey(String description){ 
+	  UserPublicKey keyToRemove = null;
+	  for(UserPublicKey key : this.publicKeys){
+	    if(key.getDescription().equals(description)){
+	      keyToRemove = key;
+	    }
+	  }    
+	  if(keyToRemove != null){
+	    this.publicKeys.remove(keyToRemove);
+	  }
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    User other = (User) obj;
+    if (affiliation == null) {
+      if (other.affiliation != null)
+        return false;
+    } else if (!affiliation.equals(other.affiliation))
+      return false;
+    if (email == null) {
+      if (other.email != null)
+        return false;
+    } else if (!email.equals(other.email))
+      return false;
+    if (firstName == null) {
+      if (other.firstName != null)
+        return false;
+    } else if (!firstName.equals(other.firstName))
+      return false;
+    if (lastName == null) {
+      if (other.lastName != null)
+        return false;
+    } else if (!lastName.equals(other.lastName))
+      return false;
+    if (passwordHash == null) {
+      if (other.passwordHash != null)
+        return false;
+    } else if (!passwordHash.equals(other.passwordHash))
+      return false;
+    if (passwordSalt == null) {
+      if (other.passwordSalt != null)
+        return false;
+    } else if (!passwordSalt.equals(other.passwordSalt))
+      return false;
+    if (publicKeys == null) {
+      if (other.publicKeys != null)
+        return false;
+    } else if (!publicKeys.containsAll(other.publicKeys) || publicKeys.size() != other.publicKeys.size())
+      return false;
+    if (username == null) {
+      if (other.username != null)
+        return false;
+    } else if (!username.equals(other.username))
+      return false;
+    return true;
+  }
+	
+	@Override
+  public String toString() {
+    return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+        + ", affiliation=" + affiliation + ", created=" + created + ", last_modified=" + last_modified
+        + ", publicKeys=" + publicKeys + "]";
+  }
+	
+	public PublicKey getPublicKey(String description){
+	  for(UserPublicKey key : publicKeys){
+	    if(key.getDescription().equals(description)){
+	      return key.getPublicKey();
+	    }
+	  }
+	  throw new UserPersistable.PublicKeyNotFoundException();
+	}
+	
+	public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+  
+  public String getEmail() {
     return email;
   }
 
@@ -165,61 +309,13 @@ public class User {
     this.email = email;
   }
 
-  public List<String> getPublicKeys() {
-		return publicKeys;
-	}
-
-	public void setPublicKeys(List<String> publicKeys) {
-		this.publicKeys = publicKeys;
-	}
-	
-	public void addPublicKey(String publicKey){
-		if(!this.publicKeys.contains(publicKey)){
-			this.publicKeys.add(publicKey);
-		}
-	}
-	
-	public void deletePublicKey(String publicKey){    
-    this.publicKeys.remove(publicKey);
+  public String getAffiliation() {
+    return affiliation;
   }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		if (publicKeys == null) {
-			if (other.publicKeys != null)
-				return false;
-		} else if (!publicKeys.equals(other.publicKeys))
-			return false;
-		return true;
-	}
-	
-	@Override
-  public String toString() {
-    return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-        + ", created=" + created + ", last_modified=" + last_modified + ", publicKeys=" + publicKeys + "]";
-  }
+  public void setAffiliation(String affiliation) {
+    this.affiliation = affiliation;
+  }  
 
   public String getPasswordHash() {
     return passwordHash;
@@ -248,6 +344,12 @@ public class User {
   public Date getCreated() {
     return created;
   }
-  
-  
+
+  public List<UserPublicKey> getPublicKeys() {
+    return publicKeys;
+  }
+
+  public void setPublicKeys(List<UserPublicKey> publicKeys) {
+    this.publicKeys = publicKeys;
+  }  
 }

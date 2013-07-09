@@ -1,9 +1,9 @@
-define(['require','validation','registration','utils','cookie'],
+define(['require','validation','registration','utils','cookie','messages'],
 
 /** @lends Login */ 
-function(require,Validation,Registration,Utils,Cookie){
+function(require,Validation,Registration,Utils,Cookie,Messages){
 	
-	console.log("loginPage.js is loaded");
+	//console.log("loginPage.js is loaded");
 	
 	 /** 
      * Login class
@@ -13,6 +13,60 @@ function(require,Validation,Registration,Utils,Cookie){
      * @return Login Object
      */
 	Login = {}; 
+	
+	
+	
+	Login.initLoginPage = function(){
+		disableFederatedLinks();
+		initOnWindowResizeEvent();
+		initNavigationMenu();
+		initRegisterLink();
+		initLoginForm();
+		initSignInBtn();
+		Registration.initRegistrationForm();	
+		Utils.showCurrentTab();
+		
+		initOnResizeEvents();
+	};
+	
+	setCurrentTab = function(currentTab){
+		if(typeof(Storage)!=="undefined"){
+			sessionStorage.currentTab = currentTab;
+		  }
+		else{
+			console.log("Session storage is not supported !");
+		}
+	};
+	
+	getCurrentTab = function(){
+		return sessionStorage.currentTab;
+	};
+	
+	
+	disableFederatedLinks = function(){
+		var a = $("#fancyLoginList").find('li a');
+		a.each(function(){
+			$(this).on('click',function(e){
+				e.preventDefault();
+			});
+		});
+
+	};
+	
+	initNavigationMenu = function(){
+		toggleNavigationBtn();
+		$("#navigation ul li a").on('click',function(){
+			Utils.setCurrentTab("#"+$(this).attr("id"));
+		});	
+	};
+	
+	toggleNavigationBtn = function(){
+		if(Utils.isSmallScreen()){
+			$('.btn-navbar').removeClass('hidden');
+		}else{
+			$('.btn-navbar').addClass('hidden');
+		}
+	};
 
 	/**
       * .... description goes here ...
@@ -48,15 +102,27 @@ function(require,Validation,Registration,Utils,Cookie){
 
 	Login.checkUsername = function(){
 		//log("checking email");
-		var isValidUsername = Validation._isName(this._getUsername());
-		Utils.highlightField("#username",isValidUsername);
+		
+		var isValidUsername = Utils.checkInputField(
+								"#username",
+								"#loginErrors",
+								Validation._isName,
+								Messages.emptyUsername,
+								Messages.wrongUsername
+		);
+		
 		return isValidUsername;
 	};
 
 	Login.checkPassword = function(){
 		//log("checking password");
-		var isValidPassword = Validation._isPassword(this._getPassword());
-		Utils.highlightField("#password",isValidPassword);
+		var isValidPassword = Utils.checkInputField(
+								"#password",
+								"#loginErrors",
+								Validation._isPassword,
+								Messages.emptyPassword,
+								Messages.wrongPassword
+		);
 		return isValidPassword;
 	};
 
@@ -64,36 +130,23 @@ function(require,Validation,Registration,Utils,Cookie){
 		
 		console.log('trying to login user...');
 		
-		Utils.clearErrorMessagesFrom("#loginForm .errorMessages");
+		Login.clearAllErrorMessages();
 		
-		var isValidEmail = Login.checkUsername();
-		var isValidPassword = Login.checkPassword();
-		
-		if(isValidEmail && isValidPassword){
-				console.log("email and password are correct");			
-				var username = null;
-				username = Login._getUsername();
-				var password = null;
-				password = Login._getPassword();
-				window.setTimeout(function(){
-						Login.sendLoginInformation(username,password);
-				},200);
-		}else{
-				console.log("username or password are NOT correct");	
-				if(!isValidEmail){
-					Utils.addErrorMessageTo("#loginForm .errorMessages", "Wrong username");
-				}
-				if(!isValidPassword){
-					Utils.addErrorMessageTo("#loginForm .errorMessages", "Password too short");
-				}
-			}
+		if(this.checkUsername() & Login.checkPassword()){
+				console.log("email and password are correct");
+				Utils.setCredentials(Login._getUsername(),Login._getPassword());					
+				Login.sendLoginInformation(Login._getUsername());
+				
+		}
 	};
 	
-	Login.sendLoginInformation = function(username, password){
+	Login.clearAllErrorMessages = function(){
+		Utils.clearErrorMessagesFrom("#loginErrors");
+	};
+	
+	Login.sendLoginInformation = function(username){
 		
 		console.log("Sending login information to the server...");
-		console.log("username " + username);
-		console.log("password "  + password);
 		$.ajax({
 			cache: false,
 			type: "GET",
@@ -101,51 +154,73 @@ function(require,Validation,Registration,Utils,Cookie){
 			dataType: "json",
 			url : "/api/v1/user/"+username,
 			beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization",
-                "Basic " + btoa(username + ":" + password)); // TODO Base64 support
+				Login.showLoadingSign();
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			complete: function(){
+				Login.hideLoadingSign();
 			},
 			success: function(user,status,xhr){
-				console.log(user);
-				Utils.setCurrentUser(user);
-				console.log(status);
-				console.log(xhr.responseText);
-				console.log("SET COOKIE ===> " + xhr.getResponseHeader('Set-Cookie'));
-								
+				Utils.setCurrentUser(user);						
 				require('mainPage').load();
 			},
 			error: function(xhr,status,thrown){
 				console.log("Response " + xhr.responseText);
 				console.log(status);
 				console.log(thrown);
+			},
+			statusCode:{
+				401: function(){
+					Utils.addErrorMessageTo("#loginErrors",Messages.wrongPasswordKey);
+				},
+				404: function(){
+					Utils.addErrorMessageTo("#loginErrors", Messages.userNotFound);	
+				}
 			}
 		});
 	};
 
-
-	Login.initLoginPage = function(){
-		$("#fiteagle").removeClass("hidden");
+	initOnWindowResizeEvent = function(){
+		$(window).resize(function(){
+			toggleNavigationBtn();
+			initLoginForm();
+		});
+	}
+	
+	initLoginForm = function(){
+		Utils.unhideBody();
 		Utils.changeFocusOnEnterClick("#username","#password");
 		Utils.addOnEnterClickEvent("#password","#signIn");
+		$('#main').scrollTop(0);
+		$('#username').focus();
 		
-		Login.initRegisterLink();
-		Login.initSignInBtn();
-		Login.initShowCookie();
+		$(function() { // when the DOM is ready...
+			//  Move the window's scrollTop to the offset position of #now
+			$(window).scrollTop($('#header').offset().top);
+		});
 
-		Registration.initRegistrationForm();
+		var position;
+		(Utils.isSmallScreen()) ? position = "top" : position = "right";
+				
+		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
+		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
+		
+		$('#main').addClass('row-fluid');
 	};
 	
 	
-	Login.initRegisterLink = function(){
+	initRegisterLink = function(){
 		$("#registrationLink").on('click',function(e){
 			e.preventDefault();
 			$("#registrationTab").click();
 		});
 	}
 	
-	Login.initSignInBtn = function(){
-		
+	initSignInBtn = function(){	
 		$("#signIn").on('click',function(){
 			 console.log("SignIn button clicked !");
+			 Utils.clearErrorMessagesFrom("#loginErrors");
 			 Login.loginUser();
 		});	
 	};
@@ -171,10 +246,10 @@ function(require,Validation,Registration,Utils,Cookie){
 	Login.initShowCookie= function(){
 		
 		$("#showCookie").on('click',function(){
-				console.log(Utils.listCookies());
+				console.log("cookie -)");
+				alert(document.cookie.length);
 		});
 	};
-	
 	
 	return Login;
 

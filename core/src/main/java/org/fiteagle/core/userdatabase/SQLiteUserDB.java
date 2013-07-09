@@ -1,6 +1,10 @@
 package org.fiteagle.core.userdatabase;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,101 +17,97 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 
-
-	private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
+	@SuppressWarnings("unused")
+  private static Logger log = LoggerFactory.getLogger(SQLiteUserDB.class);
 
 	private static SQLiteUserDB sqliteUserDB;
+	
 	public static SQLiteUserDB getInstance() throws DatabaseException{
 	  if(sqliteUserDB == null){
 	    try{
 	      sqliteUserDB = new SQLiteUserDB();
 	    } catch (SQLException e){
-	      throw new DatabaseException();
+	      throw new DatabaseException(e.getMessage());
 	    }
 	  }
 	  return sqliteUserDB;
 	}
 	
-	public SQLiteUserDB() throws DatabaseException, SQLException{
-	  try{
-	   
-  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
-  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, key)");
-  		
-	  } catch(SQLException e){
-	    log.error(e.getMessage(),e);
-	    throw new DatabaseException();
+	private SQLiteUserDB() throws DatabaseException, SQLException{
+	  try{	   
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, description, key, created, PRIMARY KEY (username, key), UNIQUE (username, description))");  		
+	  } catch(SQLException e){	    
+	    throw new DatabaseException(e.getMessage());
 	  }
-	}				
-	
+	}
 	
 	@Override
-	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 	  u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
-
-	  } catch(SQLException e){
-	    throw new DatabaseException();
+	  } catch(IOException | SQLException e){
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}
 
 	private void addUserToDatabase(User u) throws SQLException {
-	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?)");
-		ps.setString(1, u.getUsername());
-		ps.setString(2, u.getFirstName());
-		ps.setString(3, u.getLastName());
-		ps.setString(4, u.getEmail());
-		ps.setString(5, u.getPasswordHash());
-		ps.setString(6, u.getPasswordSalt());
-		ps.setDate(7, new java.sql.Date(u.getCreated().getTime()));
-		ps.setDate(8, new java.sql.Date(u.getLast_modified().getTime()));
-		
-		try{
-			ps.execute();
-		} catch(SQLException e){
-		    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
-		      throw new DuplicateUsernameException();
-		    }
-		    else{
-		      throw e;
-		    }
-		} finally{
-			ps.close();
-			connection.commit();
-			connection.close();
-		}
+    ArrayList<Object> params = new ArrayList<>();
+    params.add(u.getUsername());
+    params.add(u.getFirstName());
+    params.add(u.getLastName());
+    params.add(u.getEmail());
+    params.add(u.getAffiliation());
+    params.add(u.getPasswordHash());
+    params.add(u.getPasswordSalt());
+    params.add(new java.sql.Date(u.getCreated().getTime()));
+    params.add(new java.sql.Date(u.getLast_modified().getTime()));
+    try{
+      executeSQLString("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)", params);    
+    } catch(SQLException e){
+      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
+        throw new DuplicateUsernameException();
+      }
+      else{
+        throw e;
+      }
+    }
+  }
+	
+	private void addKeysToDatabase(String username, List<UserPublicKey> keys) throws SQLException, IOException {	 		
+		for(UserPublicKey key: keys){		  
+		  addKeyToDatabase(username, key);			  
+		}				
 	}
 
-	private void addKeysToDatabase(String username, List<String> keys) throws SQLException {	
-	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO Keys VALUES (?,?)");
-		for(String key: keys){
-			ps.setString(1, username);
-			ps.setString(2, key);
-			ps.addBatch();
-		}		
-		ps.executeBatch();		
-		ps.close();
-		connection.commit();
-		connection.close();
-	}
+  private void addKeyToDatabase(String username, UserPublicKey key) throws SQLException, IOException {
+    ArrayList<Object> params = new ArrayList<>();
+    params.add(username);
+    params.add(key.getDescription());
+    params.add(key.getPublicKeyString());
+    params.add(new java.sql.Date(key.getCreated().getTime()));    
+    try{
+      executeSQLString("INSERT INTO Keys VALUES (?,?,?,?)", params);
+    } catch(SQLException e){
+      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, description are not unique)")
+          || e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, key are not unique)")){
+        throw new DuplicatePublicKeyException();
+      }
+      else{
+        throw e;
+      }
+    }     
+  }
 	
-	private void deleteKeyFromDatabase(String username, String key) throws SQLException {
-	  Connection connection = getConnection();
-	  
-    PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=? AND key=?");
-    ps.setString(1, username);
-    ps.setString(2, key);
-    ps.execute();       
-    ps.close();
-    connection.commit();
-    connection.close();
+	private void deleteKeyFromDatabase(String username, String description) throws SQLException {
+	  ArrayList<Object> params = new ArrayList<>();
+	  params.add(username);
+	  params.add(description);
+    executeSQLString("DELETE FROM Keys WHERE username=? AND description=?", params);   
 	}
 
 	@Override
@@ -121,154 +121,137 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
       deleteUserFromDatabase(username);
       deleteKeysFromDatabase(username);    
     } catch (SQLException e) {
-      throw new DatabaseException();
+      throw new DatabaseException(e.getMessage());
     }		
-		
 	}
 
 	private void deleteKeysFromDatabase(String username) throws SQLException {
-	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("DELETE FROM Keys WHERE username=?");
-		ps.setString(1, username);
-		ps.execute();
-		ps.close();
-		connection.commit();
-		connection.close();
+	  ArrayList<Object> params = new ArrayList<>();
+    params.add(username);
+		executeSQLString("DELETE FROM Keys WHERE username=?", params);		
 	}
 
 	private void deleteUserFromDatabase(String username) throws SQLException {
-	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("DELETE FROM Users WHERE username=?");
-		ps.setString(1, username);
-		ps.execute();
-		ps.close();
-		connection.commit();
-		connection.close();
+	  ArrayList<Object> params = new ArrayList<>();
+    params.add(username);
+	  executeSQLString("DELETE FROM Users WHERE username=?", params);	 
 	}
 
 	@Override
-	public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
-	  User oldUser = get(u.getUsername());
-	  u = User.createMergedUser(oldUser, u);
-	  u.checkAttributes();
+	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+	  User newUser = get(u.getUsername());
+    newUser.mergeWithUser(u);	  
 	  try{	    
-	    updateUserInDatabase(u);
-	    deleteKeysFromDatabase(u.getUsername());    
-	    addKeysToDatabase(u.getUsername(), u.getPublicKeys());	   
-	  } catch(SQLException e){
-	    throw new DatabaseException();
-	  }
-		
+	    updateUserInDatabase(newUser);
+	    deleteKeysFromDatabase(newUser.getUsername());    
+	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
+	  } catch(IOException | SQLException e){
+	    throw new DatabaseException(e.getMessage());
+	  }		
 	}
 
 	private void updateUserInDatabase(User u) throws SQLException {
-	  Connection connection = getConnection();
-		PreparedStatement ps = connection.prepareStatement("UPDATE Users SET firstName=?, lastname=?, email=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?");
-		ps.setString(1, u.getFirstName());
-		ps.setString(2, u.getLastName());
-		ps.setString(3, u.getEmail());
-		ps.setString(4, u.getPasswordHash());
-		ps.setString(5, u.getPasswordSalt());		
-		java.util.Calendar now = java.util.Calendar.getInstance();
-		ps.setDate(6, new java.sql.Date(now.getTimeInMillis()));
-		ps.setString(7, u.getUsername());
-		if(ps.executeUpdate() == 0){
-			ps.close();
-			throw new RecordNotFoundException();
-		}
-		ps.close();
-		connection.commit();
-		connection.close();
+	  ArrayList<Object> params = new ArrayList<>();
+	  params.add(u.getFirstName());
+    params.add(u.getLastName());
+    params.add(u.getEmail());
+    params.add(u.getAffiliation());
+    params.add(u.getPasswordHash());
+    params.add(u.getPasswordSalt());    
+    params.add(new java.sql.Date(java.util.Calendar.getInstance().getTimeInMillis()));
+    params.add(u.getUsername());
+    
+		if(executeSQLUpdateString("UPDATE Users SET firstName=?, lastname=?, email=?, affiliation=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?", params) == 0){
+			throw new UserNotFoundException();
+		}		
 	}
 
 	@Override
-	public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-	  if(key == null || key.length() == 0){
-      throw new InValidAttributeException();
-    }
-	  User user = get(username);
-	  if(user == null){
-	    throw new RecordNotFoundException();
-	  }
-	  try{
-  		if(!user.getPublicKeys().contains(key)){
-  			ArrayList<String> keys = new ArrayList<String>();			
-  			keys.add(key);
-  			addKeysToDatabase(username,keys);  			
-  		}
-	  } catch(SQLException e){
-	    throw new DatabaseException();
+	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
+	  get(username);	  
+	  try{  		
+  		addKeyToDatabase(username,key);  		
+	  } catch(IOException | SQLException e){
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}
-
+	
   @Override
-  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException,
-      InValidAttributeException {
-    if(key == null || key.length() == 0){
-      throw new InValidAttributeException();
-    }
-    User user = get(username);
-    if(user == null){
-      throw new RecordNotFoundException();
-    }
+  public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException {
+    get(username);    
     try{
-      deleteKeyFromDatabase(username, key);
+      deleteKeyFromDatabase(username, description);
     } catch(SQLException e){
-      throw new DatabaseException();
+      throw new DatabaseException(e.getMessage());
     }    
   }
 	
 	@Override
-	public User get(String username) throws RecordNotFoundException, DatabaseException {		
-		User u;
+	public User get(String username) throws UserNotFoundException, DatabaseException {		
     try {
-      u = getUserFromDatabase(username);
+      return getUserFromDatabase(username);
     } catch (SQLException e) {
-      throw new DatabaseException();
+      throw new DatabaseException(e.getMessage());
     }
-		if(u == null){
-			throw new UserPersistable.RecordNotFoundException();
-		}
-		return u;
 	}
 	
 	private User getUserFromDatabase(String username) throws SQLException {
 		Connection connection = getConnection();
-	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.key FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
+	  PreparedStatement ps = connection.prepareStatement("SELECT Users.username, Users.firstname, Users.lastname, Users.email, Users.affiliation, Users.passwordHash, Users.passwordSalt, Users.created, Users.lastModified, Keys.description, Keys.key, Keys.created FROM Users LEFT OUTER JOIN Keys ON Users.username=Keys.username WHERE Users.username=?");
 		ps.setString(1, username);
-		ResultSet rs = ps.executeQuery();		
-		User u = null;
-		if(rs.next()){
-			u = evaluateResultSet(rs);
-		}
-		ps.close();
-		connection.commit();
-		connection.close();
-		return u;
+		ResultSet rs = ps.executeQuery();	
+		try{
+  		if(rs.next()){
+  			return evaluateResultSet(rs);			
+  		}
+  		else{		  
+  		  throw new UserNotFoundException();
+  		}
+		} finally{
+		  ps.close();
+      connection.commit();
+      connection.close();      
+		}		
 	}
 
 	private User evaluateResultSet(ResultSet rs) throws SQLException {
-		ArrayList<String> keys = new ArrayList<String>();
 		String username = rs.getString(1);
 		String firstname = rs.getString(2);
 		String lastname = rs.getString(3);
 		String email = rs.getString(4);
-		String passwordHash = rs.getString(5);
-		String passwordSalt = rs.getString(6);
-		java.util.Date created = new java.util.Date(rs.getDate(7).getTime());
-		java.util.Date lastModified = new java.util.Date(rs.getDate(8).getTime());
-		String key1 = rs.getString(9);
-		if(key1 != null){
-			keys.add(key1);
-		}
-		while(rs.next()){		
-			keys.add(rs.getString(9));
-		}			
-		return new User(username, firstname, lastname, email, passwordHash, passwordSalt, created, lastModified, keys);
+		String affiliation = rs.getString(5);
+		String passwordHash = rs.getString(6);
+		String passwordSalt = rs.getString(7);
+		java.util.Date created = new java.util.Date(rs.getDate(8).getTime());
+		java.util.Date lastModified = new java.util.Date(rs.getDate(9).getTime());
+		List<UserPublicKey> publicKeys;
+    try {
+      publicKeys = getPublicKeysFromResultSet(rs);
+    } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
+      throw new DatabaseException(e.getMessage());
+    }	
+		return new User(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
 	}
 
+  private List<UserPublicKey> getPublicKeysFromResultSet(ResultSet rs) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+    ArrayList<UserPublicKey> keys = new ArrayList<>();    
+    String description = rs.getString(10);
+    String key = rs.getString(11);		
+    Date created = rs.getDate(12);		
+    if(created != null){     
+      keys.add(new UserPublicKey(key, description, new java.util.Date(created.getTime())));
+    }
+    while(rs.next()){  
+      description = rs.getString(10);
+      key = rs.getString(11);
+      created = rs.getDate(12);
+      keys.add(new UserPublicKey(key, description, new java.util.Date(created.getTime())));
+    } 
+    return keys;
+  }
+
 	@Override
-	public User get(User u) throws RecordNotFoundException, DatabaseException {		
+	public User get(User u) throws UserNotFoundException, DatabaseException {		
 		return get(u.getUsername());
 	}
 
@@ -287,22 +270,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
   		connection.close();
   		return size;
 	  } catch(SQLException e){
-	    throw new DatabaseException();
+	    throw new DatabaseException(e.getMessage());
 	  }
 	}	
-
-	public void deleteAllEntries() throws DatabaseException{
-	  try{
-	    Connection connection = getConnection();
-  		Statement st = connection.createStatement();
-  		st.executeUpdate("DELETE FROM Users");	
-  		st.executeUpdate("DELETE FROM Keys");	
-  		st.close();
-  		connection.commit();
-  		connection.close();
-	  } catch(SQLException e){
-	    throw new DatabaseException();
-	  }
-	}
-
 }

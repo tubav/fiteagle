@@ -17,7 +17,7 @@ import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +40,8 @@ public class GroupAuthenticationFilterTest {
      GroupDBManager.getInstance().addGroup(new Group("testGroup", "test"));
      try{
        User testUser = UserDBManager.getInstance().get("test");
-     }catch(RecordNotFoundException r){
-       UserDBManager.getInstance().add(new User("test", "test", "test", "test@test.test", "test"));
+     }catch(UserNotFoundException r){
+       UserDBManager.getInstance().add(new User("test", "test", "test", "test@test.test", "testAffiliation", "test"));
      }
      
   }

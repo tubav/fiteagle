@@ -9,6 +9,7 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 
 import net.iharder.Base64;
 
@@ -18,10 +19,12 @@ import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.RecordNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,26 +59,13 @@ public class UserDBManager {
       preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
     }
     if (preferences.get("databaseType").equals(databaseType.SQLite.name())) {
-      database = new SQLiteUserDB();
+      database = SQLiteUserDB.getInstance();
     } else {
       database = new InMemoryUserDB();
      }
   }
-
-  private void addDefaultUser() {
-    try {
-      String key = "AAAAB3NzaC1yc2EAAAADAQABAAABAQCfnqNWBGSZGoxfUvBkbyGFs7ON4+UcA/pH9TTV9j0h9W0DltfbTuRoY/DhPsmycdv87m1EI1rJaeYAwRdzKvlth+Jc0r8IWVh4ihhqKFZZAUeKxz1xTlhWEUziThAbg1xjnlZ+iOh0kQDdxBjUYfOFPFTYUIwPa0zZeZQ651dk3jKJ4JVECfNcbTFB6forCmAZz1v2vtuwJ/Xm111xrlrzWBCU6swg3WsgjWU4wmSRd5qWCzjaV7kCdPr80PLvxJRzDbGeVUM1qGiG9FOVKxw4Mv9BueK/dpUMO+2Z/p1VABhgdLH379bT/BV5oV60p5E6aLrZFdPmw5Os9gs8+9v/";
-      User u = new User("fiteagle.av.test", "test", "testUser", "test@test.org", "test");
-      u.addPublicKey(key);
-      add(u);
-    } catch (DuplicateUsernameException e) {
-      
-    } catch (NoSuchAlgorithmException e) {
-      log.error(e.getMessage());
-    }
-  }
   
-  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.add(u);
   }
   
@@ -87,23 +77,23 @@ public class UserDBManager {
     database.delete(u);
   }
   
-  public void update(User u) throws RecordNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException {
+  public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.update(u);
   }
   
-  public void addKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
+  public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {
     database.addKey(username, key);
   }
   
-  public void deleteKey(String username, String key) throws RecordNotFoundException, DatabaseException, InValidAttributeException {
-    database.deleteKey(username, key);
+  public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException {
+    database.deleteKey(username, description);
   }
   
-  public User get(String username) throws RecordNotFoundException, DatabaseException {
+  public User get(String username) throws UserNotFoundException, DatabaseException {
     return database.get(username);
   }
   
-  public User get(User u) throws RecordNotFoundException, DatabaseException {
+  public User get(User u) throws UserNotFoundException, DatabaseException {
     return database.get(u);
   }
   
@@ -118,7 +108,6 @@ public class UserDBManager {
       throw new RuntimeException(e1);
     }
   }
-
     
   public boolean verifyPassword(String password, String passwordHash, String passwordSalt) throws IOException,
       NoSuchAlgorithmException {
@@ -128,7 +117,7 @@ public class UserDBManager {
     return Arrays.equals(passwordHashBytes, proposedDigest);
   }
   
-  public boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException, IOException, RecordNotFoundException, DatabaseException{
+  public boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException, IOException, UserNotFoundException, DatabaseException{
     User user = get(username);
     return verifyPassword(password, user.getPasswordHash(), user.getPasswordSalt());
   }
@@ -140,8 +129,7 @@ public class UserDBManager {
     return X509Util.getCertficateEncoded(cert);
   }
     
-  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {
-    
+  private byte[] createHash(byte[] salt, String password) throws NoSuchAlgorithmException {    
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
     digest.reset();
     digest.update(salt);
@@ -149,26 +137,16 @@ public class UserDBManager {
   }
   
   public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
-    String returnString = "";
-   
     KeyPair keypair = keyManager.generateKeyPair();
-    String privateKeyEncoded =  keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
+    String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, pubKeyEncoded);
+    addKey(username, new UserPublicKey(pubKeyEncoded, "created at "+new Date().toString()));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
-    returnString = privateKeyEncoded + "\n" + userCertString;
-   
-    return returnString;
+    return privateKeyEncoded + "\n" + userCertString;   
   }
 
-  public String createUserCertificate(String uid, String publicKeyEncoded) throws Exception {
-    String returnString = "";
-    PublicKey pkey =  keyManager.decodePublicKey(publicKeyEncoded);
-    addKey(uid, publicKeyEncoded);
-    returnString = createUserCertificate(returnString, pkey);
-    return returnString;
+  public String createUserCertificateForPublicKey(String username, String description) throws Exception, PublicKeyNotFoundException {
+    PublicKey publicKey = get(username).getPublicKey(description);
+    return createUserCertificate(username, publicKey);
   }
-
-  
-
 }

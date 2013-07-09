@@ -7,6 +7,7 @@ import static com.jayway.restassured.RestAssured.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.containsString;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -15,7 +16,8 @@ import java.net.URLEncoder;
 import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.delivery.rest.fiteagle.UserAuthenticationFilter;
-import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,71 +27,106 @@ public class RestUserManagerIT {
   private final static String KEYSTORE_DIRECTORY = keystorePrefs.get("keystore");
   private final static String KEYSTORE_PASSWORD = keystorePrefs.get("keystore_pass");
   
-  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"publicKeys\":[\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\"]}";
-  private final static String USER_1_UPDATE_JSON = "{\"lastName\":\"nicolaus\",\"password\":\"pass\"}";
-
-  private String cookieValue;
+  private final static String USER_1_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@test.de\",\"affiliation\":\"mitjasAffiliation\",\"publicKeys\":[{\"publicKeyString\":\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\",\"description\":\"my first key\"}]}";
+  private final static String USER_1_UPDATE_JSON = "{\"lastName\":\"nicolaus\",\"email\":\"nicolaus@test.de\"}";
+  private final static String USER_1_INCOMPLETE_JSON = "{\"firstName\":\"mitja\",\"lastName\":\"nikolaus\",\"password\":\"mitja\",\"email\":\"mnikolaus@testde\",\"affiliation\":\"mitjasAffiliation\"}";
+  private final static String USER_1_PUBLIC_KEY = "{\"publicKeyString\":\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024\",\"description\":\"my first key\"}";
   
-//  @BeforeClass
+  @BeforeClass
   public static void setUp() throws IllegalArgumentException, IOException{    
     RestAssured.keystore(KEYSTORE_DIRECTORY, KEYSTORE_PASSWORD);
     RestAssured.baseURI = "https://localhost";
     RestAssured.port = 8443;
     RestAssured.basePath = "/api/v1/user";    
+    
+    given().auth().preemptive().basic("mnikolaus", "mitja")
+    .when().delete("mnikolaus");    
   }
   
-//  @Test
-  public void testPutAndGet() {
+  @Before
+  public void addOneUser(){
     PutUser1();
+  }
+  
+  @Test
+  public void testGet() {
     GetUser1();   
   }
   
-//  @Test
+  @Test
   public void testPost() {
-    PutUser1();
-    PostUser2();
-    GetUser2();
+    UpdateUser1();
+    GetUser1Updated();
   }
   
-//  @Test
+  @Test
   public void testDelete() {
-    PutUser1();
     DeleteUser1();
-    given().auth().preemptive().basic("mnikolaus", "mitja").and()
-      .expect().statusCode(404).when().get("mnikolaus");
-  }
-  
-//  @Test
-  public void testDeletePublicKey() throws UnsupportedEncodingException {
-    PutUser1();
-    deletePubKey();
-    given().auth().preemptive().basic("mnikolaus", "mitja").and()
-    .expect().statusCode(200)
-      .body("publicKeys", hasSize(0))      
-    .when().get("mnikolaus");
+    user1ShouldBeDeleted();
   }
 
-//  @Test
+  @Test
+  public void testDeleteAndAddPublicKey() throws UnsupportedEncodingException {
+    deletePubKey();
+    user1ShouldHaveNoKeys();
+    addPubKey();
+  }
+  
+  @Test
+  public void testCreateCertificate() throws UnsupportedEncodingException {
+    String description = "my first key";
+    String encodedDescription = URLEncoder.encode(description, "UTF-8");
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+    .expect().statusCode(200)
+      .body(containsString("-----BEGIN CERTIFICATE-----"))
+      .when().get("mnikolaus/pubkey/"+encodedDescription+"/certificate");
+  }
+  
+  @Test
+  public void testPutUnprocessableUser(){
+    given().contentType("application/json").body(USER_1_INCOMPLETE_JSON)
+      .expect().statusCode(422)
+      .body(containsString("email"))
+      .when().put("mnikolaus");
+  }
+
+  @Test
   public void testAuthorizationFailure() {
-    PutUser1();
     given().auth().preemptive().basic("mnikolaus", "wrongpassword").and()
       .expect().statusCode(401).when().get("mnikolaus");
   }
   
-//  @Test
-  public void testCookieAuthentication() {
-    PutUser1();
-    
+  @Test
+  public void testSessionAuthentication() {
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus");
-    cookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
+    String cookieValue = response.getSessionId();
     
-    given().cookie(UserAuthenticationFilter.getCookieName(),cookieValue).and()
+    given().cookie("JSESSIONID",cookieValue).and()
       .expect().statusCode(200).when().delete("mnikolaus");
+  }
+  
+  @Test
+  public void testCookieAuthentication() {
+    Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus?setCookie=true");
+    String cookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
+    
+    given().cookie(UserAuthenticationFilter.getCookieName(), cookieValue).and()
+      .expect().statusCode(200).when().delete("mnikolaus");
+  }
+  
+  @Test
+  public void testLogout(){
+    Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus?setCookie=true");
+    String authCookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
+    String sessionCookieValue = response.getCookie("JSESSIONID");
+    
+    deleteCookiesOfUser1(sessionCookieValue);
+    
+    user1CookieAuthenticationShouldFail(authCookieValue, sessionCookieValue);
   }
 
   private void PutUser1() {
-    given().contentType("application/json").body(USER_1_JSON)
-      .expect().statusCode(201)
+    given().contentType("application/json").body(USER_1_JSON)   
       .when().put("mnikolaus");
   }
   
@@ -101,18 +138,19 @@ public class RestUserManagerIT {
       .when().get("mnikolaus");
   }
   
-  private void PostUser2() {
+  private void UpdateUser1() {
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
       .contentType("application/json").body(USER_1_UPDATE_JSON)     
       .expect().statusCode(200)
       .when().post("mnikolaus");
   }
   
-  private void GetUser2() {
-    given().auth().preemptive().basic("mnikolaus", "pass").and()
+  private void GetUser1Updated() {
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
       .expect().statusCode(200)
         .body("username", equalTo("mnikolaus"))
         .body("lastName", equalTo("nicolaus"))
+        .body("email", equalTo("nicolaus@test.de"))
       .when().get("mnikolaus");
   }
   
@@ -121,21 +159,50 @@ public class RestUserManagerIT {
       .expect().statusCode(200)
       .when().delete("mnikolaus");
   }  
+  
+  private void user1ShouldBeDeleted() {
+    given().auth().preemptive().basic("mnikolaus", "mitja").and()
+      .expect().statusCode(404).when().get("mnikolaus");
+  }
 
   private void deletePubKey() throws UnsupportedEncodingException {
-    String publicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCLq3fDWATRF8tNlz79sE4Ug5z2r5CLDG353SFneBL5z9Mwoub2wnLey8iqVJxIAE4nJsjtN0fUXC548VedJVGDK0chwcQGVinADbsIAUwpxlc2FGo3sBoGOkGBlMxLc/+5LT1gMH+XD6LljxrekF4xG6ddHTgcNO26VtqQw/VeGw== RSA-1024";
-    String encodedPublicKey = URLEncoder.encode(publicKey, "UTF-8");
+    String description = "my first key";
+    String encodedDescription = URLEncoder.encode(description, "UTF-8");
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
     .expect().statusCode(200)
-    .when().delete("mnikolaus/pubkey/"+encodedPublicKey);
+    .when().delete("mnikolaus/pubkey/"+encodedDescription);
   }
   
-//  @After
-  public void deleteUsers(){
+  private void addPubKey() {
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
-      .when().delete("mnikolaus");
-    given().auth().preemptive().basic("mnikolaus", "pass").and()
-      .when().delete("mnikolaus");
+      .contentType("application/json").body(USER_1_PUBLIC_KEY) 
+      .expect().statusCode(200)
+      .when().post("mnikolaus/pubkey");
+  }
+  
+  private void user1ShouldHaveNoKeys() {
+   given().auth().preemptive().basic("mnikolaus", "mitja").and()
+    .expect().statusCode(200)
+      .body("publicKeys", hasSize(0))      
+    .when().get("mnikolaus");
+  }
+  
+  private void user1CookieAuthenticationShouldFail(String authCookieValue, String sessionCookieValue) {
+    given().cookie(UserAuthenticationFilter.getCookieName(), authCookieValue).and()
+      .expect().statusCode(401).when().get("mnikolaus");
+    given().cookie("JSESSIONID", sessionCookieValue).and()
+      .expect().statusCode(401).when().get("mnikolaus");
+  }
+
+  private void deleteCookiesOfUser1(String sessionCookieValue) {
+    given().cookie("JSESSIONID", sessionCookieValue).and()
+      .expect().statusCode(200).when().delete("mnikolaus/cookie");
+  }
+  
+  @AfterClass
+  public static void deleteUsers(){
+    given().auth().preemptive().basic("mnikolaus", "mitja")
+      .when().delete("mnikolaus");   
   }
   
 }

@@ -3,8 +3,10 @@ package org.fiteagle.core.persistence;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
@@ -27,23 +29,20 @@ static {
 
 
  public  SQLiteDatabase() throws SQLException{
-   preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);
-  
+   preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);  
  }
  
   
   protected Connection getConnection() throws SQLException{
     if(connection != null)
-        connection.close();
-    
+        connection.close();    
     connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
     connection.setAutoCommit(false);
     return connection;
   }
   
   private void updatePreferences() {
-   this.preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);
-    
+   this.preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);    
   }
   
   private String getDatabasePath() {
@@ -63,5 +62,30 @@ static {
     st.close();
     connection.commit();
     connection.close();
+  }
+  
+  protected void executeSQLString(String SQLString, List<Object> params) throws SQLException {
+    Connection connection = getConnection();
+    PreparedStatement ps = connection.prepareStatement(SQLString);
+    for(int i = 0; i < params.size(); i++){
+      ps.setObject(i+1, params.get(i));
+    }
+    ps.execute();
+    ps.close();
+    connection.commit();
+    connection.close();
+  }
+  
+  protected int executeSQLUpdateString(String SQLString, List<Object> params) throws SQLException {
+    Connection connection = getConnection();
+    PreparedStatement ps = connection.prepareStatement(SQLString);
+    for(int i = 0; i < params.size(); i++){
+      ps.setObject(i+1, params.get(i));
+    }
+    int count = ps.executeUpdate();
+    ps.close();
+    connection.commit();
+    connection.close();
+    return count;
   }
 }
