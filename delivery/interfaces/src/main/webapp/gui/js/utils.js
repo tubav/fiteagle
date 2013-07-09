@@ -94,8 +94,12 @@ function(){
 		else{
 			console.log("Session storage is no supported !");
 		}
-		
-		console.log("Set user " + userJSON);
+	};
+	
+	Utils.updateInfoPanel = function(){
+		user = Utils.getCurrentUser();
+		console.log('current user is set to: '+ Utils.userToString(user));
+		$("#userName").text(user.firstName +" " + user.lastName);
 	};
 
 	Utils.getCurrentUser = function(){		
@@ -110,8 +114,7 @@ function(){
 		sessionStorage.clear();
 	};
 
-	Utils.userToString = function(usr){
-			var user = this.getCurrentUser();
+	Utils.userToString = function(user){
 			var userToString = '';
 			if(user !=null){
 				userToString = user.firstName + " " + user.lastName + " " + user.email;
@@ -226,7 +229,8 @@ function(){
 	};
 	
 	Utils.updateUserOnServer = function(userToUpdate, loadingSign){
-		console.log("credentials" + Utils.getCredentials());
+		//console.log("credentials" + Utils.getCredentials());
+		console.log("Updating user on the server...");
 		var data = JSON.stringify(userToUpdate);
 		var message;
 		$.ajax({
@@ -254,7 +258,6 @@ function(){
 				200: function(){
 					var msg = "User has been successfully updated on server";
 					Utils.setCurrentUser(Utils.getUserFromServer(userToUpdate.username));
-					initAddRemoveKeysForm();
 					message = createSuccessMessage(msg);
 				}
 			},
@@ -266,11 +269,101 @@ function(){
 		return message;
 	};
 	
+	Utils.uploadNewPublicKey = function(publicKey, uploadingSign){
+		
+		var user = Utils.getCurrentUser();
+		var username = user.username;
+		var message;
+		$.ajax({
+			cache: false,
+			type: "POST",
+			async: false,
+			url: "/api/v1/user/"+username+'/pubkey',
+			data: JSON.stringify(publicKey),
+			contentType: "application/json",
+			dataType: "json",
+			beforeSend: function(xhr){
+				Utils.unhideElement(uploadingSign);
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(data,status){
+				console.log(data);
+				console.log(status);
+			},
+			error: function(xhl,status){
+				message = createErrorMessage(xhl.responseText);
+				console.log(status);
+			},
+			statusCode:{			
+				200: function(){
+					var updatedUser = Utils.getUserFromServer(username);
+					Utils.setCurrentUser(updatedUser);
+					message = createSuccessMessage("New public key has been successfully uploaded");
+				}
+			},
+			complete: function(){
+				Utils.hideElement(uploadingSign);
+			}
+		});
+		
+		return message;
+		
+	};
+	
+	Utils.deletePublicKey = function(keyDescription){
+		var user = Utils.getCurrentUser();
+		var username = user.username;
+		var message;
+		$.ajax({
+			cache: false,
+			type: "DELETE",
+			async: false,
+			url: "/api/v1/user/"+username+'/pubkey/'+keyDescription,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(data,status){
+				console.log(data);
+				console.log(status);
+			},
+			error: function(xhl,status){
+				message = createErrorMessage(xhl.responseText);
+				console.log(status);
+			},
+			statusCode:{			
+				200: function(){
+					var updatedUser = Utils.getUserFromServer(username);
+					Utils.setCurrentUser(updatedUser);
+					message = createSuccessMessage("Public key has been successfully deleted");
+				}
+			},
+			complete: function(){
+				Utils.hideElement(uploadingSign);
+			}
+		});
+		
+		return message;
+	};
+	
 	createSuccessMessage = function(msg){
+		var successMsg = createMessage(msg);
+		successMsg.find('span').addClass("alert-success");
+		return successMsg;
+	};
+	
+	createErrorMessage = function(msg){
+		var errorMsg = createMessage(msg);
+		errorMsg.find('span').addClass("alert-error");
+		return errorMsg;
+		
+	};
+	
+	createMessage = function(msg){
 		var div = $('<div>').addClass("row-fluid errorMessage");
-		var span = $('<span>').addClass('alert alert-success').html(msg);
+		var span = $('<span>').addClass('alert').html(msg);
 		div.append(span);
-		console.log("Success msg " + div)
 		return div;
 	};
 	

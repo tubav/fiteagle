@@ -161,9 +161,9 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 			complete: function(){
 				Login.hideLoadingSign();
 			},
-			success: function(user,status,xhr){
-				Utils.setCurrentUser(user);						
+			success: function(user,status,xhr){							
 				require('mainPage').load();
+				Utils.setCurrentUser(user);	
 			},
 			error: function(xhr,status,thrown){
 				console.log("Response " + xhr.responseText);
