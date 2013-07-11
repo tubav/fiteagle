@@ -89,7 +89,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     if(authCookie != null){
       authCookie.setMaxAge(0);
       authCookie.setValue(null);
-      authCookie.setPath("/api/v1/user");
+      authCookie.setPath("/");
       response.addCookie(authCookie);
     }    
     
@@ -97,7 +97,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     if(sessionCookie != null){
       sessionCookie.setMaxAge(0);
       sessionCookie.setValue(null);
-      sessionCookie.setPath("/api/v1/user");
+      sessionCookie.setPath("/");
       response.addCookie(sessionCookie);
     }
   }
@@ -157,7 +157,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     cookie.setSecure(true);
 //  TODO:  cookie.setHttpOnly(true);
     cookie.setMaxAge(365 * 24 * 60 * 60);
-    cookie.setPath("/api/v1/user");
+    cookie.setPath("/");
     cookies.put(username, cookie);
     return cookie;
   } 
