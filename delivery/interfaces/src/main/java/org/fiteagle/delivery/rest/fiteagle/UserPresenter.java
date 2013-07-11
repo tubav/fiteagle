@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
@@ -72,7 +73,9 @@ public class UserPresenter{
     try {
       manager.add(createUser(user));
     } catch (DuplicateUsernameException e) {
-      throw new WebApplicationException(Response.Status.CONFLICT);
+      throw new FiteagleWebApplicationException(409, e.getMessage());
+    } catch (DuplicateEmailException e) {
+      throw new FiteagleWebApplicationException(409, e.getMessage());
     } catch (DuplicatePublicKeyException e){
       throw new FiteagleWebApplicationException(409, e.getMessage());
     } catch (DatabaseException e) {
@@ -96,6 +99,8 @@ public class UserPresenter{
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
     } catch (UserNotFoundException e) {
       throw new FiteagleWebApplicationException(404, e.getMessage());
+    } catch (DuplicateEmailException e) {
+      throw new FiteagleWebApplicationException(409, e.getMessage());
     } catch (DuplicatePublicKeyException e){
       throw new FiteagleWebApplicationException(409, e.getMessage());
     } catch (NotEnoughAttributesException | InValidAttributeException e) {
