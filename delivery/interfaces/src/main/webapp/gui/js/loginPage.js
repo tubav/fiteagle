@@ -80,7 +80,7 @@ function(require,Validation,Registration,Utils,Messages){
       * 
       */  
 	Login.load = function(){
-			console.log("loading Login Page...");
+			//console.log("loading Login Page...");
 			var url = "html/login.html";
 
 			$("#navigation").load(url + " #navs",
@@ -234,11 +234,11 @@ function(require,Validation,Registration,Utils,Messages){
 
 	Login.isUserLoggedIn = function(){
 		var user = Utils.getCurrentUser();
-		console.log('is logged in ' + Utils.userToString());
-		if(user != null){
-				return true;
+		console.log('Current User: ' + Utils.userToString());
+		if(!user){
+				return false;
 		}
-		return false;
+		return true;
 	};
 	
 	Login.showLoadingSign = function(){	

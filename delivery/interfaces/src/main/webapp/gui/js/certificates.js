@@ -16,12 +16,43 @@ function(Validation, Utils, MainPage,Messages){
 	initGenerateCertificatesBtn = function(){
 		$("#genPubKey").on('click',function(){
 			var selectedKeyDescription = $("#publicKeySetSelect option:selected").html();
-			console.log(selectedKeyDescription);
+			console.log("KEY DESCRIPTION: " + selectedKeyDescription);
 			var pubString = Certificates.getPublicKeyByDescription(selectedKeyDescription);
+			if(pubString){
+					addCertificateTextarea(pubString);
+			}
 		});
 	};
-
 	
+	addCertificateTextarea = function(pubKeyString){
+		$('#generatedCertificate').children().remove();
+		var area = $('<textarea rows=24 style="resize:none" disabled></textarea>').addClass("span10");		
+		area.val(pubKeyString);
+		
+		$('#generatedCertificate')
+			.append(area)
+			.append('<br/>')
+			.append(createDownloadCertificateBtn(pubKeyString));
+		
+	};
+	
+	createDownloadCertificateBtn = function(text){
+		
+		var appendix = btoa(text);
+		
+		var hattr = "data:application/octet-stream;charset=utf-8;base64," + appendix;
+		
+		console.log(hattr);
+		
+		var downloadBtn = $('<a>')
+				.addClass('btn btn-inverse')
+				.html('<i class="icon-download-alt"></i>Download')
+				.attr('download','certificate.crt')
+				.attr('href',hattr);
+		
+		return downloadBtn;
+	}
+
 	initPublicKeySelect = function(selector){
 		console.log("Init public Key Select");
 		var publicKeys = getAllUserPublicKeys();
@@ -51,11 +82,12 @@ function(Validation, Utils, MainPage,Messages){
 			async: false,
 			url : "/api/v1/user/"+username+"/pubkey/"+description+"/certificate",
 			beforeSend: function(xhr){
+				
 				xhr.setRequestHeader("Authorization",
                 "Basic " + Utils.getCredentials()); // TODO Base64 support
 			},
 			success: function(cert,status,xhr){
-				//certificat = cert;
+				certificat = cert;
 				console.log(":SUCCESS");
 			},
 			error: function(xhr,status,thrown){
@@ -67,7 +99,7 @@ function(Validation, Utils, MainPage,Messages){
 				console.log("ENDE");
 			}
 		});
-		//console.log("Certificat " + certificat);
+
 		return certificat;
 	};
 	
@@ -79,7 +111,6 @@ function(Validation, Utils, MainPage,Messages){
 	createOptionItem = function(keyDescription){	
 		console.log("Creating option");
 		var opt  = $('<option>').html(keyDescription);
-		console.log(opt);	
 		return opt;
 	};
 		

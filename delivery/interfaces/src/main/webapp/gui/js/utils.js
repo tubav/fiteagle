@@ -124,20 +124,6 @@ function(){
 			return userToString;
 	};
 	
-	Utils.listCookies = function() {
-		/*var theCookies = document.cookie.split(';');
-		console.log("Total cookie number " + theCookies.length);U
-		var aString = '';
-		for (var i = 1 ; i <= theCookies.length; i++) {
-			aString += i + ' ' + theCookies[i-1] + "\n";
-		} */
-		
-		var aString = "Cookie on site: " + document.cookie;
-		
-		return aString;
-	};
-	
-	
 	Utils.initTooltipFor = function(selector,title,placement,trigger){
 		if(selector){
 			var s = $(selector);
@@ -239,7 +225,6 @@ function(){
 			contentType: "application/json",
 			dataType: "json",
 			beforeSend: function(xhr){
-				Utils.unhideElement(loadingSign);
 				xhr.setRequestHeader("Authorization",
                 "Basic " + Utils.getCredentials()); // TODO Base64 support
 			},
@@ -259,7 +244,9 @@ function(){
 				}
 			},
 			complete: function(){
-				Utils.hideElement(loadingSign);
+				window.setTimeout(function(){
+					Utils.hideElement(loadingSign);
+				},200);
 			}
 		});
 		
@@ -387,6 +374,14 @@ function(){
 		}
 		return false;
 	};	
+	
+	Utils.downloadFile = function(){	
+		$.generateFile({
+			filename: "export.txt",
+			content: "tbis sis sdpasdsdf",
+			script: 'js/download.php'
+		});
+	};
 	
 	return Utils;
 });

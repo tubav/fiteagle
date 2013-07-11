@@ -177,6 +177,12 @@ input.search-query{height:24px !important;}
 	overflow: auto;
 }
 
+#saveProfileLoadingSign{
+	position: relative;
+	top: 10px;
+	left:10px;
+}
+
 #availableSlicesList > ul > li{ margin-top:10px}
 
 .centered-pills { text-align:center; }

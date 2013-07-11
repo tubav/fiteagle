@@ -77,21 +77,19 @@ function(require,Utils,LoginPage){
 	};
 	
 	createNewPublicKeysListItem = function(publicKey, itemNumber){
+		var keyDescription = publicKey.description;
+		var keyString = publicKey.publicKeyString;
 		var div = $("<div>").addClass('row-fluid publicKey');
-		var label = $('<label class="span2"></label>').html('Public key: ' + publicKey.description);
+		var label = $('<label class="span2"></label>').html('Public key: ' + keyDescription);
 		var d = $('<div>').addClass('span8');
-		var textArea =$('<textarea style="resize:none" class="span12" rows="3"  disabled ></textarea>')
-						.val(publicKey.publicKeyString);
+		var textArea =$('<textarea style="resize:none" class="span12" rows="6"  disabled ></textarea>')
+						.val(keyString);
 		d.append(textArea);
 		var keyContols = $('<div>')
 						.attr('id',"publicKeyControls")
 						.addClass('span2 pull-right');
-		
-		var downloadBtn = $('<button>')
-							.addClass('btn btn-success span5 ')
-							.html('<i class="icon-download nomargin"></i>');
-							
-		downloadBtn.tooltip({'title': "Download",'placement':"top"});
+						
+		var downloadBtn = createPublicKeyDownloadBtn(keyDescription,keyString);
 		
 		var deleteKey = $('<button>')
 							.attr('data-number',itemNumber)
@@ -116,6 +114,23 @@ function(require,Utils,LoginPage){
 		
 		return div;
 		
+	};
+	
+	createPublicKeyDownloadBtn = function(keyDescription,keyString){
+		
+		var appendix = btoa(keyString);
+		var filename = keyDescription+".pub";
+		var hattr = "data:application/octet-stream;charset=utf-8;base64," + appendix;
+		
+		var downloadBtn = $('<a>')
+							.addClass('btn btn-success span5 ')
+							.html('<i class="icon-download nomargin"></i>')
+							.attr('download',filename)
+							.attr('href',hattr);
+							
+		downloadBtn.tooltip({'title': "Download",'placement':"top"});
+		
+		return downloadBtn;
 	};
 	
 	clearPublicKeysErrors = function(){

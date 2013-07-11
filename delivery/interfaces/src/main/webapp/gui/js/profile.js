@@ -32,13 +32,18 @@ function(require,Utils){
 	
 	initSaveProfileInfoBtn = function(){
 		$("#saveProfileInfo").on('click',function(){
-			if(checkUserProfileEntries()){
+			Utils.unhideElement('#saveProfileLoadingSign');
+			if(checkUserProfileEntries()){	
 				var msg = Utils.updateUserOnServer(getUserFromProfileForm(),"#saveProfileLoadingSign");
 				setProfileFields(Utils.getCurrentUser());
 				Utils.clearErrorMessagesFrom('#userProfileErrors');
 				$('#userProfileErrors').append(msg);
 				Utils.updateInfoPanel();
 			}
+			
+			window.setTimeout(function(){
+				Utils.hideElement('#saveProfileLoadingSign');
+			},200);
 		});
 	};
 	

@@ -171,7 +171,9 @@
 								<div id="newUserKeyErrors" class="row-fluid"></div>
 								<div class="row-fluid">
 									<label class="span2" for="inputKeyDescription">Key Description</label>
-									<input class="span8" type="email" id="inputKeyDescription">
+									<div class="span8">
+										<input class="span12" type="email" id="inputKeyDescription">
+									</div>
 								</div>
 								<div class="row-fluid">
 									<button id="selectFromFile" class="span3 btn btn-success"><i class="icon-file-text"></i>Select from File</button>
@@ -199,7 +201,7 @@
 						</div>
 						<hr/>
 						<div id="downloadCertificateContainer" class="row-fluid collapse in">
-							<div class="span10 offset1">
+							 <div class="span10 offset1">
 								<label id="pubicKeySetLabel" class="span3" for="certificates">Select Public Key by Description</label>
 								<div id="pubicKeySet">
 									
@@ -207,6 +209,8 @@
 			
 								<br/>
 								<button id="genPubKey" class="btn btn-inverse"><i class="icon-circle-arrow-down"></i>Generate</button>
+								<i id="generationgSign" class="icon-spin icon-spinner icon-2x hidden"></i>
+								<div id="generatedCertificate" class="row-fluid top20"></div>
 							</div>
 						</div>
 					</div>
@@ -214,6 +218,5 @@
 			</div>	
 	</div>
 	<div id="footer" class="row-fluid">
-
 	</div>
 </body>

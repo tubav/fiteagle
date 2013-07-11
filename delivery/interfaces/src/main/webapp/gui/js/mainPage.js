@@ -19,6 +19,7 @@ function(require,Utils,Profile,PublicKeys,Certificates){
 		Certificates.initForm();
 		Utils.updateInfoPanel();
 		initOnWindowResizeEvents();
+
 	};
 	
 	performScreenAdjustments = function(){
