@@ -195,19 +195,18 @@
 				<div id="downloadCertificate" class="row-fluid tab-pane">
 					<div class="span12">
 						<div class="collapseHeader" data-toggle="collapse"  data-target='#downloadCertificateContainer'>
-							<h3><i class="icon-cloud-download"></i>Download Certificate<i class="collapseSign"></i></h3>
+							<h4><i class="icon-cloud-download"></i>Download Certificate<i class="collapseSign"></i></h4>
 						</div>
 						<hr/>
 						<div id="downloadCertificateContainer" class="row-fluid collapse in">
 							<div class="span10 offset1">
-								<label class="span3" for="certificates">Select Certificat</label>
-								<select id="certificates">
-									<option>TU Berlin Certificat</option>
-									<option>AV Certificat</option>
-									<option>Telecom Certificat</option>
-								</select>
+								<label id="pubicKeySetLabel" class="span3" for="certificates">Select Public Key by Description</label>
+								<div id="pubicKeySet">
+									
+								</div>
+			
 								<br/>
-								<button class="btn btn-inverse"><i class="icon-circle-arrow-down"></i>Download</button>
+								<button id="genPubKey" class="btn btn-inverse"><i class="icon-circle-arrow-down"></i>Generate</button>
 							</div>
 						</div>
 					</div>

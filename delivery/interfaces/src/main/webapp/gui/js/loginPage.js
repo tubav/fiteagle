@@ -1,7 +1,7 @@
-define(['require','validation','registration','utils','cookie','messages'],
+define(['require','validation','registration','utils','messages'],
 
 /** @lends Login */ 
-function(require,Validation,Registration,Utils,Cookie,Messages){
+function(require,Validation,Registration,Utils,Messages){
 	
 	//console.log("loginPage.js is loaded");
 	
@@ -27,6 +27,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Utils.showCurrentTab();
 		
 		initOnWindowResizeEvent();
+		
 	};
 	
 	setCurrentTab = function(currentTab){
@@ -134,8 +135,8 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		
 		if(this.checkUsername() & Login.checkPassword()){
 				console.log("email and password are correct");
-				Utils.setCredentials(Login._getUsername(),Login._getPassword());					
-				Login.sendLoginInformation(Login._getUsername());
+				Utils.setCredentials(Login._getUsername(),Login._getPassword());			
+				Login.sendLoginInformation(Login._getUsername(),Login._getPassword());
 				
 		}
 	};
@@ -144,19 +145,22 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Utils.clearErrorMessagesFrom("#loginErrors");
 	};
 	
-	Login.sendLoginInformation = function(username){
+	
+	Login.sendLoginInformation = function(username,password){
 		
 		console.log("Sending login information to the server...");
+		setCookie = "";
+		if($("#rememberMeCheckbox").is(":checked"))setCookie="setCookie=true";			
 		$.ajax({
 			cache: false,
 			type: "GET",
 			async: false,
-			dataType: "json",
+			data: setCookie,
 			url : "/api/v1/user/"+username,
 			beforeSend: function(xhr){
 				Login.showLoadingSign();
 				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
+                "Basic " + btoa(username + ":" + password)); // TODO Base64 support
 			},
 			complete: function(){
 				Login.hideLoadingSign();
@@ -242,16 +246,23 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	};
 	
 	Login.hideLoadingSign = function(){
-		$("#loadingSign").addClass('hidden');
+		window.setTimeout(function(){
+			$("#loadingSign").addClass('hidden');
+		},200);
 	};
 	
 	
-	Login.initShowCookie= function(){
-		
-		$("#showCookie").on('click',function(){
-				console.log("cookie -)");
-				alert(document.cookie.length);
-		});
+	Login.getRememberedUsername = function(){
+		var username;
+		var cookie = $.cookie('fiteagle_user_cookie');
+		if(cookie){
+			var cookieVal = atob(cookie);
+			var start = cookieVal.indexOf("username:");
+			if(start > -1){
+				username = cookieVal.substring(start+9);
+			}
+		}
+		return username;
 	};
 	
 	return Login;

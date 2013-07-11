@@ -142,7 +142,7 @@ function(){
 		if(selector){
 			var s = $(selector);
 			s.tooltip('destroy');
-			console.log("Tooltip for " + selector + ' placement '+ placement);
+			//console.log("Tooltip for " + selector + ' placement '+ placement);
 			s.tooltip({
 				'title': title,
 				'placement':placement, 
@@ -209,11 +209,8 @@ function(){
 			cache: false,
 			type: "GET",
 			async: false,
-			dataType: "json",
 			url : "/api/v1/user/"+username,
 			beforeSend: function(xhr){
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
 			},
 			success: function(user,status,xhr){
 				userFromServer = user;

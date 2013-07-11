@@ -1,6 +1,6 @@
 requirejs.config({
   shim: {
-    'bootstrap': ['jquery'] 
+    'bootstrap': ['jquery','cookie'] 
   }
 });
 

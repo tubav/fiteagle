@@ -1,8 +1,8 @@
-define(['require','utils','profile','publicKeys'],
+define(['require','utils','profile','publicKeys', 'certificates'],
 /**
  * @lends MainPage
  */ 
-function(require,Utils,Profile,PublicKeys){
+function(require,Utils,Profile,PublicKeys,Certificates){
 	
 	//console.log("mainPage.js is loaded");
 	
@@ -16,6 +16,7 @@ function(require,Utils,Profile,PublicKeys){
 		
 		Profile.initForm();
 		PublicKeys.initForm();
+		Certificates.initForm();
 		Utils.updateInfoPanel();
 		initOnWindowResizeEvents();
 	};
@@ -114,10 +115,40 @@ function(require,Utils,Profile,PublicKeys){
 	initSignOutBtn = function(){
 		$("#signOut").on('click',function(e){
 			e.preventDefault();
-			//console.log("signOut clicked");
-			Utils.resetUser();
-			sessionStorage.clear();
-			require('loginPage').load();
+			//console.log("signOut clicked");		
+			invalidateServerCookie(signOut);
+			
+		});
+	};
+	
+	signOut = function(){
+		Utils.resetUser();
+		require('loginPage').load();
+	};
+	
+	invalidateServerCookie = function(successFunction){
+		var username = Utils.getCurrentUser().username;
+		$.ajax({
+			cache: false,
+			type: "DELETE",
+			async: false,
+			url : "/api/v1/user/"+username+"/cookie",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("Authorization",
+                "Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(answer,status,xhr){
+				console.log(":SUCCESS" + answer) ;
+				successFunction();
+			},
+			error: function(xhr,status,thrown){
+				console.log("Response " + xhr.responseText);
+				console.log(status);
+				console.log(thrown);
+			},
+			complete: function(){
+				console.log("ENDE DELETING");
+			},
 		});
 	};
 		

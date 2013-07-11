@@ -59,10 +59,9 @@ define([],function(){
 	
 	Messages.wrongPasswordKey = "Wrong password.";
 	
-	Messages.wrongKeyDescription = "Wrong key description.";
+	Messages.wrongKeyDescription = "Wrong key description.";	
 	
-	
-	Messages.noPublicKeys = "No public keys is available";
+	Messages.noPublicKeys = "No public keys are available";
 	
 	return Messages;
 
