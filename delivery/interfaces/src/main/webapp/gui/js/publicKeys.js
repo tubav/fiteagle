@@ -22,7 +22,8 @@ function(require,Utils,Server){
 				var msg = Server.uploadNewPublicKey(publicKey, "#uploadingSing");
 				clearPublicKeysErrors();
 				$('#newUserKeyErrors').append(msg);
-				initExistingPublicKeysForm();
+				PublicKeys.initForm();
+				require('certificates').initForm();
 			}
 
 		});

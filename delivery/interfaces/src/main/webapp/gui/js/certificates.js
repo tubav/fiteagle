@@ -56,11 +56,10 @@ function(Validation, Utils,Messages,Server){
 	
 	addCertificateTextarea = function(pubKeyString){
 		$('#generatedCertificate').children().remove();
-		var area = 		
-		area.val(pubKeyString);
-		
+		var textarea = $('<textarea rows=30 style="resize:none" disabled></textarea>').addClass("span10");
+		textarea.val(pubKeyString);
 		$('#generatedCertificate')
-			.append(area)
+			.append(textarea)
 			.append('<br/>')
 			.append(createDownloadCertificateBtn('certificate.crt',pubKeyString));
 		

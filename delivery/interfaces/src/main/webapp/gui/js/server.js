@@ -160,9 +160,6 @@ function(require,Utils){
 			contentType: "application/json",
 			dataType: "json",
 			beforeSend: function(xhr){
-				Utils.unhideElement(uploadingSign);
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
 			},
 			success: function(data,status){
 				console.log(data);
@@ -198,13 +195,11 @@ function(require,Utils){
 			async: false,
 			url : "/api/v1/user/"+username+"/pubkey/"+publicKeyDescription+"/certificate",
 			beforeSend: function(xhr){
-				
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
+		
 			},
 			success: function(cert,status,xhr){
 				certificat = cert;
-				console.log(xhr.responseText);
+				//console.log(xhr.responseText);
 			},
 			error: function(xhr,status,thrown){
 				console.log("Response " + xhr.responseText);
