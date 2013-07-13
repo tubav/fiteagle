@@ -14,9 +14,9 @@ function(Bootstrap,LoginPage,MainPage,Utils){
 			MainPage.load();
 		}else{
 			var rememberedUser = Login.getRememberedUsername();
-			console.log("REMEMBERED: " + rememberedUser);
+			//console.log("REMEMBERED: " + rememberedUser);
 			if(rememberedUser){
-				var user = Utils.getUserFromServer(rememberedUser);
+				var user = Server.getUser(rememberedUser);
 				if(user){
 					Utils.setCurrentUser(user);
 					MainPage.load();

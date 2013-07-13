@@ -15,9 +15,13 @@ body{
 }
 label {margin-top:3px;}
 
+#deleteUserProfileModal .modal-body{padding:20px 0 20px 0}
+
 body * { outline:none !important}
 
 form{margin:0;}
+
+.collapseHeader h4{margin-left:20px}
 
 p{text-align:justify}
 
@@ -74,8 +78,11 @@ i[class^=icon-]{margin-right: 10px;}
 
 .horizontal li {display:inline}
 
-#desktop .collapseHeader {margin-left:2%;}
+.underlined{text-decoration:underline}
 
+.placeholder{padding-left:30px}
+
+.centered{text-align: center !important}
 
 input.search-query{height:24px !important;}
 
@@ -91,6 +98,15 @@ input.search-query{height:24px !important;}
 	margin:0 !important;
 	padding-top:5px;
 }
+#userInfoDropdown li.active a{
+	background-color: #d07010;
+	background-image: -moz-linear-gradient(top,#f09030,#d07010);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#f09030),to(#d07010));
+	background-image: -webkit-linear-gradient(top,#f09030,#d07010);
+	background-image: -o-linear-gradient(top,#f09030,#d07010);
+	background-image: linear-gradient(to bottom,#f09030,#d07010);
+}
+#userInfoDropdown li a{padding-top:10px; padding-bottom: 10px}
 
 #toolbar .btn-navbar{margin: 0 2% 0 2%}
 
@@ -205,7 +221,6 @@ input.search-query{height:24px !important;}
 		
 		#search .form-search{text-align: left; margin-bottom:20px !important}
 		
-		#aside .collapseHeader{padding-right: 20px}
 }
 
 /* Portrait tablet to landscape and desktop */
@@ -230,19 +245,24 @@ input.search-query{height:24px !important;}
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-
-	#mainArea{padding:10px 20px 0px 20px}
-	#desktop{padding-right:20px}
-
+	
+	.padding3pc{
+		padding:0;
+		margin-left: 3%;
+		width: 94% !important;
+	}
 	.wrapper{padding: 0 20px 20px 20px}
 	
 	.collapseHeader i.collapseSign{margin-right:2%;}
+	.collapseHeader h4{margin-left:0px}
 	
 	.thumbnail{margin-bottom:20px}
 	.thumbnail.last{margin-bottom:0px}
 
 	#main{
 		overflow-x: hidden;
+		margin-left: 4%;
+		width:92%
 	}
 	#aside{border-right: none;}
 	

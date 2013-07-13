@@ -1,8 +1,8 @@
-define(['require','utils'],
+define(['require','utils','server'],
 /**
  * @lends MainPage
  */ 
-function(require,Utils){
+function(require,Utils,Server){
 	
 	Profile = {};
 	
@@ -10,6 +10,7 @@ function(require,Utils){
 		Utils.clearErrorMessagesFrom("#manageProfile .errorMessages");
 		setProfileFields(Utils.getCurrentUser());		
 		initSaveProfileInfoBtn();
+		initDeleteUserProfileBtn();
 		defineOnEnterClicks();
 	};
 	
@@ -34,7 +35,7 @@ function(require,Utils){
 		$("#saveProfileInfo").on('click',function(){
 			Utils.unhideElement('#saveProfileLoadingSign');
 			if(checkUserProfileEntries()){	
-				var msg = Utils.updateUserOnServer(getUserFromProfileForm(),"#saveProfileLoadingSign");
+				var msg = Server.updateUser(getUserFromProfileForm(),"#saveProfileLoadingSign");
 				setProfileFields(Utils.getCurrentUser());
 				Utils.clearErrorMessagesFrom('#userProfileErrors');
 				$('#userProfileErrors').append(msg);
@@ -97,6 +98,30 @@ function(require,Utils){
 	enableSaveProfileBtn = function(){
 		console.log("enabling");
 		$('#saveProfileInfo').removeClass('disabled');
+	};
+	
+	initDeleteUserProfileBtn = function(){
+		$('#deleteUserProfileBtn').on('click',function(){
+			Server.deleteUser(afterDeleteFunction);	
+		});
+	};
+	
+	afterDeleteFunction = function(){
+		console.log("Afte DELETE function");
+		var modal = $('#deleteUserProfileModal');
+		var modalHeaderCloseBtn = modal.find('.modal-header .close');
+		var modalBody = modal.find('.modal-body');
+		var modalFooter = modal.find('.modal-footer');
+		modalHeaderCloseBtn.remove();
+		modalBody.children().remove();
+		modalFooter.children().remove();
+		modalBody.append($('<span class="span10 offset1 alert alert-info">Current user has been successfully removed</span>'));
+		var okBtn = $('<button id="deleteUserModalOkBtn" class="btn btn-success span2">OK</button>');
+		okBtn.on('click',function(){
+			$('#deleteUserProfileModal').modal('hide');
+			require('mainPage').signOut();
+		});
+		modalFooter.append(okBtn);
 	};
 	
 	return Profile;

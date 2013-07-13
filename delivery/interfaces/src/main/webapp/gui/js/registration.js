@@ -243,7 +243,7 @@ function(Validation, Utils, MainPage,Messages){
 		var allEntriesValid = this.checkRequiredUserEntries();
 		console.log("All entries are valid !" + allEntriesValid);
 		if(allEntriesValid){		
-			var newUser = Utils.createNewUser(
+			var newUserInfo = Utils.createNewUser(
 							this._getFirstName(),
 							this._getLastName(),
 							this._getAffiliation(),
@@ -252,64 +252,14 @@ function(Validation, Utils, MainPage,Messages){
 						  );
 						  
 			
-			Registration.registerUserOnServer(newUser);
-		}
-	};
-	
-	Registration.registerUserOnServer = function(newUser){	
-		console.log("Registering a new user on a server...");
-		var userToJSON = JSON.stringify(newUser);
-		console.log("New USER "+ userToJSON);			
-		$.ajax({
-			cache: false,
-			type: "PUT",
-			async: false,
-			url: "/api/v1/user/"+Registration._getUsername(),
-			data: userToJSON,
-			contentType: "application/json",
-			dataType: "json",
-			success: function(data,status){
-				console.log(data);
-				console.log(status);
-			},
-			error: function(xhl,status){
-				console.log(xhl.responseText);
-								console.log(status);
-			},
-			statusCode:{
-				
-				200: function(){
-					console.log("New user is successfully registered");		
-				},
-				
-				201: function(){
-					console.log("New user: "+ newUser.firstName +" "+newUser.lastName+ " has been successfully created.");
-					newUser.username = Registration._getUsername();
-					Utils.setCurrentUser(newUser);
-					Utils.setCredentials(newUser.username,newUser.password);
-					MainPage.load();
-					
-				},
-				
-				401: function(){
-					 console.log("Unauthorized access by user registration");
-				},
-				
-				409: function(){
-					console.log("User already exists");
-				},
-				
-				422: function(){
-					alert("422 ERROR !");
-				
-				},
-				
-				500 : function(){
-					console.log("Internal Server Error");
-				}
+			var errorMessage = Server.registerUser(newUserInfo,this._getUsername());
+			
+			if(errorMessage){
+					setTimeout(function(){
+						$('#registrationErrors').append(errorMessage)
+					},1000);
 			}
-		});
-		
+		}
 	};
 
 	Registration.initRegistrationForm = function(){

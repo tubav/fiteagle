@@ -57,7 +57,7 @@ function(){
 	};
 
 	Utils.clearErrorMessagesFrom = function(selector){
-		console.log("Clearing all error messages from "+ selector);
+		//console.log("Clearing all error messages from "+ selector);
 		var errorMessages = $(selector).find(".errorMessage");
 		errorMessages.remove();
 	};	
@@ -160,7 +160,7 @@ function(){
 		var tab;
 		if(typeof(Storage)!=="undefined"){
 			tab = sessionStorage.currentTab;
-			if(typeof tab == "undefined"){
+			if(!tab){
 				 tab = "#manageProfileMenu";
 			}
 		}else{
@@ -177,167 +177,15 @@ function(){
 		//console.log("CURRENT " +this.getCurrentTab());
 		$(this.getCurrentTab()).click();
 	};
+
 	
-	Utils.setCredentials = function(username,password){
-		sessionStorage.credentials = btoa(username + ":" + password);
-	}; 
-	
-	Utils.getCredentials = function(){
-		return sessionStorage.credentials;
-	};
-	
-	
-	Utils.getUserFromServer = function(username){
-		
-		var userFromServer = null;
-		
-		$.ajax({
-			cache: false,
-			type: "GET",
-			async: false,
-			url : "/api/v1/user/"+username,
-			beforeSend: function(xhr){
-			},
-			success: function(user,status,xhr){
-				userFromServer = user;
-			},
-			error: function(xhr,status,thrown){
-				console.log("Response " + xhr.responseText);
-				console.log(status);
-				console.log(thrown);
-			}
-		});
-	
-		return userFromServer;
-	};
-	
-	Utils.updateUserOnServer = function(userToUpdate, loadingSign){
-		//console.log("credentials" + Utils.getCredentials());
-		console.log("Updating user on the server...");
-		var data = JSON.stringify(userToUpdate);
-		var message;
-		$.ajax({
-			cache: false,
-			type: "POST",
-			async: false,
-			url: "/api/v1/user/"+userToUpdate.username,
-			data: data,
-			contentType: "application/json",
-			dataType: "json",
-			beforeSend: function(xhr){
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			success: function(data,status){
-				console.log("UPDATING DATA " + data);
-				console.log(status);
-			},
-			error: function(xhl,status){
-				console.log(xhl.responseText);
-				console.log(status);
-			},
-			statusCode:{			
-				200: function(){
-					var msg = "User has been successfully updated on server";
-					Utils.setCurrentUser(Utils.getUserFromServer(userToUpdate.username));
-					message = createSuccessMessage(msg);
-				}
-			},
-			complete: function(){
-				window.setTimeout(function(){
-					Utils.hideElement(loadingSign);
-				},200);
-			}
-		});
-		
-		return message;
-	};
-	
-	Utils.uploadNewPublicKey = function(publicKey, uploadingSign){
-		
-		var user = Utils.getCurrentUser();
-		var username = user.username;
-		var message;
-		$.ajax({
-			cache: false,
-			type: "POST",
-			async: false,
-			url: "/api/v1/user/"+username+'/pubkey',
-			data: JSON.stringify(publicKey),
-			contentType: "application/json",
-			dataType: "json",
-			beforeSend: function(xhr){
-				Utils.unhideElement(uploadingSign);
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			success: function(data,status){
-				console.log(data);
-				console.log(status);
-			},
-			error: function(xhl,status){
-				message = createErrorMessage(xhl.responseText);
-				console.log(status);
-			},
-			statusCode:{			
-				200: function(){
-					var updatedUser = Utils.getUserFromServer(username);
-					Utils.setCurrentUser(updatedUser);
-					message = createSuccessMessage("New public key has been successfully uploaded");
-				}
-			},
-			complete: function(){
-				Utils.hideElement(uploadingSign);
-			}
-		});
-		
-		return message;
-		
-	};
-	
-	Utils.deletePublicKey = function(keyDescription){
-		var user = Utils.getCurrentUser();
-		var username = user.username;
-		var message;
-		$.ajax({
-			cache: false,
-			type: "DELETE",
-			async: false,
-			url: "/api/v1/user/"+username+'/pubkey/'+keyDescription,
-			beforeSend: function(xhr){
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			success: function(data,status){
-				console.log(data);
-				console.log(status);
-			},
-			error: function(xhl,status){
-				message = createErrorMessage(xhl.responseText);
-				console.log(status);
-			},
-			statusCode:{			
-				200: function(){
-					var updatedUser = Utils.getUserFromServer(username);
-					Utils.setCurrentUser(updatedUser);
-					message = createSuccessMessage("Public key has been successfully deleted");
-				}
-			},
-			complete: function(){
-				Utils.hideElement(uploadingSign);
-			}
-		});
-		
-		return message;
-	};
-	
-	createSuccessMessage = function(msg){
+	Utils.createSuccessMessage = function(msg){
 		var successMsg = createMessage(msg);
 		successMsg.find('span').addClass("alert-success");
 		return successMsg;
 	};
 	
-	createErrorMessage = function(msg){
+	Utils.createErrorMessage = function(msg){
 		var errorMsg = createMessage(msg);
 		errorMsg.find('span').addClass("alert-error");
 		return errorMsg;
@@ -374,14 +222,6 @@ function(){
 		}
 		return false;
 	};	
-	
-	Utils.downloadFile = function(){	
-		$.generateFile({
-			filename: "export.txt",
-			content: "tbis sis sdpasdsdf",
-			script: 'js/download.php'
-		});
-	};
 	
 	return Utils;
 });

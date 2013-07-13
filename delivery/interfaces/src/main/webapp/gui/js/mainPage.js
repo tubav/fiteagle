@@ -1,8 +1,8 @@
-define(['require','utils','profile','publicKeys', 'certificates'],
+define(['require','utils','profile','publicKeys', 'certificates','server'],
 /**
  * @lends MainPage
  */ 
-function(require,Utils,Profile,PublicKeys,Certificates){
+function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	
 	//console.log("mainPage.js is loaded");
 	
@@ -12,21 +12,17 @@ function(require,Utils,Profile,PublicKeys,Certificates){
 
 		performScreenAdjustments();	
 		//initAsideSection();
-		initUserInfoPanel();
-		
+		initUserInfoPanel();		
 		Profile.initForm();
 		PublicKeys.initForm();
 		Certificates.initForm();
-		Utils.updateInfoPanel();
-		initOnWindowResizeEvents();
-
+		Utils.showCurrentTab();
 	};
 	
 	performScreenAdjustments = function(){
 		Utils.unhideBody();
-		Utils.showCurrentTab();
 		initCollapseHeaders();
-		
+		initOnWindowResizeEvents();
 		if(Utils.isSmallScreen()){
 			initForSmallScreens();
 		}else{
@@ -102,14 +98,13 @@ function(require,Utils,Profile,PublicKeys,Certificates){
 	initUserInfoPanel = function(){
 			
 		// workaroud for BOOTSTRAP's DropDown bug ("active" class for li elements removed)
-		$("#userInfoDropdown a").click(function(){
-			
+		$("#userInfoDropdown a").click(function(){		
 			var linkID  = $(this).attr("id");
 			Utils.setCurrentTab("#"+linkID);
 			var lis = $("#userInfoDropdown li");
 			lis.removeClass("active");
 		});
-		
+		Utils.updateInfoPanel();
 		initSignOutBtn();
 	};
 
@@ -117,40 +112,14 @@ function(require,Utils,Profile,PublicKeys,Certificates){
 		$("#signOut").on('click',function(e){
 			e.preventDefault();
 			//console.log("signOut clicked");		
-			invalidateServerCookie(signOut);
+			Server.invalidateCookie(Main.signOut);
 			
 		});
 	};
 	
-	signOut = function(){
+	Main.signOut = function(){
 		Utils.resetUser();
 		require('loginPage').load();
-	};
-	
-	invalidateServerCookie = function(successFunction){
-		var username = Utils.getCurrentUser().username;
-		$.ajax({
-			cache: false,
-			type: "DELETE",
-			async: false,
-			url : "/api/v1/user/"+username+"/cookie",
-			beforeSend: function(xhr){
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			success: function(answer,status,xhr){
-				console.log(":SUCCESS" + answer) ;
-				successFunction();
-			},
-			error: function(xhr,status,thrown){
-				console.log("Response " + xhr.responseText);
-				console.log(status);
-				console.log(thrown);
-			},
-			complete: function(){
-				console.log("ENDE DELETING");
-			},
-		});
 	};
 		
 	Main.load = function(){

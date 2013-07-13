@@ -134,9 +134,9 @@ function(require,Validation,Registration,Utils,Messages){
 		Login.clearAllErrorMessages();
 		
 		if(this.checkUsername() & Login.checkPassword()){
-				console.log("email and password are correct");
-				Utils.setCredentials(Login._getUsername(),Login._getPassword());			
-				Login.sendLoginInformation(Login._getUsername(),Login._getPassword());
+				//console.log("email and password are correct");
+				var rememeberMe = $("#rememberMeCheckbox").is(":checked");			
+				Server.loginUser(Login._getUsername(),Login._getPassword(),rememberMe);
 				
 		}
 	};
@@ -144,46 +144,7 @@ function(require,Validation,Registration,Utils,Messages){
 	Login.clearAllErrorMessages = function(){
 		Utils.clearErrorMessagesFrom("#loginErrors");
 	};
-	
-	
-	Login.sendLoginInformation = function(username,password){
-		
-		console.log("Sending login information to the server...");
-		setCookie = "";
-		if($("#rememberMeCheckbox").is(":checked"))setCookie="setCookie=true";			
-		$.ajax({
-			cache: false,
-			type: "GET",
-			async: false,
-			data: setCookie,
-			url : "/api/v1/user/"+username,
-			beforeSend: function(xhr){
-				Login.showLoadingSign();
-				xhr.setRequestHeader("Authorization",
-                "Basic " + btoa(username + ":" + password)); // TODO Base64 support
-			},
-			complete: function(){
-				Login.hideLoadingSign();
-			},
-			success: function(user,status,xhr){							
-				require('mainPage').load();
-				Utils.setCurrentUser(user);	
-			},
-			error: function(xhr,status,thrown){
-				console.log("Response " + xhr.responseText);
-				console.log(status);
-				console.log(thrown);
-			},
-			statusCode:{
-				401: function(){
-					Utils.addErrorMessageTo("#loginErrors",Messages.wrongPasswordKey);
-				},
-				404: function(){
-					Utils.addErrorMessageTo("#loginErrors", Messages.userNotFound);	
-				}
-			}
-		});
-	};
+
 
 	initOnWindowResizeEvent = function(){
 		$(window).resize(function(){
@@ -234,7 +195,7 @@ function(require,Validation,Registration,Utils,Messages){
 
 	Login.isUserLoggedIn = function(){
 		var user = Utils.getCurrentUser();
-		console.log('Current User: ' + Utils.userToString());
+		//console.log('Current User: ' + Utils.userToString());
 		if(!user){
 				return false;
 		}

@@ -1,13 +1,13 @@
-define(['require','utils',],
+define(['require','utils','server'],
 /**
  * @lends MainPage
  */ 
-function(require,Utils,LoginPage){
+function(require,Utils,Server){
 	
 	PublicKeys = {};
 	
 	PublicKeys.initForm = function(){
-		initExistingPublicKeysForm();
+		this.initExistingPublicKeysForm();
 		initNewUserKeysForm();
 	};
 	
@@ -19,7 +19,7 @@ function(require,Utils,LoginPage){
 				var description = $("#inputKeyDescription").val();
 				var publicKeyString = $('#publicKeyFromFile textarea').val();
 				publicKey = createNewPublicKeyObject(description,publicKeyString);
-				var msg = Utils.uploadNewPublicKey(publicKey, "#uploadingSing");
+				var msg = Server.uploadNewPublicKey(publicKey, "#uploadingSing");
 				clearPublicKeysErrors();
 				$('#newUserKeyErrors').append(msg);
 				initExistingPublicKeysForm();
@@ -57,10 +57,11 @@ function(require,Utils,LoginPage){
 		return isValidDescription;
 	};
 	
-	initExistingPublicKeysForm = function(){
-		console.log("init existing key form");
+	PublicKeys.initExistingPublicKeysForm = function(){
+		//console.log("init existing key form");
 		emptyPublicKeyList();
-		var publicKeys = Utils.getCurrentUser().publicKeys;
+		username = Utils.getCurrentUser().username;
+		var publicKeys = Server.getUser(username).publicKeys;
 		if(publicKeys.length > 0){	
 			for(var i = 0; i < publicKeys.length; i++ ){
 				var newItem  = createNewPublicKeysListItem(publicKeys[i], i);
@@ -99,10 +100,11 @@ function(require,Utils,LoginPage){
 		deleteKey.tooltip({'title':"Remove", 'placement':'top'});
 							
 		deleteKey.on('click',function(event){
-			var msg = Utils.deletePublicKey(publicKey.description);
+			var msg = Server.deletePublicKey(publicKey.description);
 			clearPublicKeysErrors();
 			$('#existingUserKeyErrors').append(msg);
-			initExistingPublicKeysForm();
+			PublicKeys.initExistingPublicKeysForm();
+			require('certificates').initForm();
 		});					
 		
 		keyContols.append(downloadBtn);
