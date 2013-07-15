@@ -2,12 +2,12 @@ package org.fiteagle.core.userdatabase;
 
 public interface UserPersistable {
 
-	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException;
+	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException, DuplicateEmailException;
 	
 	public void delete(String username) throws DatabaseException;
 	public void delete(User u) throws DatabaseException;
 	
-	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException; 
+	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException, DuplicateEmailException; 
 	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
 	public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
 	
@@ -26,6 +26,18 @@ public interface UserPersistable {
 	
 	public class DuplicateUsernameException extends RuntimeException {
 		private static final long serialVersionUID = -7242105025265481986L;		
+		
+		public DuplicateUsernameException(){
+		  super("another user with the same username already exists in the database");
+		}
+	}
+	
+	public class DuplicateEmailException extends RuntimeException {
+    private static final long serialVersionUID = 5986984055945876422L;
+    
+    public DuplicateEmailException(){
+      super("another user with the same email already exists in the database");
+    }
 	}
 	
 	public class DuplicatePublicKeyException extends RuntimeException {

@@ -34,6 +34,8 @@ define([],function(){
 	
 	Messages.emptyConfirmPassword = "Confirm password is empty." ;
 	
+	Messages.emptyKeyDescription = "Public key description is empty.";
+	
 
 	
 	
@@ -56,6 +58,10 @@ define([],function(){
 	Messages.userNotFound = "Current user isn't found.";
 	
 	Messages.wrongPasswordKey = "Wrong password.";
+	
+	Messages.wrongKeyDescription = "Wrong key description.";	
+	
+	Messages.noPublicKeys = "No public keys are available";
 	
 	return Messages;
 

@@ -15,12 +15,21 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void add(User u) throws DuplicateUsernameException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+	public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) != null)
 			throw new DuplicateUsernameException();
+		checkForDuplicateEmail(u);
 	  u.checkAttributes();
 		users.put(u.getUsername(), u);
 	}
+
+  private void checkForDuplicateEmail(User newUser) {
+    for(User user : users.values()){
+		  if(user.getEmail().equals(newUser.getEmail()) && user.getUsername() != newUser.getUsername()){
+		    throw new DuplicateEmailException();
+		  }
+		}
+  }
 
 	@Override
 	public void delete(String username){
@@ -33,9 +42,10 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws UserNotFoundException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+	public void update(User u) throws UserNotFoundException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) == null)
 			throw new UserNotFoundException();
+		checkForDuplicateEmail(u);
 	  User newUser = get(u.getUsername());
 	  newUser.mergeWithUser(u);		 
 	  users.put(u.getUsername(), newUser);    

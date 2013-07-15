@@ -1,7 +1,7 @@
-define(['require','validation','registration','utils','cookie','messages'],
+define(['require','validation','registration','utils','messages'],
 
 /** @lends Login */ 
-function(require,Validation,Registration,Utils,Cookie,Messages){
+function(require,Validation,Registration,Utils,Messages){
 	
 	//console.log("loginPage.js is loaded");
 	
@@ -26,7 +26,8 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Registration.initRegistrationForm();	
 		Utils.showCurrentTab();
 		
-		initOnResizeEvents();
+		initOnWindowResizeEvent();
+		
 	};
 	
 	setCurrentTab = function(currentTab){
@@ -79,7 +80,7 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
       * 
       */  
 	Login.load = function(){
-			console.log("loading Login Page...");
+			//console.log("loading Login Page...");
 			var url = "html/login.html";
 
 			$("#navigation").load(url + " #navs",
@@ -133,9 +134,9 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 		Login.clearAllErrorMessages();
 		
 		if(this.checkUsername() & Login.checkPassword()){
-				console.log("email and password are correct");
-				Utils.setCredentials(Login._getUsername(),Login._getPassword());					
-				Login.sendLoginInformation(Login._getUsername());
+				//console.log("email and password are correct");
+				var rememeberMe = $("#rememberMeCheckbox").is(":checked");			
+				Server.loginUser(Login._getUsername(),Login._getPassword(),rememberMe);
 				
 		}
 	};
@@ -143,48 +144,13 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	Login.clearAllErrorMessages = function(){
 		Utils.clearErrorMessagesFrom("#loginErrors");
 	};
-	
-	Login.sendLoginInformation = function(username){
-		
-		console.log("Sending login information to the server...");
-		$.ajax({
-			cache: false,
-			type: "GET",
-			async: false,
-			dataType: "json",
-			url : "/api/v1/user/"+username,
-			beforeSend: function(xhr){
-				Login.showLoadingSign();
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			complete: function(){
-				Login.hideLoadingSign();
-			},
-			success: function(user,status,xhr){
-				Utils.setCurrentUser(user);						
-				require('mainPage').load();
-			},
-			error: function(xhr,status,thrown){
-				console.log("Response " + xhr.responseText);
-				console.log(status);
-				console.log(thrown);
-			},
-			statusCode:{
-				401: function(){
-					Utils.addErrorMessageTo("#loginErrors",Messages.wrongPasswordKey);
-				},
-				404: function(){
-					Utils.addErrorMessageTo("#loginErrors", Messages.userNotFound);	
-				}
-			}
-		});
-	};
+
 
 	initOnWindowResizeEvent = function(){
 		$(window).resize(function(){
 			toggleNavigationBtn();
-			initLoginForm();
+			initLoginFormHints();
+			Registration.initRegistrationFormHints();
 		});
 	}
 	
@@ -200,15 +166,17 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 			$(window).scrollTop($('#header').offset().top);
 		});
 
-		var position;
-		(Utils.isSmallScreen()) ? position = "top" : position = "right";
-				
-		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
-		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
+		initLoginFormHints();
 		
 		$('#main').addClass('row-fluid');
 	};
 	
+	initLoginFormHints = function(){
+		var position;
+		(Utils.isSmallScreen()) ? position = "top" : position = "right";			
+		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
+		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
+	};
 	
 	initRegisterLink = function(){
 		$("#registrationLink").on('click',function(e){
@@ -227,11 +195,11 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 
 	Login.isUserLoggedIn = function(){
 		var user = Utils.getCurrentUser();
-		console.log('is logged in ' + Utils.userToString());
-		if(user != null){
-				return true;
+		//console.log('Current User: ' + Utils.userToString());
+		if(!user){
+				return false;
 		}
-		return false;
+		return true;
 	};
 	
 	Login.showLoadingSign = function(){	
@@ -239,16 +207,23 @@ function(require,Validation,Registration,Utils,Cookie,Messages){
 	};
 	
 	Login.hideLoadingSign = function(){
-		$("#loadingSign").addClass('hidden');
+		window.setTimeout(function(){
+			$("#loadingSign").addClass('hidden');
+		},200);
 	};
 	
 	
-	Login.initShowCookie= function(){
-		
-		$("#showCookie").on('click',function(){
-				console.log("cookie -)");
-				alert(document.cookie.length);
-		});
+	Login.getRememberedUsername = function(){
+		var username;
+		var cookie = $.cookie('fiteagle_user_cookie');
+		if(cookie){
+			var cookieVal = atob(cookie);
+			var start = cookieVal.indexOf("username:");
+			if(start > -1){
+				username = cookieVal.substring(start+9);
+			}
+		}
+		return username;
 	};
 	
 	return Login;

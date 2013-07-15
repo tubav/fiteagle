@@ -37,7 +37,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	private SQLiteUserDB() throws DatabaseException, SQLException{
 	  try{	   
-  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username))");
+  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username), UNIQUE (email))");
   		createTable("CREATE TABLE IF NOT EXISTS Keys (username, description, key, created, PRIMARY KEY (username, key), UNIQUE (username, description))");  		
 	  } catch(SQLException e){	    
 	    throw new DatabaseException(e.getMessage());
@@ -71,6 +71,9 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     } catch(SQLException e){
       if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
         throw new DuplicateUsernameException();
+      }
+      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column email is not unique)")){
+        throw new DuplicateEmailException();
       }
       else{
         throw e;
@@ -146,7 +149,12 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	    deleteKeysFromDatabase(newUser.getUsername());    
 	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
 	  } catch(IOException | SQLException e){
-	    throw new DatabaseException(e.getMessage());
+	    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column email is not unique)")){
+        throw new DuplicateEmailException();
+      }
+      else{
+        throw new DatabaseException(e.getMessage());
+      }	   
 	  }		
 	}
 

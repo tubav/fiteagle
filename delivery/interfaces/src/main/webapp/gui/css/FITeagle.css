@@ -15,9 +15,13 @@ body{
 }
 label {margin-top:3px;}
 
+#deleteUserProfileModal .modal-body{padding:20px 0 20px 0}
+
 body * { outline:none !important}
 
 form{margin:0;}
+
+.collapseHeader h4{margin-left:20px}
 
 p{text-align:justify}
 
@@ -58,7 +62,7 @@ ul li a:hover, ul li a:focus{text-decoration: none;}
 #managePublicKeys ul{list-style-type:none;}
 
 hr{ border-top: 1px solid #D1D1D1}
-h4{margin-bottom:20px}
+h4{margin-bottom:5px !important}
 
 i[class^=icon-]{margin-right: 10px;}
 
@@ -74,8 +78,11 @@ i[class^=icon-]{margin-right: 10px;}
 
 .horizontal li {display:inline}
 
-.collapseHeader h3{margin-left:2%;}
+.underlined{text-decoration:underline}
 
+.placeholder{padding-left:30px}
+
+.centered{text-align: center !important}
 
 input.search-query{height:24px !important;}
 
@@ -91,6 +98,15 @@ input.search-query{height:24px !important;}
 	margin:0 !important;
 	padding-top:5px;
 }
+#userInfoDropdown li.active a{
+	background-color: #d07010;
+	background-image: -moz-linear-gradient(top,#f09030,#d07010);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#f09030),to(#d07010));
+	background-image: -webkit-linear-gradient(top,#f09030,#d07010);
+	background-image: -o-linear-gradient(top,#f09030,#d07010);
+	background-image: linear-gradient(to bottom,#f09030,#d07010);
+}
+#userInfoDropdown li a{padding-top:10px; padding-bottom: 10px}
 
 #toolbar .btn-navbar{margin: 0 2% 0 2%}
 
@@ -166,7 +182,6 @@ input.search-query{height:24px !important;}
     box-shadow: none !important;
 }
 
-#aside hr{margin:10px 0 0 0;}
 #aside .search-query{margin-top:10px;}
 #aside{margin:0px;}
 
@@ -178,6 +193,12 @@ input.search-query{height:24px !important;}
 	overflow: auto;
 }
 
+#saveProfileLoadingSign{
+	position: relative;
+	top: 10px;
+	left:10px;
+}
+
 #availableSlicesList > ul > li{ margin-top:10px}
 
 .centered-pills { text-align:center; }
@@ -186,7 +207,7 @@ input.search-query{height:24px !important;}
 .centered-pills a { float:left; }
 
 
-.collapseHeader i.collapseSign{float:right; padding-top:8px;}
+.collapseHeader i.collapseSign{float:right; padding-top:1px;}
 
 @media (max-width:979px){
 		#navs ul {margin-bottom: 20px}
@@ -199,6 +220,7 @@ input.search-query{height:24px !important;}
 		.collapseHeader h3{margin-left:0%;}
 		
 		#search .form-search{text-align: left; margin-bottom:20px !important}
+		
 }
 
 /* Portrait tablet to landscape and desktop */
@@ -223,18 +245,24 @@ input.search-query{height:24px !important;}
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-
-	.tab-content{padding:10px 20px 0px 20px}
-
+	
+	.padding3pc{
+		padding:0;
+		margin-left: 3%;
+		width: 94% !important;
+	}
 	.wrapper{padding: 0 20px 20px 20px}
 	
 	.collapseHeader i.collapseSign{margin-right:2%;}
+	.collapseHeader h4{margin-left:0px}
 	
 	.thumbnail{margin-bottom:20px}
 	.thumbnail.last{margin-bottom:0px}
 
 	#main{
 		overflow-x: hidden;
+		margin-left: 4%;
+		width:92%
 	}
 	#aside{border-right: none;}
 	

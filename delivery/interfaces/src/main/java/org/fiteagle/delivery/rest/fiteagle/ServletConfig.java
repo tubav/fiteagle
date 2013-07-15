@@ -44,11 +44,14 @@ public class ServletConfig extends GuiceServletContextListener {
             
             bind(GroupPresenter.class).in(Scopes.SINGLETON);
             bind(GroupManagerBoundary.class).to(GroupManager.class).in(Scopes.SINGLETON);
+            filter("/api/v1/group/*").through(new GroupAuthenticationFilter());
             
             bind(ResourceMonitoringPresenter.class).in(Scopes.SINGLETON);
             bind(ResourceMonitoringBoundary.class).to(MonitoringManager.class).in(Scopes.SINGLETON);
 
-            filter("/api/v1/group/*").through(new GroupAuthenticationFilter());
+            bind(StatusPresenter.class).in(Scopes.SINGLETON);
+            
+            
             
             bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
         

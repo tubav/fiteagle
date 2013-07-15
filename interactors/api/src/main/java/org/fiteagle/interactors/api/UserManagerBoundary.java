@@ -7,6 +7,7 @@ import java.security.cert.X509Certificate;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
@@ -16,14 +17,14 @@ import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 
 public interface UserManagerBoundary {
   
-  public abstract void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException,
+  public abstract void add(User u) throws DuplicateUsernameException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException;
   
   public abstract void delete(String username) throws DatabaseException;
   
   public abstract void delete(User u) throws DatabaseException;
   
-  public abstract void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException,
+  public abstract void update(User u) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException;
   
   public abstract void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException,

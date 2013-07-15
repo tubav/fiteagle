@@ -8,6 +8,7 @@ import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
@@ -25,7 +26,7 @@ public class UserManager implements UserManagerBoundary{
   }
   
   @Override
-  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException,
+  public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException {
     manager.add(u);    
   }
@@ -41,7 +42,7 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException,
+  public void update(User u) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException {
     manager.update(u);
   }
