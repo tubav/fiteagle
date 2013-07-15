@@ -60,6 +60,10 @@ function(){
 	Validation._isAffiliation = function(){
 		return true; //TODO
 	};
+	
+	Validation._isKeyName = function(key){
+		return true;
+	};
 
 	return Validation;
 });

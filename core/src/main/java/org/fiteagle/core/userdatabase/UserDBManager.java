@@ -19,6 +19,7 @@ import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
@@ -65,7 +66,7 @@ public class UserDBManager {
      }
   }
   
-  public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+  public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.add(u);
   }
   
@@ -77,7 +78,7 @@ public class UserDBManager {
     database.delete(u);
   }
   
-  public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+  public void update(User u) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
     database.update(u);
   }
   

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
@@ -28,6 +29,8 @@ public abstract class UserPersistableTest {
 	protected static User USER2;
 	protected static User USER3;
 	protected static User USER4;
+	protected static User USER5;
+	protected static User USER6;
 	
 	@BeforeClass
 	public static void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException, InvalidKeySpecException{
@@ -38,8 +41,10 @@ public abstract class UserPersistableTest {
     KEYS2.add(new UserPublicKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDKpQJGxnReKal3p7d/95G5d3RQb002gso1QJrjxFKED+1cD157FsT2bCPcWpTYdLeTFRWBDUQa91yUPdkjkvoMsL2e3ah7nugRD6QfrFki0Po9oENrbujzaExPV8SAvXSuqcCG4/pidqEqjXJlAMXrphJcoFdKSzXLJtjUwfxyEw==", "key3"));
 	  USER1 = new User("test1", "mitja", "nikolaus", "mitja@test.org", "mitjasAffiliation", "mitjasPassword", KEYS1);
 	  USER2 = new User("test2", "hans", "herbert", "hschmidt@test.org", "hansAffiliation", "hansPassword", KEYS2);
-	  USER3 = new User("test2", "herbert", "herbert", "hschmidt@test.org", "herbertAffiliation", "herbertsPassword", KEYS1);
+	  USER3 = new User("test2", "herbert", "herbert", "heschmidt@test.org", "herbertAffiliation", "herbertsPassword", KEYS1);
 	  USER4 = new User("test4", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword");	  
+	  USER5 = new User("test5", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword");    
+	  USER6 = new User("test5", "mitja", "nikolaus", "hschmidt@test.org", "mitjaAffiliation", "mitjasPassword");    
 	}
 	
 	@Before
@@ -140,4 +145,17 @@ public abstract class UserPersistableTest {
 	  database.deleteKey(USER2.getUsername(), key);
 	  assertTrue(!database.get(USER2).getPublicKeys().contains(key));
 	}	
+	
+	@Test(expected = DuplicateEmailException.class)
+	public void testDuplicateEmailExeptionWhenAdd(){
+	  database.add(USER4);
+	  database.add(USER5);
+	}
+	
+	@Test(expected = DuplicateEmailException.class)
+  public void testDuplicateEmailExeptionWhenUpdate(){
+	  database.add(USER2);
+    database.add(USER5);
+    database.update(USER6);
+  }
 }

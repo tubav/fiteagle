@@ -57,7 +57,7 @@ function(){
 	};
 
 	Utils.clearErrorMessagesFrom = function(selector){
-		console.log("Clearing all error messages from "+ selector);
+		//console.log("Clearing all error messages from "+ selector);
 		var errorMessages = $(selector).find(".errorMessage");
 		errorMessages.remove();
 	};	
@@ -73,13 +73,14 @@ function(){
 	
 	Utils.hideElement = function(selector){
 		var toHide = $(selector);
-		//console.log("Hiding "+ toHide.attr('class'));
+		//console.log("Hiding Element"+ selector);
 		if(!toHide.hasClass('hidden')){
-				toHide.addClass('hidden');
+				toHide.addClass('hidden');			
 		}
 	};
 	
 	Utils.unhideElement = function(selector){
+		//console.log("Unhiding Element " + selector);
 		$(selector).removeClass('hidden');
 	};
 
@@ -93,8 +94,12 @@ function(){
 		else{
 			console.log("Session storage is no supported !");
 		}
-		
-		console.log("Set user " + userJSON);
+	};
+	
+	Utils.updateInfoPanel = function(){
+		user = Utils.getCurrentUser();
+		console.log('current user is set to: '+ Utils.userToString(user));
+		$("#userName").text(user.firstName +" " + user.lastName);
 	};
 
 	Utils.getCurrentUser = function(){		
@@ -109,8 +114,7 @@ function(){
 		sessionStorage.clear();
 	};
 
-	Utils.userToString = function(){
-			var user = this.getCurrentUser();
+	Utils.userToString = function(user){
 			var userToString = '';
 			if(user !=null){
 				userToString = user.firstName + " " + user.lastName + " " + user.email;
@@ -120,23 +124,12 @@ function(){
 			return userToString;
 	};
 	
-	Utils.listCookies = function() {
-		/*var theCookies = document.cookie.split(';');
-		console.log("Total cookie number " + theCookies.length);U
-		var aString = '';
-		for (var i = 1 ; i <= theCookies.length; i++) {
-			aString += i + ' ' + theCookies[i-1] + "\n";
-		} */
-		
-		var aString = "Cookie on site: " + document.cookie;
-		
-		return aString;
-	};
-	
-	
 	Utils.initTooltipFor = function(selector,title,placement,trigger){
 		if(selector){
-			$(selector).tooltip({
+			var s = $(selector);
+			s.tooltip('destroy');
+			//console.log("Tooltip for " + selector + ' placement '+ placement);
+			s.tooltip({
 				'title': title,
 				'placement':placement, 
 				'trigger' : trigger	
@@ -167,7 +160,7 @@ function(){
 		var tab;
 		if(typeof(Storage)!=="undefined"){
 			tab = sessionStorage.currentTab;
-			if(typeof tab == "undefined"){
+			if(!tab){
 				 tab = "#manageProfileMenu";
 			}
 		}else{
@@ -184,73 +177,26 @@ function(){
 		//console.log("CURRENT " +this.getCurrentTab());
 		$(this.getCurrentTab()).click();
 	};
+
 	
-	Utils.setCredentials = function(username,password){
-		sessionStorage.credentials = btoa(username + ":" + password);
-	}; 
-	
-	Utils.getCredentials = function(){
-		return sessionStorage.credentials;
+	Utils.createSuccessMessage = function(msg){
+		var successMsg = createMessage(msg);
+		successMsg.find('span').addClass("alert-success");
+		return successMsg;
 	};
 	
-	
-	Utils.getUserFromServer = function(username){
+	Utils.createErrorMessage = function(msg){
+		var errorMsg = createMessage(msg);
+		errorMsg.find('span').addClass("alert-error");
+		return errorMsg;
 		
-		var userFromServer = null;
-		
-		$.ajax({
-			cache: false,
-			type: "GET",
-			async: false,
-			dataType: "json",
-			url : "/api/v1/user/"+username,
-			beforeSend: function(xhr){
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			success: function(user,status,xhr){
-				userFromServer = user;
-			},
-			error: function(xhr,status,thrown){
-				console.log("Response " + xhr.responseText);
-				console.log(status);
-				console.log(thrown);
-			}
-		});
-	
-		return userFromServer;
 	};
 	
-	Utils.updateUserOnServer = function(userToUpdate){
-		var user = Utils.getCurrentUser();
-		$.ajax({
-			cache: false,
-			type: "POST",
-			async: false,
-			url: "/api/v1/user/"+user.username,
-			data: JSON.stringify(userToUpdate),
-			contentType: "application/json",
-			dataType: "json",
-			beforeSend: function(xhr){
-				xhr.setRequestHeader("Authorization",
-                "Basic " + Utils.getCredentials()); // TODO Base64 support
-			},
-			success: function(data,status){
-				console.log("UPDATING DATA " + data);
-				console.log(status);
-			},
-			error: function(xhl,status){
-				console.log(xhl.responseText);
-				console.log(status);
-			},
-			statusCode:{			
-				200: function(){
-					console.log("User has been successfully updated on server");
-					Utils.setCurrentUser(Utils.getUserFromServer(userToUpdate.username));
-					initAddRemoveKeysForm();
-				}
-			}
-		});
+	createMessage = function(msg){
+		var div = $('<div>').addClass("row-fluid errorMessage");
+		var span = $('<span>').addClass('alert').html(msg);
+		div.append(span);
+		return div;
 	};
 	
 	Utils.createNewUser = function(firstName,lastName,affiliation,password,email){		
