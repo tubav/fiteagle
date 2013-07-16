@@ -48,12 +48,12 @@ function(){
 	};
 
 	Utils.addErrorMessageTo = function(selector, message){
-		console.log('adding error message ['+message+']'+" to "+selector);
-		var errorDIV = $("<div>").addClass("row-fluid errorMessage");
-		var errorMessage =  $("<span>").addClass("alert alert-error").text(message);
-		errorDIV.append(errorMessage);
-		console.log("found "+ $(selector));
-		$(selector).append(errorDIV);
+		$(selector).append(Utils.createErrorMessage(message));
+	};
+	
+	Utils.setErrorMessageTo = function(selector,message){
+		Utils.clearErrorMessagesFrom(selector);
+		Utils.addErrorMessageTo(selector,message);
 	};
 
 	Utils.clearErrorMessagesFrom = function(selector){
@@ -95,6 +95,18 @@ function(){
 			console.log("Session storage is no supported !");
 		}
 	};
+	
+	Utils.thisUserToBeRemembered = function(){
+		toBeRemembered = true;
+		sessionStorage.remember = toBeRemembered;
+	}
+	
+	Utils.isThisUserToBeRemembered = function(){
+		var result = false;
+		if(sessionStorage.remember) 
+			result = JSON.parse(sessionStorage.remember);
+		return result;
+	}
 	
 	Utils.updateInfoPanel = function(){
 		user = Utils.getCurrentUser();
@@ -181,13 +193,13 @@ function(){
 	
 	Utils.createSuccessMessage = function(msg){
 		var successMsg = createMessage(msg);
-		successMsg.find('span').addClass("alert-success");
+		successMsg.find('span').addClass("alert-success span12 centered");
 		return successMsg;
 	};
 	
 	Utils.createErrorMessage = function(msg){
 		var errorMsg = createMessage(msg);
-		errorMsg.find('span').addClass("alert-error");
+		errorMsg.find('span').addClass("alert-error span12 centered");
 		return errorMsg;
 		
 	};
@@ -221,7 +233,60 @@ function(){
 			return true;
 		}
 		return false;
-	};	
+	};
+	
+	Utils.showProgressbarModal = function(message){
+		initProgressbarModal();
+		$('#progressBarModal').find('.progressMessage').text(message);
+		$('#progressBarModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	};
+	
+	initProgressbarModal = function(){
+		$('#progressBarModal').remove();
+		var  modal = $('<div>')
+			.attr('id','progressBarModal')
+			.addClass('modal hide fade')
+			.attr('tabindex','-1')
+			.attr('role','dialog')
+			.attr('aria-labelledby','progressBarLabel')
+			.attr('aria-hidden','true');
+		var modalBody = $('<div>').addClass('modal-body')
+					.append('<h4 class="centered progressMessage"></h4>');
+
+		Utils.addProgressbarTo(modalBody);
+		modal.append(modalBody);
+		$('body').append(modal);
+	};
+	
+	Utils.addProgressbarTo = function(object){
+		object.find('.progress').remove();
+		var progressBar = $('<div>').append(
+					"<div class='top20 progress progress-striped active'>"+
+						"<div class='bar' style='width: 100%;'></div>"+
+					"</div>"
+					);
+		object.append(progressBar);
+	};
+	
+	Utils.hideProgressbarModal = function(){
+		$('#progressBarModal').modal('hide');
+	};
+	
+	Utils.waitForFinalEvent = function () {
+		var timers = {};
+		return function (callback, ms, uniqueId) {
+			if (!uniqueId) {
+				uniqueId = "Don't call this twice without a uniqueId";
+			}
+			if (timers[uniqueId]) {
+				clearTimeout (timers[uniqueId]);
+			}
+			timers[uniqueId] = setTimeout(callback, ms);
+		};
+	};
 	
 	return Utils;
 });

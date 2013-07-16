@@ -64,6 +64,10 @@ function(){
 	Validation._isKeyName = function(key){
 		return true;
 	};
+	
+	Validation._isPassphrase = function(){
+		return true;
+	};
 
 	return Validation;
 });

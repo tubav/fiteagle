@@ -1,18 +1,24 @@
-define(['require','utils','server'],
+define(['require','utils','server','validation','messages'],
 /**
  * @lends MainPage
  */ 
-function(require,Utils,Server){
+function(require,Utils,Server,Validation,Messages){
 	
 	PublicKeys = {};
 	
 	PublicKeys.initForm = function(){
-		this.initExistingPublicKeysForm();
+		initExistingPublicKeysForm();
 		initNewUserKeysForm();
 	};
 	
 	initNewUserKeysForm = function(){
-		initFileSelectBtn();
+		initKeyDescriptionField();
+		
+		if(isFileSelectAvailable()){
+			initFileSelectBtn();
+		}else{
+			disableUploadNewUserKeysForm();
+		}
 		
 		$('#uploadNewPublicKey').on('click',function(){
 			if(checkKeyDescription()){
@@ -21,7 +27,7 @@ function(require,Utils,Server){
 				publicKey = createNewPublicKeyObject(description,publicKeyString);
 				var msg = Server.uploadNewPublicKey(publicKey, "#uploadingSing");
 				clearPublicKeysErrors();
-				$('#newUserKeyErrors').append(msg);
+				Utils.addErrorMessageTo('#newUserKeyErrors',msg);
 				PublicKeys.initForm();
 				require('certificates').initForm();
 			}
@@ -29,6 +35,38 @@ function(require,Utils,Server){
 		});
 	};
 	
+	disableUploadNewUserKeysForm = function(){
+		var info = $('<span>')
+			.addClass("alert alert-info span8")
+			.append(Messages.fileSelectionNotSupported);
+			
+		$('#uploadNewUserKeysContainer').children().remove();
+		$('#uploadNewUserKeysContainer').append(info);
+	};
+	
+	isFileSelectAvailable = function(){
+		var isAvailable;
+		(window.File && window.FileReader && 
+			window.FileList && window.Blob)?
+				isAvailable = true
+					:
+				isAvailable = false
+
+		return isAvailable;
+	};
+	
+	initKeyDescriptionField = function(){		
+		var placement;
+								
+		(Utils.isSmallScreen())? placement="top": placement = "right";					
+								
+		Utils.initTooltipFor(
+				"#inputKeyDescription",
+				Messages.keyDescription,
+				placement,
+				"focus");
+	};
+
 	createNewPublicKeyObject = function(description,keyString){
 		var publicKey = new Object();
 		publicKey.description = description;
@@ -58,31 +96,34 @@ function(require,Utils,Server){
 		return isValidDescription;
 	};
 	
-	PublicKeys.initExistingPublicKeysForm = function(){
+	initExistingPublicKeysForm = function(){
+		user = Utils.getCurrentUser();
 		//console.log("init existing key form");
-		emptyPublicKeyList();
-		username = Utils.getCurrentUser().username;
-		var publicKeys = Server.getUser(username).publicKeys;
+		$('#publicKeysList').children().remove();
+		username = user.username;
+		var publicKeys = user.publicKeys;
+		//console.log(publicKeys);
 		if(publicKeys.length > 0){	
 			for(var i = 0; i < publicKeys.length; i++ ){
 				var newItem  = createNewPublicKeysListItem(publicKeys[i], i);
 				$("#publicKeysList").append(newItem);
 			}
 		}else{
-			var p = $('<label>').addClass('.noPublicKey').html(Messages.noPublicKeys);
-			$("#publicKeysList").append(p);
+			var info = $('<span>').addClass('alert alert-info .noPublicKey span8').text(Messages.noPublicKeys);
+			$("#publicKeysList").append(info);
 		}
 	};
 	
-	emptyPublicKeyList = function(){
-		$('#publicKeysList').children().remove();
+	PublicKeys.updateExistingPublicKeyForm = function(){
+		var userFromServer = Server.getUser(Utils.getCurrentUser().username);
+		initExistingPublicKeysForm(userFromServer)
 	};
 	
 	createNewPublicKeysListItem = function(publicKey, itemNumber){
 		var keyDescription = publicKey.description;
 		var keyString = publicKey.publicKeyString;
 		var div = $("<div>").addClass('row-fluid publicKey');
-		var label = $('<label class="span2"></label>').html('Public key: ' + keyDescription);
+		var label = $('<label class="span2"></label>').html('<b>Public key: </b>' + keyDescription);
 		var d = $('<div>').addClass('span8');
 		var textArea =$('<textarea style="resize:none" class="span12" rows="6"  disabled ></textarea>')
 						.val(keyString);
@@ -95,8 +136,8 @@ function(require,Utils,Server){
 		
 		var deleteKey = $('<button>')
 							.attr('data-number',itemNumber)
-							.addClass('btn btn-danger span5 offset2 ')
-							.html('<i class="icon-remove nomargin"></i>');
+							.addClass('btn btn-inverse span5 offset2 ')
+							.html('<i class="icon-remove icon-large nopadding"></i>');
 							
 		deleteKey.tooltip({'title':"Remove", 'placement':'top'});
 							
@@ -104,7 +145,7 @@ function(require,Utils,Server){
 			var msg = Server.deletePublicKey(publicKey.description);
 			clearPublicKeysErrors();
 			$('#existingUserKeyErrors').append(msg);
-			PublicKeys.initExistingPublicKeysForm();
+			PublicKeys.initForm();
 			require('certificates').initForm();
 		});					
 		
@@ -126,8 +167,8 @@ function(require,Utils,Server){
 		var hattr = "data:application/octet-stream;charset=utf-8;base64," + appendix;
 		
 		var downloadBtn = $('<a>')
-							.addClass('btn btn-success span5 ')
-							.html('<i class="icon-download nomargin"></i>')
+							.addClass('btn btn-inverse span5 ')
+							.html('<i class="icon-download icon-large nopadding"></i>')
 							.attr('download',filename)
 							.attr('href',hattr);
 							
@@ -143,16 +184,21 @@ function(require,Utils,Server){
 	
 	handleFileSelect = function(evt){
 	
-		console.log("File handling");
+		//console.log("File handling");
 		
 		var f = evt.target.files[0]; // FileList object
 		
 		// files is a FileList of File objects. List some properties.
 		var output = [];
 		
+		var fileExt = f.name.split('.').pop();
+		
 		if (!f) {
-			alert("Failed to load file");
-		}else {	
+			Utils.setErrorMessageTo("#newUserKeyErrors",Messages.failToLoadFile);
+		}else {
+			
+			checkFileExtension()
+				
 			var reader = new FileReader();
 			reader.readAsText(f);
 			reader.onload = function(e){
@@ -165,18 +211,23 @@ function(require,Utils,Server){
 		}
 		
 		if(output.length > 0){
-			$('#currentFileName').html('Currently selected: '+ output.join(''));
+			$('#currentFileInfo').html(
+				'<span class="alert alert-info centered span12">Currently selected: '+ output.join('')+'</span>'
+			);
 			$('#uploadNewPublicKey').removeClass('hidden');
 		}else{
 			$('#currentFileName').html('No file selected.');
 			$('#uploadNewPublicKey').addClass('hidden');
 		}
 	};
-  
+	
+	checkFileExtension = function(){
+		console.log("TODO CHECK FILE EXTENSION");
+	};
   
   	setPublicKeyFromFile = function(text){
 	  var container = $("#publicKeyFromFile");
-	  var content = $('<textarea class="span12" rows=3 disabled style="resize:none"></textarea>');
+	  var content = $('<textarea class="span12" rows=6 disabled style="resize:none"></textarea>');
 	  content.html(text);
 	  container.find('textarea').remove();
 	  container.append(content);

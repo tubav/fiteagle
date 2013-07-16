@@ -107,7 +107,7 @@ function(require,Utils,Server){
 	};
 	
 	afterDeleteFunction = function(){
-		console.log("Afte DELETE function");
+		//console.log("Afte DELETE function");
 		var modal = $('#deleteUserProfileModal');
 		var modalHeaderCloseBtn = modal.find('.modal-header .close');
 		var modalBody = modal.find('.modal-body');

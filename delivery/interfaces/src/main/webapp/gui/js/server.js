@@ -7,11 +7,15 @@ function(require,Utils){
 	Server = {};
 	
 		
-	Server.loginUser = function(username,password,rememberMe){
-		
-		console.log("Sending login information to the server...");
+	Server.loginUser = function(username,password,rememberMe){		
+		//console.log("Sending login information to the server...");
+		var msg;
+		var signInBtn = $('#signIn');
 		setCookie = "";
-		if(rememberMe)setCookie="setCookie=true";			
+		if(rememberMe){
+			setCookie="setCookie=true";
+			Utils.thisUserToBeRemembered();
+		}
 		$.ajax({
 			cache: false,
 			type: "GET",
@@ -19,34 +23,35 @@ function(require,Utils){
 			data: setCookie,
 			url : "/api/v1/user/"+username,
 			beforeSend: function(xhr){
-				Login.showLoadingSign();
+				signInBtn.hide();
+				Utils.unhideElement('#loginForm .progress');
 				xhr.setRequestHeader("Authorization",
                 "Basic " + btoa(username + ":" + password)); // TODO Base64 support
 			},
-			complete: function(){
-				Login.hideLoadingSign();
-			},
-			success: function(user,status,xhr){							
+			success: function(user,status,xhr){			
+				Utils.setCurrentUser(user);
+				$('#loginForm').modal('hide');
 				require('mainPage').load();
-				Utils.setCurrentUser(user);	
 			},
-			error: function(xhr,status,thrown){
+			error: function(xhr,status,thrown){		
+				msg = thrown;
 				console.log("Response " + xhr.responseText);
 				console.log(status);
 				console.log(thrown);
 			},
-			statusCode:{
-				401: function(){
-					Utils.addErrorMessageTo("#loginErrors",Messages.wrongPasswordKey);
-				},
-				404: function(){
-					Utils.addErrorMessageTo("#loginErrors", Messages.userNotFound);	
-				}
-			}
+			complete: function(){
+			setTimeout(function(){
+				signInBtn.show();
+				Utils.hideElement('#loginForm .progress');
+			},100);
+
+			},
 		});
+		
+		return msg;
 	};
 	
-	Server.registerUser = function(newUser,newUsername){	
+	Server.registerUser = function(newUser,newUsername,successFunction){	
 		console.log("Registering a new user on a server...");
 		var userToJSON = JSON.stringify(newUser);
 		var message;
@@ -74,7 +79,7 @@ function(require,Utils){
 					console.log("New user: "+ newUser.firstName +" "+newUser.lastName+ " has been successfully created.");				
 					newUser.username = newUsername;
 					Utils.setCurrentUser(newUser);
-					Server.loginUser(newUser.username, newUser.password);
+					Server.loginUser(newUser.username, newUser.password,false,successFunction);
 				}
 			}
 		});
@@ -94,12 +99,20 @@ function(require,Utils){
 			},
 			success: function(user,status,xhr){
 				userFromServer = user;
+				Utils.setCurrentUser(userFromServer);
 			},
 			error: function(xhr,status,thrown){
 				console.log("Response " + xhr.responseText);
 				console.log(status);
 				console.log(thrown);
-			}	
+			},
+			statusCode:{			
+				401: function(){
+					console.log("Unathorized access. To be signed out")
+					require('mainPage').signOut();
+				}
+			},
+				
 		});
 		
 		return userFromServer;
@@ -166,7 +179,7 @@ function(require,Utils){
 				console.log(status);
 			},
 			error: function(xhl,status){
-				message = Utils.createErrorMessage(xhl.responseText);
+				message = xhl.responseText;
 				console.log(status);
 			},
 			statusCode:{			
@@ -195,7 +208,7 @@ function(require,Utils){
 			async: false,
 			url : "/api/v1/user/"+username+"/pubkey/"+publicKeyDescription+"/certificate",
 			beforeSend: function(xhr){
-		
+				Utils.showProgressbarModal(Messages.generateCertificate);
 			},
 			success: function(cert,status,xhr){
 				certificat = cert;
@@ -207,17 +220,17 @@ function(require,Utils){
 				console.log(thrown);
 			},
 			complete: function(){
-				//console.log("ENDE");
+					Utils.hideProgressbarModal(Messages.generateCertificate);
 			}
 		});
 
 		return certificat;
 	};
 	
-	Server.generatePublicKeyAndCertificate = function(passphrase,generatingSign,successFunction){
-		var user = Utils.getCurrentUser();
-		var username = user.username;
+	Server.generatePublicKeyAndCertificate = function(passphrase){
+		var username = Utils.getCurrentUser().username;
 		var keyAndCertificate;
+		var errorMessage;
 		$.ajax({
 			cache: false,
 			type: "POST",
@@ -226,29 +239,27 @@ function(require,Utils){
 			data: passphrase,
 			contentType: "text/plain",
 			beforeSend: function(xhr){
-				Utils.unhideElement(generatingSign);
+				Utils.showProgressbarModal(Messages.generateNewKeyAndCertificate);
 			},
 			success: function(data,status){
 				keyAndCertificate = data;
-				successFunction();
-				//console.log(data);
-				//console.log(status);
 			},
 			error: function(xhl,status){
-				//message = Utils.createErrorMessage();
+				errorMessage = xhl.responseText;
 				console.log(xhl.responseText);
 				console.log(status);
 			},
 			complete: function(){
-				Utils.hideElement(generatingSign);
+				Utils.hideProgressbarModal();
 			}
 		});
 		
-		return keyAndCertificate;
+		return [keyAndCertificate,errorMessage];
 	};
 	
-	Server.invalidateCookie = function(){
-		var username = Utils.getCurrentUser().username;
+	Server.invalidateCookie = function(username){
+		if(!username)username = Utils.getCurrentUser().username;
+		isSuccessful = false;
 		$.ajax({
 			cache: false,
 			type: "DELETE",
@@ -258,8 +269,7 @@ function(require,Utils){
 
 			},
 			success: function(answer,status,xhr){
-				//console.log(":SUCCESS" + answer) ;
-				require('mainPage').signOut();
+				isSuccessful = true;
 			},
 			error: function(xhr,status,thrown){
 				console.log("Response " + xhr.responseText);
@@ -267,9 +277,10 @@ function(require,Utils){
 				console.log(thrown);
 			},
 			complete: function(){
-				//console.log("ENDE COOKIE INVALIDATION");
 			},
 		});
+		
+		return isSuccessful;
 	};
 	
 	Server.deletePublicKey = function(keyDescription){
@@ -297,7 +308,7 @@ function(require,Utils){
 				200: function(){
 					var updatedUser = Server.getUser(username);
 					Utils.setCurrentUser(updatedUser);
-					message = Utils.createSuccessMessage("Public key has been successfully deleted");
+					message = Utils.createSuccessMessage("Public key " + keyDescription+" has been successfully removed.");
 				}
 			},
 			complete: function(){

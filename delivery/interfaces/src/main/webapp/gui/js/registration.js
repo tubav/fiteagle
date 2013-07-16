@@ -252,7 +252,10 @@ function(Validation, Utils, MainPage,Messages){
 						  );
 						  
 			
-			var errorMessage = Server.registerUser(newUserInfo,this._getUsername());
+			var errorMessage = Server.registerUser(
+											newUserInfo,
+											this._getUsername(),
+											showNewUserProfile);
 			
 			if(errorMessage){
 					setTimeout(function(){
@@ -260,6 +263,12 @@ function(Validation, Utils, MainPage,Messages){
 					},1000);
 			}
 		}
+	};
+	
+	showNewUserProfile = function(){
+		console.log('clicking on !!!');
+		console.log($('#manageProfileMenu'));
+		$('#manageProfileMenu').click();
 	};
 
 	Registration.initRegistrationForm = function(){

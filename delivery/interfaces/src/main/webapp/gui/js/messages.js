@@ -34,8 +34,6 @@ define([],function(){
 	
 	Messages.emptyConfirmPassword = "Confirm password is empty." ;
 	
-	Messages.emptyKeyDescription = "Public key description is empty.";
-	
 
 	
 	
@@ -58,10 +56,32 @@ define([],function(){
 	Messages.userNotFound = "Current user isn't found.";
 	
 	Messages.wrongPasswordKey = "Wrong password.";
+		
 	
-	Messages.wrongKeyDescription = "Wrong key description.";	
 	
+/*_____________ MAIN PAGE FORM MESSAGES _____________________________ */
+
 	Messages.noPublicKeys = "No public keys are available";
+
+	Messages.emptyKeyDescription = "Public key description is empty.";
+
+	Messages.keyDescription = "Please enter a description for the new pubic key.";
+	
+	Messages.wrongKeyDescription = "The given key description is wrong."
+	
+	Messages.fileSelectionNotSupported = "Upload New User Keys is disabled because file selection is not supported on your system."
+	
+	Messages.failToLoadFile = "Failed to load file";
+	
+	Messages.generateCertificate = "Please wait while new certificate for the specified public key is being generated.";
+	
+	Messages.emptyPassphrase = "The pass-phrase is empty.";
+	
+	Messages.wrongPassphrase = "The given pass-phrase is invalid"
+	
+	Messages.passphraseHint = "Please enter a pass-phrase for new public key and certificate."
+	
+	Messages.generateNewKeyAndCertificate = "Please wait until new key pair and certificate are being generated."
 	
 	return Messages;
 

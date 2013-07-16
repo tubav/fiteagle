@@ -1,4 +1,4 @@
-define(['require','validation','registration','utils','messages'],
+define(['require','validation','registration','utils','messages','history','ajaxify','prettyCheckable'],
 
 /** @lends Login */ 
 function(require,Validation,Registration,Utils,Messages){
@@ -15,9 +15,8 @@ function(require,Validation,Registration,Utils,Messages){
 	Login = {}; 
 	
 	
-	
 	Login.initLoginPage = function(){
-		disableFederatedLinks();
+		Utils.unhideBody();
 		initOnWindowResizeEvent();
 		initNavigationMenu();
 		initRegisterLink();
@@ -25,9 +24,43 @@ function(require,Validation,Registration,Utils,Messages){
 		initSignInBtn();
 		Registration.initRegistrationForm();	
 		Utils.showCurrentTab();
-		
 		initOnWindowResizeEvent();
 		
+	};
+	
+	initHistory  = function(){
+		History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+			var State = History.getState(); // Note: We are using History.getState() instead of event.state
+			console.log('STATE:' + State)
+		});
+		
+		$('#registrationTab').on('click',function(){
+			// Change our States
+			console.log("SFFdsfsdf");
+			History.pushState({state:1}, "State 1", "/here"); // logs {state:1}, "State 1", "?state=1"
+		});
+	};
+	
+	adjustBtnHeight = function(){
+		$(function(){
+			Utils.unhideBody();
+					var max = 0;
+		var btns = $('#fancyLoginList').find('button');
+		btns.each(function(){
+			//console.log($(this));
+			var btnH = $(this).outerHeight();
+			//console.log(btnH);
+			if(max < btnH ) max = btnH;
+		});
+		
+		});
+
+	};
+	
+	initHistory = function(){
+		console.log("HERE");
+			// Bind to StateChange Event
+
 	};
 	
 	setCurrentTab = function(currentTab){
@@ -135,8 +168,9 @@ function(require,Validation,Registration,Utils,Messages){
 		
 		if(this.checkUsername() & Login.checkPassword()){
 				//console.log("email and password are correct");
-				var rememeberMe = $("#rememberMeCheckbox").is(":checked");			
-				Server.loginUser(Login._getUsername(),Login._getPassword(),rememberMe);
+				var rememberMe = $("#rememberMeCheckbox").is(":checked");			
+				var errorMessage = Server.loginUser(Login._getUsername(),Login._getPassword(),rememberMe);
+				if(errorMessage)Utils.addErrorMessageTo("#loginErrors",errorMessage);
 				
 		}
 	};
@@ -155,25 +189,24 @@ function(require,Validation,Registration,Utils,Messages){
 	}
 	
 	initLoginForm = function(){
-		Utils.unhideBody();
-		Utils.changeFocusOnEnterClick("#username","#password");
-		Utils.addOnEnterClickEvent("#password","#signIn");
-		$('#main').scrollTop(0);
-		$('#username').focus();
-		
-		$(function() { // when the DOM is ready...
-			//  Move the window's scrollTop to the offset position of #now
-			$(window).scrollTop($('#header').offset().top);
+		$('#fiteagleLoginBtn').on('click',function(){
+			window.setTimeout(function(){
+				Utils.changeFocusOnEnterClick("#username","#password");
+				Utils.addOnEnterClickEvent("#password","#signIn");
+				$('#username').focus();					
+			},200);
 		});
-
+		initRememberMeCheckbox();
 		initLoginFormHints();
-		
-		$('#main').addClass('row-fluid');
 	};
 	
+	initRememberMeCheckbox = function(){
+		$('#rememberMeCheckbox').prettyCheckable({color:'yellow'});
+	};	
+	
 	initLoginFormHints = function(){
-		var position;
-		(Utils.isSmallScreen()) ? position = "top" : position = "right";			
+		var position ="top";
+		//(Utils.isSmallScreen()) ? position = "top" : position = "right";			
 		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
 		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
 	};
@@ -224,6 +257,13 @@ function(require,Validation,Registration,Utils,Messages){
 			}
 		}
 		return username;
+	};
+	
+	initHistory = function(){
+		
+		$('#registrationTab').on('click',function(){
+			
+		});
 	};
 	
 	return Login;
