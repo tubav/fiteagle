@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 @Path("/v1/status")
 public class StatusPresenter {
@@ -30,6 +31,17 @@ public class StatusPresenter {
     dummyList.add(fiteagle);
     return dummyList;
     
+  }
+  
+  @GET
+  @Path("{id}")
+  @Produces("application/json")
+  public TestbedStatus getTestBedStatusById(@PathParam("id") String dummy){
+	  TestbedStatus status = new TestbedStatus();
+	  status.setId("dummy2");
+	  status.setStatus("up and away");
+	  status.setLastCheck(Calendar.getInstance().getTime());
+	  return status;
   }
   
 }

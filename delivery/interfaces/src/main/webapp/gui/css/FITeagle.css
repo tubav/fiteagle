@@ -299,3 +299,10 @@ input.search-query{height:24px !important;}
 @media (max-width: 480px) { 
 
 }
+
+#statusTable{
+}
+#statusTable > tbody > tr > td > img.status {
+	width: 40%;
+	height: 60%;
+}
