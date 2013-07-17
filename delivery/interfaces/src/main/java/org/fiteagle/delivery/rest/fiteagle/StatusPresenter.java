@@ -27,6 +27,13 @@ public class StatusPresenter {
     fiteagle.setStatus("down");
     fiteagle.setLastCheck(Calendar.getInstance().getTime());
     
+    TestbedStatus partiallyUp = new TestbedStatus();
+    partiallyUp.setId("Dummy3");
+    partiallyUp.setStatus("partially");
+    partiallyUp.setLastCheck(Calendar.getInstance().getTime());
+    
+  
+    dummyList.add(partiallyUp);
     dummyList.add(fuseco);
     dummyList.add(fiteagle);
     return dummyList;
@@ -37,11 +44,22 @@ public class StatusPresenter {
   @Path("{id}")
   @Produces("application/json")
   public TestbedStatus getTestBedStatusById(@PathParam("id") String dummy){
-	  TestbedStatus status = new TestbedStatus();
-	  status.setId("dummy2");
-	  status.setStatus("up and away");
-	  status.setLastCheck(Calendar.getInstance().getTime());
-	  return status;
+	  TestbedStatus partiallyUp = new TestbedStatus();
+	    partiallyUp.setId("Dummy3");
+	    partiallyUp.setStatus("partially");
+	    partiallyUp.setLastCheck(Calendar.getInstance().getTime());
+	    TestbedStatus fuseco = new TestbedStatus();
+	    fuseco.setId("fuseco");
+	    fuseco.setStatus("up");
+	    fuseco.setLastCheck(Calendar.getInstance().getTime());
+	    
+	    TestbedStatus fiteagle = new TestbedStatus();
+	    fiteagle.setId("fiteagle local");
+	    fiteagle.setStatus("down");
+	    fiteagle.setLastCheck(Calendar.getInstance().getTime());
+	    partiallyUp.addComponent(fiteagle);
+	    partiallyUp.addComponent(fuseco);
+	  return partiallyUp;
   }
   
 }
