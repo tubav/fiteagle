@@ -29,7 +29,7 @@ public class ServletConfig extends GuiceServletContextListener {
         
          @Override
          protected void configureServlets() {            
-           
+            
             bind(UserPresenter.class).in(Scopes.SINGLETON);
             bind(UserManagerBoundary.class).to(UserManager.class).in(Scopes.SINGLETON);
             filter("/api/v1/user/*").through(UserAuthenticationFilter.getInstance());

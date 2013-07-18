@@ -6,6 +6,6 @@ import java.util.List;
 import orgt.fiteagle.core.monitoring.StatusTable;
 
 public interface ResourceMonitoringBoundary {
-	public Collection<StatusTable> getMonitoringData();
 
+	public Collection<StatusTable> getMonitoringData();
 }
