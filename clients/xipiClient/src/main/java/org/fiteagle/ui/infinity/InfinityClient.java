@@ -1,6 +1,9 @@
 package org.fiteagle.ui.infinity;
 
+import java.util.ArrayList;
+
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
+import org.fiteagle.ui.infinity.model.InfinityValueID;
 
 public abstract class InfinityClient {
 	
@@ -20,5 +23,6 @@ public abstract class InfinityClient {
 	}
 
 	abstract InfinityInfrastructure getInfrastructuresById(Number i);
+	abstract ArrayList<InfinityValueID> searchInfrastructures();
 
 }

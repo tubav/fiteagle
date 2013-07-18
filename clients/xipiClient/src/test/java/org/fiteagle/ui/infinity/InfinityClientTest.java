@@ -2,10 +2,12 @@ package org.fiteagle.ui.infinity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import junit.framework.Assert;
 
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
+import org.fiteagle.ui.infinity.model.InfinityValueID;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,5 +28,11 @@ public class InfinityClientTest {
 		Assert.assertEquals(900, result.getId());
 		Assert.assertEquals("Autonomous Province of Trento",
 				result.getOrganization());
+	}
+	
+	@Test
+	public void testSearchInfrastructures() {
+		ArrayList<InfinityValueID> result = this.client.searchInfrastructures();
+		Assert.assertNotNull(result);
 	}
 }

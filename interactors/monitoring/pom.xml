@@ -21,6 +21,12 @@
 	</repositories>
 
 	<dependencies>
+	
+	<dependency>
+      <groupId>org.fiteagle.ui.unfinity</groupId>
+	  <artifactId>xipiClient</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 
 		<dependency>
 			<groupId>org.fiteagle</groupId>

@@ -1,10 +1,12 @@
 package org.fiteagle.ui.infinity;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 import javax.ws.rs.core.MediaType;
 
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
+import org.fiteagle.ui.infinity.model.InfinityValueID;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -51,5 +53,11 @@ public class InfinityClientWeb extends InfinityClient {
 				"com.liferay.infinity.service.InfrastructureServiceUtil");
 		queryParams.add("serviceMethodName", methodName);
 		return queryParams;
+	}
+
+	@Override
+	ArrayList<InfinityValueID> searchInfrastructures() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

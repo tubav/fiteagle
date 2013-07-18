@@ -1,0 +1,72 @@
+[
+   {
+      "id":"212",
+      "other":null,
+      "name":null,
+      "value":"Application Service Delivery",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"242",
+      "other":null,
+      "name":null,
+      "value":"Backbone Network",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"277",
+      "other":null,
+      "name":null,
+      "value":"Cloud Network",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"194",
+      "other":null,
+      "name":null,
+      "value":"Customers Device",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"204",
+      "other":null,
+      "name":null,
+      "value":"Data Context Management",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"218",
+      "other":null,
+      "name":null,
+      "value":"Mobile Network",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"2377",
+      "other":null,
+      "name":null,
+      "value":"Satellite Network",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"176",
+      "other":null,
+      "name":null,
+      "value":"Sensor Network",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"230",
+      "other":null,
+      "name":null,
+      "value":"WIFI Network",
+      "javaClass":"org.infinity.model.ValueID"
+   },
+   {
+      "id":"264",
+      "other":null,
+      "name":null,
+      "value":"Wired Access Network",
+      "javaClass":"org.infinity.model.ValueID"
+   }
+]

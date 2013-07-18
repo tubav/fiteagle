@@ -1,11 +1,15 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
+import java.util.Collection;
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.fiteagle.interactors.api.ConfigurationManagerBoundary;
 import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
+import orgt.fiteagle.core.monitoring.StatusTable;
 
 import com.google.inject.Inject;
 
@@ -56,7 +60,7 @@ public class ResourceMonitoringPresenter {
 	@Path("/data")
 	@Produces("application/xml")
 	public String getResourceDefinition() {
-		String monitoringData = monitor.getMonitoringData();
+		Collection<StatusTable> monitoringData = monitor.getMonitoringData();
 		//TODO: parse monitoring data, add to the HTML
 		return resourceInformation;
 	}
