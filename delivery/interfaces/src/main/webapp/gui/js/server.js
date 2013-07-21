@@ -4,6 +4,14 @@ define(['require','utils'],
  */ 
 function(require,Utils){
 	
+	/** 
+     * Server class
+     * The Server class contains functions needed for the remote communication with the FITeagle server. 
+	 * Such as user profile, public key and certificate management. 
+     * @class
+     * @constructor
+     * @return Server object
+     */
 	Server = {};
 	
 		
@@ -40,12 +48,19 @@ function(require,Utils){
 				console.log(thrown);
 			},
 			complete: function(){
-			setTimeout(function(){
-				signInBtn.show();
-				Utils.hideElement('#loginForm .progress');
-			},100);
-
+				setTimeout(function(){
+					signInBtn.show();
+					Utils.hideElement('#loginForm .progress');
+				},100);
 			},
+			statusCode:{				
+				404: function(){
+					msg = Messages.userNotFound;	
+				},
+				401 : function(){
+					msg = Messages.wrongPasswordKey;
+				}
+			}
 		});
 		
 		return msg;
@@ -118,16 +133,18 @@ function(require,Utils){
 		return userFromServer;
 	};
 	
-	Server.updateUser = function(userToUpdate, loadingSign){
+	Server.updateUser = function(updateInformation){
 		//console.log("credentials" + Utils.getCredentials());
 		console.log("Updating user on the server...");
-		var data = JSON.stringify(userToUpdate);
+		var data = JSON.stringify(updateInformation);
+		var user = Utils.getCurrentUser(); 
+		console.log(user);
 		var message;
 		$.ajax({
 			cache: false,
 			type: "POST",
 			async: false,
-			url: "/api/v1/user/"+userToUpdate.username,
+			url: "/api/v1/user/"+user.username,
 			data: data,
 			contentType: "application/json",
 			dataType: "json",
@@ -144,14 +161,10 @@ function(require,Utils){
 			statusCode:{			
 				200: function(){
 					var msg = "User has been successfully updated on the server";
-					Utils.setCurrentUser(Server.getUser(userToUpdate.username));
+					Utils.setCurrentUser(Server.getUser(user.username));
 					message = Utils.createSuccessMessage(msg);
+					$('#saveProfileInfo').addClass('disabled');
 				}
-			},
-			complete: function(){
-				window.setTimeout(function(){
-					Utils.hideElement(loadingSign);
-				},200);
 			}
 		});
 		
@@ -173,6 +186,7 @@ function(require,Utils){
 			contentType: "application/json",
 			dataType: "json",
 			beforeSend: function(xhr){
+				Utils.unhideElement(uploadingSign);
 			},
 			success: function(data,status){
 				console.log(data);
@@ -186,16 +200,22 @@ function(require,Utils){
 				200: function(){
 					var updatedUser = Server.getUser(username);
 					Utils.setCurrentUser(updatedUser);
-					message = Utils.createSuccessMessage("New public key has been successfully uploaded");
+					Utils.showSuccessModal(
+						Utils.createSuccessMessage("New public key with description: "
+																+publicKey.description+
+															" has been successfully uploaded")
+					);
+					return ;
+				},
+				
+				409 : function(){
+						return Utils.createErrorMessage(message);
 				}
 			},
 			complete: function(){
 				Utils.hideElement(uploadingSign);
 			}
-		});
-		
-		return message;
-		
+		});		
 	};
 	
 	Server.generateCertificateForPiblicKey = function(publicKeyDescription){
@@ -208,7 +228,7 @@ function(require,Utils){
 			async: false,
 			url : "/api/v1/user/"+username+"/pubkey/"+publicKeyDescription+"/certificate",
 			beforeSend: function(xhr){
-				Utils.showProgressbarModal(Messages.generateCertificate);
+				//Utils.showProgressbarModal(Messages.generateCertificate);
 			},
 			success: function(cert,status,xhr){
 				certificat = cert;
@@ -220,7 +240,7 @@ function(require,Utils){
 				console.log(thrown);
 			},
 			complete: function(){
-					Utils.hideProgressbarModal(Messages.generateCertificate);
+				//Utils.hideProgressbarModal(Messages.generateCertificate);
 			}
 		});
 
@@ -239,7 +259,7 @@ function(require,Utils){
 			data: passphrase,
 			contentType: "text/plain",
 			beforeSend: function(xhr){
-				Utils.showProgressbarModal(Messages.generateNewKeyAndCertificate);
+				//Utils.showProgressbarModal(Messages.generateNewKeyAndCertificate);
 			},
 			success: function(data,status){
 				keyAndCertificate = data;
@@ -250,7 +270,7 @@ function(require,Utils){
 				console.log(status);
 			},
 			complete: function(){
-				Utils.hideProgressbarModal();
+				//Utils.hideProgressbarModal();
 			}
 		});
 		

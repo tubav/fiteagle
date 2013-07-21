@@ -141,7 +141,7 @@
 								<div class="row-fluid" align="center">
 										<a class="span10 underlined" href="#deleteUserProfileModal" role="button" data-toggle="modal">delete current user profile</a>
 								</div>
-								<button id="saveProfileInfo" class="btn btn-inverse span2 nomargin"><i class="icon-save"></i>Save</button>
+								<button id="saveProfileInfo" class="btn btn-inverse disabled span2 nomargin"><i class="icon-save"></i>Save</button>
 								<i id="saveProfileLoadingSign" class="icon-spin icon-spinner icon-2x hidden"></i>
 							</div>
 						</div>
@@ -159,12 +159,11 @@
 								<p class="centered">Are you sure that you want to delete your user profile ?</p>
 							  </div>
 							  <div class="modal-footer" >
-								 <div class="row-fluid">
-									<button id='deleteUserProfileBtn' class="btn btn-danger span2 offset3">
+								 <div class="row-fluid centered">
+									<button id='deleteUserProfileBtn' class="btn btn-danger btn-large">
 										Yes
 									</button>
-									<span class="span1"></span>
-									<button class="btn btn-success span2" data-dismiss="modal" aria-hidden="true">
+									<button class="btn btn-success btn-large left40" data-dismiss="modal" aria-hidden="true">
 										No
 									</button>
 								</div>
@@ -207,10 +206,13 @@
 										</div>
 									</div>
 									<div class="row-fluid">
-										<button id="selectFromFile" class="span3 btn btn-inverse"><i class="icon-file-text"></i>Select from File</button>
+										<button id="selectFromFile" class="span3 btn btn-inverse">
+											<i class="icon-file-text"></i>
+											Select from File
+										</button>
 										<input type="file" class="hidden" id="selectFromFileInput"></input>
 									</div>
-									<div class="row-fluid top20">
+									<div id="currentFileContainer" class="row-fluid top20">
 										<div id="currentFileInfo" class="row-fluid">
 											<span id="currentFileName" class="alert alert-info span3 centered">No file selected</span>
 										</div>
@@ -218,13 +220,14 @@
 											<span class="span2"></span>
 											<div id="publicKeyFromFile" class="span8"></div>
 										</div>
+										<div class="row-fluid">
+											<button id="uploadNewPublicKey" class="btn btn-inverse span3 hidden">
+												<i class="icon-circle-arrow-up"></i> Upload
+											</button>
+											<i id="uploadingSign" class="icon-spin icon-spinner icon-2x hidden"></i>
+										</div>
 									</div>		
-									<div class="row-fluid">
-										<button id="uploadNewPublicKey" class="btn btn-inverse span3 hidden">
-											<i class="icon-circle-arrow-up"></i> Upload
-										</button>
-										<i id="uploadingSign" class="icon-spin icon-spinner icon-2x hidden"></i>
-									</div>
+
 								</div>	
 							</div>
 						</div>

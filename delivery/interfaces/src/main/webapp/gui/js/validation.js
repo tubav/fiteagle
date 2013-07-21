@@ -57,7 +57,7 @@ function(){
 	};
 	
 	
-	Validation._isAffiliation = function(){
+	Validation._isAffiliation = function(affiliation){
 		return true; //TODO
 	};
 	
@@ -65,7 +65,20 @@ function(){
 		return true;
 	};
 	
-	Validation._isPassphrase = function(){
+	Validation._isPassphrase = function(phrase){
+		if(phrase.length > 3) return true;
+		return false;
+	};
+	
+	Validation._isValidPublicKeyFileExtension = function(ext){
+		if(ext === 'pub') return true;
+		return false;
+	};
+	
+	Validation._isValidPublicKeyFileSize = function(size){
+		var minSize = 100;
+		var maxSize = 400;
+		if( !(minSize < size&&size < maxSize)) return false;
 		return true;
 	};
 

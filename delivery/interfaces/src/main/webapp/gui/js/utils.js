@@ -4,12 +4,19 @@ define([],
  */ 
 function(){ 
 	
+	/** 
+     * Utils class
+     * The Utils class contains common used functions in order to ease the programming experience. 
+     * @class
+     * @constructor
+     * @return Utils object
+     */
 	Utils = {};
 	
 	/**
 	* Adds on "enter" button click event for the given element in order to trigger "on click event" for the other specified element
-	* @param {JQuery Selector} selectorOn - selector of an element to apply on "enter" button click event
-	* @param {JQuery Selector} triggerOn - selector of an element to trigger "on click" event
+	* @param {String} selectorOn - selector of an element to apply on "enter" button click event
+	* @param {String} triggerOn - selector of an element to trigger "on click" event
 	**/
 	Utils.addOnEnterClickEvent = function (selectorOn, triggerOn){
 		$(selectorOn).keyup(function(event){
@@ -23,8 +30,8 @@ function(){
 
 	/**
 	* Changes focus after on "enter" button click event to the other specified element
-	* @param {JQuery Selector} selectorFrom - selector of an element to apply on "enter" button click event
-	* @param {JQuery Selector} selectorTo - selector of an element to set focus to
+	* @param {String} selectorFrom - selector of an element to apply on "enter" button click event
+	* @param {String} selectorTo - selector of an element to set focus to
 	**/
 	Utils.changeFocusOnEnterClick = function(selectorFrom, selectorTo){
 		$(selectorFrom).keyup(function(event){
@@ -36,8 +43,8 @@ function(){
 
 	/**
 	* Adds or removes .invalid class to/from the element specified by the given selector. The ".invalid" class can be used together with appropriate CSS in order to highlight the element.
-	* @param {JQuery Selector} selector - selector of an element to add/remove .invalid class
-	* @param {JQuery Selector} bool - boolean value. If the value is true then ".invalid" class is added otherwise it is removed.
+	* @param {String} selector - selector of an element to add/remove .invalid class
+	* @param {String} bool - boolean value. If the value is true then ".invalid" class is added otherwise it is removed.
 	**/
 	Utils.highlightField =function(selector,bool){
 		if(!bool){
@@ -110,7 +117,7 @@ function(){
 	
 	Utils.updateInfoPanel = function(){
 		user = Utils.getCurrentUser();
-		console.log('current user is set to: '+ Utils.userToString(user));
+		//console.log('current user is set to: '+ Utils.userToString(user));
 		$("#userName").text(user.firstName +" " + user.lastName);
 	};
 
@@ -246,20 +253,45 @@ function(){
 	
 	initProgressbarModal = function(){
 		$('#progressBarModal').remove();
-		var  modal = $('<div>')
-			.attr('id','progressBarModal')
-			.addClass('modal hide fade')
-			.attr('tabindex','-1')
-			.attr('role','dialog')
-			.attr('aria-labelledby','progressBarLabel')
-			.attr('aria-hidden','true');
+		var modal = createModal('progressBarModal');
 		var modalBody = $('<div>').addClass('modal-body')
 					.append('<h4 class="centered progressMessage"></h4>');
-
 		Utils.addProgressbarTo(modalBody);
 		modal.append(modalBody);
 		$('body').append(modal);
 	};
+	
+	createModal = function(id){
+		var  modal = $('<div>')
+			.attr('id',id)
+			.addClass('modal hide fade')
+			.attr('tabindex','-1')
+			.attr('role','dialog')
+			.attr('aria-labelledby','progressBarLabel')
+			.attr('aria-hidden','true');		
+		return modal;
+	}
+	
+	Utils.showSuccessModal = function(successMsg){
+		$('#successModal').remove();
+		var modal = createModal('successModal');
+		var okBtn  = $('<button>').addClass('btn btn-inverse btn-large')
+						.attr('data-dismiss','modal')
+						.attr('aria-hidden','true')
+						.append('<i class="icon-ok"></i>OK');
+		var modalBody = $('<div>').addClass('modal-body')
+					.append(successMsg);	
+					
+		var modalFooter = $('<div>').addClass('modal-footer centered')
+						.append(okBtn);
+						
+		modal.append(modalBody).append(modalFooter);
+		$('body').append(modal);	
+		$('#successModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
 	
 	Utils.addProgressbarTo = function(object){
 		object.find('.progress').remove();
@@ -271,8 +303,8 @@ function(){
 		object.append(progressBar);
 	};
 	
-	Utils.hideProgressbarModal = function(){
-		$('#progressBarModal').modal('hide');
+	Utils.hideModal = function(selector){
+		$(selector).modal('hide');
 	};
 	
 	Utils.waitForFinalEvent = function () {

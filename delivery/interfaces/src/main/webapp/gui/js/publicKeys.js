@@ -4,6 +4,13 @@ define(['require','utils','server','validation','messages'],
  */ 
 function(require,Utils,Server,Validation,Messages){
 	
+	/** 
+     * PublicKeys class
+     * The PublicKey class contains functions required for the user public key management.
+     * @class
+     * @constructor
+     * @return PublicKeys object
+     */
 	PublicKeys = {};
 	
 	PublicKeys.initForm = function(){
@@ -12,27 +19,39 @@ function(require,Utils,Server,Validation,Messages){
 	};
 	
 	initNewUserKeysForm = function(){
+		checkFileSelectSupport();
 		initKeyDescriptionField();
-		
+		initUploadPublicKeyBtn();
+	};
+	
+	initUploadPublicKeyBtn = function(){
+		$('#uploadNewPublicKey').on('click',function(){
+			clearPublicKeysErrors();
+			if(checkKeyDescription()){
+				clearPublicKeysErrors();
+				var description = $("#inputKeyDescription").val();
+				var publicKeyString = $('#publicKeyFromFile textarea').val();
+				publicKey = createNewPublicKeyObject(description,publicKeyString);
+				var errorMessage = Server.uploadNewPublicKey(publicKey, "#uploadingSing");
+				if(errorMessage)
+					$('#newUserKeyErrors').append(errorMessage);
+				updatePublicKeyRelatedForms();
+			}
+		});
+	};
+	
+	checkFileSelectSupport = function(){
 		if(isFileSelectAvailable()){
 			initFileSelectBtn();
 		}else{
 			disableUploadNewUserKeysForm();
 		}
-		
-		$('#uploadNewPublicKey').on('click',function(){
-			if(checkKeyDescription()){
-				var description = $("#inputKeyDescription").val();
-				var publicKeyString = $('#publicKeyFromFile textarea').val();
-				publicKey = createNewPublicKeyObject(description,publicKeyString);
-				var msg = Server.uploadNewPublicKey(publicKey, "#uploadingSing");
-				clearPublicKeysErrors();
-				Utils.addErrorMessageTo('#newUserKeyErrors',msg);
-				PublicKeys.initForm();
-				require('certificates').initForm();
-			}
-
-		});
+	};
+	
+	updatePublicKeyRelatedForms = function(){	
+		initExistingPublicKeysForm();
+		require('certificates').initForm();
+		resetSelectedFileInfo();
 	};
 	
 	disableUploadNewUserKeysForm = function(){
@@ -69,14 +88,16 @@ function(require,Utils,Server,Validation,Messages){
 
 	createNewPublicKeyObject = function(description,keyString){
 		var publicKey = new Object();
-		publicKey.description = description;
 		publicKey.publicKeyString = keyString;
+		publicKey.description = description;
+		console.log(JSON.stringify(publicKey));
 		return publicKey;
 	};
 	
 	
 	initFileSelectBtn = function(){
 		$('#selectFromFile').on('click',function(){
+			resetSelectedFileInfo();
 			$('#selectFromFileInput').click();
 		});
 		$('#selectFromFileInput').on('change',function(event){
@@ -143,8 +164,13 @@ function(require,Utils,Server,Validation,Messages){
 							
 		deleteKey.on('click',function(event){
 			var msg = Server.deletePublicKey(publicKey.description);
+			isSuccessMsg = msg.find('span').hasClass('alert-success');
 			clearPublicKeysErrors();
-			$('#existingUserKeyErrors').append(msg);
+			(isSuccessMsg)? 
+						Utils.showSuccessModal(msg)
+							:
+						$('#existingUserKeyErrors').append(msg);
+	
 			PublicKeys.initForm();
 			require('certificates').initForm();
 		});					
@@ -183,46 +209,69 @@ function(require,Utils,Server,Validation,Messages){
 	};
 	
 	handleFileSelect = function(evt){
-	
-		//console.log("File handling");
-		
-		var f = evt.target.files[0]; // FileList object
-		
-		// files is a FileList of File objects. List some properties.
-		var output = [];
-		
-		var fileExt = f.name.split('.').pop();
-		
+	    evt.stopPropagation();
+		evt.preventDefault();
+		var f = evt.target.files[0]; // FileList object	
+		var output;			
 		if (!f) {
 			Utils.setErrorMessageTo("#newUserKeyErrors",Messages.failToLoadFile);
-		}else {
-			
-			checkFileExtension()
-				
-			var reader = new FileReader();
-			reader.readAsText(f);
-			reader.onload = function(e){
-				contents = e.target.result;
-				setPublicKeyFromFile(contents);
-			};
-			output.push('<strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-				  f.size, ' bytes, last modified: ',
-				  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
+		}else {			
+			var checked = checkPublicKeyFile(f);
+			if(checked)output = readFile(f); // correct file selected
 		}
-		
+	};
+	
+	readFile = function(file){
+		var reader = new FileReader();
+		reader.readAsText(file);
+		reader.onload = function(e){
+			contents = e.target.result;
+			setPublicKeyFromFile(contents);
+		};		  
+		showSelectedFileInfo(file);		
+	};
+	
+	showSelectedFileInfo = function(file){
+		// files is a FileList of File objects. List some properties.
+		var output = [];
+		output.push('<strong>', escape(file.name), '</strong> (', file.type || 'n/a', ') - ',
+			file.size, ' bytes, last modified: ',
+			file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() : 'n/a');
+			
 		if(output.length > 0){
 			$('#currentFileInfo').html(
 				'<span class="alert alert-info centered span12">Currently selected: '+ output.join('')+'</span>'
 			);
 			$('#uploadNewPublicKey').removeClass('hidden');
-		}else{
-			$('#currentFileName').html('No file selected.');
-			$('#uploadNewPublicKey').addClass('hidden');
 		}
 	};
 	
-	checkFileExtension = function(){
-		console.log("TODO CHECK FILE EXTENSION");
+	resetSelectedFileInfo = function(){
+		$('#currentFileInfo').children().remove();
+		$('#currentFileInfo').append('<span id="currentFileName" class="alert alert-info span3 centered">No file selected</span>');
+		$('#publicKeyFromFile').children().remove();
+		$('#currentFileName').html('No file selected.');
+		$('#uploadNewPublicKey').addClass('hidden');
+	}
+	
+	checkPublicKeyFile = function(f){
+		Utils.clearErrorMessagesFrom('#newUserKeyErrors');
+		var isValid = checkPublicKeyFileExtension(f) && checkPublicKeyFileSize(f);
+		return isValid;
+	};
+	
+	checkPublicKeyFileExtension = function(file){	
+		var fileExt = file.name.split('.').pop();
+		var isValid = Validation._isValidPublicKeyFileExtension(fileExt);
+		if(!isValid)Utils.addErrorMessageTo('#newUserKeyErrors',Messages.wrongPublicKeyFileExt);
+		return isValid;
+	};
+	
+	checkPublicKeyFileSize = function(file){
+		var fileSize = file.size;
+		var isValid = Validation._isValidPublicKeyFileSize(fileSize);
+		if(!isValid)Utils.addErrorMessageTo('#newUserKeyErrors',Messages.wrongPublicKeyFileSize);
+		return isValid;
 	};
   
   	setPublicKeyFromFile = function(text){

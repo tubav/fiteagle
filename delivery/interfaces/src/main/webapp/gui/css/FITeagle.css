@@ -89,11 +89,13 @@ h4{margin-bottom:5px !important}
 i[class^=icon-]{padding-right:10px;}
 
 .left20{margin-left: 20px}
+.left40{margin-left: 40px !important}
 .top10{margin-top:10px}
 .top20{margin-top:20px}
 .padding3pc{padding:0 3% 0 3%}
 .margin3pc{margin: 0 3% 0 3%}
 #loginErrors .errorMessage{margin-bottom: 5px}
+.modal-body .errorMessage{margin-bottom: 0px}
 .errorMessage{margin-bottom:20px}
 .nopadding{padding:0 !important;}
 .nomargin{margin:0 !important}

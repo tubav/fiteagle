@@ -1,22 +1,26 @@
 define(['validation','utils','messages','server'],
-/**
- * @lends Registration
- */ 
 function(Validation, Utils,Messages,Server){
 
+	/** 
+     * Certificates class.
+     * The Certificates class contains functions for existing public key form initialisation 
+	 * as well as for certificate generation.
+     * @class
+     * @constructor
+     * @return Certificates object
+     */
 	Certificates = {}
 	
 
-	
 	Certificates.initForm = function(){
 		
-			initPublicKeySelect();	
-			initGenerateCertificatesBtn();
+		initPublicKeySelect();	
+		initGenerateCertificatesBtn();
+		initPassphraseField();
+		initGenerateKeyAndCertificateBtn();
+		$(window).bind('resizeEnd',function(){
 			initPassphraseField();
-			initGenerateKeyAndCertificateBtn();
-			$(window).bind('resizeEnd',function(){
-				initPassphraseField();
-			});
+		});
 			
 	};
 	
@@ -42,7 +46,7 @@ function(Validation, Utils,Messages,Server){
 	
 	initGenerateKeyAndCertificateBtn = function(){
 		$('#genKeyAndCertificate').on('click',function(){
-			
+			Utils.clearErrorMessagesFrom('#newKeypairAndCertificateErrors');
 			var passphrase = $('#inputPassphrase').val();
 			var isPassphraseValid = Utils.checkInputField(
 										"#inputPassphrase",

@@ -114,11 +114,11 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			e.preventDefault();
 			//console.log("signOut clicked");		
 			var isCookieDeleted = Server.invalidateCookie();
-			if(isCookieDeleted) signOut();
+			if(isCookieDeleted) Main.signOut();
 		});
 	};
 	
-	signOut = function(){
+	Main.signOut = function(){
 		Utils.resetUser();
 		require('loginPage').load();
 	};

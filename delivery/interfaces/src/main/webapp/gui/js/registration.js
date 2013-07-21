@@ -1,9 +1,13 @@
 define(['validation','utils','mainPage','messages'],
-/**
- * @lends Registration
- */ 
 function(Validation, Utils, MainPage,Messages){
 	
+	/** 
+     * Registration class
+     * The Registration class contains functions for user registration form initialisation. 
+     * @class
+     * @constructor
+     * @return Registration object
+     */
 	Registration = {};
 	
 	/**

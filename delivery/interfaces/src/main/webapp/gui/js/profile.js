@@ -1,17 +1,65 @@
-define(['require','utils','server'],
-/**
- * @lends MainPage
- */ 
+define(['require','utils','server'], 
 function(require,Utils,Server){
 	
+	/** 
+     * Profile class.
+     * The Profile class contains functions for user profile form initialisation and management
+     * @class
+     * @constructor
+     * @return Profile object
+     */
 	Profile = {};
 	
 	Profile.initForm = function(){
-		Utils.clearErrorMessagesFrom("#manageProfile .errorMessages");
-		setProfileFields(Utils.getCurrentUser());		
+		initProfileFields();		
 		initSaveProfileInfoBtn();
 		initDeleteUserProfileBtn();
+
+	};
+	
+	initProfileFields = function(){
+		Utils.clearErrorMessagesFrom("#manageProfile .errorMessages");
+		setProfileFields(Utils.getCurrentUser());
 		defineOnEnterClicks();
+		defineOnFieldValueChange();
+	};
+	
+	defineOnFieldValueChange = function(){
+		var inputs = $('#manageProfileContainer').find('input');
+		inputs.each(function(){
+			$(this).on('keyup',function(){
+				checkIfChanged($(this));
+				toggleSaveBtn();
+			});
+		});
+	};
+	
+	toggleSaveBtn = function(){
+		var saveBtn = $('#saveProfileInfo');
+		if(isAnyFieldChanges()){
+			saveBtn.removeClass('disabled');			
+		}else{
+			(!saveBtn.hasClass('disabled')) ? saveBtn.addClass('disabled') : "";	
+		}
+	};
+		
+	checkIfChanged = function(object){
+		var t = object;
+		var currentValue = t.val();
+		var defaultValue = t.attr('data-default');		
+		if(currentValue != defaultValue){ 
+			if(!t.hasClass('changed'))t.addClass('changed');	
+		}else{
+			t.removeClass('changed');
+			
+		}
+	};
+	
+	isAnyFieldChanges =function(){
+		var result = false;
+		var changes = $('#manageProfileContainer').find('input').filter('.changed');
+		if(changes.length != 0) result = true;
+		return result;
 	};
 	
 	defineOnEnterClicks = function(){
@@ -22,30 +70,48 @@ function(require,Utils,Server){
 	};
 	
 	setProfileFields = function(user){
-		$("#inputUsername").val(user.username);
-		$("#inputFirstName").val(user.firstName);
-		$("#inputLastName").val(user.lastName);
-		$("#inputAffiliation").val(user.affiliation);
-		$("#inputEmail").val(user.email);
-		$("#inputUsername").val(user.username);
+		$("#inputUsername")
+			.val(user.username)
+			.attr('data-default',user.username);
+		$("#inputFirstName")
+			.val(user.firstName)
+			.attr('data-default',user.firstName);
+		$("#inputLastName")
+			.val(user.lastName)
+			.attr('data-default',user.lastName);
+		$("#inputAffiliation")
+			.val(user.affiliation)
+			.attr('data-default',user.affiliation);
+		$("#inputEmail")
+			.val(user.email)
+			.attr('data-default',user.email);
 	};
 	
 	
 	initSaveProfileInfoBtn = function(){
-		$("#saveProfileInfo").on('click',function(){
-			Utils.unhideElement('#saveProfileLoadingSign');
-			if(checkUserProfileEntries()){	
-				var msg = Server.updateUser(getUserFromProfileForm(),"#saveProfileLoadingSign");
-				setProfileFields(Utils.getCurrentUser());
-				Utils.clearErrorMessagesFrom('#userProfileErrors');
-				$('#userProfileErrors').append(msg);
-				Utils.updateInfoPanel();
+		var saveBtn = $("#saveProfileInfo");
+		saveBtn.on('click',function(){		
+			if(checkUserProfileEntries() && !saveBtn.hasClass('disabled')){
+				Utils.unhideElement('#saveProfileLoadingSign');
+				console.log(JSON.stringify(getUserProfileChanges()));
+				var msg = Server.updateUser(getUserProfileChanges(),"#saveProfileLoadingSign");
+				afterProfileUpdate(msg);
 			}
-			
-			window.setTimeout(function(){
-				Utils.hideElement('#saveProfileLoadingSign');
-			},200);
 		});
+	};
+	
+	afterProfileUpdate = function(msg){
+		setProfileFields(Utils.getCurrentUser());
+		isSuccessMsg = msg.find('span').hasClass('alert-success');
+		if(isSuccessMsg){
+			Utils.showSuccessModal(msg);
+		}else{
+			Utils.clearErrorMessagesFrom('#userProfileErrors');
+			$('#userProfileErrors').append(msg);
+		}
+		Utils.updateInfoPanel();
+		Utils.hideElement('#saveProfileLoadingSign');
+		
 	};
 	
 	checkUserProfileEntries = function(){
@@ -85,14 +151,14 @@ function(require,Utils,Server){
 	
 	
 		
-	getUserFromProfileForm = function(){
-		user = new Object();		
-		user.username = $('#inputUsername').val();
-		user.firstName = $('#inputFirstName').val();
-		user.lastName = $('#inputLastName').val();
-		user.affiliation = $('#inputAffiliation').val();
-		user.email = $('#inputEmail').val();	
-		return user;
+	getUserProfileChanges = function(){
+		profileChanges = new Object();		
+		($('#inputUsername').hasClass('changed'))    ?   profileChanges.username = $('#inputUsername').val()   : "";
+		($('#inputFirstName').hasClass('changed'))   ?   profileChanges.firstName = $('#inputFirstName').val() : "";
+		($('#inputLastName').hasClass('changed'))    ?   profileChanges.lastName = $('#inputLastName').val()   : "";
+		($('#inputAffiliation').hasClass('changed')) ?   profileChanges.affiliation = $('#inputAffiliation').val() : "";
+		($('#inputEmail').hasClass('changed'))       ?   profileChanges.email = $('#inputEmail').val() : "";	
+		return profileChanges;
 	};
 	
 	enableSaveProfileBtn = function(){
