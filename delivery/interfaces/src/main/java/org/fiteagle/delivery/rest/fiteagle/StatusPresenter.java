@@ -79,7 +79,7 @@ public class StatusPresenter {
 	private TestbedStatus statusTable2Testbedstatus(StatusTable statusTable){
 		TestbedStatus testbedStatus = new TestbedStatus();
 		
-		testbedStatus.setId(statusTable.getName());
+		testbedStatus.setId(statusTable.getId());
 		testbedStatus.setLastCheck(statusTable.getLastCheck());
 		testbedStatus.setStatus(statusTable.getStatus());
 		

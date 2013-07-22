@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
+import org.fiteagle.interactors.monitoring.server.OMLServer;
 import org.fiteagle.ui.infinity.InfinityClientMock;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
 import org.fiteagle.ui.infinity.model.InfinityValueID;
@@ -20,6 +21,20 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	// is empty then get information using xipi client!! => maybe extend pom to get xipi client
 
 	private static HashMap<String, StatusTable> monitoringData = new HashMap<String, StatusTable>();
+	
+	private static boolean serverStarted = false;
+	private static OMLServer omlServer = new OMLServer();
+	
+	public MonitoringManager() {
+		if(!serverStarted){
+			new Thread(omlServer).start();
+			serverStarted=true;
+		}
+	}
+	
+	public void terminateOMLServer(){
+		omlServer.terminate();
+	}
 	
 	@Override
 	public Collection<StatusTable> getMonitoringData() {
@@ -36,8 +51,8 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	private void addMonitoringData(List<StatusTable> data) {
 		for (Iterator iterator = data.iterator(); iterator.hasNext();) {
 			StatusTable statusTable = (StatusTable) iterator.next();
-			Date lastCheck=Calendar.getInstance().getTime();
-			statusTable.setLastCheck(lastCheck);
+//			Date lastCheck=Calendar.getInstance().getTime();
+//			statusTable.setLastCheck(lastCheck);
 			monitoringData.put(statusTable.getId(), statusTable);
 		}
 	}
@@ -58,26 +73,28 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 			StatusTable statusTable = new StatusTable();
 			
 			String id = infinityValueID.getId();
-			statusTable.setId(id);
+			statusTable.setXipiId(id);
 			
-			Integer intId = new Integer(id);
-			InfinityInfrastructure infrastructure = client.getInfrastructuresById(intId);
+//			Integer intId = new Integer(id);
+//			InfinityInfrastructure infrastructure = client.getInfrastructuresById(intId);
 			
-			String name = infrastructure.getName_();
-			statusTable.setName(name);
+//			String name = infrastructure.getName_();
+//			statusTable.setName(name);
+//			
+//			Number idInteger = infrastructure.getId();
+//			String idString = new Integer(idInteger.intValue()).toString();
+//			statusTable.setId(idString);
+//			
+//			String status = infrastructure.getStatus();
+//			if(status.trim().compareTo("")==0)
+//				status = "status unknown";
+//			statusTable.setStatus(status);
+//			
+//			String organization = infrastructure.getOrganization();
+//			statusTable.setOrganization(organization);
 			
-			Number idInteger = infrastructure.getId();
-			String idString = new Integer(idInteger.intValue()).toString();
-			statusTable.setId(idString);
-			
-			String status = infrastructure.getStatus();
-			if(status.trim().compareTo("")==0)
-				status = "status unknown";
-			statusTable.setStatus(status);
-			
-			String organization = infrastructure.getOrganization();
-			statusTable.setOrganization(organization);
-			
+			statusTable.setId(infinityValueID.getValue());
+			statusTable.setLastCheck(null);
 			
 			result.add(statusTable);
 		}
@@ -86,8 +103,9 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 		return result;
 	}
 	
-	public void pushMonitoringData(String newMonitoringData){
+	public void pushMonitoringData(StatusTable statusTable){
 		//TODO: over an interface available for individual testbeds??
+		monitoringData.put(statusTable.getId(), statusTable);
 	}
 
 }

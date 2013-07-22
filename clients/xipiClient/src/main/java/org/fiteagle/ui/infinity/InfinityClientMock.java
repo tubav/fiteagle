@@ -55,7 +55,6 @@ public class InfinityClientMock extends InfinityClient {
 	private static String convertStreamToString(InputStream is) {
 		@SuppressWarnings("resource")
 		Scanner s = new Scanner(is).useDelimiter("\\A");
-		System.out.println("S IN CLIENT IS: "+s);
 		return s.hasNext() ? s.next() : "";
 	}
 }

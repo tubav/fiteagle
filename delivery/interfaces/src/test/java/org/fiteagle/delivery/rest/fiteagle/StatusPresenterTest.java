@@ -23,8 +23,8 @@ public class StatusPresenterTest {
 	public void testGetStatus() {
 		List<TestbedStatus> status = statusPresenter.getStatus();
 		Assert.assertNotNull(status);
-		//this one is only while using the mock client. ignore this for other cases.
-		Assert.assertEquals("status unknown", status.get(0).getStatus());
+//		//this one is only while using the mock client. ignore this for other cases.
+//		Assert.assertEquals("status unknown", status.get(0).getStatus());
 	}
 
 }

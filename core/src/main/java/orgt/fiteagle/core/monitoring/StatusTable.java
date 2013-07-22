@@ -5,10 +5,11 @@ import java.util.Date;
 public class StatusTable {
 	
 	private String id;
-	private String status;
+	private String status=null;
 	private Date lastCheck;
 	private String organization;
-	private String name;
+	private String xipiId;
+//	private String name;
 	
 	
 	public String getId() {
@@ -35,11 +36,17 @@ public class StatusTable {
 	public void setOrganization(String organization) {
 		this.organization = organization;
 	}
-	public String getName() {
-		return name;
+//	public String getName() {
+//		return name;
+//	}
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+	public String getXipiId() {
+		return xipiId;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setXipiId(String xipiId) {
+		this.xipiId = xipiId;
 	}
 
 }
