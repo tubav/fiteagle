@@ -40,11 +40,8 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	public Collection<StatusTable> getMonitoringData() {
 		if(monitoringData.isEmpty()){
 			List<StatusTable> data = getXIPIMonitoringData();
-			//TODO: parse this data and store it in monitoringData hashmap
 			addMonitoringData(data);
 		}
-		//TODO: give monitoring data as html parts?? delivery should not know the interactor side!
-//		ArrayList<StatusTable> result = (ArrayList<StatusTable>) monitoringData.values();
 		return monitoringData.values();
 	}
 	
@@ -58,7 +55,6 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	}
 
 	List<StatusTable> getXIPIMonitoringData(){
-		//TODO: return value must be internal monitoring data structure. InfinityValueID must be mapped to this.
 		InfinityClientMock client = new InfinityClientMock();
 		ArrayList<InfinityValueID> infrastructures = client.searchInfrastructures();
 		
@@ -74,6 +70,7 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 			
 			String id = infinityValueID.getId();
 			statusTable.setXipiId(id);
+			statusTable.setId(infinityValueID.getValue());
 			
 //			Integer intId = new Integer(id);
 //			InfinityInfrastructure infrastructure = client.getInfrastructuresById(intId);
@@ -93,8 +90,6 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 //			String organization = infrastructure.getOrganization();
 //			statusTable.setOrganization(organization);
 			
-			statusTable.setId(infinityValueID.getValue());
-			statusTable.setLastCheck(null);
 			
 			result.add(statusTable);
 		}
@@ -104,8 +99,13 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 	}
 	
 	public void pushMonitoringData(StatusTable statusTable){
-		//TODO: over an interface available for individual testbeds??
+		if(monitoringData.get(statusTable.getId())!=null)
 		monitoringData.put(statusTable.getId(), statusTable);
+	}
+
+	@Override
+	public StatusTable getMonitoringDataById(String id) {
+		return monitoringData.get(id);
 	}
 
 }

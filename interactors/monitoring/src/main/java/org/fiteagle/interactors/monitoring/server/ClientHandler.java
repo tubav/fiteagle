@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.fiteagle.interactors.monitoring.MonitoringManager;
@@ -14,6 +15,7 @@ import orgt.fiteagle.core.monitoring.StatusTable;
 
 public class ClientHandler implements Runnable {
 	Socket socket;
+	long timeForOldLastCheckedInMilis = 15778463000L;
 //	PrintStream out;
 
 	public ClientHandler(Socket s) {
@@ -22,6 +24,7 @@ public class ClientHandler implements Runnable {
 
 	@Override
 	public void run() {
+		
 		BufferedReader in;
 		PrintWriter out = null;
 		StatusTable statusTable = new StatusTable();
@@ -31,28 +34,48 @@ public class ClientHandler implements Runnable {
 			String str;
 			String testbedName = null;
 			String testbedStatus = "undefined";
+			boolean oneComponentIsUp = false;
+			boolean upAndLastCheckedOld = false;
 			Date lastChecked = new Date();
 			while ((str=in.readLine()) != null) {
+				StatusTable componentStatusTable = new StatusTable();
 				
 				if(str.contains("domain:"))
 					testbedName=str.split(":")[1].trim();
 				
 				if(str.length()>0 && Character.isDigit(str.charAt(0))){
 					String[] strArray = parseLine(str);
-					Date date = new Date();
+					Date lastCheckedDate = new Date();
 					if(strArray[3]!=null)
-					date = parseStringToDate(strArray[3]);
-					statusTable.setId(strArray[1]);
-					if(strArray[2].compareTo("1")==0 && testbedStatus.compareTo("down")!=0)
-						testbedStatus="up";
-					if(strArray[2].compareTo("0")==0)
-						testbedStatus = "down";
+					lastCheckedDate = parseStringToDate(strArray[3]);
+					
+					componentStatusTable.setLastCheck(lastCheckedDate);
+					componentStatusTable.setId(strArray[1]);
+					
+					if(strArray[2].compareTo("1")==0){
+						if(isLastCheckedOld(lastCheckedDate)){
+							upAndLastCheckedOld = true;
+							componentStatusTable.setStatus("upAndLastCheckedOld");
+							//TODO: if lastchecked is old grey button =>set upAndLastCheckedOld=> status upAndOld.
+						}else
+							componentStatusTable.setStatus("up");
+						oneComponentIsUp=true;
+						if(testbedStatus.compareTo("partially")!=0)
+							testbedStatus="up";
+					}
+					
+					if(strArray[2].compareTo("0")==0){
+						componentStatusTable.setStatus("down");
+						testbedStatus = "partially";
+					}
 					
 //					if(statusTable.getStatus()==null)
 //						testbedStatus = "undefined";
 					
-					if(date.before(lastChecked))
-						lastChecked=date;
+					if(lastCheckedDate.before(lastChecked))
+						lastChecked=lastCheckedDate;
+					
+					statusTable.addComponent(componentStatusTable);
 					
 				}
 				
@@ -80,7 +103,13 @@ public class ClientHandler implements Runnable {
 				
 //				if (str != null && str.compareTo("quit")==0) break;
 			}
+			
+			if(!oneComponentIsUp)
+				testbedStatus = "down";
+			
 			statusTable.setLastCheck(lastChecked);
+			if(testbedStatus.compareTo("up")==0 && upAndLastCheckedOld)
+				testbedStatus="upAndLastCheckedOld";
 			statusTable.setStatus(testbedStatus);
 			if(testbedName!=null){
 				statusTable.setId(testbedName);
@@ -115,6 +144,14 @@ public class ClientHandler implements Runnable {
 	}
 	
 	
+	private boolean isLastCheckedOld(Date lastCheckedDate) {
+		Date now = new Date();
+		long nowInMilis = now.getTime();
+		long lastCheckedDateInMilis = lastCheckedDate.getTime();
+		
+		return (nowInMilis-lastCheckedDateInMilis)>timeForOldLastCheckedInMilis;
+	}
+
 	private Date parseStringToDate(String dateString) throws ParseException {
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
 //		DateFormat dateFormat = DateFormat.getInstance();

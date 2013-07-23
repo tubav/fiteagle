@@ -26,5 +26,10 @@ public class StatusPresenterTest {
 //		//this one is only while using the mock client. ignore this for other cases.
 //		Assert.assertEquals("status unknown", status.get(0).getStatus());
 	}
+	
+//	@Test
+//	public void getTestBedStatusById(){
+//		statusPresenter.getTestBedStatusById("")
+//	}
 
 }

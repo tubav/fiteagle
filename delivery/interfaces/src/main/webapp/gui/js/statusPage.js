@@ -34,7 +34,7 @@ function(){
 	}
 	
 	showDetailedStatus = function(data) {
-		var table =  "<table><caption><h3>"+data.id+"</h3></caption><thead><tr><th>Monitoring Status</th><th>Testbed Name</th><th>Last checked</th></tr></thead><tbody>";
+		var table =  "<table><caption><h3>"+data.id+"</h3></caption><thead><tr><th>Monitoring Status</th><th>Component Name</th><th>Last checked</th></tr></thead><tbody>";
 		var tableBody = "";
 		for(var k in data.components){
 			tableBody = tableBody + buildDetailRow(data.components[k]);

@@ -68,20 +68,30 @@ public class StatusPresenter {
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
-	public TestbedStatus getTestBedStatusById(@PathParam("id") String dummy) {
-		TestbedStatus status = new TestbedStatus();
-		status.setId("dummy2");
-		status.setStatus("up and away");
-		status.setLastCheck(Calendar.getInstance().getTime());
-		return status;
+	public TestbedStatus getTestBedStatusById(@PathParam("id") String id) {
+//		TestbedStatus status = new TestbedStatus();
+//		status.setId("dummy2");
+//		status.setStatus("up and away");
+//		status.setLastCheck(Calendar.getInstance().getTime());
+//		TestbedStatus status = statusTable2Testbedstatus(monitor.getMonitoringDataById(id));
+		return statusTable2Testbedstatus(monitor.getMonitoringDataById(id));
 	}
 	
 	private TestbedStatus statusTable2Testbedstatus(StatusTable statusTable){
+		if(statusTable==null) return null;
 		TestbedStatus testbedStatus = new TestbedStatus();
 		
 		testbedStatus.setId(statusTable.getId());
 		testbedStatus.setLastCheck(statusTable.getLastCheck());
 		testbedStatus.setStatus(statusTable.getStatus());
+		
+		if(statusTable.getComponents()!=null){
+			List<StatusTable> components = statusTable.getComponents();
+			for (Iterator iterator = components.iterator(); iterator.hasNext();) {
+				StatusTable statusTable2 = (StatusTable) iterator.next();
+				testbedStatus.addComponent(statusTable2Testbedstatus(statusTable2));
+			}
+		}
 		
 		return testbedStatus;
 		
