@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.monitoring.server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -36,6 +37,8 @@ public class ClientHandler implements Runnable {
 			boolean oneComponentIsUp = false;
 			boolean upAndLastCheckedOld = false;
 			Date lastChecked = new Date();
+			
+			
 			while ((str=in.readLine()) != null) {
 				StatusTable componentStatusTable = new StatusTable();
 				
