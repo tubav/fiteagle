@@ -20,13 +20,13 @@
     "id": "2893",
     "other": null,
     "name": null,
-    "value": "SmartSantander Testbed - Lï¿½beck Facility",
+    "value": "SmartSantander Testbed - Lübeck Facility",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "2872",
     "other": null,
     "name": null,
-    "value": "awilocï¿½ testbed ",
+    "value": "awiloc® testbed ",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "2855",
@@ -224,7 +224,7 @@
     "id": "2255",
     "other": null,
     "name": null,
-    "value": "Der Verein zur Fï¿½rderung eines Deutschen Forschungsnetzes",
+    "value": "Der Verein zur Förderung eines Deutschen Forschungsnetzes",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "2171",
@@ -302,7 +302,7 @@
     "id": "1998",
     "other": null,
     "name": null,
-    "value": "Grafenwï¿½rth bewegt",
+    "value": "Grafenwörth bewegt",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "1990",
@@ -314,7 +314,7 @@
     "id": "1976",
     "other": null,
     "name": null,
-    "value": "CENTRO ANDALUZ DE INNOVACIï¿½N Y TECNOLOGï¿½AS DE LA INFORMACIï¿½N Y LAS COMUNICACIONES",
+    "value": "CENTRO ANDALUZ DE INNOVACIÓN Y TECNOLOGÍAS DE LA INFORMACIÓN Y LAS COMUNICACIONES",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "1968",
@@ -422,7 +422,7 @@
     "id": "1761",
     "other": null,
     "name": null,
-    "value": "Rede Comunitï¿½ria de Banda Larga da Terra Quente Transmontana",
+    "value": "Rede Comunitária de Banda Larga da Terra Quente Transmontana",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "1736",
@@ -506,7 +506,7 @@
     "id": "1609",
     "other": null,
     "name": null,
-    "value": "Fundaciï¿½ i2CAT. Recerca i Innovaciï¿½ en l'ï¿½mbit d'Internet",
+    "value": "Fundació i2CAT. Recerca i Innovació en l'Àmbit d'Internet",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "1600",
@@ -710,7 +710,7 @@
     "id": "1222",
     "other": null,
     "name": null,
-    "value": "Gestiï¿½n de Infraestructuras Pï¿½blicas de Telecomunicaciones del Principado de Asturias S.A.",
+    "value": "Gestión de Infraestructuras Públicas de Telecomunicaciones del Principado de Asturias S.A.",
     "javaClass": "org.infinity.model.ValueID"
 }, {
     "id": "1210",
