@@ -24,14 +24,14 @@
       "id":"2893",
       "other":null,
       "name":null,
-      "value":"SmartSantander Testbed - L�beck Facility",
+      "value":"SmartSantander Testbed - Lübeck Facility",
       "javaClass":"org.infinity.model.ValueID"
    },
    {
       "id":"2872",
       "other":null,
       "name":null,
-      "value":"awiloc� testbed ",
+      "value":"awiloc® testbed ",
       "javaClass":"org.infinity.model.ValueID"
    },
    {
@@ -262,7 +262,7 @@
       "id":"2255",
       "other":null,
       "name":null,
-      "value":"Der Verein zur F�rderung eines Deutschen Forschungsnetzes",
+      "value":"Der Verein zur Förderung eines Deutschen Forschungsnetzes",
       "javaClass":"org.infinity.model.ValueID"
    },
    {

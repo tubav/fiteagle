@@ -17,11 +17,6 @@ public class OMLServer implements Runnable {
 	
 
 	private boolean running = true;
-//	private MonitoringManager monitoringManager;
-	
-//	public OMLServer(MonitoringManager manager) {
-//		this.monitoringManager = manager;
-//	}
 	
 	public void terminate(){
 		this.running = false;

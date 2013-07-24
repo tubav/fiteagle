@@ -48,12 +48,20 @@ function(){
 		
 	}
 	buildRow = function(testbedstatus){
-		var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td>'+testbedstatus.id+'</td><td>'+new Date(testbedstatus.lastCheck).toString()+'</td><td class="statusRow" '+'id="'+testbedstatus.id+'">Details</td></tr>';
+//		var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td>'+testbedstatus.id+'</td><td>'+new Date(testbedstatus.lastCheck).toString()+'</td><td class="statusRow" '+'id="'+testbedstatus.id+'">Details</td></tr>';
+		var lastCheckStr = 'unknown'; 
+		if(testbedstatus.lastCheck!=null)
+			lastCheckStr = new Date(testbedstatus.lastCheck).toString();
+		var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td><td class="statusRow" '+'id="'+testbedstatus.id+'">Details</td></tr>';
 		return row;
 	}	
 	
 	buildDetailRow = function(testbedstatus) {
-		var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td>'+testbedstatus.id+'</td><td>'+new Date(testbedstatus.lastCheck).toString()+'</td></tr>';
+//		var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td>'+testbedstatus.id+'</td><td>'+new Date(testbedstatus.lastCheck).toString()+'</td></tr>';
+		var lastCheckStr = 'unknown'; 
+		if(testbedstatus.lastCheck!=null)
+			lastCheckStr = new Date(testbedstatus.lastCheck).toString();
+		var row = '<tr><td>'+getStatusIcon(testbedstatus.status)+'</td><td class="rowAlignLeft">'+testbedstatus.id+'</td><td>'+lastCheckStr+'</td></tr>';
 		return row;
 	}
 	// TODO don't rely on img names and path
@@ -64,6 +72,12 @@ function(){
 			return '<img src="images/red.png" class="status"></img>';
 		}else if (status === 'partially') {
 			return '<img src="images/yellow.png" class="status"></img>';
+		}else if (status === 'upAndLastCheckedOld') {
+			return '<img src="images/gray.png" class="status"></img>';
+		}else if (status === 'undefined') {
+			return '<img src="images/unknown.png" class="status"></img>';
+		}else if (status === null) {
+			return '<img src="images/unknown.png" class="status"></img>';
 		}
 	}
 	return Status;

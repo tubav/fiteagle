@@ -46,9 +46,7 @@ public class InfinityClientMock extends InfinityClient {
 	}
 
 	private String getMockedInput(String path) throws FileNotFoundException {
-//		InputStream in = new FileInputStream(path);
 		InputStream in = this.getClass().getResourceAsStream(path);
-//		InputStream in = InfinityClientTest.class.getResourceAsStream(path);
 		return convertStreamToString(in);
 	}
 

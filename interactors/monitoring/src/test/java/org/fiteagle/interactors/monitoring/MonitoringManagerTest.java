@@ -3,6 +3,7 @@ package org.fiteagle.interactors.monitoring;
 import static org.junit.Assert.*;
 
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +22,6 @@ public class MonitoringManagerTest {
 
 	@Before
 	public void setup() throws URISyntaxException {
-		//URI uri = new URI("http://www.xipi.eu");
-		//this.client = new InfinityClientWeb(uri);
 		this.monitoringManager = new MonitoringManager();
 	}
 	
@@ -35,11 +34,11 @@ public class MonitoringManagerTest {
 
 	@Test
 	public void getMonitoringDataById(){
+//		monitoringManager.getXIPIMonitoringData();
 //		StatusTable statusTable = new StatusTable();
-//		statusTable.setId("testId");
+//		statusTable.setId("FOKUS FUSECO Playground");
 //		statusTable.setLastCheck(new Date());
 //		statusTable.setStatus("up");
-//		statusTable.setXipiId("xipiId");
 //		StatusTable component= new StatusTable();
 //		component.setId("componentId");
 //		component.setStatus("up");
@@ -47,9 +46,10 @@ public class MonitoringManagerTest {
 //		statusTable.addComponent(component);
 //		
 //		monitoringManager.pushMonitoringData(statusTable);
-//		StatusTable data = monitoringManager.getMonitoringDataById("testId");
-//		Assert.assertNull(data);//
-//		Assert.assertEquals("testId", data.getId());
+//		StatusTable data = monitoringManager.getMonitoringDataById("FOKUS FUSECO Playground");
+//		Assert.assertNull(data);
+//		Assert.assertEquals("FOKUS FUSECO Playground", data.getId());
+//		Assert.assertEquals("up", data.getStatus());
 	}
 	
 }

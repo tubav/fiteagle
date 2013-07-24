@@ -16,7 +16,6 @@ import orgt.fiteagle.core.monitoring.StatusTable;
 public class ClientHandler implements Runnable {
 	Socket socket;
 	long timeForOldLastCheckedInMilis = 15778463000L;
-//	PrintStream out;
 
 	public ClientHandler(Socket s) {
 		socket = s;
@@ -56,7 +55,6 @@ public class ClientHandler implements Runnable {
 						if(isLastCheckedOld(lastCheckedDate)){
 							upAndLastCheckedOld = true;
 							componentStatusTable.setStatus("upAndLastCheckedOld");
-							//TODO: if lastchecked is old grey button =>set upAndLastCheckedOld=> status upAndOld.
 						}else
 							componentStatusTable.setStatus("up");
 						oneComponentIsUp=true;
@@ -69,9 +67,6 @@ public class ClientHandler implements Runnable {
 						testbedStatus = "partially";
 					}
 					
-//					if(statusTable.getStatus()==null)
-//						testbedStatus = "undefined";
-					
 					if(lastCheckedDate.before(lastChecked))
 						lastChecked=lastCheckedDate;
 					
@@ -79,29 +74,6 @@ public class ClientHandler implements Runnable {
 					
 				}
 				
-//				if(str.length()>0 && Character.isDigit(str.charAt(0))){
-//					String[] strArray = parseLine(str);
-//					
-//					Date date = parseStringToDate(strArray[3]);
-//					
-//					StatusTable statusTable = new StatusTable();
-////					statusTable.setXipiId(strArray[0]);
-//					statusTable.setId(strArray[1]);
-//					if(strArray[2].compareTo("1")==0)
-//						statusTable.setStatus("up");
-//					if(strArray[2].compareTo("0")==0)
-//						statusTable.setStatus("down");
-//					
-//					if(statusTable.getStatus()==null)
-//						statusTable.setStatus("undefined");
-//					
-//					statusTable.setLastCheck(date);
-//					new MonitoringManager().pushMonitoringData(statusTable);
-//					
-////					System.out.println("1:'"+strArray[0]+"' 2:'"+strArray[1]+"' 3:'"+date+"'");
-//				}
-				
-//				if (str != null && str.compareTo("quit")==0) break;
 			}
 			
 			if(!oneComponentIsUp)
@@ -127,20 +99,6 @@ public class ClientHandler implements Runnable {
 			}
 		}
 		
-
-//		try {
-//			out = new PrintStream(socket.getOutputStream());
-//		} catch (IOException e) {
-//			System.out.println("PrintStream Error");
-//		}
-//
-//		out.println("Hello");
-//
-//		try {
-//			socket.close();
-//		} catch (IOException e) {
-//			System.out.println("Failed to close, oddly...");
-//		}
 	}
 	
 	
@@ -154,20 +112,11 @@ public class ClientHandler implements Runnable {
 
 	private Date parseStringToDate(String dateString) throws ParseException {
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
-//		DateFormat dateFormat = DateFormat.getInstance();
-//		Date date = dateFormat.parse(dateString);
-		
 		
 		StringBuilder dateStrBuilder = new StringBuilder(dateString);
 		dateStrBuilder.deleteCharAt(dateString.lastIndexOf(":"));
 		
-//		String test = "2013-07-21T18:33:38.546057-0700";
-//		Date testDate = simpleDate.parse(test);
-//		System.out.println("here test: "+testDate);
-//		
-//		return simpleDate.parse(dateString);
 		return simpleDate.parse(dateStrBuilder.toString());
-//		return date;
 		
 	}
 
@@ -176,9 +125,6 @@ public class ClientHandler implements Runnable {
 		if (str==null) return null;
 		
 		String[] strArr = str.split("\t");
-//		for (int i = 0; i < strArr.length; i++) {
-//			System.out.println("strArrTest: "+strArr[i]);
-//		}
 		String[] response = new String[4];
 		
 		response[0]=strArr[1].trim();

@@ -317,6 +317,11 @@ input.search-query{height:24px !important;}
 	
 }
 
+#statusTable > tbody > tr > td.rowAlignLeft  {
+	text-align: left;
+	
+}
+
 #statusTable > tbody > tr:hover td.statusRow  {
 	font-size: 140%;
 		

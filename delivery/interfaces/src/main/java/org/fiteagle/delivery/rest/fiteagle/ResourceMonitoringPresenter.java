@@ -61,7 +61,6 @@ public class ResourceMonitoringPresenter {
 	@Produces("application/xml")
 	public String getResourceDefinition() {
 		Collection<StatusTable> monitoringData = monitor.getMonitoringData();
-		//TODO: parse monitoring data, add to the HTML
 		return resourceInformation;
 	}
 
