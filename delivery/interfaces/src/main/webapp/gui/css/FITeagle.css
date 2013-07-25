@@ -151,7 +151,8 @@ input.search-query{height:24px !important;}
 #navs{	margin-top:10px;}
 #navs ul{ margin-bottom: 0px;}
 #navs ul li{ margin-right:15px}
-#navs .nav-pills>li>a{ color:#2E2E2E}
+#navs .nav-pills>li>a{color:#2E2E2E}
+		
 #navs .nav-pills>.active>a { color:white;background-color: #212121;}
 #header{
 	background: #212121;
@@ -302,11 +303,16 @@ input.search-query{height:24px !important;}
 
 #statusTable{
 	width: 75%;
+	position:relative;
+ 	top:80px;
+ 	left:160px;
 }
 #statusTable > tbody > tr   {
 	padding-top: 2%;
-	
 }
+
+#statusTable > tbody > tr:nth-child(odd){background-color:#fff;}
+	
 /*#statusTable > tbody > tr:hover td  {
 	background-color: #c7c7c7;
 	
