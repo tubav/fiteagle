@@ -1,7 +1,7 @@
 .hidden{display:none}
 body{
 	padding:0 !important;
-	background: #f7f7f7;
+	background: #fff;
 	background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -webkit-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -ms-linear-gradient(top, #f7f7f7, #e1e1e1);
@@ -339,7 +339,7 @@ input.search-query{height:24px !important;}
 	width: 12%;
 }
 #popup {
-	width: 40%;
+	min-width: 40%;
 	alignment-baseline: central;
 }
 #popup div  {
@@ -365,5 +365,4 @@ input.search-query{height:24px !important;}
 #popup div.modal-body >table > tbody > tr > td > img.status {
 	width: 25%;
 }
-
 
