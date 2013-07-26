@@ -1,7 +1,9 @@
 package orgt.fiteagle.core.monitoring;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class StatusTable {
@@ -11,7 +13,8 @@ public class StatusTable {
 	private Date lastCheck;
 	private String organization;
 	private String xipiId;
-	private List<StatusTable>components;
+	private HashMap<String,StatusTable>components;
+//	private List<StatusTable>components;
 //	private String name;
 	
 	
@@ -53,19 +56,21 @@ public class StatusTable {
 	}
 	
 	
-	public List<StatusTable> getComponents() {
-		return this.components;
+	public Collection<StatusTable> getComponents() {
+		if(this.components == null)
+			components = new HashMap<String, StatusTable>();
+		return this.components.values();
 	}
 	
-	public void setComponents(List<StatusTable> components) {
+	public void setComponents(HashMap<String,StatusTable> components) {
 		this.components = components;
 	}
 	
 	public void addComponent(StatusTable component){
 		if(this.components == null)
-			components = new ArrayList<>();
+			components = new HashMap<String, StatusTable>();
 			
-		this.components.add(component);
+		this.components.put(component.getId(), component);
 	}
 
 }

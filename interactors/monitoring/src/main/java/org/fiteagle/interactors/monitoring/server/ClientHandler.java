@@ -76,20 +76,20 @@ public class ClientHandler implements Runnable {
 					statusTable.addComponent(componentStatusTable);
 					
 				}
+				if(!oneComponentIsUp)
+					testbedStatus = "down";
+				
+				statusTable.setLastCheck(lastChecked);
+				if(testbedStatus.compareTo("up")==0 && upAndLastCheckedOld)
+					testbedStatus="upAndLastCheckedOld";
+				statusTable.setStatus(testbedStatus);
+				if(testbedName!=null){
+					statusTable.setId(testbedName);
+					new MonitoringManager().pushMonitoringData(statusTable);
+				}
 				
 			}
 			
-			if(!oneComponentIsUp)
-				testbedStatus = "down";
-			
-			statusTable.setLastCheck(lastChecked);
-			if(testbedStatus.compareTo("up")==0 && upAndLastCheckedOld)
-				testbedStatus="upAndLastCheckedOld";
-			statusTable.setStatus(testbedStatus);
-			if(testbedName!=null){
-				statusTable.setId(testbedName);
-				new MonitoringManager().pushMonitoringData(statusTable);
-			}
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}finally{

@@ -63,7 +63,7 @@ public class StatusPresenter {
 		testbedStatus.setStatus(statusTable.getStatus());
 		
 		if(statusTable.getComponents()!=null){
-			List<StatusTable> components = statusTable.getComponents();
+			Collection<StatusTable> components = statusTable.getComponents();
 			for (Iterator iterator = components.iterator(); iterator.hasNext();) {
 				StatusTable statusTable2 = (StatusTable) iterator.next();
 				testbedStatus.addComponent(statusTable2Testbedstatus(statusTable2));
