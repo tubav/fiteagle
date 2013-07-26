@@ -333,7 +333,9 @@ input.search-query{height:24px !important;}
 		
 }
 
-
+#statusTable > thead {
+	white-space: nowrap;
+}
 
 #statusTable > tbody > tr > td  {
 	text-align: center;
@@ -342,7 +344,8 @@ input.search-query{height:24px !important;}
 }
 
 #statusTable > tbody > tr > td > img.status {
-	width: 12%;
+	max-width: 2em;
+	min-width: 1em;
 }
 #popup {
 	min-width: 40%;
