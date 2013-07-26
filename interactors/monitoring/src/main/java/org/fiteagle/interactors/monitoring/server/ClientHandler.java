@@ -9,7 +9,9 @@ import java.net.Socket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.fiteagle.interactors.monitoring.MonitoringManager;
 import orgt.fiteagle.core.monitoring.StatusTable;
@@ -25,74 +27,128 @@ public class ClientHandler implements Runnable {
 	@Override
 	public void run() {
 		
+		//TODO: get the testbed name from header not from lines!!
+
 		BufferedReader in;
 		PrintWriter out = null;
-		StatusTable statusTable = new StatusTable();
 		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream(), true);
 			String str;
 			String testbedName = null;
-			String testbedStatus = "undefined";
-			boolean oneComponentIsUp = false;
-			boolean upAndLastCheckedOld = false;
-			Date lastChecked = new Date();
-			
-			
-			while ((str=in.readLine()) != null) {
+//			String testbedStatus = StatusTable.UNDEFINED;
+
+			while ((str = in.readLine()) != null) {
 				StatusTable componentStatusTable = new StatusTable();
-				
-				if(str.contains("domain:"))
-					testbedName=str.split(":")[1].trim();
-				
-				if(str.length()>0 && Character.isDigit(str.charAt(0))){
-					String[] strArray = parseLine(str);
-					Date lastCheckedDate = new Date();
-					if(strArray[3]!=null)
-					lastCheckedDate = parseStringToDate(strArray[3]);
+
+				if (str.contains("domain:"))
+					testbedName = str.split(":")[1].trim();
+
+				if (str.length() > 0 && Character.isDigit(str.charAt(0))) {
 					
+					if (testbedName == null || testbedName == "")
+						throw new RuntimeException(
+								"The testbed name must be set as domain!");
+
+					String[] strArray = parseLine(str);
+
+					Date lastCheckedDate = null;
+					if (strArray[3] != null)
+						lastCheckedDate = parseStringToDate(strArray[3]);
 					componentStatusTable.setLastCheck(lastCheckedDate);
 					componentStatusTable.setId(strArray[1]);
-					
-					if(strArray[2].compareTo("1")==0){
-						if(isLastCheckedOld(lastCheckedDate)){
-							upAndLastCheckedOld = true;
-							componentStatusTable.setStatus("upAndLastCheckedOld");
-						}else
-							componentStatusTable.setStatus("up");
-						oneComponentIsUp=true;
-						if(testbedStatus.compareTo("partially")!=0)
-							testbedStatus="up";
+
+					if (strArray[2].compareTo("1") == 0) {
+						if (isLastCheckedOld(lastCheckedDate)) {
+							componentStatusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
+						} else
+							componentStatusTable.setStatus(StatusTable.UP);
 					}
-					
-					if(strArray[2].compareTo("0")==0){
-						componentStatusTable.setStatus("down");
-						testbedStatus = "partially";
+
+					if (strArray[2].compareTo("0") == 0) {
+						componentStatusTable.setStatus(StatusTable.DOWN);
 					}
-					
-					if(lastCheckedDate.before(lastChecked))
-						lastChecked=lastCheckedDate;
-					
-					statusTable.addComponent(componentStatusTable);
-					
-				}
-				if(!oneComponentIsUp)
-					testbedStatus = "down";
-				
-				statusTable.setLastCheck(lastChecked);
-				if(testbedStatus.compareTo("up")==0 && upAndLastCheckedOld)
-					testbedStatus="upAndLastCheckedOld";
-				statusTable.setStatus(testbedStatus);
-				if(testbedName!=null){
-					statusTable.setId(testbedName);
+
+					StatusTable statusTable = new MonitoringManager()
+							.getMonitoringDataById(testbedName);
+
+					if (statusTable == null) {
+						statusTable = new StatusTable();
+						statusTable.setId(testbedName);
+						statusTable.addComponent(componentStatusTable);
+						statusTable.setLastCheck(componentStatusTable
+								.getLastCheck());
+						statusTable.setStatus(componentStatusTable.getStatus());
+					} else {
+						statusTable.addComponent(componentStatusTable);
+					}
+
+					statusTable = updateStatusTableState(statusTable);
 					new MonitoringManager().pushMonitoringData(statusTable);
 				}
-				
+
 			}
-			
+
+			// while ((str=in.readLine()) != null) {
+			// StatusTable componentStatusTable = new StatusTable();
+			//
+			// if(str.contains("domain:"))
+			// testbedName=str.split(":")[1].trim();
+			//
+			// if(str.length()>0 && Character.isDigit(str.charAt(0))){
+			// String[] strArray = parseLine(str);
+			// Date lastCheckedDate = new Date();
+			// if(strArray[3]!=null)
+			// lastCheckedDate = parseStringToDate(strArray[3]);
+			//
+			// componentStatusTable.setLastCheck(lastCheckedDate);
+			// componentStatusTable.setId(strArray[1]);
+			//
+			// if(strArray[2].compareTo("1")==0){
+			// if(isLastCheckedOld(lastCheckedDate)){
+			// upAndLastCheckedOld = true;
+			// componentStatusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
+			// }else
+			// componentStatusTable.setStatus(StatusTable.UP);
+			// oneComponentIsUp=true;
+			// if(testbedStatus.compareTo(StatusTable.PARTIALLY)!=0){
+			// if (testbedStatus.compareTo(StatusTable.DOWN) == 0){
+			// testbedStatus = StatusTable.PARTIALLY;
+			// }else
+			// testbedStatus=StatusTable.UP;
+			// }
+			// }
+			//
+			// if(strArray[2].compareTo("0")==0){
+			// componentStatusTable.setStatus(StatusTable.DOWN);
+			// testbedStatus = StatusTable.PARTIALLY;
+			// }
+			//
+			// if(lastCheckedDate.before(lastChecked))
+			// lastChecked=lastCheckedDate;
+			//
+			// statusTable.addComponent(componentStatusTable);
+			//
+			// }
+			// if(!oneComponentIsUp)
+			// testbedStatus = StatusTable.DOWN;
+			//
+			// statusTable.setLastCheck(lastChecked);
+			// if(testbedStatus.compareTo(StatusTable.UP)==0 &&
+			// upAndLastCheckedOld)
+			// testbedStatus=StatusTable.UP_AND_LAST_CHECKED_OLD;
+			// statusTable.setStatus(testbedStatus);
+			// if(testbedName!=null){
+			// statusTable.setId(testbedName);
+			// new MonitoringManager().pushMonitoringData(statusTable);
+			// }
+			//
+			// }
+
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
-		}finally{
+		} finally {
 			out.close();
 			try {
 				socket.close();
@@ -101,40 +157,94 @@ public class ClientHandler implements Runnable {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-		
+
 	}
-	
-	
+
+	private StatusTable updateStatusTableState(StatusTable statusTable) {
+
+		Date lastChecked = new Date();
+		statusTable.setStatus(StatusTable.UNDEFINED);
+
+		Collection<StatusTable> components = statusTable.getComponents();
+
+		for (Iterator iterator = components.iterator(); iterator.hasNext();) {
+			StatusTable statusTableComponent = (StatusTable) iterator.next();
+
+			if (statusTableComponent.getStatus().compareTo(StatusTable.UP) == 0) {
+				if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
+					statusTable.setStatus(StatusTable.PARTIALLY);
+				}
+				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
+					statusTable.setStatus(StatusTable.UP);
+			}
+
+			if (statusTableComponent.getStatus().compareTo(
+					StatusTable.UP_AND_LAST_CHECKED_OLD) == 0) {
+				if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
+					statusTable.setStatus(StatusTable.PARTIALLY);
+				}
+				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
+					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
+			}
+
+			if (statusTableComponent.getStatus().compareTo(StatusTable.DOWN) == 0) {
+				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0
+						|| statusTable.getStatus().compareTo(StatusTable.DOWN) == 0)
+					statusTable.setStatus(StatusTable.DOWN);
+				else
+					statusTable.setStatus(StatusTable.PARTIALLY);
+			}
+
+			if (statusTableComponent.getStatus().compareTo(
+					StatusTable.UNDEFINED) == 0) {
+				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0) {
+					statusTable.setStatus(StatusTable.UNDEFINED);
+				} else if (statusTable.getStatus().compareTo(StatusTable.DOWN) == 0) {
+					statusTable.setStatus(StatusTable.DOWN);
+				} else
+					statusTable.setStatus(StatusTable.PARTIALLY);
+			}
+
+			if (statusTableComponent.getLastCheck().before(lastChecked))
+				lastChecked = statusTableComponent.getLastCheck();
+		}
+
+		statusTable.setLastCheck(lastChecked);
+
+		return statusTable;
+	}
+
 	private boolean isLastCheckedOld(Date lastCheckedDate) {
 		Date now = new Date();
 		long nowInMilis = now.getTime();
 		long lastCheckedDateInMilis = lastCheckedDate.getTime();
-		
-		return (nowInMilis-lastCheckedDateInMilis)>timeForOldLastCheckedInMilis;
+
+		return (nowInMilis - lastCheckedDateInMilis) > timeForOldLastCheckedInMilis;
 	}
 
 	private Date parseStringToDate(String dateString) throws ParseException {
-		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
-		
+		SimpleDateFormat simpleDate = new SimpleDateFormat(
+				"yyyy-MM-dd'T'HH:mm:ss.SSSSSSz");
+
 		StringBuilder dateStrBuilder = new StringBuilder(dateString);
 		dateStrBuilder.deleteCharAt(dateString.lastIndexOf(":"));
-		
+
 		return simpleDate.parse(dateStrBuilder.toString());
-		
+
 	}
 
-
 	private String[] parseLine(String str) {
-		if (str==null) return null;
-		
+		if (str == null)
+			return null;
+
 		String[] strArr = str.split("\t");
 		String[] response = new String[4];
-		
-		response[0]=strArr[1].trim();
-		response[1]=strArr[3].trim();
-		response[2]=strArr[4].trim();
-		response[3]=strArr[5].trim();
-		
+
+		response[0] = strArr[1].trim();
+		response[1] = strArr[3].trim();
+		response[2] = strArr[4].trim();
+		response[3] = strArr[5].trim();
+
 		return response;
 	}
 }

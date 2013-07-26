@@ -19,7 +19,7 @@ public class OMLServerTest {
 
 	@Test
 	public void testPushMonitoringData() {
-		client.run();
+//		client.run();
 	}
 	
 

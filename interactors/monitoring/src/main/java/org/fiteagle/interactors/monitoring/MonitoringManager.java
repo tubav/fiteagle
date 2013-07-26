@@ -17,8 +17,6 @@ import orgt.fiteagle.core.monitoring.StatusTable;
 
 public class MonitoringManager implements ResourceMonitoringBoundary {
 	
-	//TODO: make enum for status staff.
-
 	private static HashMap<String, StatusTable> monitoringData = new HashMap<String, StatusTable>();
 	
 	private static boolean serverStarted = false;
@@ -69,8 +67,6 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 			statusTable.setXipiId(id);
 			statusTable.setId(infinityValueID.getValue());
 			
-			
-			
 			result.add(statusTable);
 		}
 		
@@ -81,7 +77,7 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 		if(monitoringData.get(statusTable.getId())!=null)
 		monitoringData.put(statusTable.getId(), statusTable);
 	}
-
+	
 	@Override
 	public StatusTable getMonitoringDataById(String id) {
 		return monitoringData.get(id);
