@@ -166,6 +166,25 @@ public class UserPresenter{
     return Response.status(200).build();
   }
   
+  @POST
+  @Path("{username}/pubkey/{description}/description")
+  @Consumes(MediaType.TEXT_PLAIN)
+  public Response renamePublicKey(@PathParam("username") String username, @PathParam("description") String description, String newDescription) {    
+    try {
+      manager.renameKey(username, decode(description), newDescription);
+    } catch (InValidAttributeException e){
+      throw new FiteagleWebApplicationException(422, e.getMessage());
+    } catch (DuplicatePublicKeyException e){
+      throw new FiteagleWebApplicationException(409, e.getMessage());
+    } catch (UserNotFoundException | PublicKeyNotFoundException e) {
+      throw new FiteagleWebApplicationException(404, e.getMessage());
+    } catch (DatabaseException e) {
+      log.error(e.getMessage());
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    return Response.status(200).build();
+  }
+  
   private String decode(String string){    
     try {
       return URLDecoder.decode(string, "UTF-8");
@@ -189,7 +208,7 @@ public class UserPresenter{
   
   @POST
   @Path("{username}/certificate")
-  @Consumes("text/plain")
+  @Consumes(MediaType.TEXT_PLAIN)
   public String createUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
     try {      
       return manager.createUserPrivateKeyAndCertAsString(username, decode(passphrase));

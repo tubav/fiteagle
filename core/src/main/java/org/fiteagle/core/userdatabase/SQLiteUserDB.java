@@ -75,9 +75,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
       if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column email is not unique)")){
         throw new DuplicateEmailException();
       }
-      else{
-        throw e;
-      }
+      throw e;
     }
   }
 	
@@ -99,10 +97,8 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
       if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, description are not unique)")
           || e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, key are not unique)")){
         throw new DuplicatePublicKeyException();
-      }
-      else{
-        throw e;
-      }
+      }      
+      throw e;      
     }     
   }
 	
@@ -193,6 +189,31 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
       throw new DatabaseException(e.getMessage());
     }    
   }
+  
+  @Override
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+    get(username);    
+    
+    try {
+      renameKeyInDatabase(username, description, newDescription);
+    } catch (SQLException e) {
+      if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, description are not unique)")){
+        throw new DuplicatePublicKeyException();
+      }
+      throw new DatabaseException(e.getMessage());
+    }   
+  }
+
+  private void renameKeyInDatabase(String username, String description, String newDescription) throws SQLException {
+    ArrayList<Object> params = new ArrayList<>();
+    params.add(newDescription);
+    params.add(username);
+    params.add(description);
+    
+    if(executeSQLUpdateString("UPDATE Keys SET description=? WHERE username=? AND description = ?", params) == 0){
+      throw new PublicKeyNotFoundException();
+    }
+  } 
 	
 	@Override
 	public User get(String username) throws UserNotFoundException, DatabaseException {		

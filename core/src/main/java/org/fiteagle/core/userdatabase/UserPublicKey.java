@@ -95,31 +95,20 @@ public class UserPublicKey {
     return publicKey;
   }  
 
-  public void setPublicKey(PublicKey publicKey) {
-    this.publicKey = publicKey;
-  }
-
   public String getDescription() {
     return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   public Date getCreated() {
     return created;
   }
 
-  public void setCreated(Date created) {
-    this.created = created;
-  }
-
   public String getPublicKeyString() {
     return publicKeyString;
   }
 
-  public void setPublicKeyString(String publicKeyString) {
-    this.publicKeyString = publicKeyString;
-  }  
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
 }

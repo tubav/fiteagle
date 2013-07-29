@@ -90,6 +90,10 @@ public class UserDBManager {
     database.deleteKey(username, description);
   }
   
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+    database.renameKey(username, description, newDescription);
+  }
+  
   public User get(String username) throws UserNotFoundException, DatabaseException {
     return database.get(username);
   }
@@ -147,7 +151,7 @@ public class UserDBManager {
   }
 
   public String createUserCertificateForPublicKey(String username, String description) throws Exception, PublicKeyNotFoundException {
-    PublicKey publicKey = get(username).getPublicKey(description);
+    PublicKey publicKey = get(username).getPublicKey(description).getPublicKey();
     return createUserCertificate(username, publicKey);
   }
 }

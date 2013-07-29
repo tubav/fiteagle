@@ -32,6 +32,8 @@ public interface UserManagerBoundary {
   
   public abstract void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
   
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException;
+  
   public abstract User get(String username) throws UserNotFoundException, DatabaseException;
   
   public abstract User get(User u) throws UserNotFoundException, DatabaseException;
