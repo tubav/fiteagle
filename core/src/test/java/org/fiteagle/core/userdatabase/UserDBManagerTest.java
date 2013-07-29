@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.After;
@@ -24,10 +25,12 @@ public class UserDBManagerTest {
     testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password");
     try{
       userDBManager.add(testUser);
-    } catch(DuplicateUsernameException e){      
+    } catch(DuplicateUsernameException | DuplicateEmailException e){  
+      userDBManager.delete(testUser);
+      userDBManager.add(testUser);
     }
   }
-  
+    
   @Test
   public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException { 
     Assert.assertEquals("test", testUser.getFirstName());
