@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.iharder.Base64;
 
@@ -37,7 +38,8 @@ public class User {
 	private List<UserPublicKey> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
-	private final static int MINIMUM_USERNAME_LENGTH = 3;
+	private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-]{3,20}");
+	private final static Pattern EMAIL_PATTERN = Pattern.compile("[\\w|-]+@[\\w|-]*\\.[a-z]{2,3}");
 	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 3;
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
 
@@ -110,17 +112,17 @@ public class User {
       throw new NotEnoughAttributesException("no password given or password too short");
     }   
 	  
-	  if(username.length() < MINIMUM_USERNAME_LENGTH){
-	    throw new InValidAttributeException("username too short");
-	  }
+	  if(!USERNAME_PATTERN.matcher(username).matches()){
+      throw new InValidAttributeException("invalid username, only letters, numbers and \"-\" is allowed and the username has to be from 3 to 20 characters long");
+    }
 	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
       throw new InValidAttributeException("firstName too short");
     }
 	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
       throw new InValidAttributeException("lastName too short");
     }
-	  if(!email.contains("@") || !email.contains(".")){
-      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
+	  if(!EMAIL_PATTERN.matcher(email).matches()){
+      throw new InValidAttributeException("an email needs to contain \"@\" and \".\" and no special characters");
     }
 	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
       throw new InValidAttributeException("affiliation too short");

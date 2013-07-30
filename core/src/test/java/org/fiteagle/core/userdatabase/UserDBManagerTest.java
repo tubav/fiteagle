@@ -33,8 +33,8 @@ public class UserDBManagerTest {
     
   @Test
   public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException { 
-    Assert.assertEquals("test", testUser.getFirstName());
     Assert.assertEquals("test1", testUser.getUsername());
+    Assert.assertEquals("test", testUser.getFirstName());    
     Assert.assertEquals("testName", testUser.getLastName());
     Assert.assertEquals("test@test.org", testUser.getEmail());
     Assert.assertNotNull(testUser.getPasswordHash());
