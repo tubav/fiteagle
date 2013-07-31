@@ -5,11 +5,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
+import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
 import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 
 public class UserPublicKey {
@@ -18,7 +20,9 @@ public class UserPublicKey {
   private PublicKey publicKey;  
   private String description;
   private String publicKeyString; 
-  private Date created;  
+  private Date created;    
+  
+  private final static Pattern KEY_DESCRIPTION_PATTERN = Pattern.compile("[\\w|\\s]+");
   
   private KeyManagement keyManager = KeyManagement.getInstance();
   
@@ -60,6 +64,9 @@ public class UserPublicKey {
   private void checkDescription() throws NotEnoughAttributesException {
     if(description == null || description.length() == 0){
       throw new NotEnoughAttributesException("no description for public key given");
+    }
+    if(!KEY_DESCRIPTION_PATTERN.matcher(description).matches()){
+      throw new InValidAttributeException("empty or invalid key description, only letters, numbers and whitespace is allowed: "+description);
     }
   }   
   

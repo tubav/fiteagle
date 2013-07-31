@@ -9,7 +9,6 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
 
 import net.iharder.Base64;
 
@@ -145,7 +144,7 @@ public class UserDBManager {
     KeyPair keypair = keyManager.generateKeyPair();
     String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, new UserPublicKey(pubKeyEncoded, "created at "+new Date().toString()));
+    addKey(username, new UserPublicKey(pubKeyEncoded, "created at "+System.currentTimeMillis()));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
     return privateKeyEncoded + "\n" + userCertString;   
   }

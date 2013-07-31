@@ -39,8 +39,8 @@ public class User {
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
 	private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-]{3,20}");
-	private final static Pattern EMAIL_PATTERN = Pattern.compile("[\\w|-]+@[\\w|-]*\\.[a-z]{2,3}");
-	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 3;
+	private final static Pattern EMAIL_PATTERN = Pattern.compile("[^@]+@{1}[^@]+\\.+[^@]+");
+	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 2;
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
 
   static Logger log = LoggerFactory.getLogger(UserDBManager.class);
@@ -122,7 +122,7 @@ public class User {
       throw new InValidAttributeException("lastName too short");
     }
 	  if(!EMAIL_PATTERN.matcher(email).matches()){
-      throw new InValidAttributeException("an email needs to contain \"@\" and \".\" and no special characters");
+      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
     }
 	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
       throw new InValidAttributeException("affiliation too short");
@@ -131,6 +131,7 @@ public class User {
 	  for(UserPublicKey userPublicKey : publicKeys){
 	    String description = userPublicKey.getDescription();
 	    String publicKeyString = userPublicKey.getPublicKeyString();
+	    
 	    for(UserPublicKey key : publicKeys){
 	      if(key != userPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
 	        throw new DuplicatePublicKeyException();
