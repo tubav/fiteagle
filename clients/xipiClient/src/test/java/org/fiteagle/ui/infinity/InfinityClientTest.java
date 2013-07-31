@@ -17,9 +17,9 @@ public class InfinityClientTest {
 
 	@Before
 	public void setup() throws URISyntaxException {
-		//URI uri = new URI("http://www.xipi.eu");
-		//this.client = new InfinityClientWeb(uri);
-		this.client = new InfinityClientMock();
+		URI uri = new URI("http://www.xipi.eu");
+		this.client = new InfinityClientWeb(uri);
+//		this.client = new InfinityClientMock();
 	}
 
 	@Test

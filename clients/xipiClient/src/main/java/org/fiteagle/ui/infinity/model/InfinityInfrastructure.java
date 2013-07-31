@@ -22,6 +22,9 @@ public class InfinityInfrastructure{
    	private String shortName;
    	private String status;
    	private ArrayList<String> tags;
+   	
+   	private String description;
+   	
 
  	public InfinityArrayList getBlocks(){
 		return this.blocks;
@@ -136,5 +139,11 @@ public class InfinityInfrastructure{
 	}
 	public void setTags(ArrayList<String> tags){
 		this.tags = tags;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

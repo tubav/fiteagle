@@ -1,5 +1,8 @@
 package org.fiteagle.ui.infinity;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -44,7 +47,15 @@ public class InfinityClientWeb extends InfinityClient {
 		WebResource resource = path.queryParams(queryParams);
 		Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 		String jsonString = builder.get(String.class);
-		return jsonString;
+		
+		InputStream fixedInputStream;
+//		try {
+//			fixedInputStream = fixEncoding(new ByteArrayInputStream(jsonString.getBytes("ISO-8859-1")));
+			fixedInputStream = fixEncoding(new ByteArrayInputStream(jsonString.getBytes()));
+//		} catch (UnsupportedEncodingException e) {
+//			throw new RuntimeException(e.getMessage());
+//		}
+		return convertStreamToString(fixedInputStream);
 	}
 
 	private MultivaluedMapImpl getDefaultQueryParams(String methodName) {
@@ -56,8 +67,17 @@ public class InfinityClientWeb extends InfinityClient {
 	}
 
 	@Override
-	ArrayList<InfinityValueID> searchInfrastructures() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<InfinityValueID> searchInfrastructures() {
+		String methodName = InfinityClient.Methods.SEARCH_INFRASTRUCTURES.getValue();
+		MultivaluedMapImpl queryParams = getDefaultQueryParams(methodName);
+		queryParams.add("serviceParameters", "%5btext,country,component%5d");
+
+		String jsonString = getJsonString(queryParams);
+
+		try {
+			return this.parser.parseSearchInfrastructuresResponse(jsonString);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

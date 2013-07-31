@@ -55,37 +55,4 @@ public class InfinityClientMock extends InfinityClient {
 		return convertStreamToString(fixedIn);
 	}
 
-	private InputStream fixEncoding(InputStream in) {
-		
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	    byte[] buffer = new byte[1024];
-	    int len;
-	    try {
-			while ((len = in.read(buffer)) > -1 ) {
-			    out.write(buffer, 0, len);
-			}
-		} catch (IOException e2) {
-			throw new RuntimeException(e2.getMessage());
-		}
-	    try {
-			out.flush();
-		} catch (IOException e1) {
-			throw new RuntimeException(e1.getMessage());
-		}
-	    
-	    byte[] utf8 = null;
-		try {
-			utf8 = new String(out.toByteArray(), "ISO-8859-1").getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-		
-		return new ByteArrayInputStream(utf8);
-	}
-
-	private static String convertStreamToString(InputStream is) {
-		@SuppressWarnings("resource")
-		Scanner s = new Scanner(is).useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
-	}
 }

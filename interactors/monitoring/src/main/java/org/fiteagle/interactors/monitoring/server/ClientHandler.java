@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.fiteagle.interactors.monitoring.MonitoringManager;
@@ -31,6 +32,9 @@ public class ClientHandler implements Runnable {
 
 		BufferedReader in;
 		PrintWriter out = null;
+		HashMap <Integer, String> componentSchemaNames = new HashMap<Integer, String>();
+		
+		
 		try {
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
@@ -41,9 +45,35 @@ public class ClientHandler implements Runnable {
 
 			while ((str = in.readLine()) != null) {
 				StatusTable componentStatusTable = new StatusTable();
+				
+				str = str.trim();
 
 				if (str.contains("domain:"))
 					testbedName = str.split(":")[1].trim();
+				
+				if(str.startsWith("schema:")){
+					String schemaNrAndName = str.split(":")[1].trim();
+					Integer schemaNr = null;
+					int startOfSchemaName;
+					int i = 0;
+					while (!Character.isDigit(schemaNrAndName.charAt(i)) && schemaNrAndName.length() > i) i++;
+					if(i==schemaNrAndName.length()-1) 
+						throw new RuntimeException("Schema definition in OML Stream is wrong");
+					if(Character.isDigit(schemaNrAndName.charAt(i+1))){
+						schemaNr = Integer.parseInt(schemaNrAndName.substring(i, i+1));
+						startOfSchemaName = i+2;
+					}else{
+						schemaNr = Integer.parseInt(new String(new char[]{schemaNrAndName.charAt(i)}));
+						if(schemaNr == 0) continue;
+						startOfSchemaName = i+1;
+					}
+					int endOfSchemaName = schemaNrAndName.lastIndexOf("node");
+					
+					String schemaName = schemaNrAndName.substring(startOfSchemaName, endOfSchemaName).trim();
+					componentSchemaNames.put(schemaNr, schemaName);
+				}
+					
+					
 
 				if (str.length() > 0 && Character.isDigit(str.charAt(0))) {
 					
@@ -57,7 +87,8 @@ public class ClientHandler implements Runnable {
 					if (strArray[3] != null)
 						lastCheckedDate = parseStringToDate(strArray[3]);
 					componentStatusTable.setLastCheck(lastCheckedDate);
-					componentStatusTable.setId(strArray[1]);
+//					componentStatusTable.setId(strArray[1]);
+					componentStatusTable.setId(componentSchemaNames.get(new Integer(strArray[0])));
 
 					if (strArray[2].compareTo("1") == 0) {
 						if (isLastCheckedOld(lastCheckedDate)) {
@@ -184,6 +215,8 @@ public class ClientHandler implements Runnable {
 					statusTable.setStatus(StatusTable.PARTIALLY);
 				}
 				if (statusTable.getStatus().compareTo(StatusTable.UNDEFINED) == 0)
+					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
+				if (statusTable.getStatus().compareTo(StatusTable.UP) == 0)
 					statusTable.setStatus(StatusTable.UP_AND_LAST_CHECKED_OLD);
 			}
 
