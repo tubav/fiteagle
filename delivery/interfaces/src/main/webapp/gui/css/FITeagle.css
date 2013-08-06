@@ -1,6 +1,7 @@
 .hidden{display:none}
 body{
 	padding:0 !important;
+<<<<<<< HEAD
 	background: #f7f7f7;
 	background: -moz-linear-gradient(top, #f7f7f7, #aaaaaa);
 	background: -webkit-linear-gradient(top, #f7f7f7, #aaaaaa);
@@ -8,6 +9,14 @@ body{
 	background: -o-linear-gradient(top, #f7f7f7, #aaaaaa);
 	background: linear-gradient(top, #f7f7f7, #aaaaaa);
 	background-size: 100%;
+=======
+	background: #fff;
+	background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -webkit-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -ms-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -o-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: linear-gradient(top, #f7f7f7, #e1e1e1);
+>>>>>>> 9fca92614c83d65054fd85b3d9b74e40cbd6e0db
 	color: #373737 !important;
 	font-size: 16px !important;
 	line-height: 1.5 !important;
@@ -178,7 +187,8 @@ input.search-query{height:24px !important;}
 #navs{	margin-top:10px;}
 #navs ul{ margin-bottom: 0px;}
 #navs ul li{ margin-right:15px}
-#navs .nav-pills>li>a{ color:#2E2E2E}
+#navs .nav-pills>li>a{color:#2E2E2E}
+		
 #navs .nav-pills>.active>a { color:white;background-color: #212121;}
 #header{
 	background: #212121;
@@ -337,21 +347,31 @@ input.search-query{height:24px !important;}
 
 }
 
-<<<<<<< HEAD
-#statusTable{
+
+/*#statusTable{
 	width: 75%;
+	position:relative;
+ 	top:80px;
+ 	left:160px;
 }
 #statusTable > tbody > tr   {
 	padding-top: 2%;
-	
 }
+
+#statusTable > tbody > tr:nth-child(odd){background-color:#fff;}
+	
 /*#statusTable > tbody > tr:hover td  {
 	background-color: #c7c7c7;
 	
-}*/
+}*!/
 #statusTable > tbody > tr > td.statusRow  {
 	cursor: pointer;
 	width: 10%;
+	
+}
+
+#statusTable > tbody > tr > td.rowAlignLeft  {
+	text-align: left;
 	
 }
 
@@ -360,7 +380,9 @@ input.search-query{height:24px !important;}
 		
 }
 
-
+#statusTable > thead {
+	white-space: nowrap;
+}
 
 #statusTable > tbody > tr > td  {
 	text-align: center;
@@ -369,10 +391,11 @@ input.search-query{height:24px !important;}
 }
 
 #statusTable > tbody > tr > td > img.status {
-	width: 12%;
+	max-width: 2em;
+	min-width: 1em;
 }
 #popup {
-	width: 40%;
+	min-width: 40%;
 	alignment-baseline: central;
 }
 #popup div  {
@@ -398,7 +421,7 @@ input.search-query{height:24px !important;}
 #popup div.modal-body >table > tbody > tr > td > img.status {
 	width: 25%;
 }
-
+*/
 
 =======
 /* LOGIN BUTTON STYLES */
@@ -476,4 +499,5 @@ input.search-query{height:24px !important;}
 
 
 
->>>>>>> 994dcc12351ebd0724c9248c9dd7192aabb20151
+#navs ul { white-space:nowrap; }
+

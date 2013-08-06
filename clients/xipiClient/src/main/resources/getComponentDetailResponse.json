@@ -1,0 +1,133 @@
+[
+   {
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":null,
+            "other":null,
+            "name":"Location",
+            "value":"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"1085\">\t<colgroup>\t\t<col width=\"33\" />\t\t<col width=\"1052\" />\t<\/colgroup>\t<tbody>\t\t<tr height=\"76\">\t\t\t<td class=\"xl66\" colspan=\"2\" height=\"76\" width=\"1085\">\t\t\t\t<p>As presented before, Trentino Testbed is composed of two parallel experimental facilities: one based on commercial equipments, the other on OpenFlow ones. The locations hosting the related backbone devices are the following three: Trentino Network, CREATE-NET and DIECS/DISI department at the University of Trento.<\/p>\t\t\t<\/td>\t\t<\/tr>\t<\/tbody><\/table>",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Dates of unavailability",
+            "value":"N/A",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Support of traffic priority ",
+            "value":"3",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Coverage",
+            "value":"5",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Services offered",
+            "value":"1,8,3,4,5",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Protocol for accessing services",
+            "value":"1,3,4,5,7,8",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Interconnection with other infrastructures",
+            "value":"<p>WiFi networks<br />\t\t\t\t\tSensor networks<\/p>",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Open interfaces (API)",
+            "value":"1",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"year of starting operation",
+            "value":"01/01/2010",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Planned evolution",
+            "value":"<p>An equipment upgrade is foreseen by the end of 2012.<\/p><p>The evolution plans for the Trentino Testbed aim at connecting to <a href=\"http://www.trentinonetwork.it/reti/fibra-ottica-1/la-fibra-ottica\">Trentino MPLS Network Backbone<\/a>, an MPLS based backbone network running all over fiber distributed in all main valleys of the Trentino province.<\/p>",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Architecture",
+            "value":null,
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Security services",
+            "value":"1,6,7,8",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Authentication",
+            "value":"8",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Technical assistance",
+            "value":"0,1",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Access Technologies",
+            "value":"0,2",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"On demand access",
+            "value":"2",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Dynamic prioritization of traffic",
+            "value":"2",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":null,
+            "other":null,
+            "name":"Access Interfaces",
+            "value":"0,1,2",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   }
+]
