@@ -93,5 +93,11 @@ public class UserManager implements UserManagerBoundary{
   public String createUserCertificateForPublicKey(String uid, String description) throws Exception, PublicKeyNotFoundException {
     return manager.createUserCertificateForPublicKey(uid, description);
   }
+
+  @Override
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException,
+      DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+    manager.renameKey(username, description, newDescription);    
+  }
   
 }

@@ -74,4 +74,10 @@ public class InMemoryUserDB implements UserPersistable {
 	  User u = get(username);    
     u.deletePublicKey(description);
 	}	
+	
+	@Override
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+    User u = get(username);    
+    u.renamePublicKey(description, newDescription);
+  } 
 }

@@ -32,7 +32,7 @@
 	<div id="navigation" class="row-fluid">
 		<div id="navs" class="span12">
 			<a class="btn btn-inverse btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse">
-				<i class="icon-reorder"></i>
+				<i class="icon-reorder icon-2x"></i>
 			</a>
 			<div class="nav-collapse collapse">
 				<div class="centered-pills">
@@ -58,131 +58,166 @@
 	<div id="main" class="row-fluid">
 		<div id="loginPages" class="tab-content span12" >
 			<div id="home" class="row-fluid tab-pane active">
-					<div  class="span10 offset1 ">
-						<div id="FITeagleInfo" class="page-header">
-							<h3>
-								Welcome to FITeagle Portal !
-							</h3>					
-						</div>
-						<div class="row-fluid">
-							<h4>
-								New to FITeagle? Please <a id="registrationLink" href="#" data-toggle="tab">register</a> or learn more about the project.
-							</h4>
-							<p>
-								FITeagle is an extensible and distributed open source experimentation and management framework for federated Future Internet testbeds.
-							</p>
-						</div>
-						<div id="loginContainer" class="row-fluid top10">
-							<div id="fancyLogins" class="span5" >
-								<h4>Federated Log In</h4>
-								<div id="fancyLoginList"  align="left">
-									<ul class="top20">
-										<li><a id="fed4fireLoginBtn" href="#"><img src="img/fed4fireB.png" alt=""/></a></li>
-										<li><a id="openidLoginBtn" href="#"><img src="img/openidB.png" alt=""/></a></li>
-										<li><a id="googleLoginBtn" href="#"><img src="img/googleB.png" alt="" /></a></li>
-										<li><a id="facebookLoginBtn" href="#"><img src="img/facebookB.png" alt="" /></a></li>
-										<li><a id="yahooLoginBtn" href="#"><img src="img/yahooB.png" alt="" /></a></li>
-									</ul>
-								</div>				
-							</div>	
-							<div id="loginForm" class="span7">
-								<h4>Log In</h4>
-								<div id="loginErrors" class="row-fluid top20">
-								</div>
-								<div class="row-fluid ">
-									<label class="span3" for="username">Username</label>
-									<input class="span9" type="text" id="username" placeholder="Username" autocomplete="on" required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="password">Password</label>
-									<input class="span9" type="password" id="password" placeholder="Password" autocomplete="on" required>
-								</div>
-								<div class="row-fluid">
-									<label id="rememberMe" class="checkbox">
-										<input id="rememberMeCheckbox"type="checkbox"> Remember me</input>
-									</label>
-								</div>
-								<div class="row-fluid">
-									<button id="signIn" type="submit" class="btn btn-inverse"><i class="icon-signin"></i>Sign in</button>
-										<i id="loadingSign" class="icon-spin icon-spinner icon-large hidden"></i>	
-								</div>
-							</div>		
-						</div> 
+				<div  class="span8 offset2 ">
+					<div id="FITeagleInfo" class="page-header">
+						<h3>
+							Welcome to FITeagle Portal !
+						</h3>					
 					</div>
+					<div class="row-fluid">
+						<h4>
+							New to FITeagle? Please <a id="registrationLink" href="#" data-toggle="tab">register</a> or learn more about the project.
+						</h4>
+						<p>
+							FITeagle is an extensible and distributed open source experimentation and management framework for federated Future Internet testbeds.
+						</p>
+					</div>
+					<div id="loginContainer" class="row-fluid top10">
+						<div id="fancyLogins" class="span12" >
+							<h4>Federated Log In</h4>
+							<div id="fancyLoginList" >
+								<div  class="row-fluid">
+									<div class="span4">
+										<button id="fiteagleLoginBtn" class="btn span12"
+											role = "button"
+											data-target = "#loginForm"
+											data-toggle = "modal"
+										>												
+										</button>
+									</div>
+									<div class="span4">
+										<button id="xifiLoginBtn" class="btn btn-inverse span12">
+										</button>
+									</div>
+
+									<div class="span4">
+										<button id="fed4fireLoginBtn" class="btn span12"></button>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="span4">
+										<button id="openidLoginBtn" class="btn span12"></button>
+									</div>
+									<div class="span4">
+										<button id="googleLoginBtn" class="btn span12">
+										</button> 
+									</div>
+									<div class="span4">
+										<button id="yahooLoginBtn" class="btn span12">
+										</button> 
+									</div>
+								</div>
+							</div>
+							<div id="loginForm" class="modal hide fade"
+								tabindex="-1" role="dialog" 
+								aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-header">
+									<button type="button" 
+									class="close" data-dismiss="modal" aria-hidden="true">
+									<i class="icon-remove icon-large"></i>
+									</button>
+									<h4>FITeagle Custom Log In</h4>
+								</div>
+								<div class="modal-body">
+									<div id="loginErrors" class="row-fluid top20"></div>
+									<div class="row-fluid ">
+										<label class="span3" for="username">Username</label>
+										<input class="span9" type="text" id="username" placeholder="Username" autocomplete="on" required>
+									</div>
+									<div class="row-fluid">
+										<label class="span3" for="password">Password</label>
+										<input class="span9" type="password" id="password" placeholder="Password" autocomplete="on" required>
+									</div>
+									<div class="row-fluid">
+										<input id="rememberMeCheckbox" type="checkbox"></input>
+										<span id="rememberMeCheckboxLabel">Remember me</span>
+									</div>
+									<div class="modal-footer">
+										<div class="row-fluid">
+											<div class='top20 progress progress-striped active hidden'>
+												<div class='bar' style='width: 100%;'></div>
+											</div>
+											<button id="signIn" type="submit" class="btn btn-inverse span6 offset3"><i class="icon-signin icon-large"></i>Sign In</button>	
+										</div>
+									</div>
+								</div>	
+							</div>							
+						</div>	
+					</div> 
 				</div>
+			</div>
 			<div id="registration" class="row-fluid tab-pane">
-					<div  class="span10 offset1 ">
-						<div class="row-fluid">
-							<div class="page-header">
-								<h3>
-									Welcome to FITeagle Registration Page!
-								<br/>
-								<small>Please fill in our registration form below for registering.</small>
-								</h3>
-							</div>
+				<div  class="span8 offset2 ">
+					<div class="row-fluid">
+						<div class="page-header">
+							<h3>
+								Welcome to FITeagle Registration Page!
+							<br/>
+							<small>Please fill in our registration form below for registering.</small>
+							</h3>
 						</div>
-						<div class="row-fluid">
-							<div id="registrationForm" class="span10 offset1">
-								<div class="row-fluid">
-									<p></p>
-								</div>
-								<div class="row-fluid">
-									<p class="alert alert-info">* required fields</p>
-								</div>
-								<div id="registrationErrors" class="row-fluid">									
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputUsername">Username*</label>
-									<input class="span6"
-										id="inputUsername"
-										type="text"  
-										placeholder="Username" 
-									required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputFirstName">First Name*</label>
-									<input class="span6" type="text" id="inputFirstName" 
-										placeholder="First Name" required />
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputLastName">Last Name*</label>
-									<input class="span6" type="text" id="inputLastName" placeholder="Last Name"required />
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputEmail">Email*</label>
-									<input class="span6" type="email" id="inputEmail" 
-										placeholder="Email" required />
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputAffiliation">Affiliation*</label>
-									<input class="span6" type="text" id="inputAffiliation" 
-										placeholder="Affiliation" required />
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputPassword">Password*</label>
-									<input class="span6" type="password" 
-										id="inputPassword" placeholder="Password" required />
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputEmail">Confirm Password*</label>
-									<input class="span6" type="password" id="inputConfirmPassword" 
-										placeholder="Confirm Password" required />
-								</div>
-								<div class="row-fluid">
-									<button id="registerBtn" type="submit" class="btn btn-inverse">
-											<i class="icon-check"></i>Register
-									</button>			
-								</div>
+					</div>
+					<div class="row-fluid">
+						<div id="registrationForm" class="span10 offset1">
+							<div class="row-fluid">
+								<p></p>
+							</div>
+							<div class="row-fluid">
+								<p class="alert alert-info">* required fields</p>
+							</div>
+							<div id="registrationErrors" class="row-fluid">	</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputUsername">Username*</label>
+								<input class="span6"
+									id="inputUsername"
+									type="text"  
+									placeholder="Username" 
+								required>
+							</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputFirstName">First Name*</label>
+								<input class="span6" type="text" id="inputFirstName" 
+									placeholder="First Name" required />
+							</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputLastName">Last Name*</label>
+								<input class="span6" type="text" id="inputLastName" placeholder="Last Name"required />
+							</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputEmail">Email*</label>
+								<input class="span6" type="email" id="inputEmail" 
+									placeholder="Email" required />
+							</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputAffiliation">Affiliation*</label>
+								<input class="span6" type="text" id="inputAffiliation" 
+									placeholder="Affiliation" required />
+							</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputPassword">Password*</label>
+								<input class="span6" type="password" 
+									id="inputPassword" placeholder="Password" required />
+							</div>
+							<div class="row-fluid">
+								<label class="span3" for="inputEmail">Confirm Password*</label>
+								<input class="span6" type="password" id="inputConfirmPassword" 
+									placeholder="Confirm Password" required />
+							</div>
+							<div class="row-fluid">
+								<button id="registerBtn" type="submit" class="btn btn-inverse">
+										<i class="icon-check"></i>Register
+								</button>			
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
 			<div id="aboutUs" class="row-fluid tab-pane">
-				<div  class="span10 offset1 ">
+				<div  class="span8 offset2 ">
 					<div class="page-header">
 						<h3>About FITeagle</h3>
 					</div>
-						<section id="about" class="main_content inner ">
+					<section id="about" class="main_content inner ">
 							
 
 							<h4>In Short</h4>
@@ -241,11 +276,10 @@
 							</ul>
 						</div>
 						<br/><br/>
-						</section>	
-					</div>
+					</section>	
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>		 		 
 	<div id="footer" class="row-fluid">
 

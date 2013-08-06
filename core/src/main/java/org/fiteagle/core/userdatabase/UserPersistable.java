@@ -10,6 +10,7 @@ public interface UserPersistable {
 	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException, DuplicateEmailException; 
 	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
 	public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
+	public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException;
 	
 	public User get(String username) throws UserNotFoundException, DatabaseException;
 	public User get(User u) throws UserNotFoundException, DatabaseException;

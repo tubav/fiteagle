@@ -1,9 +1,13 @@
 define(['validation','utils','mainPage','messages'],
-/**
- * @lends Registration
- */ 
 function(Validation, Utils, MainPage,Messages){
 	
+	/** 
+     * Registration class
+     * The Registration class contains functions for user registration form initialisation. 
+     * @class
+     * @constructor
+     * @return Registration object
+     */
 	Registration = {};
 	
 	/**
@@ -252,7 +256,10 @@ function(Validation, Utils, MainPage,Messages){
 						  );
 						  
 			
-			var errorMessage = Server.registerUser(newUserInfo,this._getUsername());
+			var errorMessage = Server.registerUser(
+											newUserInfo,
+											this._getUsername(),
+											showNewUserProfile);
 			
 			if(errorMessage){
 					setTimeout(function(){
@@ -260,6 +267,12 @@ function(Validation, Utils, MainPage,Messages){
 					},1000);
 			}
 		}
+	};
+	
+	showNewUserProfile = function(){
+		console.log('clicking on !!!');
+		console.log($('#manageProfileMenu'));
+		$('#manageProfileMenu').click();
 	};
 
 	Registration.initRegistrationForm = function(){

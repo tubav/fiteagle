@@ -33,7 +33,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	
 	initOnWindowResizeEvents = function(){
 		$(window).resize(function(){
-				performScreenAdjustments();
+				//performScreenAdjustments();
 		});			
 	};
 	
@@ -104,6 +104,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var lis = $("#userInfoDropdown li");
 			lis.removeClass("active");
 		});
+		
 		Utils.updateInfoPanel();
 		initSignOutBtn();
 	};
@@ -112,8 +113,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		$("#signOut").on('click',function(e){
 			e.preventDefault();
 			//console.log("signOut clicked");		
-			Server.invalidateCookie(Main.signOut);
-			
+			var isCookieDeleted = Server.invalidateCookie();
+			if(isCookieDeleted) Main.signOut();
 		});
 	};
 	
