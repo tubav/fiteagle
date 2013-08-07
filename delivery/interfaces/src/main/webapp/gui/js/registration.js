@@ -5,7 +5,7 @@ define(['validation','utils','mainPage','messages'],
 function(Validation, Utils, MainPage,Messages){
 	
 	Registration = {};
-	
+	domain = "";
 	/**
 	* 
 	* Gets the username from the ristration form
@@ -272,7 +272,8 @@ function(Validation, Utils, MainPage,Messages){
 		
 		Registration.initRegistrationFormHints();
 		Registration.initRegisterNewUserButton();
-		Registration.setDomain();
+		Registration.getDomain();
+		Registration.setDomainInput();
 
 	};
 	
@@ -309,10 +310,25 @@ function(Validation, Utils, MainPage,Messages){
 		Utils.clearErrorMessagesFrom("#registrationErrors");
 	}
 	
-	Registration.setDomain = function(){
+	Registration.getDomain = function(){
 		$.get("/api/v1/config/domain",function(data){
-			$("#inputUsername").after("  @" + data);
+			domain = data;
 		})
+	}
+	
+	Registration.setDomainInput = function(){
+			$("#inputUsername").change(function () {Registration.checkDomainInput()});
+		
+	}
+	
+	Registration.checkDomainInput = function(){
+		var inputField = $("#inputUsername");
+		var value = $(inputField).val();
+		if(~value.indexOf("@")){
+			
+		}else{
+			$(inputField).val(value + "@" +domain);
+		}
 	}
 
 	return Registration;
