@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
@@ -45,17 +46,20 @@ public class UserPresenter{
   private static Logger log = LoggerFactory.getLogger(UserPresenter.class);
   
   private final UserManagerBoundary manager;
+  private final InterfaceConfiguration configuration;
   
   @Inject
   public UserPresenter(final UserManagerBoundary manager){
     this.manager = manager;
+    configuration = InterfaceConfiguration.getInstance();
   }
   
   @GET
   @Path("{username}")
   @Produces(MediaType.APPLICATION_JSON)
   public User getUser(@PathParam("username") String username, @QueryParam("setCookie") boolean setCookie) {
-    try {
+    username = addDomain(username);
+	try {
       return manager.get(username);
     } catch (UserNotFoundException e) {
       throw new FiteagleWebApplicationException(404, e.getMessage());
@@ -69,6 +73,7 @@ public class UserPresenter{
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addUser(@PathParam("username") String username, NewUser user) {
+	username = addDomain(username);
     user.setUsername(username);
     try {
       manager.add(createUser(user));
@@ -91,6 +96,7 @@ public class UserPresenter{
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response updateUser(@PathParam("username") String username, NewUser user) {
+	username = addDomain(username);
     user.setUsername(username);
     try {
       manager.update(createUser(user));    
@@ -135,7 +141,8 @@ public class UserPresenter{
   @Path("{username}/pubkey/")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addPublicKey(@PathParam("username") String username, NewPublicKey pubkey) {    
-    try {
+	username = addDomain(username);
+	try {
       manager.addKey(username, new UserPublicKey(pubkey.getPublicKeyString(), pubkey.getDescription()));
     } catch (CouldNotParse | InValidAttributeException | NotEnoughAttributesException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
@@ -152,7 +159,8 @@ public class UserPresenter{
   
   @DELETE
   @Path("{username}/pubkey/{description}")
-  public Response deletePublicKey(@PathParam("username") String username, @PathParam("description") String description) {    
+  public Response deletePublicKey(@PathParam("username") String username, @PathParam("description") String description) {
+	  username = addDomain(username);
     try {
       manager.deleteKey(username, decode(description));
     } catch (InValidAttributeException e){
@@ -178,6 +186,7 @@ public class UserPresenter{
   @DELETE
   @Path("{username}")
   public Response deleteUser(@PathParam("username") String username) {
+	  username = addDomain(username);
     try {
       manager.delete(username);
     } catch (DatabaseException e) {
@@ -191,6 +200,7 @@ public class UserPresenter{
   @Path("{username}/certificate")
   @Consumes("text/plain")
   public String createUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
+	  username = addDomain(username);
     try {      
       return manager.createUserPrivateKeyAndCertAsString(username, decode(passphrase));
     } catch (Exception e) {
@@ -203,6 +213,7 @@ public class UserPresenter{
   @Path("{username}/pubkey/{description}/certificate")
   @Produces(MediaType.TEXT_PLAIN)
   public String getUserCertificateForPublicKey(@PathParam("username") String username, @PathParam("description") String description) {
+	  username = addDomain(username);
     try {
       return manager.createUserCertificateForPublicKey(username, decode(description));
     } catch (PublicKeyNotFoundException e){
@@ -216,6 +227,7 @@ public class UserPresenter{
   @DELETE
   @Path("{username}/cookie")
   public Response deleteCookie(@PathParam("username") String username){
+	  username = addDomain(username);
     UserAuthenticationFilter.getInstance().deleteCookie(username);
     return Response.status(200).build();
   }
@@ -226,5 +238,12 @@ public class UserPresenter{
       super(new ResponseBuilderImpl().status(status).entity(message).build()); 
     }   
   }   
+  
+  private String addDomain(String username){
+	  if(!username.contains("@"))
+		  username = username + "@" + configuration.getDomain();
+	  
+	  return username;
+  }
   
 }
