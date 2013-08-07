@@ -25,4 +25,10 @@ public class ConfigurationPresenter {
   public String getVersion() {
     return interactor.getVersion();
   }
+  
+  @GET
+  @Path("domain")
+  public String getDomain(){
+  	return interactor.getDomain();
+  }
 }

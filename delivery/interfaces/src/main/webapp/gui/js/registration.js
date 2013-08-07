@@ -272,6 +272,7 @@ function(Validation, Utils, MainPage,Messages){
 		
 		Registration.initRegistrationFormHints();
 		Registration.initRegisterNewUserButton();
+		Registration.setDomain();
 
 	};
 	
@@ -306,6 +307,12 @@ function(Validation, Utils, MainPage,Messages){
 	
 	Registration.clearAllErrorMessages = function(){
 		Utils.clearErrorMessagesFrom("#registrationErrors");
+	}
+	
+	Registration.setDomain = function(){
+		$.get("/api/v1/config/domain",function(data){
+			$("#inputUsername").after("  @" + data);
+		})
 	}
 
 	return Registration;
