@@ -3,7 +3,8 @@ requirejs.config({
     'bootstrap'	: ['jquery','cookie'],
     'history' : ['jquery'],
     'ajaxify' : ['history'],
-	'prettyCheckable' : ['jquery']
+	'prettyCheckable' : ['jquery'],
+	'scrollTo' : ['jquery']
   }
 });
 

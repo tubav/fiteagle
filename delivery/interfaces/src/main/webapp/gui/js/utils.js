@@ -120,12 +120,6 @@ function(){
 			result = JSON.parse(sessionStorage.remember);
 		return result;
 	}
-	
-	Utils.updateInfoPanel = function(){
-		user = Utils.getCurrentUser();
-		//console.log('current user is set to: '+ Utils.userToString(user));
-		$("#userName").text(user.firstName +" " + user.lastName);
-	};
 
 	Utils.getCurrentUser = function(){		
 			if (sessionStorage.user != undefined){
