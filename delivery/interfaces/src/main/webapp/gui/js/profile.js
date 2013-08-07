@@ -167,24 +167,20 @@ function(require,Utils,Server){
 	};
 	
 	initDeleteUserProfileBtn = function(){
-		$('#deleteUserProfileBtn').on('click',function(){
-			Server.deleteUser(afterDeleteFunction);	
+		$('#deleteUserBtn').on('click',function(){
+			Utils.createConfirmModal('deleteUserProfileModal','deleteUserConfirmedBtn',Messages.confirmUserDeletionQuestion);
+			Utils.showModal('#deleteUserProfileModal');
+			$('#deleteUserConfirmedBtn').on('click',function(){
+				Utils.hideModal('#deleteUserProfileModal');
+				Server.deleteUser(afterDeleteFunction);	
+			});
 		});
 	};
 	
-	afterDeleteFunction = function(){
-		//console.log("Afte DELETE function");
-		var modal = $('#deleteUserProfileModal');
-		var modalHeaderCloseBtn = modal.find('.modal-header .close');
-		var modalBody = modal.find('.modal-body');
-		var modalFooter = modal.find('.modal-footer');
-		modalHeaderCloseBtn.remove();
-		modalBody.children().remove();
-		modalFooter.children().remove();
-		modalBody.append($('<span class="span10 offset1 alert alert-info">Current user has been successfully removed</span>'));
-		var okBtn = $('<button id="deleteUserModalOkBtn" class="btn btn-success span2">OK</button>');
-		okBtn.on('click',function(){
-			$('#deleteUserProfileModal').modal('hide');
+	afterDeleteFunction = function(){	
+		Utils.showSuccessModal(Messages.userDeleted,'userDeletedBtn')
+		$('#userDeletedBtn').on('click',function(){
+			Utils.hideModal('#deleteUserProfileModal')
 			require('mainPage').signOut();
 		});
 		modalFooter.append(okBtn);

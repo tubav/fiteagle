@@ -53,7 +53,13 @@ function(){
 			$(selector).addClass("invalid");
 		}
 	};
-
+	
+	/**
+	* Creates an error message with the specified text and adds it to the given filed found by the provided selector. 
+	* The error message is an twitter bootstrap "alert alert-danger" span field.
+	* @param {String} selector - selector of an element to add/remove .invalid class
+	* @param {String} bool - boolean value. If the value is true then ".invalid" class is added otherwise it is removed.
+	**/
 	Utils.addErrorMessageTo = function(selector, message){
 		$(selector).append(Utils.createErrorMessage(message));
 	};
@@ -220,17 +226,14 @@ function(){
 	
 	Utils.createNewUser = function(firstName,lastName,affiliation,password,email){		
 		
-		var newUser = new Object();
-		
+		var newUser = new Object();	
 		newUser.firstName = firstName;
 		newUser.lastName = lastName;
 		newUser.email = email;
 		newUser.affiliation = affiliation;
 		newUser.password = password;
 		newUser.publicKeys = [];
-
-		//console.log(JSON.stringify(newUser));
-		
+		//console.log(JSON.stringify(newUser));	
 		return newUser;
 	};
 	
@@ -251,14 +254,47 @@ function(){
 		});
 	};
 	
-	initProgressbarModal = function(){
-		$('#progressBarModal').remove();
-		var modal = createModal('progressBarModal');
-		var modalBody = $('<div>').addClass('modal-body')
-					.append('<h4 class="centered progressMessage"></h4>');
-		Utils.addProgressbarTo(modalBody);
-		modal.append(modalBody);
+	Utils.createCustomModal = function(id, modalHeader, modalBody, modalFooter){
+		$("#"+id).remove();
+		var modal = createModal(id);
+		var head = $('<div>').addClass('modal-header');
+		var body = $('<div>').addClass('modal-body');
+		var foot = $('<div>').addClass('modal-footer');
+		if(modalHeader) modal.append(head.append(modalHeader));
+		if(modalBody) modal.append(body.append(modalBody));
+		if(modalFooter) modal.append(foot.append(modalFooter));
 		$('body').append(modal);
+		return modal;
+	};
+	
+	Utils.showProgressbarModal = function(progressBarMessage){
+		var modalBody = $('<div>').addClass('modal-body')
+					.append('<h4 class="centered progressMessage">'+progressBarMessage+'</h4>');
+		Utils.addProgressbarTo(modalBody);
+		Utils.createCustomModal('progressBarModal',null,modalBody,null);
+		Utils.showModal('#progressBarModal');
+		
+	};
+	
+	Utils.createConfirmModal = function(id,okId,confirmMsg){
+		var ok = $('<button>')
+				.attr('id',okId)
+				.addClass('btn btn-success')
+				.append('<i class="icon-ok"></i>Yes');
+				
+		var cancel  = $('<button>')
+				.addClass('btn btn-danger left40')
+				.attr('data-dismiss','modal')
+				.attr('aria-hidden','true')
+				.append('<i class="icon-remove-sign"></i>No');
+				
+		var footer = $('<div>').addClass('centered')
+					.append(ok)
+					.append(cancel);
+		
+		var pBody = $('<div class="centered">'+confirmMsg+'</div>');
+			
+		return Utils.createCustomModal(id, null,pBody, footer);
 	};
 	
 	createModal = function(id){
@@ -272,25 +308,28 @@ function(){
 		return modal;
 	}
 	
-	Utils.showSuccessModal = function(successMsg){
-		$('#successModal').remove();
-		var modal = createModal('successModal');
-		var okBtn  = $('<button>').addClass('btn btn-inverse btn-large')
-						.attr('data-dismiss','modal')
-						.attr('aria-hidden','true')
-						.append('<i class="icon-ok"></i>OK');
-		var modalBody = $('<div>').addClass('modal-body')
-					.append(successMsg);	
-					
-		var modalFooter = $('<div>').addClass('modal-footer centered')
-						.append(okBtn);
-						
-		modal.append(modalBody).append(modalFooter);
-		$('body').append(modal);	
-		$('#successModal').modal({
+	Utils.showModal = function(selector){
+		$(selector).modal({
 			backdrop: 'static',
 			keyboard: false
 		});
+	}
+	
+	Utils.showSuccessModal = function(successMsg,okId){
+		var foot = $('<div>').addClass('centered')
+			.append(
+				$('<button>').addClass('btn btn-success btn-large')
+				.attr('id',okId)
+				.attr('data-dismiss','modal')
+				.attr('aria-hidden','true')
+				.append('<i class="icon-ok"></i>OK')
+			);
+			
+		var body = $('<div>').addClass('centered').append(successMsg);
+		
+		var modal = Utils.createCustomModal('successModal',null,body,foot);
+		console.log(modal);
+		Utils.showModal('#successModal');
 	}
 	
 	Utils.addProgressbarTo = function(object){

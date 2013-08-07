@@ -205,20 +205,17 @@ function(require,Validation,Registration,Utils,Messages){
 	}
 	
 	/**
-      * Initiates the login form. It Defines the focus change for enter click events on the login form fields.
-	  * Styles the remember me checkbox and initiates login form field hints by the help of the tooltips.
+      * Initiates the login form. It Defines the focus change for enter click events for the login form fields.
+	  * Styles the remember me checkbox by utilizing prettyCheckable plugin functions and images as well as 
+	  * initiates login form field hints with the twitter bootstrap tooltips.
 	  * @private
 	  * @memberOf Login#
       * @see http://arthurgouveia.com/prettyCheckable/
 	  */
 	initLoginForm = function(){
-		$('#fiteagleLoginBtn').on('click',function(){
-			window.setTimeout(function(){
-				Utils.changeFocusOnEnterClick("#username","#password");
-				Utils.addOnEnterClickEvent("#password","#signIn");
-				$('#username').focus();					
-			},200);
-		});
+		Utils.changeFocusOnEnterClick("#username","#password");
+		Utils.addOnEnterClickEvent("#password","#signIn");
+
 		$('#rememberMeCheckbox').prettyCheckable({color:'yellow'});
 		initLoginFormHints();
 	};

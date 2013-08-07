@@ -94,6 +94,12 @@ define([],function(){
 	
 	Messages.wrongPublicKeyFileSize = "Wrong file size. Please select another public key file";
 	
+	Messages.confirmKeyDeletionQuestion = "Are you sure you want to delete this public key ?"; 
+	
+	Messages.confirmUserDeletionQuestion = "Are you sure you want to delete your user profile?";
+	
+	Messages.userDeleted = "Current user profile has been successfully deleted";
+	
 	return Messages;
 
 });

@@ -139,7 +139,13 @@
 									<input class="span8" type="email" id="inputEmail">
 								</div>
 								<div class="row-fluid" align="center">
-										<a class="span10 underlined" href="#deleteUserProfileModal" role="button" data-toggle="modal">delete current user profile</a>
+									<div class="centered">
+										<button id="deleteUserBtn" class="btn btn-danger">
+										<i class="icon-minus-sign">
+											&nbsp;Delete User
+										</i>
+										</button>
+									</div>
 								</div>
 								<button id="saveProfileInfo" class="btn btn-inverse disabled span2 nomargin"><i class="icon-save"></i>Save</button>
 								<i id="saveProfileLoadingSign" class="icon-spin icon-spinner icon-2x hidden"></i>
@@ -173,8 +179,10 @@
 				</div>	
 				<div id="managePublicKeys" class="row-fluid tab-pane">
 					<div class="span12">
-						<div class="collapseHeader">
-							<h4 class="collapseHeader"><i class="icon-key icon-large"></i>Manage Public Keys</h4>
+						<div class="collapseHeader" data-toggle='collapse' data-target='#managePublicKeysContainer'>
+							<h4 class="collapseHeader" >
+								<i class="icon-key icon-large"></i>Manage Public Keys<i class="collapseSign"></i>
+							</h4>
 						</div>
 						<hr/>
 						<div id="managePublicKeysContainer" class="row-fluid collapse in">

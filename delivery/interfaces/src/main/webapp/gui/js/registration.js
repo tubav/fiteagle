@@ -49,7 +49,10 @@ function(Validation, Utils, MainPage,Messages){
 		return _email;
 	};
 	
-	
+	/**
+	* Gets an affiliation value provided by the user within a registration form. 
+	* @returns value from an element by '#inputAffiliation'.
+	*/
 	Registration._getAffiliation = function(){
 		var _affiliation = $("#inputAffiliation").val();
 		return _affiliation;
@@ -229,6 +232,11 @@ function(Validation, Utils, MainPage,Messages){
 		return areValid;
 	};
 
+	/**
+	* Triggers the validation of the all values provided by the user within the registration form: user's first and last name, email, affiliation
+	* as well as password comparison and confirmation. 
+	* @returns true is all of the field values are valid and false otherwise.
+	*/
 	Registration.checkRequiredUserEntries = function(){
 		
 		var allEntriesValid = 
@@ -243,9 +251,11 @@ function(Validation, Utils, MainPage,Messages){
 	};
 
 	Registration.registerNewUser = function(){
-		console.log("Registration clicked ");
+		//console.log("Registration clicked ");
+		
+		Utils.unhideElement('#registerSpinner');
 		var allEntriesValid = this.checkRequiredUserEntries();
-		console.log("All entries are valid !" + allEntriesValid);
+		//console.log("All entries are valid !" + allEntriesValid);
 		if(allEntriesValid){		
 			var newUserInfo = Utils.createNewUser(
 							this._getFirstName(),
@@ -264,9 +274,12 @@ function(Validation, Utils, MainPage,Messages){
 			if(errorMessage){
 					setTimeout(function(){
 						$('#registrationErrors').append(errorMessage)
-					},1000);
+					},100);
 			}
 		}
+		setTimeout(function(){
+			Utils.hideElement('#registerSpinner');
+		},200)
 	};
 	
 	showNewUserProfile = function(){

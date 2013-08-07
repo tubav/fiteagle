@@ -93,8 +93,7 @@ function(require,Utils,Server,Validation,Messages){
 		console.log(JSON.stringify(publicKey));
 		return publicKey;
 	};
-	
-	
+		
 	initFileSelectBtn = function(){
 		$('#selectFromFile').on('click',function(){
 			resetSelectedFileInfo();
@@ -163,16 +162,7 @@ function(require,Utils,Server,Validation,Messages){
 		deleteKey.tooltip({'title':"Remove", 'placement':'top'});
 							
 		deleteKey.on('click',function(event){
-			var msg = Server.deletePublicKey(publicKey.description);
-			isSuccessMsg = msg.find('span').hasClass('alert-success');
-			clearPublicKeysErrors();
-			(isSuccessMsg)? 
-						Utils.showSuccessModal(msg)
-							:
-						$('#existingUserKeyErrors').append(msg);
-	
-			PublicKeys.initForm();
-			require('certificates').initForm();
+			onDeleteKeyPressed(keyDescription);
 		});					
 		
 		keyContols.append(downloadBtn);
@@ -185,6 +175,37 @@ function(require,Utils,Server,Validation,Messages){
 		return div;
 		
 	};
+	
+	onDeleteKeyPressed = function(keyDescription){
+		Utils.createConfirmModal('deleteKeyConfirmation','deleteKeyConfirmedBtn',Messages.confirmKeyDeletionQuestion +"<br/>"+keyDescription);
+		Utils.showModal('#deleteKeyConfirmation');
+		$('#deleteKeyConfirmedBtn').on('click',function(){
+			var msg = Server.deletePublicKey(keyDescription);
+			isSuccessMsg = msg.find('span').hasClass('alert-success');
+			clearPublicKeysErrors();
+			(isSuccessMsg)? 
+						Utils.showSuccessModal(msg)
+							:
+						$('#existingUserKeyErrors').append(msg);
+	
+			PublicKeys.initForm();
+			require('certificates').initForm();
+			Utils.hideModal('#deleteKeyConfirmation');
+		});
+	};
+	
+	deleteUserOnServer = function(){
+		var msg = Server.deletePublicKey(publicKey.description);
+		isSuccessMsg = msg.find('span').hasClass('alert-success');
+		clearPublicKeysErrors();
+		(isSuccessMsg)? 
+					Utils.showSuccessModal(msg)
+						:
+					$('#existingUserKeyErrors').append(msg);
+
+		PublicKeys.initForm();
+		require('certificates').initForm();
+	}
 	
 	createPublicKeyDownloadBtn = function(keyDescription,keyString){
 		

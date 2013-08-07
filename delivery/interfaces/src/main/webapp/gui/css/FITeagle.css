@@ -47,6 +47,8 @@ p{text-align:justify}
 	overflow: visible;
 }
 
+.btn-inverse.disabled{background-color: #aaa !important;}
+
 #loginPages a{
 	text-decoration: none;
 	color: #f09030;
