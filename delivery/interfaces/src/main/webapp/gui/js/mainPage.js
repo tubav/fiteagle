@@ -179,11 +179,30 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	initSignOutBtn = function(){
 		$("#signOut").on('click',function(e){
 			e.preventDefault();
-			//console.log("signOut clicked");		
-			var isCookieDeleted = Server.invalidateCookie();
-			if(isCookieDeleted) Main.signOut();
+			//console.log("signOut clicked");	
+			var modal = createSignOutModal();
+			modal.modal('show');
+			$('#signOutOkBtn').on('click',function(){
+				var isCookieDeleted = Server.invalidateCookie();
+				if(isCookieDeleted) Main.signOut();
+			});
 		});
 	};
+	
+	
+	/**
+	* Creates and appends to the body confirmation modal to be shown before signing out. 
+	* The user is signed out only after confirming his decision.
+    * @private
+    * @memberOf Main#
+	* @return sign out modal object
+	*/
+	createSignOutModal = function(){
+		var modalBody = $('<div>').addClass('centered').append('<h5>'+Messages.signOutConfirm+'</h5>')
+		var signOutModal = Utils.createConfirmModal('signOutModal','signOutOkBtn','YES','NO',modalBody);
+		$('body').append(signOutModal);
+		return signOutModal;
+	}
 	
 	
 	/**
@@ -209,7 +228,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#navigation").load(url + " #toolbar",
 				function(){
 					$("#main").load(url + " #mainArea",
-						function(){								
+					    function(){								
 							initMainPage(); 
 						});
 				}

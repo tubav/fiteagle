@@ -8,7 +8,7 @@ requirejs.config({
   }
 });
 
-define(['jquery','bootstrap','loginPage','mainPage','utils', 'history', 'ajaxify'], 
+define(['jquery','bootstrap','loginPage','mainPage','utils', 'history', 'ajaxify','fileSaver'], 
 
 function($,Bootstrap,LoginPage,MainPage,Utils){
 					

@@ -92,6 +92,10 @@ define([],function(){
 	
 	Messages.generateCertificate = "Please wait while new certificate for the specified public key is being generated.";
 	
+	Messages.generateKeyPairAndCertificate = 'Generate new key pair and the certificate for it';
+	
+	Messages.generateCertificateFromKey = "Generate certificate from the selected public key";
+	
 	Messages.emptyPassphrase = "The pass-phrase is empty.";
 	
 	Messages.wrongPassphrase = "The given pass-phrase is invalid";
@@ -109,6 +113,8 @@ define([],function(){
 	Messages.confirmUserDeletionQuestion = "Are you sure you want to delete your user profile?";
 	
 	Messages.userDeleted = "Current user profile has been successfully deleted";
+	
+	Messages.signOutConfirm = "Are you sure you want to sign out ?";
 	
 	return Messages;
 

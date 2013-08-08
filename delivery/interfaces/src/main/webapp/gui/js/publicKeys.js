@@ -1,4 +1,4 @@
-define(['require','utils','server','validation','messages'],
+define(['require','utils','server','validation','messages','fileSaver'],
 /**
  * @lends MainPage
  */ 
@@ -466,17 +466,14 @@ function(require,Utils,Server,Validation,Messages){
     * @private
 	* @memberOf PublicKeys#
 	*/
-	createPublicKeyDownloadBtn = function(keyDescription,keyString){
-		
-		var appendix = btoa(keyString);
-		var filename = keyDescription+".pub";
-		var hattr = "data:application/octet-stream;charset=utf-8;base64," + appendix;
-		
+	createPublicKeyDownloadBtn = function(keyDescription,keyString){	
 		var downloadBtn = $('<a>')
 							.addClass('btn btn-inverse span5 ')
-							.html('<i class="icon-download icon-large nopadding"></i>')
-							.attr('download',filename)
-							.attr('href',hattr);
+							.html('<i class="icon-download icon-large nopadding"></i>').
+							on('click',function(){
+								var blob = new Blob([keyString], {type: "text/plain;charset=utf-8"});
+								saveAs(blob, keyDescription+".txt");
+							});
 							
 		downloadBtn.tooltip({'title': "Download",'placement':"top"});
 		

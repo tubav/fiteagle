@@ -11,9 +11,16 @@ function(Validation, Utils,Messages,Server){
      */
 	Certificates = {}
 	
-
+	
+	/**
+	* Triggers functions for the certificate management form initialization. It initializes public key select element that contains all the public keys 
+	* from the current user profile. It defines the behaviour for the certificate generation from the existing public key as well as generation of the certificate and 
+    * the corresponding certificate.	
+	* @public
+	* @name Certificates#initForm
+	* @function
+	**/
 	Certificates.initForm = function(){
-		
 		Certificates.initPublicKeySelect();	
 		initGenerateCertificatesBtn();
 		initPassphraseField();
@@ -21,9 +28,13 @@ function(Validation, Utils,Messages,Server){
 		$(window).bind('resizeEnd',function(){
 			initPassphraseField();
 		});
-			
 	};
 	
+	/**
+	* Initializes the behaviour after clicking on the button for the generation of the certificate from the currently selected public key.
+    * @private
+	* @memberOf Certificates#
+	*/
 	initGenerateCertificatesBtn = function(){
 		$("#genPubKey").on('click',function(){
 			var selectedKeyDescription = $("#publicKeySetSelect option:selected").html();
@@ -32,11 +43,10 @@ function(Validation, Utils,Messages,Server){
 			if(pubString){
 					addCertificateTextarea(pubString);
 			}
-		});
+		}).tooltip({title: Messages.generateCertificateFromKey});
 	};
 	
-	initPassphraseField = function(){
-		
+	initPassphraseField = function(){		
 		Utils.addOnEnterClickEvent("#inputPassphrase","#genKeyAndCertificate");
 		
 		var placement;
@@ -72,7 +82,7 @@ function(Validation, Utils,Messages,Server){
 					Utils.addErrorMessageTo('#newKeypairAndCertificateErrors');
 				}
 			}
-		});
+		}).tooltip({title: Messages.generateKeyPairAndCertificate});
 	};
 	
 	afterSuccessGeneration = function(){
@@ -89,23 +99,21 @@ function(Validation, Utils,Messages,Server){
 		$('#generatedKeyAndCertificate').children().remove();
 		
 		var privateKeyContainer = 
-			createTextAreaContainer('privateKeyContainer',
-								'New generated Private Key',
-								privateKey,
-								'private_key.key'
+			createTextAreaContainer('privateKeyAndCertificateContainer',
+								'New generated Private Key and Cerificate',
+								keyAndCertificate
 								);
-		var certificateContainer = 
-				createTextAreaContainer('privateCertificateContainer',
-										'Generated certificate',
-										certificate,
-										'private_certificate.crt')
 			
 		$('#generatedKeyAndCertificate')
-			.append(certificateContainer)
-			.prepend(privateKeyContainer);
+			.append(privateKeyContainer)
+			.append(
+				$('<div class="row-fluid certificateControls"></div>')
+					.append(createDownloadCertificateBtn('certificate.crt', certificate))
+					.append(createDownloadPrivateKeyBtn('privateKey.ppk',privateKey))
+				);
 	};
 	
-	createTextAreaContainer = function(containerID, headerText, content, filename){
+	createTextAreaContainer = function(containerID, headerText, content){
 		var container = $('<div>').attr('id',containerID).addClass('row-fluid');
 		var textarea = $(
 			'<textarea id="generatedPrivateKey" rows=20 style="resize:none" disabled></textarea>'
@@ -113,8 +121,7 @@ function(Validation, Utils,Messages,Server){
 		var header = $('<h5>').text(headerText);
 		container
 			.append(header)
-			.append(textarea).append('<br/>')
-			.append(createDownloadCertificateBtn(filename,content)); 
+			.append(textarea).append('<br/>');
 			
 		return container;
 	};
@@ -131,18 +138,31 @@ function(Validation, Utils,Messages,Server){
 	};
 	
 	createDownloadCertificateBtn = function(filename,text){
-		
-		var appendix = btoa(text);
-		
-		var hattr = "data:application/octet-stream;charset=utf-8;base64," + appendix;
-		
+				
 		//console.log(hattr);
 		
 		var downloadBtn = $('<a>')
 				.addClass('btn btn-inverse span2 nomargin')
-				.html('<i class="icon-download-alt"></i>Download')
-				.attr('download',filename)
-				.attr('href',hattr);
+				.html('<i class="icon-file-text-alt"></i>Download Certificate')
+				.on('click',function(){
+					var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+					saveAs(blob, filename);
+				});
+		
+		return downloadBtn;
+	}
+	
+	createDownloadPrivateKeyBtn = function(filename,text){
+				
+		//console.log(hattr);
+		
+		var downloadBtn = $('<a>')
+				.addClass('btn btn-inverse span2 offset1 ')
+				.html('<i class="icon-file"></i>Download Private Key')
+				.on('click',function(){
+					var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+					saveAs(blob, filename);
+				});
 		
 		return downloadBtn;
 	}
