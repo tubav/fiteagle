@@ -289,6 +289,10 @@ input.search-query{height:24px !important;}
 		top: 0;
 		}
 		
+	#fancyLogins{
+		margin-top:30px;
+	}
+		
 	.mainWindow  #header{padding-top:52px;}
 	#publicKeysList .publicKey{margin-top:20px}
 

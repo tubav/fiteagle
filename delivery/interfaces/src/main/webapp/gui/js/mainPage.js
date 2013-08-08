@@ -149,7 +149,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
       */ 
 	initUserInfoPanel = function(){		
 		// workaroud for BOOTSTRAP's DropDown bug ("active" class for li elements removed)
-		$("#userInfoDropdown a").click(function(){
+		$("#userInfoDropdown a").not('#signOut').click(function(){
 			var t = $(this);
 			var linkID  = t.attr("id");
 			var linkHref = t.attr('href');
@@ -184,6 +184,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			modal.modal('show');
 			$('#signOutOkBtn').on('click',function(){
 				var isCookieDeleted = Server.invalidateCookie();
+				modal.modal('hide');
 				if(isCookieDeleted) Main.signOut();
 			});
 		});
