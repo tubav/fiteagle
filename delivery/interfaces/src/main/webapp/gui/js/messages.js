@@ -68,11 +68,21 @@ define([],function(){
 	
 /*_____________ MAIN PAGE FORM MESSAGES _____________________________ */
 
+	Messages.uploadNewPublicKey = "Click to upload the new public key.";
+
 	Messages.noPublicKeys = "No public keys are available";
 
 	Messages.emptyKeyDescription = "Public key description is empty.";
 
 	Messages.keyDescription = "Please enter a description for the new pubic key.";
+	
+	Messages.newKeyDescription = "Please enter new description for the given public key.";
+	
+	Messages.emptyKeyValue = "Public key value is empty";
+	
+	Messages.wrongKeyValue = "The given key value syntax is wrong";
+	
+	Messages.clickToChangeKeyDescription = "Click to change the public key description.";
 	
 	Messages.wrongKeyDescription = "The given key description is wrong.";
 	

@@ -22,6 +22,7 @@ function(require,Validation,Registration,Utils,Messages){
 	  * @function	  
 	  */  
 	Login.initLoginPage = function(){
+		$('#fiteagle').removeClass('mainWindow');
 		Utils.unhideBody();
 		initOnWindowResizeEvent();
 		initNavigationMenu();

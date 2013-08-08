@@ -17,10 +17,12 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Triggers functions for main Page initialization such as: screen adjustments by resizing, initialization of user panel, profile form,
 	* public keys form, manage certificates form, and showing of the last opened tab.
+    * @private
+	* @memberOf Main#
 	*/
 	initMainPage = function(){
+		$('#fiteagle').addClass('mainWindow'); // class in order to distinguish between main and login pages
 		performScreenAdjustments();	
-		//initAsideSection();
 		initUserInfoPanel();		
 		Profile.initForm();
 		PublicKeys.initForm();
@@ -31,11 +33,12 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Triggers functions for adjusting the site view for better representing depending on the current screen size such as:
 	* collapsing of the opened sections for small screen devices and opening for a large ones and other related tasks.
+    * @private
+	* @memberOf Main#
 	*/
 	performScreenAdjustments = function(){
 		Utils.unhideBody();
 		initCollapseHeaders();
-		initOnWindowResizeEvents();
 		if(Utils.isSmallScreen()){
 			initForSmallScreens();
 		}else{
@@ -44,12 +47,13 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		initCollapseSigns();
 	};
 	
-	initOnWindowResizeEvents = function(){
-		$(window).resize(function(){
-				//performScreenAdjustments();
-		});			
-	};
 	
+	/**
+	* Collapses sections identified by "#yourSliceList" and "#availableSlicesList" selectors
+	* @param boolean value triggers collapse function. True value collapses the container, false otherwise opens it.
+	* @private
+	* @memberOf Main#
+	*/
 	collapseAsideSections = function(bool){
 		var sliceList = $("#yourSliceList");
 		var availableSlices  = $('#availableSlicesList');
@@ -66,6 +70,11 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		}
 	};
 	
+	/**
+	* Initializes change of the icon sign for all of the headers with the class with  the ".collapseHeader" selector after clicking on it.
+	* @private
+	* @memberOf Main#
+	*/
 	initCollapseHeaders = function(){
 		$('.collapseHeader').on('click',function(){
 			var icon = $(this).find('.collapseSign');
@@ -75,31 +84,44 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		});
 	};
 	
+	/**
+	* Initializes change of the icon sign for all of the elements with the class with  the ".collapseSign" selector.
+	* @private
+	* @memberOf Main#
+	*/
 	initCollapseSigns = function(){
 		var icons = $('.collapseSign');
-		//console.log("INIT COLLAPSE _______________");
 		icons.each(function(){
 			var t = $(this);
 			initCollapseSignFor(t);
 		});		
 	};
 	
-	initCollapseSignFor = function(obj){
-		var selector = obj.closest('div').attr('data-target');
+	/**
+	* Replaces the section header icon sigh according to the current section state. 
+	* Icon chevron right from the font awesome icons is shown if the section is collapsed and icon chevron right is section is opened.
+ 	* @param icon_object is an item object to change the icon sign after the section is opened or collapsed.
+	* @private
+	* @memberOf Main#
+	*/
+	initCollapseSignFor = function(icon_object){
+		var selector = icon_object.closest('div').attr('data-target');
 		isOpen  = $(selector).hasClass('in');
 			//console.log("selector" + selector + " is open " + isOpen);
 			if(isOpen){
-					obj.attr('class','');
-					obj.addClass('collapseSign icon-chevron-down');
+					icon_object.attr('class','');
+					icon_object.addClass('collapseSign icon-chevron-down');
 			}else{
-					obj.attr('class','');
-					obj.addClass('collapseSign icon-chevron-right');
+					icon_object.attr('class','');
+					icon_object.addClass('collapseSign icon-chevron-right');
 		}
 	};
 	
 	/**
 	* Defines the behaviour for the small size devises. Collapses Aside sections for better representation on the narrow window screen.
 	* Unhides small screen navigation toolbar.
+    * @private
+	* @memberOf Main#
 	*/
 	initForSmallScreens = function(){
 		collapseAsideSections(true);	
@@ -109,6 +131,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
 	* Hides small screen navigation toolbar.
+    * @private
+	* @memberOf Main#
 	*/
 	initForLargeScreens = function(){
 		collapseAsideSections(false);	
@@ -136,17 +160,16 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			if(Utils.isSmallScreen()){
 				setTimeout(function(){
 					$('html, body').animate({
-						 scrollTop: scrollTo.offset().top-10
+						 scrollTop: scrollTo.offset().top-12-$('#navigation').height()
 					}, 1000);
 				},100)
 			}
 		});
-		
-		var user = Utils.getCurrentUser();
-		//console.log('current user is set to: '+ Utils.userToString(user));
-		$("#userName").text(user.firstName +" " + user.lastName);
+		Utils.updateUserInfoPanel();
 		initSignOutBtn();
 	};
+	
+	
 
 	/**
       * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 

@@ -193,29 +193,24 @@ function(require,Utils){
 				console.log(status);
 			},
 			error: function(xhl,status){
-				message = xhl.responseText;
+				message = Utils.createErrorMessage(xhl.responseText);
 				console.log(status);
 			},
 			statusCode:{			
 				200: function(){
 					var updatedUser = Server.getUser(username);
 					Utils.setCurrentUser(updatedUser);
-					Utils.showSuccessModal(
-						Utils.createSuccessMessage("New public key with description: "
+					message = Utils.createSuccessMessage("New public key with description: "
 																+publicKey.description+
-															" has been successfully uploaded")
-					);
-					return ;
-				},
-				
-				409 : function(){
-						return Utils.createErrorMessage(message);
+															" has been successfully uploaded");
 				}
 			},
 			complete: function(){
 				Utils.hideElement(uploadingSign);
 			}
-		});		
+		});	
+		
+		return message;
 	};
 	
 	Server.generateCertificateForPiblicKey = function(publicKeyDescription){
@@ -321,7 +316,7 @@ function(require,Utils){
 				console.log(status);
 			},
 			error: function(xhl,status){
-				message = createErrorMessage(xhl.responseText);
+				message = Utils.createErrorMessage(xhl.responseText);
 				console.log(status);
 			},
 			statusCode:{			
@@ -333,6 +328,44 @@ function(require,Utils){
 			},
 			complete: function(){
 				Utils.hideElement(uploadingSign);
+			}
+		});
+		
+		return message;
+	};
+	
+	Server.renamePublicKey = function(oldKeyDescription, newKeyDescription){
+		var user = Utils.getCurrentUser();
+		var username = user.username;
+		var message;
+		$.ajax({
+			cache: false,
+			type: "POST",
+			async: false,
+			url: "/api/v1/user/"+username+'/pubkey/'+oldKeyDescription+'/description',
+			data: newKeyDescription,
+			contentType: "text/plain",
+			beforeSend: function(xhr){
+				//xhr.setRequestHeader("Authorization",
+                //"Basic " + Utils.getCredentials()); // TODO Base64 support
+			},
+			success: function(data,status){
+				console.log(data);
+				console.log(status);
+			},
+			error: function(xhl,status){
+				message = Utils.createErrorMessage(xhl.responseText);
+				console.log(status);
+			},
+			statusCode:{			
+				200: function(){
+					var updatedUser = Server.getUser(username);
+					Utils.setCurrentUser(updatedUser);
+					message = Utils.createSuccessMessage("Public key " + oldKeyDescription+" has been successfully renamed to: " + newKeyDescription+'.');
+				}
+			},
+			complete: function(){
+				//Utils.hideElement(uploadingSign);
 			}
 		});
 		

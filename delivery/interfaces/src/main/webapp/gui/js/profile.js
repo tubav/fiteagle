@@ -109,8 +109,8 @@ function(require,Utils,Server){
 			Utils.clearErrorMessagesFrom('#userProfileErrors');
 			$('#userProfileErrors').append(msg);
 		}
-		Utils.updateInfoPanel();
-		Utils.hideElement('#saveProfileLoadingSign');
+		Utils.updateUserInfoPanel();
+		$('#saveProfileLoadingSign').addClass('hidden');
 		
 	};
 	
@@ -168,7 +168,8 @@ function(require,Utils,Server){
 	
 	initDeleteUserProfileBtn = function(){
 		$('#deleteUserBtn').on('click',function(){
-			Utils.createConfirmModal('deleteUserProfileModal','deleteUserConfirmedBtn',Messages.confirmUserDeletionQuestion);
+		    var pBody = $('<div class="centered">'+Messages.confirmUserDeletionQuestion+'</div>');
+			Utils.createConfirmModal('deleteUserProfileModal','deleteUserConfirmedBtn','YES','NO',pBody);
 			Utils.showModal('#deleteUserProfileModal');
 			$('#deleteUserConfirmedBtn').on('click',function(){
 				Utils.hideModal('#deleteUserProfileModal');

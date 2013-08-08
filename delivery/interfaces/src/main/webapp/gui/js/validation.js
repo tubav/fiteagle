@@ -65,6 +65,15 @@ function(){
 		return true;
 	};
 	
+	
+	Validation._isKeyValue = function(keyValue){
+		// TODO Add appropriate public key validation
+		var isValid = false;
+		var keyLength = keyValue.length;
+		if( 50 < keyLength && keyLength < 500 ) isValid = true;
+		return isValid;
+	}
+	
 	Validation._isPassphrase = function(phrase){
 		if(phrase.length > 3) return true;
 		return false;

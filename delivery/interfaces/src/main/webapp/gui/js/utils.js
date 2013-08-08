@@ -74,6 +74,12 @@ function(){
 		var errorMessages = $(selector).find(".errorMessage");
 		errorMessages.remove();
 	};	
+	
+	Utils.updateUserInfoPanel = function(){
+		var user = Utils.getCurrentUser();
+		//console.log('current user is set to: '+ Utils.userToString(user));
+		$("#userName").text(user.firstName +" " + user.lastName);
+	};
 
 
 	Utils.unhideBody = function(){
@@ -270,25 +276,23 @@ function(){
 		
 	};
 	
-	Utils.createConfirmModal = function(id,okId,confirmMsg){
+	Utils.createConfirmModal = function(id,okId,okBtnText,closeBtnText,body){
 		var ok = $('<button>')
 				.attr('id',okId)
 				.addClass('btn btn-success')
-				.append('<i class="icon-ok"></i>Yes');
+				.append('<i class="icon-ok"></i>'+okBtnText);
 				
 		var cancel  = $('<button>')
 				.addClass('btn btn-danger left40')
 				.attr('data-dismiss','modal')
 				.attr('aria-hidden','true')
-				.append('<i class="icon-remove-sign"></i>No');
+				.append('<i class="icon-remove-sign"></i>'+closeBtnText);
 				
 		var footer = $('<div>').addClass('centered')
 					.append(ok)
 					.append(cancel);
-		
-		var pBody = $('<div class="centered">'+confirmMsg+'</div>');
 			
-		return Utils.createCustomModal(id, null,pBody, footer);
+		return Utils.createCustomModal(id, null,body, footer);
 	};
 	
 	createModal = function(id){
@@ -322,7 +326,6 @@ function(){
 		var body = $('<div>').addClass('centered').append(successMsg);
 		
 		var modal = Utils.createCustomModal('successModal',null,body,foot);
-		console.log(modal);
 		Utils.showModal('#successModal');
 	}
 	

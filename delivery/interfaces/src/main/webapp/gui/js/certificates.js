@@ -14,7 +14,7 @@ function(Validation, Utils,Messages,Server){
 
 	Certificates.initForm = function(){
 		
-		initPublicKeySelect();	
+		Certificates.initPublicKeySelect();	
 		initGenerateCertificatesBtn();
 		initPassphraseField();
 		initGenerateKeyAndCertificateBtn();
@@ -78,7 +78,7 @@ function(Validation, Utils,Messages,Server){
 	afterSuccessGeneration = function(){
 			//console.log('after generation');
 			require('publicKeys').updateExistingPublicKeyForm();
-			initPublicKeySelect();
+			Certificates.initPublicKeySelect();
 	};
 	
 	addKeyAndCertificateTextarea = function(keyAndCertificate){
@@ -147,7 +147,7 @@ function(Validation, Utils,Messages,Server){
 		return downloadBtn;
 	}
 
-	initPublicKeySelect = function(updateUser){
+	Certificates.initPublicKeySelect = function(updateUser){
 		var selectPubKey = $('#selectKeyForGeneration');
 		selectPubKey.children().remove();
 		var publicKeys = getUserPublicKeysFromServer();

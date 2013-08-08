@@ -191,6 +191,8 @@ input.search-query{height:24px !important;}
 	background: linear-gradient(top, #373737, #212121);
 }
 
+
+
 #rememberMe{ margin-top:10px}
 
 .btn{margin-top: 10px ! important}
@@ -281,6 +283,13 @@ input.search-query{height:24px !important;}
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
+	.mainWindow  #navigation{
+		position: fixed;
+		z-index: 100;
+		top: 0;
+		}
+		
+	.mainWindow  #header{padding-top:52px;}
 	#publicKeysList .publicKey{margin-top:20px}
 
 	#fancyLoginList ul{margin:0}
