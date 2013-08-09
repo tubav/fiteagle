@@ -216,7 +216,7 @@ function(require,Validation,Registration,Utils,Messages){
 	initLoginForm = function(){
 		Utils.changeFocusOnEnterClick("#username","#password");
 		Utils.addOnEnterClickEvent("#password","#signIn");
-
+		$('#username').focus();
 		$('#rememberMeCheckbox').prettyCheckable({color:'yellow'});
 		initLoginFormHints();
 	};

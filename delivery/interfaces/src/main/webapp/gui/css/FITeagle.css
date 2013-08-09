@@ -247,6 +247,8 @@ input.search-query{height:24px !important;}
     display: compact;
 }
 
+#generatedPrivateKey{margin-top: 40px}
+
 @media (max-width:979px){
 		#navs ul {margin-bottom: 20px}
 		
@@ -283,6 +285,9 @@ input.search-query{height:24px !important;}
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
+	
+	.alert{ text-align:center !important}
+	
 	.mainWindow  #navigation{
 		position: fixed;
 		z-index: 100;

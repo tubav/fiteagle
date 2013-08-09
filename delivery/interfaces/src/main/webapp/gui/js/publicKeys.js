@@ -34,9 +34,10 @@ function(require,Utils,Server,Validation,Messages){
 	initNewUserKeysForm = function(){
 		checkFileSelectSupport();
 		initTooltipForKeyDescriptionField();
+		initTooltipForPublicKeyFromFile();
 		initUploadPublicKeyBtn();
 		$('#publicKeyFromFile').on('click',function(){
-			$(this).find('textarea').removeAttr('disabled');
+			$(this).find('textarea').removeAttr('disabled').focus();
 		});
 	};
 	
@@ -371,8 +372,14 @@ function(require,Utils,Server,Validation,Messages){
 			if(isValidNewKeyDescription){
 				var newKey = $('#'+inputFieldID).val();
 				var oldKey = $('#'+keyLabelID).find('.keyDescriptionSpan').text();
-				var msg = Server.renamePublicKey(oldKey,newKey);
-				$('#'+errContainerID).append(msg);
+				var msg = Server.renamePublicKey(oldKey,newKey); //TODO
+				var isSuccessMsg = msg.find('span').hasClass('alert-success');
+				if(isSuccessMsg){ 
+					Utils.showSuccessModal(msg);
+					modal.modal('hide');
+				}else{
+					$('#'+errContainerID).append(msg);
+				}			
 				updatePublicKeyRelatedForms();
 			}
 		});
@@ -407,7 +414,7 @@ function(require,Utils,Server,Validation,Messages){
 			$('<div>').addClass('row-fluid top20').append(
 				$('<label>').attr('for',inputFieldID).addClass('span5').text('New Public Key Description')
 			).append(
-				$('<input type="text" required></input>').attr('id',inputFieldID).addClass('span7')
+				$('<input type="text" required></input>').attr('id',inputFieldID).addClass('span7').tooltip({trigger: 'focus',title: Messages.newKeyDescription})
 			)
 		);
 		return Utils.createConfirmModal('changePublicKeyDescriptionModal',submitBtnID,'Submit','Cancel',modBody); 
@@ -619,12 +626,13 @@ function(require,Utils,Server,Validation,Messages){
 	* @memberOf PublicKeys#
 	*/
   	setPublicKeyFromFile = function(text){
-	  var container = $("#publicKeyFromFile");
-	  var content = $('<textarea class="span12" rows=6 disabled style="resize:none"></textarea>');
-	  content.html(text);
-	  container.find('textarea').remove();
-	  container.append(content);
+	  var container = $("#publicKeyFromFile textarea");
+	  container.html(text)
 	};
+	
+	initTooltipForPublicKeyFromFile =function(){
+		$('#publicKeyFromFile textarea').tooltip({trigger: 'focus', title: Messages.keyValueHint});
+	}
 	
 	return PublicKeys;
 

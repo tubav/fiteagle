@@ -11,19 +11,21 @@ define([],function(){
 	
 /*________ REGISTRATION FORM HINT MESSAGES _______*/
 	
-	Messages.usernameHint = "Please enter valid username. Only symbol characters are allowed.";
+	Messages.usernameHint = "The username must be between 5 and 15 characters, dot and underscore are allowed, the first letter should be number or character";
 	
-	Messages.firstNameHint = "Please enter user's first name.";
+	Messages.firstNameHint = "Acceptable first names include compound names with a hyphen or a space in them.";
 	
-	Messages.lastNameHint ="Please enter user's last name.";
+	Messages.lastNameHint ="Acceptable last names include compound names with a hyphen or a space in them.";
 	
-	Messages.emailHint = "Please enter user's email address.";
+	Messages.emailHint = "Please enter a valid email address.";
 	
-	Messages.affiliationHint = "Please enter your affiliation.";
+	Messages.affiliationHint = "The affiliation should be between 2 and 20 digits, underscore, hyphen, apostrophe and dots are allowed. First letter can be only a character.";
 	
-	Messages.passwordHint = "Please enter a password that at least four characters long.";
+	Messages.passwordHint = "Password must be between 4 and 8 digits long and include at least one numeric digit.";
 	
 	Messages.confirmPasswordHint = "Please enter password confirmation.";
+	
+	Messages.keyValueHint = "The public key length should be between 100 and 500 digits.";
 	
 /*_________ LOGIN AND REGISTRATION FORM WARNING MESSAGES _________ */
 	
@@ -52,13 +54,13 @@ define([],function(){
 	
 	Messages.wrongEmailAddress = "Wrong email address.";
 	
-	Messages.wrongAffiliation = "Wrong Affiliation name.";
+	Messages.wrongAffiliation = "Wrong Affiliation syntax";
 	
-	Messages.wrongPassword = "Password is too short.";
+	Messages.wrongPassword = "The given password syntax is invalid";
 	
 	Messages.wrongConfirmPassword = "Confirm password is too short."; 
 	
-	Messages.passwordsAreInconsistent = "Passwors are inconsistent.";
+	Messages.passwordsAreInconsistent = "Password are inconsistent.";
 	
 	Messages.userNotFound = "Current user isn't found.";
 	
@@ -74,9 +76,9 @@ define([],function(){
 
 	Messages.emptyKeyDescription = "Public key description is empty.";
 
-	Messages.keyDescription = "Please enter a description for the new pubic key.";
+	Messages.keyDescription = "The public key description should be from 3 to 15 digits long. The first letter has to be a character. Only alphanumeric characters are allowed.";
 	
-	Messages.newKeyDescription = "Please enter new description for the given public key.";
+	Messages.newKeyDescription = "The new public key description should be from 3 to 15 digits long. The first letter has to be a character. Only alphanumeric characters are allowed.";
 	
 	Messages.emptyKeyValue = "Public key value is empty";
 	
@@ -98,13 +100,13 @@ define([],function(){
 	
 	Messages.emptyPassphrase = "The pass-phrase is empty.";
 	
-	Messages.wrongPassphrase = "The given pass-phrase is invalid";
+	Messages.wrongPassphrase = "The given pass-phrase syntax is invalid.";
 	
-	Messages.passphraseHint = "Please enter a pass-phrase for new public key and certificate.";
+	Messages.passphraseHint = "Password must be at least 4 characters, no more than 8 characters, and must include at least one lower case letter, and one numeric digit.";
 	
 	Messages.generateNewKeyAndCertificate = "Please wait until new key pair and certificate are being generated.";
 	
-	Messages.wrongPublicKeyFileExt = "Wrong public key file extension. Please select file with correct extension ";
+	Messages.wrongPublicKeyFileExt = "Wrong public key file extension. The valid public key extension is 'pub'.";
 	
 	Messages.wrongPublicKeyFileSize = "Wrong file size. Please select another public key file";
 	

@@ -101,26 +101,29 @@ function(Validation, Utils,Messages,Server){
 		var privateKeyContainer = 
 			createTextAreaContainer('privateKeyAndCertificateContainer',
 								'New generated Private Key and Cerificate',
-								keyAndCertificate
+								keyAndCertificate,
+								privateKey,
+								certificate
 								);
-			
+		
 		$('#generatedKeyAndCertificate')
-			.append(privateKeyContainer)
-			.append(
-				$('<div class="row-fluid certificateControls"></div>')
-					.append(createDownloadCertificateBtn('certificate.crt', certificate))
-					.append(createDownloadPrivateKeyBtn('privateKey.ppk',privateKey))
-				);
+			.append(privateKeyContainer);
 	};
 	
-	createTextAreaContainer = function(containerID, headerText, content){
+	createTextAreaContainer = function(containerID, headerText, content, privateKey, certificate){
 		var container = $('<div>').attr('id',containerID).addClass('row-fluid');
 		var textarea = $(
-			'<textarea id="generatedPrivateKey" rows=20 style="resize:none" disabled></textarea>'
+			'<textarea id="generatedPrivateKey" rows=10 style="resize:none" disabled></textarea>'
 			).addClass("span10").val(content);
-		var header = $('<h5>').text(headerText);
+		var header = $('<h5 class="top20"></h5>').text(headerText);
 		container
 			.append(header)
+			.append('<hr/>')
+			.append(
+				$('<div class="row-fluid certificateControls"></div>')
+					.append(createDownloadPrivateKeyBtn('privateKey.ppk',privateKey))
+					.append(createDownloadCertificateBtn('certificate.crt', certificate))
+			)
 			.append(textarea).append('<br/>');
 			
 		return container;
@@ -128,7 +131,7 @@ function(Validation, Utils,Messages,Server){
 	
 	addCertificateTextarea = function(pubKeyString){
 		$('#generatedCertificate').children().remove();
-		var textarea = $('<textarea rows=20 style="resize:none" disabled></textarea>').addClass("span10");
+		var textarea = $('<textarea rows=10 style="resize:none" disabled></textarea>').addClass("span10");
 		textarea.val(pubKeyString);
 		$('#generatedCertificate')
 			.append(textarea)
@@ -142,7 +145,7 @@ function(Validation, Utils,Messages,Server){
 		//console.log(hattr);
 		
 		var downloadBtn = $('<a>')
-				.addClass('btn btn-inverse span2 nomargin')
+				.addClass('btn btn-inverse span3 offset3')
 				.html('<i class="icon-file-text-alt"></i>Download Certificate')
 				.on('click',function(){
 					var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
@@ -157,7 +160,7 @@ function(Validation, Utils,Messages,Server){
 		//console.log(hattr);
 		
 		var downloadBtn = $('<a>')
-				.addClass('btn btn-inverse span2 offset1 ')
+				.addClass('btn btn-inverse span3')
 				.html('<i class="icon-file"></i>Download Private Key')
 				.on('click',function(){
 					var blob = new Blob([text], {type: "text/plain;charset=utf-8"});

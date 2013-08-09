@@ -22,10 +22,9 @@ function(){
 		$(selectorOn).keyup(function(event){
 			if(event.keyCode == 13){
 				$(triggerOn).click();
+				$(triggerOn).focus();
 			}
 		});
-		
-		$(selectorOn).focus();
 	};
 
 	/**

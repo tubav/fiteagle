@@ -86,7 +86,7 @@ function(Validation, Utils, MainPage,Messages){
 		var isValidUsername = Utils.checkInputField(
 								"#inputUsername",
 								"#registrationErrors",
-								Validation._isName,
+								Validation._isUsername,
 								Messages.emptyUsername,
 								Messages.wrongUsername
 								);
