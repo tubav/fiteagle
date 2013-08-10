@@ -1,0 +1,304 @@
+<head>
+  <title>FITeagle | Future Internet Testbed Experimentation and Management Framework</title>
+</head>
+
+<body>
+
+<!---------------------- HEADER --------------------------------------->
+	<div id="header" class="row-fluid">
+		<div id="logoImg" class="span1 offset3">
+			<img src="img/logo_fiteagle.png" alt="" />
+		</div>
+		<div id="logoTxt" class="span8">
+			<h1 id="project_title">FITeagle</h1>
+			<h2 id="project_tagline">Future Internet Testbed Experimentation and Management Framework</h2>
+		</div>				
+	</div>
+<!--_____________________END HEADER__________________________________-->
+
+<!------------------- NAVIGATION TOOLBAR ------------------------------>	
+	<div id="navigation" class="row-fluid">
+		<div id="toolbar" class="row-fluid">
+			<a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse">
+				<i class="icon-reorder"></i>
+			</a>
+			<div id="userInfoPanel" class="dropdown pull-right">
+				<span class="dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user icon-2x"></i>
+					<span id="userName"></span>
+					<i class="icon-sort-down"></i>
+				</span>
+				<ul id="userInfoDropdown" class="dropdown-menu" >
+					<li><a id="manageProfileMenu" href="#manage" ><i class="icon-wrench"></i>Edit profile</a></li>
+					<li><a id="managePublicKeysMenu" href="#keys" ><i class="icon-key"></i>Manage public keys</a></li>
+					<li><a id="downloadCertificateMenu" href="#certificate" ><i class="icon-cloud-download"></i>Download certificate</a></li>
+					<li><a id="signOut" href="#"><i class="icon-signout"></i>Sign Out</a></li>
+				</ul>
+			</div>
+			
+			<div class="nav-collapse collapse">
+				<div id="search" class="margin3pc">
+					<form class="form-search">
+						<div class="input-append span4">
+								<input type="text" class="search-query top10" placeholder="Search">
+								<button type="submit" class="btn btn-inverse"><i class="icon-search"></i></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div> 
+
+	</div>
+	
+<!--_________________END NAVIGATION TOOLBAR__________________________-->
+
+<!------------------- MAIN SECTION ------------------------------------>	
+	<div id="main" >
+	<div id="mainArea" class="tab-content row-fluid">
+		<div id="mainWindow">
+			<div id="aside" class="span3">
+				<div class="row-fluid">
+
+				</div>
+				<div id="yourSlices" class="row-fluid">
+					<div id="yourSlicesContainer" class="offset1 span10">
+						<div data-toggle="collapse" data-target="#yourSliceList">
+							<h4 class="collapseHeader"><i class="icon-puzzle-piece icon-large"></i>Your Slices<i class="collapseSign"></i></h4>
+						</div>					
+						<div id="yourSliceList" class="collapse in">
+							<a href="#" class="btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage Slices</a>
+							<ul>
+								<li><a href="#">Testslice 1</a></li>
+								<li><a href="#">Testslice 2</a></li>
+								<li><a href="#">Testslice 3</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<hr/>				
+				<div id="availableSlices" class="row-fluid">
+					<div id="avSlicesContainer" class="offset1 span10">
+						<div data-toggle="collapse" data-target="#availableSlicesList">
+							<h4 class="collapseHeader"><i class="icon-beaker icon-large"></i>Available Testbeds<i class="collapseSign"></i></h4>
+						</div>
+						<div id="availableSlicesList" class="collapse in">
+							<ul>
+								<li data-toggle="collapse" data-target="#AV">AV</li>
+									<ul id="AV" class="collapse in">
+										<li><a href="#"><i class="icon-wrench"></i>Hardware</a></li>
+										<li><a href="#"><i class="icon-sitemap"></i> Databases</a></li>
+										<li><a href="#"><i class="icon-desktop"></i> Monitoring</a></li>
+										<li><a href="#"><i class="icon-leaf"></i> Software</a></li>
+									</ul>
+								<li data-toggle="collapse" data-target="#FraunhoferFOCUS"> Fraunhofer FOCUS</li>
+									<ul id="FraunhoferFOCUS" class="collapse">
+										<li><a href="#"><i class="icon-wrench"></i>Hardware</a></li>
+										<li><a href="#"><i class="icon-sitemap"></i> Databases</a></li>
+										<li><a href="#"><i class="icon-desktop"></i> Monitoring</a></li>
+										<li><a href="#"><i class="icon-leaf"></i> Software</a></li>
+									</ul>
+								<li>NITOS</li>
+								<li>GENI</li>
+								<li>PlanetLab Europe</li>
+							</ul>
+						
+						</div>
+					</div>
+				</div>
+				<hr />			
+			</div>
+			<div id="desktop" class="span9 tab-content">
+				<div id="manage" class="row-fluid tab-pane">
+					<div class="span12">
+						<div class="collapseHeader" data-toggle='collapse' data-target='#manageProfileContainer'>
+							<h4 class="collapseHeader"><i class="icon-wrench icon-large"></i>Edit User Profile<i class="collapseSign"></i></h4>
+						</div>
+						<hr/>
+						<div id="manageProfileContainer" class="row-fluid collapse in">
+							<div class="top20 padding3pc">
+								<div id="userProfileErrors" class="row-fluid">			
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputUsername">Username</label>
+									<input class="span8" type="text" id="inputUsername" disabled>
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputFirstName">First Name</label>
+									<input class="span8" type="text" id="inputFirstName">
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputLastName">Last Name</label>
+									<input class="span8" type="text" id="inputLastName">
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputAffiliation">Affiliation</label>
+									<input class="span8" type="text" id="inputAffiliation">
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputEmail">Email</label>
+									<input class="span8" type="email" id="inputEmail">
+								</div>
+								<div class="row-fluid" align="center">
+									<div class="centered">
+										<button id="deleteUserBtn" class="btn btn-danger">
+										<i class="icon-minus-sign">
+											&nbsp;Delete User
+										</i>
+										</button>
+									</div>
+								</div>
+								<button id="saveProfileInfo" class="btn btn-inverse disabled span2 nomargin"><i class="icon-save"></i>Save</button>
+								<i id="saveProfileLoadingSign" class="icon-spin icon-spinner icon-2x hidden"></i>
+							</div>
+						</div>
+						<div id="deleteUserProfileModal" class="modal hide fade" 
+							tabindex="-1" role="dialog" 
+							data-keyboard="false" data-backdrop="static"
+							aria-labelledby="myModalLabel" aria-hidden="true">
+							  <div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									<i class="icon-remove"></i>
+								</button>
+								<h3 id="myModalLabel">Delete User Profile</h3>
+							  </div>
+							  <div class="modal-body ">
+								<p class="centered">Are you sure that you want to delete your user profile ?</p>
+							  </div>
+							  <div class="modal-footer" >
+								 <div class="row-fluid centered">
+									<button id='deleteUserProfileBtn' class="btn btn-danger btn-large">
+										Yes
+									</button>
+									<button class="btn btn-success btn-large left40" data-dismiss="modal" aria-hidden="true">
+										No
+									</button>
+								</div>
+							  </div>
+						</div>
+					</div>
+				</div>	
+				<div id="keys" class="row-fluid tab-pane">
+					<div class="span12">
+						<div class="collapseHeader" data-toggle='collapse' data-target='#managePublicKeysContainer'>
+							<h4 class="collapseHeader" >
+								<i class="icon-key icon-large"></i>Manage Public Keys<i class="collapseSign"></i>
+							</h4>
+						</div>
+						<hr/>
+						<div id="managePublicKeysContainer" class="row-fluid collapse in">
+							<div class="padding3pc">
+								<div>
+									<h5 class="collapseHeader"><i class="icon-list-ul"></i>Existing User Keys</h5>
+								</div>
+								<hr/>
+								<div id="existingUserKeysContainer" class="margin3pc">
+									<div id="existingUserKeyErrors" class="row-fluid"></div>
+									<div class="row-fluid top20">
+										<div class="span12">
+											<div id="publicKeysList">
+												
+											</div>	
+										</div>
+									</div>
+								</div>
+								<div class="top20" data-toggle="collapse" data-target="#uploadNewUserKeysContainer">
+									<h5 class="collapseHeader"><i class="icon-indent-right"></i>Upload New User Keys</h5>
+								</div>
+								<hr/>
+								<div id="uploadNewUserKeysContainer" class="margin3pc">
+									<div id="newUserKeyErrors" class="row-fluid"></div>
+									<div class="row-fluid">
+										<label class="span2" for="inputKeyDescription"><b>Key Description*</b></label>
+										<div class="span8">
+											<input class="span12" type="text" id="inputKeyDescription" required>
+										</div>
+									</div>
+									<div id="currentFileContainer" class="row-fluid top20">
+										<div class="row-fluid top20">
+											<label class="span2" for='publicKeyFromFile'><b>Key Value</b></label>
+											<div id="publicKeyFromFile" class="span8">
+												<textarea class="span12" rows=6 disabled style="resize:none"></textarea>
+											</div>
+											<div class="span2">
+												<button id="uploadNewPublicKey" class="btn btn-inverse span5">
+													<i class="icon-circle-arrow-up icon-large nopadding"></i>
+												</button>
+												<i id="uploadingSign" class="icon-spin icon-spinner icon-2x hidden"></i>
+											</div>
+										</div>
+									</div>	
+									<div class="row-fluid top20">
+										<div id="currentFileInfo" class="row-fluid">
+											<span id="currentFileName" class="alert alert-info span3 centered">No file selected</span>
+										</div>
+										<div class="row-fluid">
+											<button id="selectFromFile" class="span3 btn btn-inverse">
+												<i class="icon-file-text"></i>
+												Select from File
+											</button>
+										</div>
+										<div id="selectFromFileInput" class="hidden">
+											<input type="file" class="hidden"></input>
+										</div>
+									</div>	
+								</div>	
+							</div>
+						</div>
+					</div>
+				</div>	
+				<div id="certificate" class="row-fluid tab-pane">
+					<div class="span12">
+						<div class="collapseHeader"
+							data-parent="#certificate"  
+							data-toggle="collapse"  
+							data-target='#downloadCertificateContainer'>
+							<h4 class="collapseHeader"><i class="icon-cloud-download icon-large"></i>Download Certificates<i class="collapseSign"></i></h4>
+						</div>
+						<hr/>
+						<div id="downloadCertificateContainer" class="collapse in">
+							<div id="genFromExKey" class="row-fluid padding3pc">
+								 <div class="collapseHeader">
+										<h5><i class="icon-file-text"></i>Certificate From Existing Key</i></h5>
+								 </div>
+								 <hr/>
+								 <div id="cerfificateFromKeyContainer" class="margin3pc">
+									<div id="selectKeyForGeneration" class="row-fluid"></div>
+									<div class="row-fluid">
+										<button id="genPubKey" class="btn btn-inverse span2 nomargin">
+											<i class="icon-circle-arrow-down"></i>Generate
+										</button>
+										<i id="genPubKeySign" class="icon-spin icon-spinner icon-2x hidden"></i>
+									</div>
+									<div id="generatedCertificate" class="row-fluid top20"></div>
+								</div>
+							</div>
+							<div id="genNewKeypairWithCertificate" class="row-fluid top20 padding3pc">
+								<div class="collapseHeader">
+										<h5><i class="icon-paste"></i>New Keypair with Certificate</i></h5>
+								 </div>
+								 <hr/>
+								 <div id="cerfificateWithKeyContainer" class="margin3pc">
+									<div id="newKeypairAndCertificateErrors" class="row-fluid"></div>
+									<div id="passphraseForGeneration" class="row-fluid">
+										<label class="span2" for="inputPassphrase">Pass-phrase</label>
+										<div class="span8">
+											<input class="span12" id="inputPassphrase"  type="password" required>
+										</div>
+									</div>
+									<div class="row-fluid">
+										<button id="genKeyAndCertificate" class="btn btn-inverse span2 nomargin ">
+											<i class="icon-circle-arrow-down"></i>Generate
+										</button>
+										<i id="genKeyAndCertificateSign" class="icon-spin icon-spinner icon-2x hidden"></i>
+									</div>
+									<div id="generatedKeyAndCertificate" class="row-fluid top20"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+	</div>
+	<div id="footer" class="row-fluid">
+	</div>
+</body>
