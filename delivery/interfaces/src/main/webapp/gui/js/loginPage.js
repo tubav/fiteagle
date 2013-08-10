@@ -23,6 +23,7 @@ function(require,Validation,Registration,Utils,Messages){
 	  */  
 	Login.initLoginPage = function(){
 		$('#fiteagle').removeClass('mainWindow');
+		redirectToUrl();
 		Utils.unhideBody();
 		initOnWindowResizeEvent();
 		initNavigationMenu();
@@ -32,22 +33,47 @@ function(require,Validation,Registration,Utils,Messages){
 		Registration.initRegistrationForm();	
 		Utils.showCurrentTab();
 		initOnWindowResizeEvent();
-		
+		initHistory();
 	};
 	
-	/* Currently not used
-	initHistory  = function(){
-		History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
-			var State = History.getState(); // Note: We are using History.getState() instead of event.state
-			console.log('STATE:' + State)
+	redirectToUrl = function(){
+		var href = window.location.hash;
+		console.log(href);
+		if(href == null || href == ''){
+				$('#navigation [href$=#home]').tab('show');
+		}else{
+				var tab = $('#navigation [href$='+href+']'); 
+				(tab.length)? 
+					tab.tab('show')
+						:
+					//if this hashtag is not found on this page
+					Utils.storeHashTag(href); // store the hashtag to try open it on main page
+		}
+	};
+	
+	/**
+	* Initiates history functionality for the login page navigation menu by initializing History API. It stores 
+	* the previous clicked navigation tab in the browser tab so it can be reached by clicking
+	* on "back" and "next" buttons.
+	* @private
+	* @memberOf Login#
+	*/
+	initHistory = function(){
+		$('#navigation ul li a').on('click',function(e){
+			e.preventDefault();
+			var t = $(this);
+			var href = t.attr('href');
+			if(href == "#home"){href = "";}
+			history.pushState(href, "page "+href, "/"+href);
+			(href == '')?
+				$('[href$=#home]').tab('show')
+					:
+				$('[href$='+href+']').tab('show')
 		});
-		
-		$('#registrationTab').on('click',function(){
-			// Change our States
-			console.log("SFFdsfsdf");
-			History.pushState({state:1}, "State 1", "/here"); // logs {state:1}, "State 1", "?state=1"
+		$(window).on(' hashchange', function(event) {
+			redirectToUrl();
 		});
-	}; */
+	};
 	
 	/**
       * Stores current Tab name in a session storage
@@ -84,9 +110,9 @@ function(require,Validation,Registration,Utils,Messages){
       */ 
 	initNavigationMenu = function(){
 		toggleNavigationBtn();
-		$("#navigation ul li a").on('click',function(){
-			Utils.setCurrentTab("#"+$(this).attr("id"));
-		});	
+		/*$("#navigation ul li a").on('click',function(){
+			//Utils.setCurrentTab("#"+$(this).attr("id"));
+		});	*/
 	};
 	
 	/**
@@ -111,18 +137,16 @@ function(require,Validation,Registration,Utils,Messages){
       * @function 
 	  * @see initLoginPage()
       */  
-	Login.load = function(){
+	Login.load = function(url){
 			//console.log("loading Login Page...");
-			var url = "html/login.html";
-
-			$("#navigation").load(url + " #navs",
-				function(){
-					$("#main").load(url + " #loginPages",
+			var url = "login.html";
+			$("#navigation").load(url + " #navs",function(){
+				$("#main").load(url + " #loginPages",
 						function(){
 							Login.initLoginPage();
-						});
-				}
-			);
+				})
+			});
+			
 	};	
 
 	/**
@@ -262,7 +286,11 @@ function(require,Validation,Registration,Utils,Messages){
 		});	
 	};
 	
-
+	/**
+	* Checks if the current user has been already logged into the system.
+	* @return true if logged, false otherwise.
+	* @private
+	*/
 	Login.isUserLoggedIn = function(){
 		var user = Utils.getCurrentUser();
 		//console.log('Current User: ' + Utils.userToString());

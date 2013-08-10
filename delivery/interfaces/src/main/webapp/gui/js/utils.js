@@ -148,6 +148,15 @@ function(){
 			return userToString;
 	};
 	
+	Utils.storeHashTag = function(tag){
+		console.log("STORING: "+tag);
+		sessionStorage.hashTag = tag;
+	};
+	
+	Utils.getStoredHashTag = function(){
+		return sessionStorage.hashTag;
+	};
+	
 	Utils.initTooltipFor = function(selector,title,placement,trigger){
 		if(selector){
 			var s = $(selector);
@@ -197,9 +206,11 @@ function(){
 		sessionStorage.currentTab = currentTab;
 	};
 	
-	Utils.showCurrentTab = function(){
+	Utils.showCurrentTab = function(selector){
 		//console.log("CURRENT " +this.getCurrentTab());
-		$(this.getCurrentTab()).click();
+		var sel = this.getCurrentTab();
+		if(selector){sel = selector;}
+		$(sel).click();
 	};
 
 	

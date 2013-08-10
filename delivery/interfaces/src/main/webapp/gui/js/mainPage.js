@@ -1,4 +1,4 @@
-define(['require','utils','profile','publicKeys', 'certificates','server'],
+define(['require','utils','profile','publicKeys', 'certificates','server','index'],
 /**
  * @lends MainPage
  */ 
@@ -27,7 +27,14 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		Profile.initForm();
 		PublicKeys.initForm();
 		Certificates.initForm();
-		Utils.showCurrentTab();
+		checkForStoredHashTags();
+	};
+	
+	checkForStoredHashTags = function(){
+		var tag = Utils.getStoredHashTag();
+		if(tag.length > 0){
+			openTab(tag);
+		}
 	};
 	
 	/**
@@ -148,28 +155,68 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	  * @memberOf Main#
       */ 
 	initUserInfoPanel = function(){		
-		// workaroud for BOOTSTRAP's DropDown bug ("active" class for li elements removed)
-		$("#userInfoDropdown a").not('#signOut').click(function(){
+		var navLinks = $("#userInfoDropdown a");
+		navLinks.off();
+		navLinks.not('#signOut').on('click',function(e){
+			e.preventDefault();
 			var t = $(this);
 			var linkID  = t.attr("id");
 			var linkHref = t.attr('href');
-			Utils.setCurrentTab("#"+linkID);
 			var lis = $("#userInfoDropdown li");
-			lis.removeClass("active");
-			var scrollTo = $(linkHref).find('h4.collapseHeader');
-			if(Utils.isSmallScreen()){
-				setTimeout(function(){
-					$('html, body').animate({
-						 scrollTop: scrollTo.offset().top-12-$('#navigation').height()
-					}, 1000);
-				},100)
-			}
+			lis.removeClass("active");	
+			initScrollToForm(linkHref+' h4.collapseHeader');
+			var hash = linkHref.toLowerCase();
+			history.pushState(linkHref, "page "+linkHref, "/"+hash);
+			$('[href$='+linkHref+']').tab('show');			
 		});
 		Utils.updateUserInfoPanel();
 		initSignOutBtn();
+		initHashtagChange();
 	};
 	
 	
+	/**
+	* Defines the behaviour for clicking on "back" or "next" browser buttons aka browser history.
+	* The function opens the appropriate form views.
+	*/
+	initHashtagChange = function(){
+		$(window).unbind();
+		$(window).on('popstate hashchange',function(){
+			var state = window.location.hash;
+			openTab(state);
+		});
+	};
+	
+	openTab = function(state){
+		console.log("open tab "+state);
+		if(state != null){
+			var lis = $("#userInfoDropdown li");
+			lis.removeClass("active");
+			var a = $('#userInfoDropdown [href$='+state+']');
+			(a.length)?
+				a.tab('show') // if found show the tab
+					:
+				$('[href$=#manage]').tab('show'); // if not found show manage profile tab
+		}
+	}
+	
+	/**
+	* Initializes scrolling for small screen devices to the container specified by a selector. 
+	* The scrolling lasts one second and has an offset of navigation menu height.
+	* @param selector - container selector to scroll to
+ 	* @private
+	* @memberOf Main#
+	*/
+	initScrollToForm = function(selector){
+		var scrollTo = $(selector);
+		if(Utils.isSmallScreen()){
+			setTimeout(function(){
+				$('html, body').animate({
+					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
+				}, 1000);
+			},100)
+		}	
+	};
 
 	/**
       * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
@@ -224,16 +271,16 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @function
 	**/
 	Main.load = function(){
-			//console.log("loading main Page...");
-			var url = "html/main.html";
-			$("#navigation").load(url + " #toolbar",
-				function(){
-					$("#main").load(url + " #mainArea",
-					    function(){								
-							initMainPage(); 
-						});
-				}
-			);
+		//console.log("loading main Page...");
+		var url = "main.html";
+		$("#navigation").load(url + " #toolbar",
+			function(){
+				$("#main").load(url + " #mainArea",
+					function(){								
+						initMainPage(); 
+					});
+			}
+		);
 	};
 	
 	return Main;

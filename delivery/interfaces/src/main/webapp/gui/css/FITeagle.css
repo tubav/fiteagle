@@ -83,7 +83,7 @@ ul li a{color: #585858}
 ul li a:hover, ul li a:focus{text-decoration: none;}
 
 #managePubliKeys ul li textarea{color: black;}
-#managePublicKeys ul{list-style-type:none;}
+#keys ul{list-style-type:none;}
 
 hr{ border-top: 1px solid #D1D1D1}
 h4{margin-bottom:5px !important}

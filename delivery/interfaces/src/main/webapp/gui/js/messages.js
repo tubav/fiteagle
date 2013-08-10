@@ -11,7 +11,7 @@ define([],function(){
 	
 /*________ REGISTRATION FORM HINT MESSAGES _______*/
 	
-	Messages.usernameHint = "The username must be between 5 and 15 characters, dot and underscore are allowed, the first letter should be number or character";
+	Messages.usernameHint = "The username must be between 5 and 15 characters, dot and underscore are allowed, the first letter should be a number or a character";
 	
 	Messages.firstNameHint = "Acceptable first names include compound names with a hyphen or a space in them.";
 	
@@ -94,7 +94,7 @@ define([],function(){
 	
 	Messages.generateCertificate = "Please wait while new certificate for the specified public key is being generated.";
 	
-	Messages.generateKeyPairAndCertificate = 'Generate new key pair and the certificate for it';
+	Messages.generateKeyPairAndCertificate = 'Generate new key pair and a certificate for it';
 	
 	Messages.generateCertificateFromKey = "Generate certificate from the selected public key";
 	
