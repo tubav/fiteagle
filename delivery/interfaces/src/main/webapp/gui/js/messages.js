@@ -23,7 +23,7 @@ define([],function(){
 	
 	Messages.passwordHint = "Password must be between 4 and 8 digits long and include at least one numeric digit.";
 	
-	Messages.confirmPasswordHint = "Please enter password confirmation.";
+	Messages.confirmPasswordHint = "Please enter password confirmation. The password has to be exactly the same you've entered in the field above.";
 	
 	Messages.keyValueHint = "The public key length should be between 100 and 500 digits.";
 	
@@ -58,7 +58,7 @@ define([],function(){
 	
 	Messages.wrongPassword = "The given password syntax is invalid";
 	
-	Messages.wrongConfirmPassword = "Confirm password is too short."; 
+	Messages.wrongConfirmPassword = "Confirm password has a wrong syntax."; 
 	
 	Messages.passwordsAreInconsistent = "Password are inconsistent.";
 	

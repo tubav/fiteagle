@@ -133,6 +133,14 @@ function(){
 			return null;
 	};
 	
+	Utils.disableSelectionOnElements = function(){
+		$('body *').not('input').not('textarea').each(function(){
+			$(this).attr('unselectable', 'on')
+                 .css('user-select', 'none')
+                 .on('selectstart', false);
+		});
+	};
+	
 
 	Utils.resetUser = function(){
 		sessionStorage.clear();
@@ -149,7 +157,6 @@ function(){
 	};
 	
 	Utils.storeHashTag = function(tag){
-		console.log("STORING: "+tag);
 		sessionStorage.hashTag = tag;
 	};
 	

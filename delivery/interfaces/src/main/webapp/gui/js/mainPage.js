@@ -6,8 +6,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	
 	//console.log("mainPage.js is loaded");
 	 /** 
-     * Main class
-     * This Main Page class contains functions required for initialization of the Forms and Elements located on the FITeagle main page.
+	 * The FITeagle main page class contains functions required for initialization of the 
+	 * main page forms and elements located on the page.
      * @class
      * @constructor
      * @return Main Object
@@ -15,49 +15,24 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	Main = {};
 	
 	/**
-	* Triggers functions for main Page initialization such as: screen adjustments by resizing, initialization of user panel, profile form,
-	* public keys form, manage certificates form, and showing of the last opened tab.
-    * @private
+	* Checks if any hashtag is stored before. In case the tag is found the function triggers the tab opening according to this tag.
+	* @private
 	* @memberOf Main#
 	*/
-	initMainPage = function(){
-		$('#fiteagle').addClass('mainWindow'); // class in order to distinguish between main and login pages
-		performScreenAdjustments();	
-		initUserInfoPanel();		
-		Profile.initForm();
-		PublicKeys.initForm();
-		Certificates.initForm();
-		checkForStoredHashTags();
-	};
-	
 	checkForStoredHashTags = function(){
 		var tag = Utils.getStoredHashTag();
-		if(tag.length > 0){
-			openTab(tag);
-		}
-	};
-	
-	/**
-	* Triggers functions for adjusting the site view for better representing depending on the current screen size such as:
-	* collapsing of the opened sections for small screen devices and opening for a large ones and other related tasks.
-    * @private
-	* @memberOf Main#
-	*/
-	performScreenAdjustments = function(){
-		Utils.unhideBody();
-		initCollapseHeaders();
-		if(Utils.isSmallScreen()){
-			initForSmallScreens();
+		if(tag && tag.length > 0){
+			openTab(tag); // trying to open a tab for the tag
 		}else{
-			initForLargeScreens();
+			window.location.hash = "#manage";
+			openTab('#manage');
 		}
-		initCollapseSigns();
 	};
-	
-	
+		
 	/**
 	* Collapses sections identified by "#yourSliceList" and "#availableSlicesList" selectors
-	* @param boolean value triggers collapse function. True value collapses the container, false otherwise opens it.
+	* @param {Boolean} boolean value that triggers collapse function. 
+	* True value collapses the container, false otherwise opens it.
 	* @private
 	* @memberOf Main#
 	*/
@@ -78,6 +53,37 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	};
 	
 	/**
+	* Creates and appends to the body confirmation modal to be shown before signing out. 
+	* The user is signed out only after confirming his decision.
+    * @private
+    * @memberOf Main#
+	* @return {Object} sign out modal object
+	*/
+	createSignOutModal = function(){
+		var modalBody = $('<div>').addClass('centered').append('<h5>'+Messages.signOutConfirm+'</h5>')
+		var signOutModal = Utils.createConfirmModal('signOutModal','signOutOkBtn','YES','NO',modalBody);
+		$('body').append(signOutModal);
+		return signOutModal;
+	}
+	
+	
+	/**
+	* Disables all links within the aside section in order to prevent quitting from the main page by
+	* clicking on an undefined link. The function has to be removed before implementing a functionality for the links
+	* inside the aside section.
+	* @private
+    * @memberOf Main#
+	*/
+	disableAsideLinks = function(){
+		$('#aside').find('a').each(function(){
+			$(this).on('click',function(e){
+				e.preventDefault();
+				return false;
+			})
+		});
+	};
+		
+	/**
 	* Initializes change of the icon sign for all of the headers with the class with  the ".collapseHeader" selector after clicking on it.
 	* @private
 	* @memberOf Main#
@@ -89,6 +95,26 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				initCollapseSignFor(icon);
 			},100);
 		});
+	};
+			
+	/**
+	* Initializes the icon sign replacement within the given container according to the current section state. 
+	* Icon chevron right from the font awesome icons is shown if the section is collapsed and icon chevron right is section is opened.
+ 	* @param {Object} icon_object is a container object to change the icon sign after the section is opened or collapsed.
+	* @private
+	* @memberOf Main#
+	*/
+	initCollapseSignFor = function(icon_object){
+		var selector = icon_object.closest('div').attr('data-target');
+		var isOpen  = $(selector).hasClass('in');
+			//console.log("selector" + selector + " is open " + isOpen);
+			if(isOpen){
+				icon_object.attr('class','');
+				icon_object.addClass('collapseSign icon-chevron-down');
+			}else{
+				icon_object.attr('class','');
+				icon_object.addClass('collapseSign icon-chevron-right');
+		}
 	};
 	
 	/**
@@ -103,25 +129,16 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			initCollapseSignFor(t);
 		});		
 	};
-	
+		
 	/**
-	* Replaces the section header icon sigh according to the current section state. 
-	* Icon chevron right from the font awesome icons is shown if the section is collapsed and icon chevron right is section is opened.
- 	* @param icon_object is an item object to change the icon sign after the section is opened or collapsed.
-	* @private
+	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
+	* Hides small screen navigation toolbar.
+    * @private
 	* @memberOf Main#
 	*/
-	initCollapseSignFor = function(icon_object){
-		var selector = icon_object.closest('div').attr('data-target');
-		isOpen  = $(selector).hasClass('in');
-			//console.log("selector" + selector + " is open " + isOpen);
-			if(isOpen){
-					icon_object.attr('class','');
-					icon_object.addClass('collapseSign icon-chevron-down');
-			}else{
-					icon_object.attr('class','');
-					icon_object.addClass('collapseSign icon-chevron-right');
-		}
+	initForLargeScreens = function(){
+		collapseAsideSections(false);	
+		Utils.hideElement('#toolbar .btn-navbar');
 	};
 	
 	/**
@@ -136,16 +153,74 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	};
 	
 	/**
-	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
-	* Hides small screen navigation toolbar.
+	* Defines the behaviour for clicking on "back" or "next" browser buttons aka browser history.
+	* The function opens the appropriate form views.
+	* @private
+	* @memberOf Main#
+	*/
+	initHashtagChange = function(){
+		$(window).unbind();
+		$(window).on('popstate hashchange',function(){
+			var state = window.location.hash;
+			openTab(state);
+		});
+	};
+
+	/**
+	* Triggers functions for main Page initialization such as: screen adjustments by resizing, initialization of user panel, profile form,
+	* public keys form, manage certificates form, and showing of the last opened tab.
     * @private
 	* @memberOf Main#
 	*/
-	initForLargeScreens = function(){
-		collapseAsideSections(false);	
-		Utils.hideElement('#toolbar .btn-navbar');
+	initMainPage = function(){
+		$('#fiteagle').addClass('mainWindow'); // class in order to distinguish between main and login pages
+		performScreenAdjustments();	
+		initUserInfoPanel();		
+		Profile.initForm();
+		PublicKeys.initForm();
+		Certificates.initForm();
+		checkForStoredHashTags();
+		Utils.disableSelectionOnElements();
+		disableAsideLinks();
 	};
-
+	
+	/**
+	* Initializes scrolling for small screen devices to the container specified by a selector. 
+	* The scrolling lasts one second and has an offset of navigation menu height.
+	* @param selector - container selector to scroll to
+ 	* @private
+	* @memberOf Main#
+	*/
+	initScrollToForm = function(selector){
+		var scrollTo = $(selector);
+		if(Utils.isSmallScreen()){
+			setTimeout(function(){
+				$('html, body').animate({
+					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
+				}, 1000);
+			},100)
+		}	
+	};
+	
+	/**
+      * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
+	  * @private
+	  * @memberOf Main#
+     */ 
+	initSignOutBtn = function(){
+		$("#signOut").on('click',function(e){
+			e.preventDefault();
+			//console.log("signOut clicked");	
+			var modal = createSignOutModal();
+			modal.modal('show');
+			$('#signOutOkBtn').on('click',function(){
+				var isCookieDeleted = Server.invalidateCookie();
+				modal.modal('hide');
+				if(isCookieDeleted) Main.signOut();
+			});
+		});
+	};
+	
 	/**
       * Initiates user info panel located in the main page header section. Defines the behaviour for clicking on the panel items: 
 	  * opening the corresponding window. Sets current user first and last name in it.
@@ -174,96 +249,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		initHashtagChange();
 	};
 	
-	
-	/**
-	* Defines the behaviour for clicking on "back" or "next" browser buttons aka browser history.
-	* The function opens the appropriate form views.
-	*/
-	initHashtagChange = function(){
-		$(window).unbind();
-		$(window).on('popstate hashchange',function(){
-			var state = window.location.hash;
-			openTab(state);
-		});
-	};
-	
-	openTab = function(state){
-		console.log("open tab "+state);
-		if(state != null){
-			var lis = $("#userInfoDropdown li");
-			lis.removeClass("active");
-			var a = $('#userInfoDropdown [href$='+state+']');
-			(a.length)?
-				a.tab('show') // if found show the tab
-					:
-				$('[href$=#manage]').tab('show'); // if not found show manage profile tab
-		}
-	}
-	
-	/**
-	* Initializes scrolling for small screen devices to the container specified by a selector. 
-	* The scrolling lasts one second and has an offset of navigation menu height.
-	* @param selector - container selector to scroll to
- 	* @private
-	* @memberOf Main#
-	*/
-	initScrollToForm = function(selector){
-		var scrollTo = $(selector);
-		if(Utils.isSmallScreen()){
-			setTimeout(function(){
-				$('html, body').animate({
-					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
-				}, 1000);
-			},100)
-		}	
-	};
-
-	/**
-      * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
-	  * @private
-	  * @memberOf Main#
-     */ 
-	initSignOutBtn = function(){
-		$("#signOut").on('click',function(e){
-			e.preventDefault();
-			//console.log("signOut clicked");	
-			var modal = createSignOutModal();
-			modal.modal('show');
-			$('#signOutOkBtn').on('click',function(){
-				var isCookieDeleted = Server.invalidateCookie();
-				modal.modal('hide');
-				if(isCookieDeleted) Main.signOut();
-			});
-		});
-	};
-	
-	
-	/**
-	* Creates and appends to the body confirmation modal to be shown before signing out. 
-	* The user is signed out only after confirming his decision.
-    * @private
-    * @memberOf Main#
-	* @return sign out modal object
-	*/
-	createSignOutModal = function(){
-		var modalBody = $('<div>').addClass('centered').append('<h5>'+Messages.signOutConfirm+'</h5>')
-		var signOutModal = Utils.createConfirmModal('signOutModal','signOutOkBtn','YES','NO',modalBody);
-		$('body').append(signOutModal);
-		return signOutModal;
-	}
-	
-	
-	/**
-	* Signs out the current user. Resets its data in the session storage and loads the login page.  
-	* @public
-	* @name Main#signOut
-	* @function
-	**/
-	Main.signOut = function(){
-		Utils.resetUser();
-		require('loginPage').load();
-	};
-	
 	/**
 	* Loads HTML for the FITeagle main page dynamically and triggers the page initialization after the loading is successfully completed.
 	* @public
@@ -281,6 +266,58 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 					});
 			}
 		);
+	};
+	
+	/**
+	* Opens the appropriate tab from the user info dropdown menu on the main page according to the
+	* hash tag entered in the browser's url field. The function searches within a "user info dropdown" menu
+	* for a link with the reference showing to the specified container.
+	* If no tab is found for a hash tag then "manage profile" tab is opened per default.
+	* @see Twitter Bootstrap tab documentation for more information.
+	* @param {String} hash - tag to opening a form for.
+	* @example openTab('#keys') tries to open a tab identified by a "#keys" selector
+	* @private
+	* @memberOf Main#
+	*/
+	openTab = function(hash){
+		if(hash != null){
+			var lis = $("#userInfoDropdown li");
+			lis.removeClass("active");
+			var a = $('#userInfoDropdown [href$='+hash+']');
+			(a.length)?
+				a.tab('show') // if found show the tab
+					:
+				$('[href$=#manage]').tab('show'); // if not found show manage profile tab
+		}
+	};
+	
+	/**
+	* Triggers functions for adjusting the site view for better representing depending on the current screen size such as:
+	* collapsing of the opened sections for small screen devices and opening for a large ones and other related tasks.
+    * @private
+	* @memberOf Main#
+	*/
+	performScreenAdjustments = function(){
+		Utils.unhideBody();
+		initCollapseHeaders();
+		if(Utils.isSmallScreen()){
+			initForSmallScreens();
+		}else{
+			initForLargeScreens();
+		}
+		initCollapseSigns();
+	};
+
+	/**
+	* Signs out the current user. Resets its data in the session storage and loads the login page.  
+	* @public
+	* @name Main#signOut
+	* @function
+	**/
+	Main.signOut = function(){
+		Utils.resetUser();
+		history.pushState('', "page ", "/"); // change url hash to "home"
+		require('loginPage').load();
 	};
 	
 	return Main;

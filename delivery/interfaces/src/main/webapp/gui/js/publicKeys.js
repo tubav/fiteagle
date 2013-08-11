@@ -157,7 +157,7 @@ function(require,Utils,Server,Validation,Messages){
 		var publicKey = new Object();
 		publicKey.publicKeyString = keyString;
 		publicKey.description = description;
-		console.log(JSON.stringify(publicKey));
+		//console.log(JSON.stringify(publicKey));
 		return publicKey;
 	};
 	
@@ -186,7 +186,7 @@ function(require,Utils,Server,Validation,Messages){
 								.attr('type','file')
 								.attr('name','file')
 								.on('change',function(event){
-										console.log(event);
+										//console.log(event);
 										clearPublicKeysErrors();
 										handleFileSelect(event);
 										setTimeout(function(){
@@ -206,7 +206,6 @@ function(require,Utils,Server,Validation,Messages){
 	* @memberOf PublicKeys#	
 	*/
 	isKeyDescriptionValid = function(){
-		console.log('key descr validation');
 		var isValidDescription = Utils.checkInputField(
 								"#inputKeyDescription",
 								"#newUserKeyErrors",
@@ -231,8 +230,7 @@ function(require,Utils,Server,Validation,Messages){
 								"#newUserKeyErrors",
 								Validation._isKeyValue,
 								Messages.emptyKeyValue,
-								Messages.wrongKeyValue);
-								
+								Messages.wrongKeyValue);						
 		return isValidKeyValue;
 	};
 	
@@ -414,7 +412,9 @@ function(require,Utils,Server,Validation,Messages){
 			$('<div>').addClass('row-fluid top20').append(
 				$('<label>').attr('for',inputFieldID).addClass('span5').text('New Public Key Description')
 			).append(
-				$('<input type="text" required></input>').attr('id',inputFieldID).addClass('span7').tooltip({trigger: 'focus',title: Messages.newKeyDescription})
+				$('<input type="text" required></input>')
+					.attr('id',inputFieldID).addClass('span7')
+					.tooltip({trigger: 'focus',title: Messages.newKeyDescription})
 			)
 		);
 		return Utils.createConfirmModal('changePublicKeyDescriptionModal',submitBtnID,'Submit','Cancel',modBody); 
@@ -627,6 +627,7 @@ function(require,Utils,Server,Validation,Messages){
 	*/
   	setPublicKeyFromFile = function(text){
 	  var container = $("#publicKeyFromFile textarea");
+	 // console.log(container);
 	  container.html(text)
 	};
 	

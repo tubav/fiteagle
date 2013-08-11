@@ -5,16 +5,29 @@ define(['require','utils'],
 function(require,Utils){
 	
 	/** 
-     * Server class
-     * The Server class contains functions needed for the remote communication with the FITeagle server. 
-	 * Such as user profile, public key and certificate management. 
+     * Server class contains functions that enables the remote communication with the FITeagle server REST API,  
+	 * by utilizing AJAX such as user profile, public key and certificate management. 
      * @class
      * @constructor
      * @return Server object
      */
 	Server = {};
 	
-		
+	/**
+	* The function sends a request to the server API for logging in a user with a given username and password.   
+	* @param {String} username of the user to try logging in
+	* @param {String} password for the given username to log in
+	* @param {Boolean} rememberMe - a flag for remembering the user after the user is successful logged in.
+	* true is for remembering the current user and false for not.
+	* @return {String} message in case of the error the server response message is returned.
+	* in case 404 status code the Messages.userNotFound message is returned.
+	* in case 401 status code the Messages.wrongPasswordKey message is returned.
+	* @see Messages#userNotFound
+	* @see Messages#wrongPasswordKey
+	* @public
+	* @name Server#loginUser
+	* @function
+	*/
 	Server.loginUser = function(username,password,rememberMe){		
 		//console.log("Sending login information to the server...");
 		var msg;
@@ -38,14 +51,13 @@ function(require,Utils){
 			},
 			success: function(user,status,xhr){			
 				Utils.setCurrentUser(user);
-				$('#loginForm').modal('hide');
 				require('mainPage').load();
 			},
 			error: function(xhr,status,thrown){		
 				msg = thrown;
-				console.log("Response " + xhr.responseText);
-				console.log(status);
-				console.log(thrown);
+				//console.log("Response " + xhr.responseText);
+				//console.log(status);
+				//console.log(thrown);
 			},
 			complete: function(){
 				setTimeout(function(){
@@ -66,6 +78,20 @@ function(require,Utils){
 		return msg;
 	};
 	
+	/**
+	* The function sends a request to the server API for registering a new user. If the given user is successfully 
+	* registered the function then automatically sends the logging in request and loads the FITeagle main page.
+	* @param {Object} newUser object contains
+	* @param {String} newUsername is username for a new user to be registered with
+	* @param {Function} successFunction is a callback function to be called after the new user is 
+	* successfully registered.
+	* @return {Object} error object containing the error response message from the server.
+	* The error object is the Twitter Bootstrap alert span object
+	* @see Utils#createErrorMessage and Twitter Bootstrap alert component
+	* @public
+	* @name Server#registerUser
+	* @function
+	*/
 	Server.registerUser = function(newUser,newUsername,successFunction){	
 		console.log("Registering a new user on a server...");
 		var userToJSON = JSON.stringify(newUser);
@@ -79,9 +105,7 @@ function(require,Utils){
 			data: userToJSON,
 			contentType: "application/json",
 			dataType: "json",
-			success: function(data,status){
-
-			},
+			success: function(data,status){	},
 			error: function(xhl,status){
 				message = Utils.createErrorMessage(xhl.responseText);
 				console.log(status);
@@ -102,9 +126,22 @@ function(require,Utils){
 		return message;
 	};
 	
+	/**
+	* Sends the request to the server API for getting user profile object for the specified username.
+	* In case there was an unauthorized request attempt (meaning the user is not logged on the server side) the function and currently shown page is a FITeagle main page,
+	* the function triggers the sing out procedure, it is done for security reasons and other use cases.
+	* If the response is a successful one the function sets the received user as a current FITeagle clien user. 
+	* In case the error code is responded the information about the event is written to the browser's console.
+	* @param {String} username to get the user profile object for.
+	* @return {Object} user profile object containing the entire information about the user.
+	* @see Main#signOut for sign out procedure.
+	* @see Utils#setCurrentUser for setting a user as a current FITeagle client user.
+	* @public
+	* @name Server#getUser
+	* @function
+	*/
 	Server.getUser = function(username){	
-		var userFromServer = null;
-		
+		var userFromServer = null;	
 		$.ajax({
 			cache: false,
 			type: "GET",
@@ -126,13 +163,17 @@ function(require,Utils){
 					console.log("Unathorized access. To be signed out")
 					require('mainPage').signOut();
 				}
-			},
-				
+			},	
 		});
-		
 		return userFromServer;
 	};
 	
+	/**
+	* Sends a request to the server API Updates the user pro
+	* @public
+	* @name Server#updateUser
+	* @function
+	*/
 	Server.updateUser = function(updateInformation){
 		//console.log("credentials" + Utils.getCredentials());
 		console.log("Updating user on the server...");
@@ -167,11 +208,15 @@ function(require,Utils){
 				}
 			}
 		});
-		
 		return message;
 	};
 	
-	
+	/**
+	* todo
+	* @public
+	* @name Server#uploadNewPublicKey
+	* @function
+	*/
 	Server.uploadNewPublicKey = function(publicKey, uploadingSign){
 		
 		var user = Utils.getCurrentUser();
@@ -194,7 +239,6 @@ function(require,Utils){
 			},
 			error: function(xhl,status){
 				message = Utils.createErrorMessage(xhl.responseText);
-				console.log(status);
 			},
 			statusCode:{			
 				200: function(){
@@ -213,6 +257,12 @@ function(require,Utils){
 		return message;
 	};
 	
+	/**
+	* todo
+	* @public
+	* @name Server#generateCertificateForPiblicKey
+	* @function
+	*/
 	Server.generateCertificateForPiblicKey = function(publicKeyDescription){
 
 		var username = Utils.getCurrentUser().username;
@@ -242,6 +292,12 @@ function(require,Utils){
 		return certificat;
 	};
 	
+	/**
+	* todo
+	* @public
+	* @name Server#generatePublicKeyAndCertificate 
+	* @function
+	*/
 	Server.generatePublicKeyAndCertificate = function(passphrase){
 		var username = Utils.getCurrentUser().username;
 		var keyAndCertificate;
@@ -253,9 +309,7 @@ function(require,Utils){
 			url: "/api/v1/user/"+username+'/certificate',
 			data: passphrase,
 			contentType: "text/plain",
-			beforeSend: function(xhr){
-				//Utils.showProgressbarModal(Messages.generateNewKeyAndCertificate);
-			},
+			beforeSend: function(xhr){},
 			success: function(data,status){
 				keyAndCertificate = data;
 			},
@@ -264,14 +318,18 @@ function(require,Utils){
 				console.log(xhl.responseText);
 				console.log(status);
 			},
-			complete: function(){
-				//Utils.hideProgressbarModal();
-			}
+			complete: function(){}
 		});
 		
 		return [keyAndCertificate,errorMessage];
 	};
 	
+	/**
+	* todo
+	* @public
+	* @name Server#invalidateCookie
+	* @function
+	*/
 	Server.invalidateCookie = function(username){
 		if(!username)username = Utils.getCurrentUser().username;
 		isSuccessful = false;
@@ -298,6 +356,12 @@ function(require,Utils){
 		return isSuccessful;
 	};
 	
+	/**
+	* todo
+	* @public
+	* @name Server#deletePublicKey
+	* @function
+	*/
 	Server.deletePublicKey = function(keyDescription){
 		var user = Utils.getCurrentUser();
 		var username = user.username;
@@ -334,6 +398,13 @@ function(require,Utils){
 		return message;
 	};
 	
+	
+	/**
+	* todo
+	* @public
+	* @name Server#renamePublicKey
+	* @function
+	*/
 	Server.renamePublicKey = function(oldKeyDescription, newKeyDescription){
 		var user = Utils.getCurrentUser();
 		var username = user.username;
@@ -371,7 +442,13 @@ function(require,Utils){
 		
 		return message;
 	};
-		
+	
+	/**
+	* todo
+	* @public
+	* @name Server#deleteUser
+	* @function
+	*/	
 	Server.deleteUser = function(afterDeleteFunction){
 		var user = Utils.getCurrentUser();
 		var username = user.username;

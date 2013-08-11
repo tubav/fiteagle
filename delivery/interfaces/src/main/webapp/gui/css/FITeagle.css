@@ -12,6 +12,9 @@ body{
 	font-size: 16px !important;
 	line-height: 1.5 !important;
 }
+
+label,h1,h2,h3,h4,h5,h6{ cursor: default}
+
 label {margin-top:3px;}
 #rememberMeCheckboxLabel{
 	position:relative;
