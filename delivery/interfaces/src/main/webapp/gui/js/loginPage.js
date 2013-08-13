@@ -157,7 +157,6 @@ function(require,Validation,Registration,Utils,Messages){
 		initLoginForm();
 		initSignInBtn();
 		Registration.initRegistrationForm();	
-		Utils.showCurrentTab();
 		initOnWindowResizeEvent();
 		initHistory();
 		Utils.disableSelectionOnElements();
