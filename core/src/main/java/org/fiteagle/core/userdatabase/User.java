@@ -45,7 +45,7 @@ public class User {
 
   static Logger log = LoggerFactory.getLogger(UserDBManager.class);
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
+	private User(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -61,21 +61,7 @@ public class User {
 		}
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String password){ 
-	  this.username = username;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.affiliation = affiliation;
-    this.created = Calendar.getInstance().getTime();
-    this.last_modified = created;
-    byte[] salt = generatePasswordSalt();
-    this.passwordSalt = Base64.encodeBytes(salt);        
-    this.passwordHash = generatePasswordHash(salt, password);    
-    this.publicKeys = new ArrayList<UserPublicKey>();
-	}
-	
-	public User(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys){ 
+	private User(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys){ 
 	  this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -92,7 +78,19 @@ public class User {
     }
 	}
 	
-	public void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
+	public static User createUser(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
+	  User u = new User(username, firstName, lastName, email, affiliation, password, publicKeys);
+	  u.checkAttributes();
+	  return u;
+	}
+	
+	public static User createUserWithExistingPassword(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
+	  User u = new User(username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
+	  u.checkAttributes();
+	  return u;
+	}
+	
+	private void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
 	  if(username == null){
 	    throw new NotEnoughAttributesException("no username given");
 	  }
@@ -166,25 +164,26 @@ public class User {
     return digest.digest(password.getBytes());
   }
 	
-  public void mergeWithUser(User newUser) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
-    if(newUser.getFirstName() != null){
-     this.firstName = newUser.getFirstName();
+  public void update(String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
+    if(newFirstName != null){
+     this.firstName = newFirstName;
     }
-    if(newUser.getLastName() != null){
-      this.lastName = newUser.getLastName();
+    if(newLastName != null){
+      this.lastName = newLastName;
     }
-    if(newUser.getPublicKeys() != null && newUser.getPublicKeys().size() != 0){
-      this.publicKeys = newUser.getPublicKeys();
+    if(newPublicKeys != null && newPublicKeys.size() != 0){
+      this.publicKeys = newPublicKeys;
     }
-    if(newUser.getEmail() != null){
-      this.email = newUser.getEmail();
+    if(newEmail != null){
+      this.email = newEmail;
     }
-    if(newUser.getAffiliation() != null){
-      this.affiliation = newUser.getAffiliation();
+    if(newAffiliation != null){
+      this.affiliation = newAffiliation;
     }
-    if(newUser.getPasswordHash() != null){
-      this.passwordSalt = newUser.getPasswordSalt();
-      this.passwordHash = newUser.getPasswordHash();
+    if(newPassword != null){
+      byte[] salt = generatePasswordSalt();
+      this.passwordSalt = Base64.encodeBytes(salt);        
+      this.passwordHash = generatePasswordHash(salt, newPassword);
     }
     this.setLast_modified(Calendar.getInstance().getTime());
     this.checkAttributes();      

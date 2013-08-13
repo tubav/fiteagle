@@ -41,7 +41,7 @@ public class UserAuthenticationFilterTest {
   public static void setUp() throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, NoSuchAlgorithmException {
      userManager = new UserManager();
      userManager.delete("test");
-     userManager.add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test"));     
+     userManager.add(User.createUser("test", "test", "test", "test@test.de", "testAffiliation", "test", null));     
   }
   
   @Before

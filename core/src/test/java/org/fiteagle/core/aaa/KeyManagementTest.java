@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import junit.framework.Assert;
 
-import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.junit.Before;
@@ -25,21 +24,15 @@ public class KeyManagementTest {
   
   @Test
   public void testGetEncryptedPrivateKey() throws DuplicateUsernameException, SQLException, IOException, GeneralSecurityException{
-    User u = new User("test", "test", "testName", "test@test.org", "testAffiliation", "password");
-    CertificateAuthority cA = CertificateAuthority.getInstance();
-    
+    CertificateAuthority cA = CertificateAuthority.getInstance();    
   
     KeyPair keyPair = keyManagement.generateKeyPair();
     String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "password");
-    System.out.println(encryptedPrivateKey);
-    Assert.assertNotNull(encryptedPrivateKey);
-    
+    Assert.assertNotNull(encryptedPrivateKey);    
   }
   
   //@Test 
   public void testVerifyEncryptedPrivateKey() throws DuplicateUsernameException, SQLException, IOException, GeneralSecurityException{
-    User u = new User("test", "test", "testName", "test@test.org", "testAffiliation", "password");
-
     KeyPair keyPair = keyManagement.generateKeyPair();
     String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "passwordpasswordpassword");
     Assert.assertFalse(keyManagement.verifyPrivateKey(encryptedPrivateKey, "Wrongpassword"));

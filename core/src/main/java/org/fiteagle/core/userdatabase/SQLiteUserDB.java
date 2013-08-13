@@ -46,7 +46,6 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	@Override
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-	  u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());
@@ -137,13 +136,13 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-	  User newUser = get(u.getUsername());
-    newUser.mergeWithUser(u);	  
+	public void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+	  User user = get(username);
+    user.update(newFirstName, newLastName, newEmail, newAffiliation, newPassword, newPublicKeys);	  
 	  try{	    
-	    updateUserInDatabase(newUser);
-	    deleteKeysFromDatabase(newUser.getUsername());    
-	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
+	    updateUserInDatabase(user);
+	    deleteKeysFromDatabase(user.getUsername());    
+	    addKeysToDatabase(user.getUsername(), user.getPublicKeys());	   
 	  } catch(IOException | SQLException e){
 	    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column email is not unique)")){
         throw new DuplicateEmailException();
@@ -259,7 +258,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
       throw new DatabaseException(e.getMessage());
     }	
-		return new User(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
+		return User.createUserWithExistingPassword(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
 	}
 
   private List<UserPublicKey> getPublicKeysFromResultSet(ResultSet rs) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException, IOException {

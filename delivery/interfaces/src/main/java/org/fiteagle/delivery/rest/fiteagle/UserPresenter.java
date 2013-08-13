@@ -93,7 +93,7 @@ public class UserPresenter{
   public Response updateUser(@PathParam("username") String username, NewUser user) {
     user.setUsername(username);
     try {
-      manager.update(createUser(user));    
+      manager.update(username, user.getFirstName(), user.getLastName(), user.getEmail(), user.getAffiliation(), user.getPassword(), createPublicKeys(user.getPublicKeys()));   
     } catch (DatabaseException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
@@ -108,10 +108,10 @@ public class UserPresenter{
     }
     return Response.status(200).build();
   }
-
+  
   private User createUser(NewUser newUser){
     List<UserPublicKey> publicKeys = createPublicKeys(newUser.getPublicKeys());    
-    return new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);     
+    return User.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);     
   }
 
   private ArrayList<UserPublicKey> createPublicKeys(List<NewPublicKey> keys) {

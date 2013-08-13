@@ -22,7 +22,7 @@ public class UserDBManagerTest {
   @Before
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
-    testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password");
+    testUser = User.createUser("test1", "test", "testName", "test@test.org", "testAffiliation", "password", null);
     try{
       userDBManager.add(testUser);
     } catch(DuplicateUsernameException | DuplicateEmailException e){  
