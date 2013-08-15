@@ -6,7 +6,10 @@ import java.security.NoSuchAlgorithmException;
 import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
+import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
+import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
@@ -21,22 +24,34 @@ public class UserDBManagerTest {
   @Before
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
-    testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password");
+    testUser = User.createUser("test1", "test", "testName", "test@test.org", "testAffiliation", "password", null);
     try{
       userDBManager.add(testUser);
-    } catch(DuplicateUsernameException e){      
+    } catch(DuplicateUsernameException | DuplicateEmailException e){  
+      userDBManager.delete(testUser);
+      userDBManager.add(testUser);
     }
   }
-  
+    
   @Test
   public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException { 
-    Assert.assertEquals("test", testUser.getFirstName());
     Assert.assertEquals("test1", testUser.getUsername());
+    Assert.assertEquals("test", testUser.getFirstName());    
     Assert.assertEquals("testName", testUser.getLastName());
     Assert.assertEquals("test@test.org", testUser.getEmail());
     Assert.assertNotNull(testUser.getPasswordHash());
     Assert.assertNotNull(testUser.getPasswordSalt());
   }  
+  
+  @Test(expected=NotEnoughAttributesException.class)
+  public void testCreateIncompleteUser(){
+    User.createUser("test1", null, "testName", "test@test.org", "testAffiliation", "password", null);
+  }
+  
+  @Test(expected=InValidAttributeException.class)
+  public void testCreateInvalidUser(){
+    User.createUser("test1", "test", "testName", "test@test.org", "T", "password", null);
+  }
  
   @Test
   public void testVerifyPassword() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException{    

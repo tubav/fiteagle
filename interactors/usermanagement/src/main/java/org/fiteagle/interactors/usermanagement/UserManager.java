@@ -3,6 +3,7 @@ package org.fiteagle.interactors.usermanagement;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
@@ -42,9 +43,9 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public void update(User u) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
+  public void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException {
-    manager.update(u);
+    manager.update(username, newFirstName, newLastName, newEmail, newAffiliation, newPassword, newPublicKeys);
   }
 
   @Override
@@ -92,6 +93,12 @@ public class UserManager implements UserManagerBoundary{
   @Override
   public String createUserCertificateForPublicKey(String uid, String description) throws Exception, PublicKeyNotFoundException {
     return manager.createUserCertificateForPublicKey(uid, description);
+  }
+
+  @Override
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException,
+      DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+    manager.renameKey(username, description, newDescription);    
   }
   
 }

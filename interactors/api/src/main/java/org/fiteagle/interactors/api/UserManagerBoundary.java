@@ -3,6 +3,7 @@ package org.fiteagle.interactors.api;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.core.userdatabase.User;
@@ -24,13 +25,15 @@ public interface UserManagerBoundary {
   
   public abstract void delete(User u) throws DatabaseException;
   
-  public abstract void update(User u) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
+  public abstract void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
       InValidAttributeException, DuplicatePublicKeyException;
   
   public abstract void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException,
       InValidAttributeException, DuplicatePublicKeyException;
   
   public abstract void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
+  
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException;
   
   public abstract User get(String username) throws UserNotFoundException, DatabaseException;
   

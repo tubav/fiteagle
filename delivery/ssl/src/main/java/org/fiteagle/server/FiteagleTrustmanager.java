@@ -92,7 +92,7 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
 			try{
 				User user = usermanager.get(username);
 			}catch(UserNotFoundException e){
-				User newUser = new User(username, "", "", "", "", "");
+				User newUser = User.createUser(username);
 				newUser.addPublicKey(new UserPublicKey(x509Certificate.getPublicKey(), "Certificate PublicKey"));
 				usermanager.add(newUser);
 			}

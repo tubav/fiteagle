@@ -14,6 +14,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
+import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,10 +28,8 @@ public abstract class UserPersistableTest {
 	protected static ArrayList<UserPublicKey> KEYS2;	
 	protected static User USER1;
 	protected static User USER2;
-	protected static User USER3;
 	protected static User USER4;
 	protected static User USER5;
-	protected static User USER6;
 	
 	@BeforeClass
 	public static void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException, InvalidKeySpecException{
@@ -39,12 +38,10 @@ public abstract class UserPersistableTest {
 	  KEYS1.add(new UserPublicKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCarsTCyAf8gYXwei8rhJnLTqYI6P88weRaY5dW9j3DT4mvfQPna79Bjq+uH4drmjbTD2n3s3ytqupFfNko1F0+McstA2EEkO8pAo5NEPcreygUcB2d49So032GKGPETB8chRkDsaBCm/KKL2vXdQoicofli8JJRPK2kXfUW34qww==", "key1"));
     KEYS1.add(new UserPublicKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCOHoq0DYsW793kyhbW1sj6aNm5OWeRn3HQ6nZxU9ax3FnDmtJsxvq2u0RwtPQki5JEMG58aqJPs3s4Go6LrTyw4jqnodKyOfcFupUYHTbQYnzxudLwyU59RfBmH01cLiyu26ECdVNXX+Y1mgofRUx72thBTtY6vyuM5nR1l7UNTw==", "key2"));
     KEYS2.add(new UserPublicKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDKpQJGxnReKal3p7d/95G5d3RQb002gso1QJrjxFKED+1cD157FsT2bCPcWpTYdLeTFRWBDUQa91yUPdkjkvoMsL2e3ah7nugRD6QfrFki0Po9oENrbujzaExPV8SAvXSuqcCG4/pidqEqjXJlAMXrphJcoFdKSzXLJtjUwfxyEw==", "key3"));
-	  USER1 = new User("test1", "mitja", "nikolaus", "mitja@test.org", "mitjasAffiliation", "mitjasPassword", KEYS1);
-	  USER2 = new User("test2", "hans", "herbert", "hschmidt@test.org", "hansAffiliation", "hansPassword", KEYS2);
-	  USER3 = new User("test2", "herbert", "herbert", "heschmidt@test.org", "herbertAffiliation", "herbertsPassword", KEYS1);
-	  USER4 = new User("test4", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword");	  
-	  USER5 = new User("test5", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword");    
-	  USER6 = new User("test5", "mitja", "nikolaus", "hschmidt@test.org", "mitjaAffiliation", "mitjasPassword");    
+	  USER1 = User.createUser("test1", "mitja", "nikolaus", "mitja@test.org", "mitjasAffiliation", "mitjasPassword", KEYS1);
+	  USER2 = User.createUser("test2", "hans", "herbert", "hschmidt@test.org", "hansAffiliation", "hansPassword", KEYS2);
+	  USER4 = User.createUser("test4", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword", null);	  
+	  USER5 = User.createUser("test5", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword", null);    
 	}
 	
 	@Before
@@ -63,9 +60,9 @@ public abstract class UserPersistableTest {
 	}
 	
 	@Test(expected=UserPersistable.DuplicateUsernameException.class)
-	public void testAddFails() throws DatabaseException{
+	public void testAddFailsDuplicateUsername() throws DatabaseException{
 		database.add(USER2);
-		database.add(USER3);
+		database.add(User.createUser("test2", "hans", "herbert", "heschmidt@test.org", "hansAffiliation", "hansPassword", null));
 	}
 	
 	@Test
@@ -97,9 +94,10 @@ public abstract class UserPersistableTest {
 	public void testUpdate() throws DatabaseException, InterruptedException{
 		database.add(USER2);
 		Thread.sleep(1);
-		database.update(USER3);
-		User updatedUser = database.get(USER3);
-		assertTrue(USER3.equals(updatedUser));
+		database.update("test2", "herbert", "herbert", "heschmidt@test.org", "herbertAffiliation", "herbertsPassword", KEYS1);
+		User updatedUser = database.get(USER2);
+		assertTrue("herbert".equals(updatedUser.getFirstName()));
+		assertTrue("heschmidt@test.org".equals(updatedUser.getEmail()));
 		Date created = updatedUser.getCreated();
 		Date lastModified = updatedUser.getLast_modified();
 		assertTrue(created.before(lastModified));
@@ -108,14 +106,14 @@ public abstract class UserPersistableTest {
 	@Test
 	public void testUpdateWithFewArguments(){
 	  database.add(USER1);
-	  database.update(new User("test1", "martin", null, null, null, null, null, null, null, null));
+	  database.update("test1", "martin", null, null, null, null, null);
 	  assertEquals("martin", database.get(USER1.getUsername()).getFirstName());
 	  assertEquals("nikolaus", database.get(USER1.getUsername()).getLastName());
 	}
 	
 	@Test(expected=UserPersistable.UserNotFoundException.class)
 	public void testUpdateFails() throws DatabaseException{
-		database.update(USER3);
+		database.update(USER2.getUsername(), "martin", null, null, null, null, null);
 	}
 	
 	@Test
@@ -146,6 +144,24 @@ public abstract class UserPersistableTest {
 	  assertTrue(!database.get(USER2).getPublicKeys().contains(key));
 	}	
 	
+	@Test
+	public void testRenameKey() {
+	  database.add(USER1);
+	  database.renameKey(USER1.getUsername(), "key1", "my new description");
+	}
+	
+	@Test(expected = DuplicatePublicKeyException.class)
+	public void testRenameKeyDuplicateDescription() {
+	  database.add(USER1);
+	  database.renameKey(USER1.getUsername(), "key1", "key2");
+	}
+	
+	@Test(expected = PublicKeyNotFoundException.class)
+  public void testRenameKeyNotFound() {
+    database.add(USER1);
+    database.renameKey(USER1.getUsername(), "key5", "my new description");
+  }
+	
 	@Test(expected = DuplicateEmailException.class)
 	public void testDuplicateEmailExeptionWhenAdd(){
 	  database.add(USER4);
@@ -156,6 +172,6 @@ public abstract class UserPersistableTest {
   public void testDuplicateEmailExeptionWhenUpdate(){
 	  database.add(USER2);
     database.add(USER5);
-    database.update(USER6);
+    database.update(USER5.getUsername(), null, null, "hschmidt@test.org", null, null, null);
   }
 }

@@ -41,7 +41,7 @@ public class GroupAuthenticationFilterTest {
      try{
        User testUser = UserDBManager.getInstance().get("test");
      }catch(UserNotFoundException r){
-       UserDBManager.getInstance().add(new User("test", "test", "test", "test@test.test", "testAffiliation", "test"));
+       UserDBManager.getInstance().add(User.createUser("test", "test", "test", "test@test.de", "testAffiliation", "test", null));
      }
      
   }
