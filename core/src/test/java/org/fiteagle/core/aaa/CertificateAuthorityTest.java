@@ -28,7 +28,6 @@ public class CertificateAuthorityTest {
   @Test
   public void testCreateCertificateForDummyUser() throws Exception {
     KeyPair keypair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
-    
     X509Certificate userCert =   CA.createCertificate(dummyUser, keypair.getPublic());
     Assert.assertTrue(userCert != null);   
   }
