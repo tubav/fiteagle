@@ -18,9 +18,7 @@ public class Group {
   @JsonIgnore
   private List<String> authorizedUsers;
 
-  public Group(){
-    
-  }
+
   public Group(String groupId, String groupOwnerId) {
     this.groupId = groupId;
     this.groupOwnerId = groupOwnerId;

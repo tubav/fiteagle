@@ -40,7 +40,7 @@ public class RestUserManagerIT {
     RestAssured.basePath = "/api/v1/user";    
     
     given().auth().preemptive().basic("mnikolaus", "mitja")
-    .when().delete("mnikolaus");    
+    .when().delete("mnikolaus");  
   }
   
   @Before

@@ -8,6 +8,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
@@ -16,6 +17,13 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509ExtendedTrustManager;
 
 import org.fiteagle.core.aaa.AuthenticationHandler;
+import org.fiteagle.core.aaa.x509.X509Util;
+import org.fiteagle.core.userdatabase.User;
+import org.fiteagle.core.userdatabase.UserDBManager;
+import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.ibex.nestedvm.UsermodeConstants;
 import org.mortbay.log.Log;
 
 public class FiteagleTrustmanager extends X509ExtendedTrustManager {
@@ -47,14 +55,17 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
   public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException {
     Log.debug("checkClientTrusted 2");
     try{
-      authenticationHandler.authenticateCertificates(chain);
+     if(authenticationHandler.areAuthenticatedCertificates(chain)){
+    	 addClientIfNotExists(chain[0]);
+     }
     }catch(InvalidKeySpecException | IOException | KeyStoreException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | CertPathValidatorException | SQLException  e){
       throw new ServerException();
     }
     
   }
 
-  @Override
+ 
+@Override
   public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine)
       throws CertificateException {
     Log.debug("checkClientTrusted 3");
@@ -74,6 +85,19 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
     
   }
 
+  private void addClientIfNotExists(X509Certificate x509Certificate) throws CertificateParsingException, NotEnoughAttributesException, IOException {
+		UserDBManager usermanager = UserDBManager.getInstance();
+		String username = X509Util.getUserNameFromX509Certificate(x509Certificate);
+		if(username.contains("@")){
+			try{
+				User user = usermanager.get(username);
+			}catch(UserNotFoundException e){
+				User newUser = new User(username, "", "", "", "", "");
+				newUser.addPublicKey(new UserPublicKey(x509Certificate.getPublicKey(), "Certificate PublicKey"));
+				usermanager.add(newUser);
+			}
+		}
+	}
   public class ServerException extends RuntimeException {
 
     private static final long serialVersionUID = 3696231034900651182L;

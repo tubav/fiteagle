@@ -12,18 +12,28 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
+import org.fiteagle.core.util.URN;
+import org.fiteagle.core.util.URN.URNParsingException;
+
 import net.iharder.Base64;
 
 public class X509Util {
   
   public static String getUserNameFromX509Certificate(X509Certificate cert) throws CertificateParsingException {
     String username = "";
-    username = getURN(cert);
-    if (username.equals("")) {
+    URN urn = null;
+    try{
+    	 urn = getURN(cert);
+    }catch(URNParsingException e){
+    	
+    }
+   
+    if (urn == null) {
       X500Principal prince = cert.getSubjectX500Principal();
       username = X509Util.getUserNameFromPrinicpal(prince);
     } else {
-      username = getUIDFromURN(username);
+      urn = getURN(cert);
+      username = urn.getSubjectAtDomain();
     }
     return username;
   }
@@ -58,10 +68,6 @@ public class X509Util {
     
   }
   
-  private static String getUIDFromURN(String urn) {
-    String userFromURN = urn.substring(urn.lastIndexOf("+") + 1);
-    return userFromURN;
-  }
   
   private static class NonParsableNamingFormat extends RuntimeException {
     
@@ -69,15 +75,15 @@ public class X509Util {
     
   }
   
-  public static String getURN(X509Certificate cert) throws CertificateParsingException {
-    String urn = "";
+  public static URN getURN(X509Certificate cert) throws CertificateParsingException {
+    URN urn = null;
     Collection<List<?>> alternativeNames = cert.getSubjectAlternativeNames();
     if (alternativeNames != null) {
       Iterator<List<?>> it = alternativeNames.iterator();
       while (it.hasNext()) {
         List<?> altName = it.next();
         if (altName.get(0).equals(Integer.valueOf(6))) {
-          urn = (String) altName.get(1);
+          urn = new URN((String) altName.get(1));
         }
       }
     }
@@ -114,4 +120,8 @@ public class X509Util {
     bout.close();
     return encodedCert;
   }
+  
+  public static boolean isSelfSigned(X509Certificate xCert) {
+	    return xCert.getIssuerX500Principal().equals(xCert.getSubjectX500Principal());
+	  }
 }

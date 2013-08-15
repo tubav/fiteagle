@@ -43,25 +43,31 @@ public class AuthenticationHandler {
     this.keyStoreManagement = KeyStoreManagement.getInstance();
   }
   
-  public void authenticateCertificates(X509Certificate[] certificates) throws KeyStoreException,
+  public boolean areAuthenticatedCertificates(X509Certificate[] certificates) throws KeyStoreException,
       NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException,
       CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse {
    
     X509Certificate cert = certificates[0];
+    try{
     if (cert.getSubjectX500Principal().equals(cert.getIssuerX500Principal())) {
       
       UserDBManager userDBManager = UserDBManager.getInstance();
       User identifiedUser = userDBManager.getUserFromCert(cert);
-      verifyUserSignedCertificate(identifiedUser, cert);
+      return verifyUserSignedCertificate(identifiedUser, cert);
       
     } else {
       
       if(isValid(0, certificates, certificates[0].getSubjectX500Principal())){
 //        if(userIsUnknown(cert))
-          storeNewUser(cert);
+//          storeNewUser(cert);
+    	  return true;
       }
 
     }
+    }catch(RuntimeException e){
+    	return false;
+    }
+	return false;
     
   }
   
@@ -136,7 +142,7 @@ public class AuthenticationHandler {
     throw new CertificateNotTrustedException();
   }
   
-  private void verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, CouldNotParse {
+  private boolean verifyUserSignedCertificate(User identifiedUser, X509Certificate certificate) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, CouldNotParse {
     boolean verified = false;
     KeyManagement keydecoder = KeyManagement.getInstance();
     if (identifiedUser.getPublicKeys() == null || identifiedUser.getPublicKeys().size() == 0) {
@@ -149,7 +155,7 @@ public class AuthenticationHandler {
       
       verified = verifyCertificateWithPublicKey(certificate, pubKey);
       if (verified) {
-        return;
+        return true;
       }
     }
     throw new KeyDoesNotMatchException();

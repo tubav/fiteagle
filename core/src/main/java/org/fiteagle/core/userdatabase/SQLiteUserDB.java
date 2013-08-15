@@ -46,7 +46,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	
 	@Override
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-	  u.checkAttributes();
+	  //u.checkAttributes();
 	  try{
   		addUserToDatabase(u);		
   		addKeysToDatabase(u.getUsername(),u.getPublicKeys());

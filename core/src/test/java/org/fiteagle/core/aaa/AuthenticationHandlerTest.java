@@ -62,28 +62,28 @@ public class AuthenticationHandlerTest {
  // @Test
   public void testAuthenticateCertificates() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse {
     
-    authHandler.authenticateCertificates(testCertificateArray);
+    authHandler.areAuthenticatedCertificates(testCertificateArray);
     
   }
   @Ignore
   @Test
   public void testAuthenticateChain() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, InvalidAlgorithmParameterException, CertPathValidatorException, IOException, SQLException, InvalidKeySpecException, CouldNotParse{
-    authHandler.authenticateCertificates(testCertificateArray);
+    authHandler.areAuthenticatedCertificates(testCertificateArray);
   }
  // @Test(expected = RecordNotFoundException.class)
   public void testAuthWithUnstoredPkeyAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse {
     
-    authHandler.authenticateCertificates(loadTestCert(unknownUserCertPath));
+    authHandler.areAuthenticatedCertificates(loadTestCert(unknownUserCertPath));
     
   }
   //@Test(expected = KeyDoesNotMatchException.class)
   public void testAuthWithWrongPkeyForUserAndUntrustedCert() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse{
-    authHandler.authenticateCertificates(loadTestCert(wrongPkeyCertPath));
+    authHandler.areAuthenticatedCertificates(loadTestCert(wrongPkeyCertPath));
   }
   
   // @Test
   public void testAuthWithCertByFiteagleCA() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, InvalidAlgorithmParameterException, CertPathValidatorException, SQLException, InvalidKeySpecException, CouldNotParse{
-    authHandler.authenticateCertificates(loadTestCert(signedByFiteagleCertPath));
+    authHandler.areAuthenticatedCertificates(loadTestCert(signedByFiteagleCertPath));
     
   }
   @Ignore
@@ -104,7 +104,7 @@ public class AuthenticationHandlerTest {
     });
     EasyMock.expect(trustedCertMock.getSubjectAlternativeNames()).andReturn(subjectAlternativeNames);
     EasyMock.replay(trustedCertMock);
-    authHandler.authenticateCertificates(new X509Certificate[]{trustedCertMock});
+    authHandler.areAuthenticatedCertificates(new X509Certificate[]{trustedCertMock});
     UserDBManager dbManager = UserDBManager.getInstance();
     Assert.assertTrue(dbManager.get("test@av.tu-berlin.de")!= null);
   }

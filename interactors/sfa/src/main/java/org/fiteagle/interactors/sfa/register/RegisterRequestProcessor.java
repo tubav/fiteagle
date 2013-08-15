@@ -2,14 +2,20 @@ package org.fiteagle.interactors.sfa.register;
 
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Credential;
+import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Signatures;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +29,7 @@ Logger log = LoggerFactory.getLogger(getClass());
   }
   
   public HashMap<String, Object> register(HashMap<String, Object> parameters){
-    String urn = getUrn(parameters);
+    URN slicUrn = getUrn(parameters);
     String type = getType(parameters);
     String credentialString = getCredential(parameters);
     SignedCredential cred = null;
@@ -33,17 +39,41 @@ Logger log = LoggerFactory.getLogger(getClass());
       log.error(e.getMessage(),e);
     }
     
-    if(isSliceType(type) && isURN(urn)){
-     
-      return new HashMap<String, Object>();
+    if(isSliceType(type)){
+    	URN userURN = new URN(cred.getCredential().getOwnerURN());
+    	Group slice = new Group(slicUrn.getSubjectAtDomain(), userURN.getSubjectAtDomain() );
+    	GroupDBManager groupmananger = GroupDBManager.getInstance();
+    	groupmananger.addGroup(slice);
+    	SignedCredential sliceCredential = createSignedCredential(slice);
+    	return new HashMap<String, Object>();
     }
     else {
       return new HashMap<String, Object>();
     }
+	
     
   }
   
-  public class NotImplemented extends RuntimeException{
+  private SignedCredential createSignedCredential(Group slice) {
+	SignedCredential sliceCredential = new SignedCredential();
+	sliceCredential.setCredential(createCredential(slice));
+	sliceCredential.setSignatures(createSignature());
+	return sliceCredential;
+  }
+
+private Signatures createSignature() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+private Credential createCredential(Group slice) {
+	Credential credential = new Credential();
+	credential.setSerial(UUID.randomUUID().toString());
+//	credential.setUuid(value);
+	return credential;
+}
+
+public class NotImplemented extends RuntimeException{
     private static final long serialVersionUID = 1L;
   }
 
@@ -57,13 +87,11 @@ Logger log = LoggerFactory.getLogger(getClass());
   }
 
   
-  public String getUrn(HashMap<String, Object> hashMap) {
-    return hashMap.get("urn").toString();
+  public URN  getUrn(HashMap<String, Object> hashMap) {
+    return new URN(hashMap.get("urn").toString());
   }
 
-  public boolean isURN(String urn) {
-    return true;
-  }
+  
 
   public String getCredential(HashMap<String, Object> hashMap) {
     return hashMap.get("credential").toString();

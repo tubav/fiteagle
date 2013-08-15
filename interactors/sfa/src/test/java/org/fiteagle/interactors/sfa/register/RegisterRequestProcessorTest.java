@@ -4,7 +4,10 @@ import java.util.HashMap;
 
 import javax.xml.bind.JAXBException;
 
+import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +17,14 @@ public class RegisterRequestProcessorTest {
   
   RegisterRequestProcessor proc = null;
   private HashMap<String,Object> hashMap;
+private String urnString;
   @Before
   public void setUp() throws Exception {
      proc = new RegisterRequestProcessor();
      hashMap = new HashMap<String, Object>();
      hashMap.put("type", "Slice");
-     hashMap.put("urn", "urn:publicid:IDN+wall3.test.ibbt.be+slice+grmps");
+     urnString = "urn:publicid:IDN+wall3.test.ibbt.be+slice+grmps";
+     hashMap.put("urn", urnString);
      hashMap.put("credential", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
                                 "<signed-credential xmlns:ns2=\"http://www.w3.org/2000/09/xmldsig#\">" +
                                 "<credential id=\"b077930c-4b97-47af-8c2b-e60663ea2532\" xml:id=\"b077930c-4b97-47af-8c2b-e60663ea2532\">" +
@@ -44,7 +49,7 @@ public class RegisterRequestProcessorTest {
                                 "1b3nUwsbKNJRMiJzU/Xip/0PoNrLTztHWEcO4wyMdb6xwDikSGhXA93MFNzAHnkoSrCp5jAwVKHd"+
                                 "bXB4y2d9" +
                                 "</owner_gid>" +
-                                "<owner_urn>urn:publicid:IDN+urn:publicid:IDN+wall3:test:ibbt+user+be+user+dnehls</owner_urn>" +
+                                "<owner_urn>urn:publicid:IDN+wall3:test:ibbt+user+dnehls</owner_urn>" +
                                 "<target_urn>urn:publicid:IDN+fiteagle-fuseco.fokus.fraunhofer.de+authority+sa</target_urn>" +
                                 "<target_gid>" +
                                 "MIID5TCCA06gAwIBAgIBEDANBgkqhkiG9w0BAQUFADCBijELMAkGA1UEBhMCREUxDzANBgNVBAgM"+
@@ -148,17 +153,9 @@ public class RegisterRequestProcessorTest {
   
   @Test
   public void getUrnTest(){
-    String urn = proc.getUrn(hashMap);
+    URN urn = proc.getUrn(hashMap);
   }
   
-
-  
-  @Test
-  public void getAndTestUrn(){
-    String urn = proc.getUrn(hashMap);
-    System.out.println(urn);
-    Assert.assertTrue(proc.isURN(urn));
-  }
   
   @Test
   public void getCredentialTest(){
@@ -171,5 +168,10 @@ public class RegisterRequestProcessorTest {
     String credential =  proc.getCredential(hashMap);
     SignedCredential sg = proc.buildCredential(credential);
     sg.getCredential().getOwnerURN();
+  }
+  
+  @After
+  public void deleteTestGroup(){
+	  GroupDBManager.getInstance().deleteGroup(new URN(urnString).getSubjectAtDomain());
   }
 }

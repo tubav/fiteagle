@@ -322,7 +322,7 @@ protected KeyStore loadKeyStore(StoreType type) throws KeyStoreException, NoSuch
     return preferences.get("resourceStore");
   }
   public void storeResourceCertificate(X509Certificate cert) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-    String alias  = X509Util.getURN(cert);
+    String alias  = X509Util.getURN(cert).getSubjectAtDomain();
     storeCertificate(alias, cert, StoreType.RESOURCESTORE);
   }
   

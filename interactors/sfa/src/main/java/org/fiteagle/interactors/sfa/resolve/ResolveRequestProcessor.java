@@ -92,22 +92,10 @@ public class ResolveRequestProcessor extends SFAv3RequestProcessor {
     // result.setReg_Slices(getRegSlices());
     // result.setReg_Urn(getRegURN());
     result.setGid(X509Util.getCertficateEncoded(cert));
-    result.setType(getType(X509Util.getURN(cert)));
+    result.setType(X509Util.getURN(cert).getType());
     return result;
   }
   
-  private String getType(String urn) {
-    if (urn.contains("+slice+"))
-      return "slice";
-    
-    if (urn.contains("+user+"))
-      return "user";
-    
-    if (urn.contains("+authority+"))
-      return "authority";
-    
-    return "";
-  }
   
   private String getRegURN() {
     // TODO Auto-generated method stub
