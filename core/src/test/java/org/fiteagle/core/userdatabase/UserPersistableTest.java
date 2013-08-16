@@ -14,6 +14,7 @@ import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
+import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -145,6 +146,24 @@ public abstract class UserPersistableTest {
 	  database.deleteKey(USER2.getUsername(), key);
 	  assertTrue(!database.get(USER2).getPublicKeys().contains(key));
 	}	
+	
+	@Test
+	public void testRenameKey() {
+	  database.add(USER1);
+	  database.renameKey(USER1.getUsername(), "key1", "my new description");
+	}
+	
+	@Test(expected = DuplicatePublicKeyException.class)
+	public void testRenameKeyDuplicateDescription() {
+	  database.add(USER1);
+	  database.renameKey(USER1.getUsername(), "key1", "key2");
+	}
+	
+	@Test(expected = PublicKeyNotFoundException.class)
+  public void testRenameKeyNotFound() {
+    database.add(USER1);
+    database.renameKey(USER1.getUsername(), "key5", "my new description");
+  }
 	
 	@Test(expected = DuplicateEmailException.class)
 	public void testDuplicateEmailExeptionWhenAdd(){

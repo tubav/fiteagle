@@ -1,18 +1,26 @@
 define(['validation','utils','messages','server'],
-/**
- * @lends Registration
- */ 
 function(Validation, Utils,Messages,Server){
 
+	/** 
+     * Certificates class.
+     * The Certificates class contains functions for existing public key form initialisation 
+	 * as well as for certificate generation.
+     * @class
+     * @constructor
+     * @return Certificates object
+     */
 	Certificates = {}
 	
 
-	
 	Certificates.initForm = function(){
 		
-			initPublicKeySelect("#selectKeyForGeneration");	
-			initGenerateCertificatesBtn();		
-			initGenerateKeyAndCertificateBtn();	
+		initPublicKeySelect();	
+		initGenerateCertificatesBtn();
+		initPassphraseField();
+		initGenerateKeyAndCertificateBtn();
+		$(window).bind('resizeEnd',function(){
+			initPassphraseField();
+		});
 			
 	};
 	
@@ -27,36 +35,93 @@ function(Validation, Utils,Messages,Server){
 		});
 	};
 	
+	initPassphraseField = function(){
+		
+		Utils.addOnEnterClickEvent("#inputPassphrase","#genKeyAndCertificate");
+		
+		var placement;
+		(Utils.isSmallScreen())? placement ="top" : placement = "right";
+		Utils.initTooltipFor("#inputPassphrase",Messages.passphraseHint,placement,"focus");
+	};
+	
 	initGenerateKeyAndCertificateBtn = function(){
 		$('#genKeyAndCertificate').on('click',function(){
+			Utils.clearErrorMessagesFrom('#newKeypairAndCertificateErrors');
 			var passphrase = $('#inputPassphrase').val();
-			if(passphrase.length > 0){
-				var keyAndCertificate = 
-					Server.generatePublicKeyAndCertificate(
-						passphrase,"#genKeyAndCertificateSign",afterSuccessGeneration);
-				addKeyAndCertificateTextarea(keyAndCertificate);
+			var isPassphraseValid = Utils.checkInputField(
+										"#inputPassphrase",
+										"#newKeypairAndCertificateErrors",
+										Validation._isPassphrase,
+										Messages.emptyPassphrase,
+										Messages.wrongPassphrase
+									);
+			if(isPassphraseValid){		
+				var repsonse = Server.
+							generatePublicKeyAndCertificate(
+								passphrase,"#genKeyAndCertificateSign");
+				
+				var keyAndCertificate = repsonse[0];
+				console.log(keyAndCertificate);
+				
+				var errorMessage = repsonse[1];				
+				console.log(errorMessage);
+				if(!errorMessage){			
+					addKeyAndCertificateTextarea(keyAndCertificate);
+					afterSuccessGeneration();
+				}else{
+					Utils.addErrorMessageTo('#newKeypairAndCertificateErrors');
+				}
 			}
 		});
 	};
 	
 	afterSuccessGeneration = function(){
-			console.log('after generation');
-			require('publicKeys').initExistingPublicKeysForm();
-			Certificates.initForm();
+			//console.log('after generation');
+			require('publicKeys').updateExistingPublicKeyForm();
+			initPublicKeySelect();
 	};
 	
 	addKeyAndCertificateTextarea = function(keyAndCertificate){
+		var beginCertIndex =  keyAndCertificate.indexOf("-----BEGIN CERTIFICATE-----");
+		var privateKey = keyAndCertificate.substr(0,beginCertIndex);
+		var certificate = keyAndCertificate.substr(beginCertIndex+1);
+
 		$('#generatedKeyAndCertificate').children().remove();
-		var textarea = $('<textarea rows=30 style="resize:none" disabled></textarea>').addClass("span10");
-		textarea.val(keyAndCertificate);
-		$('#generatedKeyAndCertificate').append(textarea)
-			.append('<br/>')
-			.append(createDownloadCertificateBtn('key_and_certificate.crt',keyAndCertificate));
+		
+		var privateKeyContainer = 
+			createTextAreaContainer('privateKeyContainer',
+								'New generated Private Key',
+								privateKey,
+								'private_key.key'
+								);
+		var certificateContainer = 
+				createTextAreaContainer('privateCertificateContainer',
+										'Generated certificate',
+										certificate,
+										'private_certificate.crt')
+			
+		$('#generatedKeyAndCertificate')
+			.append(certificateContainer)
+			.prepend(privateKeyContainer);
+	};
+	
+	createTextAreaContainer = function(containerID, headerText, content, filename){
+		var container = $('<div>').attr('id',containerID).addClass('row-fluid');
+		var textarea = $(
+			'<textarea id="generatedPrivateKey" rows=20 style="resize:none" disabled></textarea>'
+			).addClass("span10").val(content);
+		var header = $('<h5>').text(headerText);
+		container
+			.append(header)
+			.append(textarea).append('<br/>')
+			.append(createDownloadCertificateBtn(filename,content)); 
+			
+		return container;
 	};
 	
 	addCertificateTextarea = function(pubKeyString){
 		$('#generatedCertificate').children().remove();
-		var textarea = $('<textarea rows=30 style="resize:none" disabled></textarea>').addClass("span10");
+		var textarea = $('<textarea rows=20 style="resize:none" disabled></textarea>').addClass("span10");
 		textarea.val(pubKeyString);
 		$('#generatedCertificate')
 			.append(textarea)
@@ -82,14 +147,14 @@ function(Validation, Utils,Messages,Server){
 		return downloadBtn;
 	}
 
-	initPublicKeySelect = function(selector){
-		console.log("Init public Key Select");
-		$(selector).children().remove();
-		var publicKeys = getAllUserPublicKeys();
+	initPublicKeySelect = function(updateUser){
+		var selectPubKey = $('#selectKeyForGeneration');
+		selectPubKey.children().remove();
+		var publicKeys = getUserPublicKeysFromServer();
 		var label;
 		if(publicKeys.length == 0){ // if no keys	
 			Utils.hideElement("#pubicKeySetLabel");
-			$(selector).append('<span class="alert alert-info span8">'+Messages.noPublicKeys+"</span>");
+			selectPubKey.append('<span class="alert alert-info span8">'+Messages.noPublicKeys+"</span>");
 			$("#genPubKey").addClass('disabled');
 			
 		}else{ // if keys exists
@@ -113,7 +178,7 @@ function(Validation, Utils,Messages,Server){
 		}			
 	};
 	
-	getAllUserPublicKeys = function(){
+	getUserPublicKeysFromServer = function(){
 		var username = Utils.getCurrentUser().username;
 		var user = Server.getUser(username);	
 		return user.publicKeys;

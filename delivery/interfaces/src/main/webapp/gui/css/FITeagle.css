@@ -1,19 +1,31 @@
 .hidden{display:none}
 body{
 	padding:0 !important;
+<<<<<<< HEAD
+	background: #f7f7f7;
+	background: -moz-linear-gradient(top, #f7f7f7, #aaaaaa);
+	background: -webkit-linear-gradient(top, #f7f7f7, #aaaaaa);
+	background: -ms-linear-gradient(top, #f7f7f7, #aaaaaa);
+	background: -o-linear-gradient(top, #f7f7f7, #aaaaaa);
+	background: linear-gradient(top, #f7f7f7, #aaaaaa);
+	background-size: 100%;
+=======
 	background: #fff;
 	background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -webkit-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -ms-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -o-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: linear-gradient(top, #f7f7f7, #e1e1e1);
+>>>>>>> 9fca92614c83d65054fd85b3d9b74e40cbd6e0db
 	color: #373737 !important;
 	font-size: 16px !important;
-	font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif !important;
-	font-family: "proxima-nova-1","proxima-nova-2",sans-serif !important;
 	line-height: 1.5 !important;
 }
 label {margin-top:3px;}
+#rememberMeCheckboxLabel{
+	position:relative;
+	top:-10px;
+	}
 
 #deleteUserProfileModal .modal-body{padding:20px 0 20px 0}
 
@@ -24,6 +36,25 @@ form{margin:0;}
 .collapseHeader h4{margin-left:20px}
 
 p{text-align:justify}
+
+#loginForm .modal-header{
+	position: relative;
+	z-index: 1;
+	color: black;
+	border-radius: 6px 6px 0 0; 
+	background: #f09030;
+	background: -moz-linear-gradient(top, #f09030, #d07010);
+	background: -webkit-linear-gradient(top, #f09030, #d07010);
+	background: -ms-linear-gradient(top, #f09030, #d07010);
+	background: -o-linear-gradient(top, #f09030, #d07010);
+	background: linear-gradient(top, #f09030, #d07010);
+}
+
+.alert{margin-bottom:10px !important}
+
+#loginForm .modal-body{
+	overflow: visible;
+}
 
 #loginPages a{
 	text-decoration: none;
@@ -64,15 +95,19 @@ ul li a:hover, ul li a:focus{text-decoration: none;}
 hr{ border-top: 1px solid #D1D1D1}
 h4{margin-bottom:5px !important}
 
-i[class^=icon-]{margin-right: 10px;}
+i[class^=icon-]{padding-right:10px;}
 
 .left20{margin-left: 20px}
+.left40{margin-left: 40px !important}
 .top10{margin-top:10px}
 .top20{margin-top:20px}
 .padding3pc{padding:0 3% 0 3%}
 .margin3pc{margin: 0 3% 0 3%}
+#loginErrors .errorMessage{margin-bottom: 5px}
+.modal-body .errorMessage{margin-bottom: 0px}
 .errorMessage{margin-bottom:20px}
-.nomargin{margin:0 !important;}
+.nopadding{padding:0 !important;}
+.nomargin{margin:0 !important}
 
 .horizontal{list-style-type: none}
 
@@ -87,6 +122,8 @@ i[class^=icon-]{margin-right: 10px;}
 input.search-query{height:24px !important;}
 
 #aside{height:100%}
+
+#publicKeyControls a i {position: relative; top:6px}
 
 #main{margin-bottom: 20px !important;}
 #toolbar{color:black;}
@@ -111,7 +148,6 @@ input.search-query{height:24px !important;}
 #toolbar .btn-navbar{margin: 0 2% 0 2%}
 
 #userInfoPanel{ padding: 10px 0px 5px 0}
-#fancyLoginList{ border-right: 1px solid #d1d1d1}
 #fancyLoginList > ul > li{margin-top:10px; list-style:none;}
 #fancyLogins  li:first{margin-top:0}
 #aside{border-right: 1px solid #d1d1d1;}
@@ -210,6 +246,13 @@ input.search-query{height:24px !important;}
 
 .collapseHeader i.collapseSign{float:right; padding-top:1px;}
 
+.btnAdd
+{
+    background-image: url('../img/logo_fiteagle.png')!important;
+    background-repeat: no-repeat !important;
+    display: compact;
+}
+
 @media (max-width:979px){
 		#navs ul {margin-bottom: 20px}
 		
@@ -246,7 +289,9 @@ input.search-query{height:24px !important;}
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-	
+	#publicKeysList .publicKey{margin-top:20px}
+
+	#fancyLoginList ul{margin:0}
 	.padding3pc{
 		padding:0;
 		margin-left: 3%;
@@ -267,7 +312,7 @@ input.search-query{height:24px !important;}
 	}
 	#aside{border-right: none;}
 	
-	#fancyLoginList{ border-right: none; padding-bottom:20px; border-bottom: 1px solid #d1d1d1;}
+	#fancyLoginList{ border-right: none; padding-bottom:20px;}
 	#loginForm {margin-top:10px;}
 	label{margin:0;}
 	
@@ -278,9 +323,10 @@ input.search-query{height:24px !important;}
 		padding-bottom:10px;
 	}
 	#navs{
-		margin-left:20px; 
-		width: 95%;
+		margin-left:3%; 
+		width: 94%;
 	}
+	#navs ul li{ margin-right:0px !important}
 	#logoTxt{ 
 		padding-left: 90px;
 		margin-top: -85px;
@@ -301,7 +347,8 @@ input.search-query{height:24px !important;}
 
 }
 
-#statusTable{
+
+/*#statusTable{
 	width: 75%;
 	position:relative;
  	top:80px;
@@ -316,7 +363,7 @@ input.search-query{height:24px !important;}
 /*#statusTable > tbody > tr:hover td  {
 	background-color: #c7c7c7;
 	
-}*/
+}*!/
 #statusTable > tbody > tr > td.statusRow  {
 	cursor: pointer;
 	width: 10%;
@@ -374,5 +421,83 @@ input.search-query{height:24px !important;}
 #popup div.modal-body >table > tbody > tr > td > img.status {
 	width: 25%;
 }
+*/
+
+=======
+/* LOGIN BUTTON STYLES */
+
+#fancyLoginList .btn{
+	background-position:center;
+	min-height: 50px !important;
+	background-repeat:no-repeat;
+}
+#fiteagleLoginBtn{
+	background: #f5f5f5;
+	background-image: url('../img/FITeagle1.png'); /* fallback */
+	background-image: url('../img/FITeagle1.png'), -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* Saf4+, Chrome */
+	background-image: url('../img/FITeagle1.png'), -webkit-linear-gradient(top, #ffffff, #e6e6e6); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/FITeagle1.png'),    -moz-linear-gradient(top, #ffffff, #e6e6e6); /* FF3.6+ */
+	background-image: url('../img/FITeagle1.png'),     -ms-linear-gradient(top, #ffffff, #e6e6e6); /* IE10 */
+	background-image: url('../img/FITeagle1.png'),      -o-linear-gradient(top, #ffffff, #e6e6e6); /* Opera 11.10+ */
+	background-image: url('../img/FITeagle1.png'),         linear-gradient(top, #ffffff, #e6e6e6); /* W3C */
+}
+
+#xifiLoginBtn{
+	background: #363636;
+	background-image: url('../img/xifi1.png'); /* fallback */
+	background-image: url('../img/xifi1.png'), -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* Saf4+, Chrome */
+	background-image: url('../img/xifi1.png'), -webkit-linear-gradient(top, #444, #222); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/xifi1.png'),    -moz-linear-gradient(top, #444, #222); /* FF3.6+ */
+	background-image: url('../img/xifi1.png'),     -ms-linear-gradient(top, #444, #222); /* IE10 */
+	background-image: url('../img/xifi1.png'),      -o-linear-gradient(top, #444, #222); /* Opera 11.10+ */
+	background-image: url('../img/xifi1.png'),         linear-gradient(top, #444, #222); /* W3C */
+}
+
+#fed4fireLoginBtn{	
+	background: #f5f5f5;
+	background-image: url('../img/fed4fire.png'); /* fallback */
+	background-image: url('../img/fed4fire.png'), -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* Saf4+, Chrome */
+	background-image: url('../img/fed4fire.png'), -webkit-linear-gradient(top, #ffffff, #e6e6e6); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/fed4fire.png'),    -moz-linear-gradient(top, #ffffff, #e6e6e6); /* FF3.6+ */
+	background-image: url('../img/fed4fire.png'),     -ms-linear-gradient(top, #ffffff, #e6e6e6); /* IE10 */
+	background-image: url('../img/fed4fire.png'),      -o-linear-gradient(top, #ffffff, #e6e6e6); /* Opera 11.10+ */
+	background-image: url('../img/fed4fire.png'),         linear-gradient(top, #ffffff, #e6e6e6); /* W3C */
+}
+
+#openidLoginBtn{
+	background: #f5f5f5;
+	background-image: url('../img/openid1.png'); /* fallback */
+	background-image: url('../img/openid1.png'), -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* Saf4+, Chrome */
+	background-image: url('../img/openid1.png'), -webkit-linear-gradient(top, #ffffff, #e6e6e6); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/openid1.png'),    -moz-linear-gradient(top, #ffffff, #e6e6e6); /* FF3.6+ */
+	background-image: url('../img/openid1.png'),     -ms-linear-gradient(top, #ffffff, #e6e6e6); /* IE10 */
+	background-image: url('../img/openid1.png'),      -o-linear-gradient(top, #ffffff, #e6e6e6); /* Opera 11.10+ */
+	background-image: url('../img/openid1.png'),         linear-gradient(top, #ffffff, #e6e6e6); /* W3C */
+}
+
+#googleLoginBtn{
+	background: #f5f5f5;
+	background-image: url('../img/Google1.png'); /* fallback */
+	background-image: url('../img/Google1.png'), -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* Saf4+, Chrome */
+	background-image: url('../img/Google1.png'), -webkit-linear-gradient(top, #ffffff, #e6e6e6); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/Google1.png'),    -moz-linear-gradient(top, #ffffff, #e6e6e6); /* FF3.6+ */
+	background-image: url('../img/Google1.png'),     -ms-linear-gradient(top, #ffffff, #e6e6e6); /* IE10 */
+	background-image: url('../img/Google1.png'),      -o-linear-gradient(top, #ffffff, #e6e6e6); /* Opera 11.10+ */
+	background-image: url('../img/Google1.png'),         linear-gradient(top, #ffffff, #e6e6e6); /* W3C */
+}
+
+#yahooLoginBtn{
+	background: #f5f5f5;
+	background-image: url('../img/yahoo1.png'); /* fallback */
+	background-image: url('../img/yahoo1.png'), -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* Saf4+, Chrome */
+	background-image: url('../img/yahoo1.png'), -webkit-linear-gradient(top, #ffffff, #e6e6e6); /* Chrome 10+, Saf5.1+ */
+	background-image: url('../img/yahoo1.png'),    -moz-linear-gradient(top, #ffffff, #e6e6e6); /* FF3.6+ */
+	background-image: url('../img/yahoo1.png'),     -ms-linear-gradient(top, #ffffff, #e6e6e6); /* IE10 */
+	background-image: url('../img/yahoo1.png'),      -o-linear-gradient(top, #ffffff, #e6e6e6); /* Opera 11.10+ */
+	background-image: url('../img/yahoo1.png'),         linear-gradient(top, #ffffff, #e6e6e6); /* W3C */
+}
+
+
 
 #navs ul { white-space:nowrap; }
+

@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="css/FITeagle.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen" />
   <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" media="screen" />
-  
+  <link rel="stylesheet" type="text/css" href="css/prettyCheckable.css" media="screen" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
   
@@ -46,122 +46,7 @@
 <!--_________________END NAVIGATION TOOLBAR__________________________-->
 
 <!------------------- MAIN SECTION ------------------------------------>	
-	<div id="main">
-		<div id="loginPages" class="tab-content">
-			<div id="home" class="row-fluid tab-pane active">
-					<div  class="span6 offset3 ">
-						<div id="FITeagleInfo" class="row-fluid">
-							<h3>
-								Welcome to FITeagle Portal !
-							</h3>
-							<h4>
-								New to FITeagle? Please <a href="#registration" onclick="return false;" data-toggle="tab">register</a> or learn more about the project.
-							</h4>
-							<p>
-								FITeagle is an extensible and distributed open source experimentation and management framework for federated Future Internet testbeds.
-							</p>
-						</div>
-						<div id="loginContainer" class="row-fluid">
-							<div id="fancyLogins" class="span5" >
-								<h4>Fancy Log In</h4>
-								<div id="fancyLoginList" align="left">
-									<ul>
-										<li><a id="fed4fireLoginBtn" href="#"><img src="img/fed4fireB.png" alt=""/></a></li>
-										<li><a id="openidLoginBtn" href="#"><img src="img/openidB.png" alt=""/></a></li>
-										<li><a id="googleLoginBtn" href="#"><img src="img/googleB.png" alt="" /></a></li>
-										<li><a id="facebookLoginBtn" href="#"><img src="img/facebookB.png" alt="" /></a></li>
-										<li><a id="yahooLoginBtn" href="#"><img src="img/yahooB.png" alt="" /></a></li>
-									</ul>
-								</div>				
-							</div>	
-							<div id="loginForm" class="span7">
-								<h4>Custom Log In</h4>
-									<div class="errorMessages">
-									</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputEmail">Email</label>
-									<input class="span9" type="email" id="email" placeholder="Email" required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputPassword">Password</label>
-									<input class="span9" type="password" id="password" placeholder="Password" required>
-								</div>
-								<div class="row-fluid">
-									<label id="rememberMe" class="checkbox">
-										<input type="checkbox"> Remember me</input>
-									</label>
-								</div>
-								<div class="row-fluid">
-									<button id="signIn" type="submit" class="btn btn-inverse"><i class="icon-signin"></i>Sign in</button>
-										<i class="icon-spin icon-spinner icon-large"></i>		
-								</div>
-							</div>		
-						</div>
-					</div>
-				</div>
-			<div id="registration" class="row-fluid tab-pane">
-					<div  class="span6 offset3 ">
-						<div class="row-fluid">
-							<div class="span12">
-								<h3>
-									Welcome to FITeagle Registration Page!
-								</h3>
-							</div>
-						</div>
-						<hr />
-						<div class="row-fluid">
-							<div id="registrationForm">
-								<div class="row-fluid">
-									<p class="alert alert-info">* required fields</p>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputFirstName">First Name*</label>
-									<input class="span6" type="text" id="inputFirstName" 
-										placeholder="First Name" required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputLastName">Last Name*</label>
-									<input class="span6" type="text" id="inputLastName" placeholder="Last Name" required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputAffiliation">Affiliation</label>
-									<input class="span6" type="text" id="inputAffiliation" placeholder="Affiliation">
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputEmail">Email*</label>
-									<input class="span6" type="email" id="inputEmail" 
-										onblur="Registration.checkUserEntries();"
-										placeholder="Email" required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputPassword">Password*</label>
-									<input class="span6" type="password" 
-										onblur="Registration.checkUserPasswords();"
-										id="inputPassword" placeholder="Password" required>
-								</div>
-								<div class="row-fluid">
-									<label class="span3" for="inputEmail">Confirm Password*</label>
-									<input class="span6" type="password" id="inputConfirmPassword" 
-										onblur="Registration.checkUserPasswords();"
-										placeholder="Confirm Password" required>
-								</div>
-								<div class="row-fluid">
-									<button id="registerBtn" type="submit" class="btn btn-inverse">
-											<i class="icon-check"></i>Register
-									</button>			
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			<div id="aboutUs" class="row-fluid tab-pane">
-				<div  class="span6 offset3 ">
-					<h3>About Us Section</h3> 
-				</div>
-			</div>
-		</div>	
+	<div id="main" class="row-fluid">
+	<!-- WILL BE LOADED DYNAMICALLY -->
 	</div>		 		 
-	<div id="footer" class="row-fluid">
-
-	</div>
 </body>

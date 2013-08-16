@@ -9,7 +9,6 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
 
 import net.iharder.Base64;
 
@@ -90,6 +89,10 @@ public class UserDBManager {
     database.deleteKey(username, description);
   }
   
+  public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+    database.renameKey(username, description, newDescription);
+  }
+  
   public User get(String username) throws UserNotFoundException, DatabaseException {
     return database.get(username);
   }
@@ -141,13 +144,13 @@ public class UserDBManager {
     KeyPair keypair = keyManager.generateKeyPair();
     String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
     String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-    addKey(username, new UserPublicKey(pubKeyEncoded, "created at "+new Date().toString()));
+    addKey(username, new UserPublicKey(pubKeyEncoded, "created at "+System.currentTimeMillis()));
     String userCertString = createUserCertificate(username,keypair.getPublic()); 
     return privateKeyEncoded + "\n" + userCertString;   
   }
 
   public String createUserCertificateForPublicKey(String username, String description) throws Exception, PublicKeyNotFoundException {
-    PublicKey publicKey = get(username).getPublicKey(description);
+    PublicKey publicKey = get(username).getPublicKey(description).getPublicKey();
     return createUserCertificate(username, publicKey);
   }
 }
