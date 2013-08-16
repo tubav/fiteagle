@@ -173,8 +173,8 @@ function(Validation, Utils,Messages,Server){
 				var description = publicKeys[i].description;
 				sel.append(createOptionItem(description));
 			}
-			$(selector).append(label);
-			$(selector).append(selDiv);
+			selectPubKey.append(label);
+			selectPubKey.append(selDiv);
 		}			
 	};
 	
