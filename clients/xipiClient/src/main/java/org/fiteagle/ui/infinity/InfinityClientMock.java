@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.fiteagle.ui.infinity.model.InfinityArrayList;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
 import org.fiteagle.ui.infinity.model.InfinityValueID;
 
@@ -51,8 +52,21 @@ public class InfinityClientMock extends InfinityClient {
 
 	private String getMockedInput(String path) throws FileNotFoundException {
 		InputStream in = this.getClass().getResourceAsStream(path);
-		InputStream fixedIn = fixEncoding(in);
+		InputStream fixedIn = fixXIPIEncoding(in);
 		return convertStreamToString(fixedIn);
+	}
+
+	@Override
+	public ArrayList<InfinityValueID> getTechnicalComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<InfinityArrayList> getComponentDetail(
+			String infrastructureId, String componentId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

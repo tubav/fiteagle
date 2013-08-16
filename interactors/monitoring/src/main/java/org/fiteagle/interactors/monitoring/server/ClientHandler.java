@@ -28,7 +28,6 @@ public class ClientHandler implements Runnable {
 	@Override
 	public void run() {
 		
-		//TODO: get the testbed name from header not from lines!!
 
 		BufferedReader in;
 		PrintWriter out = null;
@@ -41,7 +40,6 @@ public class ClientHandler implements Runnable {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			String str;
 			String testbedName = null;
-//			String testbedStatus = StatusTable.UNDEFINED;
 
 			while ((str = in.readLine()) != null) {
 				StatusTable componentStatusTable = new StatusTable();
@@ -87,7 +85,6 @@ public class ClientHandler implements Runnable {
 					if (strArray[3] != null)
 						lastCheckedDate = parseStringToDate(strArray[3]);
 					componentStatusTable.setLastCheck(lastCheckedDate);
-//					componentStatusTable.setId(strArray[1]);
 					componentStatusTable.setId(componentSchemaNames.get(new Integer(strArray[0])));
 
 					if (strArray[2].compareTo("1") == 0) {

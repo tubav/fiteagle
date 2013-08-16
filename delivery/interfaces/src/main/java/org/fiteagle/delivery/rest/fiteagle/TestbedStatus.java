@@ -49,7 +49,7 @@ public class TestbedStatus {
 	
 	public void addComponent(TestbedStatus component){
 		if(this.components == null)
-			components = new ArrayList<>();
+			components = new ArrayList<TestbedStatus>();
 			
 		this.components.add(component);
 	}

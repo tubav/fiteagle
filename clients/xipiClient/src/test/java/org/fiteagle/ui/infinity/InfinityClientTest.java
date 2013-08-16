@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import junit.framework.Assert;
 
+import org.fiteagle.ui.infinity.model.InfinityArrayList;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
 import org.fiteagle.ui.infinity.model.InfinityValueID;
 import org.junit.Before;
@@ -35,4 +36,21 @@ public class InfinityClientTest {
 		ArrayList<InfinityValueID> result = this.client.searchInfrastructures();
 		Assert.assertNotNull(result);
 	}
+	
+	@Test
+	public void testGetTechnicalComponents(){
+		ArrayList<InfinityValueID> result = this.client.getTechnicalComponents();
+		Assert.assertNotNull(result);
+	}
+	
+	@Test
+	public void testGetComponentDetail(){
+		String infrastructureId="900";
+		String componentId="242";
+		ArrayList<InfinityArrayList> result = this.client.getComponentDetail(infrastructureId, componentId);
+		Assert.assertNotNull(result);
+	}
+	
+	
+	
 }

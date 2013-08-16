@@ -84,7 +84,6 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 			statusTable.setId(infinityValueID.getValue());
 			
 			InfinityInfrastructure infinityInfrastructure = getInfrastuctureByID(new Integer(id));
-//			System.out.println("STATUS IS: "+infinityInfrastructure.getStatus());
 			
 			if(infinityInfrastructure.getStatus() != null && infinityInfrastructure.getStatus()!=""){
 				//TODO: how does status look like in json(if it is not empty) from XIPI? There is no example
@@ -92,7 +91,6 @@ public class MonitoringManager implements ResourceMonitoringBoundary {
 				//status table states.
 			}else
 				statusTable.setStatus(StatusTable.UNDEFINED);
-				
 			
 			result.add(statusTable);
 		}
