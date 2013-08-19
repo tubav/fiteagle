@@ -14,8 +14,9 @@
   <script src="js/main.js" type="text/javascript"></script>
 </head>
 
-<body>
+<body id="fiteagle">
 
+<div id="fiteagleBody">
 <!---------------------- HEADER --------------------------------------->
 	<div id="header" class="row-fluid">
 		<div id="logoImg" class="span1 offset3">
@@ -38,13 +39,13 @@
 				<div class="centered-pills">
 					<ul class="nav nav-pills span8 offset3">
 						<li class="active span3">
-							<a id="homeTab" class="span12" href="#home" data-toggle="tab">Home</a>
+							<a id="homeTab" class="span12" href="#home" >Home</a>
 						</li>
 						<li class="span3">
-							<a id="registrationTab" class="span12" href="#registration" data-toggle="tab">Registration</a>
+							<a id="registrationTab" class="span12" href="#registration" >Registration</a>
 						</li>
 						<li class="span3">
-							<a id="aboutUsTab" class="span12" href="#aboutUs" data-toggle="tab">About Us</a>
+							<a id="aboutUsTab" class="span12" href="#about">About Us</a>
 						</li>
 					</ul>
 				</div>
@@ -73,75 +74,64 @@
 						</p>
 					</div>
 					<div id="loginContainer" class="row-fluid top10">
-						<div id="fancyLogins" class="span12" >
-							<h4>Federated Log In</h4>
-							<div id="fancyLoginList" >
-								<div  class="row-fluid">
-									<div class="span4">
-										<button id="fiteagleLoginBtn" class="btn span12"
-											role = "button"
-											data-target = "#loginForm"
-											data-toggle = "modal"
-										>												
-										</button>
+						<div id="customlogin" class="span5">
+							<h4 class="centered">FITeagle Custom Log In</h4>
+							<hr/>
+							<div class="span12">
+								<div id="loginErrors" class="row-fluid top20"></div>
+								<div class="row-fluid ">
+									<label class="span3" for="username">Username</label>
+									<input class="span9" type="text" id="username" placeholder="Username" autocomplete="on" required>
+								</div>
+								<div class="row-fluid">
+									<label class="span3" for="password">Password</label>
+									<input class="span9" type="password" id="password" placeholder="Password" autocomplete="on" required>
+								</div>
+								<div class="row-fluid">
+									<input id="rememberMeCheckbox" type="checkbox"></input>
+									<span id="rememberMeCheckboxLabel">Remember me</span>
+								</div>
+								<div class="row-fluid">
+									<div class='top20 progress progress-striped active hidden'>
+										<div class='bar' style='width: 100%;'></div>
 									</div>
-									<div class="span4">
+									<button id="signIn" type="submit" class="btn btn-inverse span6 offset3"><i class="icon-signin icon-large"></i>Sign In</button>	
+								</div>
+							</div>	
+						</div>
+						<div id="fancyLogins" class="span5 offset1">
+							<h4 class="centered">Federated Log In</h4>
+							<hr/>
+							<div id="fancyLoginList" class="span12">
+								<div  class="row-fluid">
+									<div class="span8 offset2">
 										<button id="xifiLoginBtn" class="btn btn-inverse span12">
 										</button>
 									</div>
-
-									<div class="span4">
+								</div>
+								<div class="row-fluid">
+									<div class="span8 offset2">
 										<button id="fed4fireLoginBtn" class="btn span12"></button>
 									</div>
 								</div>
 								<div class="row-fluid">
-									<div class="span4">
+									<div class="span8 offset2">
 										<button id="openidLoginBtn" class="btn span12"></button>
 									</div>
-									<div class="span4">
+								</div>
+								<div class="row-fluid">
+									<div class="span8 offset2">
 										<button id="googleLoginBtn" class="btn span12">
 										</button> 
 									</div>
-									<div class="span4">
+								</div>
+								<div class="row-fluid">								
+									<div class="span8 offset2">
 										<button id="yahooLoginBtn" class="btn span12">
 										</button> 
 									</div>
 								</div>
-							</div>
-							<div id="loginForm" class="modal hide fade"
-								tabindex="-1" role="dialog" 
-								aria-labelledby="myModalLabel" aria-hidden="true">
-								<div class="modal-header">
-									<button type="button" 
-									class="close" data-dismiss="modal" aria-hidden="true">
-									<i class="icon-remove icon-large"></i>
-									</button>
-									<h4>FITeagle Custom Log In</h4>
-								</div>
-								<div class="modal-body">
-									<div id="loginErrors" class="row-fluid top20"></div>
-									<div class="row-fluid ">
-										<label class="span3" for="username">Username</label>
-										<input class="span9" type="text" id="username" placeholder="Username" autocomplete="on" required>
-									</div>
-									<div class="row-fluid">
-										<label class="span3" for="password">Password</label>
-										<input class="span9" type="password" id="password" placeholder="Password" autocomplete="on" required>
-									</div>
-									<div class="row-fluid">
-										<input id="rememberMeCheckbox" type="checkbox"></input>
-										<span id="rememberMeCheckboxLabel">Remember me</span>
-									</div>
-									<div class="modal-footer">
-										<div class="row-fluid">
-											<div class='top20 progress progress-striped active hidden'>
-												<div class='bar' style='width: 100%;'></div>
-											</div>
-											<button id="signIn" type="submit" class="btn btn-inverse span6 offset3"><i class="icon-signin icon-large"></i>Sign In</button>	
-										</div>
-									</div>
-								</div>	
-							</div>							
+							</div>						
 						</div>	
 					</div> 
 				</div>
@@ -206,13 +196,14 @@
 							<div class="row-fluid">
 								<button id="registerBtn" type="submit" class="btn btn-inverse">
 										<i class="icon-check"></i>Register
-								</button>			
+								</button>
+								<i id="registerSpinner" class="icon-spin icon-spinner icon-large hidden"></i>								
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="aboutUs" class="row-fluid tab-pane">
+			<div id="about" class="row-fluid tab-pane">
 				<div  class="span8 offset2 ">
 					<div class="page-header">
 						<h3>About FITeagle</h3>
@@ -285,4 +276,5 @@
 
 	</div>
 	<iframe src="/api/v1/user/blank.html" id="barframe"></iframe>
+</div>
 </body>
