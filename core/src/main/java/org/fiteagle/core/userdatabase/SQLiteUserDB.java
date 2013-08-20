@@ -136,13 +136,13 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 
 	@Override
-	public void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-	  User user = get(username);
-    user.update(newFirstName, newLastName, newEmail, newAffiliation, newPassword, newPublicKeys);	  
+	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+	  User newUser = get(u.getUsername());
+    newUser.mergeWithUser(u);	  
 	  try{	    
-	    updateUserInDatabase(user);
-	    deleteKeysFromDatabase(user.getUsername());    
-	    addKeysToDatabase(user.getUsername(), user.getPublicKeys());	   
+	    updateUserInDatabase(newUser);
+	    deleteKeysFromDatabase(newUser.getUsername());    
+	    addKeysToDatabase(newUser.getUsername(), newUser.getPublicKeys());	   
 	  } catch(IOException | SQLException e){
 	    if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column email is not unique)")){
         throw new DuplicateEmailException();
@@ -258,6 +258,7 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
       throw new DatabaseException(e.getMessage());
     }	
+
     	if(passwordHash!=null){
     		return User.createUserWithExistingPassword(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
     	}else{

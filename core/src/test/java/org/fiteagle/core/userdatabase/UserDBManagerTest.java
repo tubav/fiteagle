@@ -8,8 +8,6 @@ import junit.framework.Assert;
 import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +22,7 @@ public class UserDBManagerTest {
   @Before
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
-    testUser = User.createUser("test1", "test", "testName", "test@test.org", "testAffiliation", "password", null);
+    testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password");
     try{
       userDBManager.add(testUser);
     } catch(DuplicateUsernameException | DuplicateEmailException e){  
@@ -42,16 +40,6 @@ public class UserDBManagerTest {
     Assert.assertNotNull(testUser.getPasswordHash());
     Assert.assertNotNull(testUser.getPasswordSalt());
   }  
-  
-  @Test(expected=NotEnoughAttributesException.class)
-  public void testCreateIncompleteUser(){
-    User.createUser("test1", null, "testName", "test@test.org", "testAffiliation", "password", null);
-  }
-  
-  @Test(expected=InValidAttributeException.class)
-  public void testCreateInvalidUser(){
-    User.createUser("test1", "test", "testName", "test@test.org", "T", "password", null);
-  }
  
   @Test
   public void testVerifyPassword() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException{    

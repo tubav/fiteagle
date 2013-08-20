@@ -8,6 +8,7 @@ import junit.framework.Assert;
 
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class CertificateAuthorityTest {
   public void setUp() throws Exception {
     CA =CertificateAuthority.getInstance();
     um = UserDBManager.getInstance();
-    dummyUser = User.createUser("dummy", "dummy", "dummy", "dummy@dummy.org", "dummyAffiliation", "blub", null);
+    dummyUser = new User("dummy", "dummy", "dummy", "dummy@dummy.org", "dummyAffiliation", "blub");
   }
   
  

@@ -1,0 +1,14 @@
+protocol: 4
+domain: FOKUS FUSECO Playground
+start-time: 0
+sender-id: fuseco.fokus.fraunhofer.de
+app-name: fiteagle
+schema: 0 _experiment_metadata subject:string key:string value:string
+schema: 1 FOKUS FUSECO Playground_laptop node:string up:double last_check:string
+schema: 2 FOKUS FUSECO Playground_epc_wifi node:string up:double last_check:string
+schema: 3 FOKUS FUSECO Playground_fiteagle node:string up:double last_check:string
+content: text
+
+0.926104068756	1	0	Fed4FIRE EPC Demo Laptop	1	2013-07-24T13:24:48.925966+02:00
+0.92628288269	2	0	Fed4FIRE EPC WiFi	1	2013-07-24T13:24:48.925966+02:00
+0.926387071609	3	0	FITeagle AM	1	2013-07-23T12:52:54.102724+02:00

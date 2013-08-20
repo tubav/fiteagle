@@ -19,6 +19,7 @@
 		<module>groupmanagement</module>
 		<module>configuration</module>
 		<module>api</module>
+		<module>monitoring</module>
 	</modules>
 
    <repositories>

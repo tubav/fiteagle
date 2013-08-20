@@ -175,7 +175,7 @@ public class SFAInteractorTest {
 		DescribeResult describeResult = this.sfaInteractor.describe(urns, getListCredentials(), createTestDescribeOptions("GENI", "3", false));
 		Assert.assertEquals(0, describeResult.getCode().getGeni_code());
 	}
-	
+	@Ignore
 	@Test
   public void testAllocate() throws IOException {
     ArrayList<String> urns = new ArrayList<String>();
@@ -214,7 +214,7 @@ public class SFAInteractorTest {
     
     Assert.assertEquals(0, statusResult.getCode().getGeni_code());
   }
-	
+	@Ignore
 	@Test
   public void testDelete() throws IOException {
     ArrayList<String> urns = new ArrayList<String>();

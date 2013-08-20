@@ -1,7 +1,5 @@
 package org.fiteagle.core.userdatabase;
 
-import java.util.List;
-
 public interface UserPersistable {
 
 	public void add(User u) throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException, DuplicateEmailException;
@@ -9,7 +7,7 @@ public interface UserPersistable {
 	public void delete(String username) throws DatabaseException;
 	public void delete(User u) throws DatabaseException;
 	
-	public void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException, DuplicateEmailException; 
+	public void update(User u) throws UserNotFoundException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException, DuplicateEmailException; 
 	public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException;
 	public void deleteKey(String username, String description) throws UserNotFoundException, DatabaseException;
 	public void renameKey(String username, String description, String newDescription) throws UserNotFoundException, DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException;

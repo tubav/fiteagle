@@ -32,7 +32,7 @@
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>/gui/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
   
   <filter>

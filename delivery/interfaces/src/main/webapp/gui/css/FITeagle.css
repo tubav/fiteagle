@@ -1,6 +1,7 @@
 .hidden{display:none}
 body{
 	padding:0 !important;
+<<<<<<< HEAD
 	background: #f7f7f7;
 	background: -moz-linear-gradient(top, #f7f7f7, #aaaaaa);
 	background: -webkit-linear-gradient(top, #f7f7f7, #aaaaaa);
@@ -8,13 +9,18 @@ body{
 	background: -o-linear-gradient(top, #f7f7f7, #aaaaaa);
 	background: linear-gradient(top, #f7f7f7, #aaaaaa);
 	background-size: 100%;
+=======
+	background: #fff;
+	background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -webkit-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -ms-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: -o-linear-gradient(top, #f7f7f7, #e1e1e1);
+	background: linear-gradient(top, #f7f7f7, #e1e1e1);
+>>>>>>> 9fca92614c83d65054fd85b3d9b74e40cbd6e0db
 	color: #373737 !important;
 	font-size: 16px !important;
 	line-height: 1.5 !important;
 }
-
-label,h1,h2,h3,h4,h5,h6{ cursor: default}
-
 label {margin-top:3px;}
 #rememberMeCheckboxLabel{
 	position:relative;
@@ -50,8 +56,6 @@ p{text-align:justify}
 	overflow: visible;
 }
 
-.btn-inverse.disabled{background-color: #c8c8c8 !important;}
-
 #loginPages a{
 	text-decoration: none;
 	color: #f09030;
@@ -86,7 +90,7 @@ ul li a{color: #585858}
 ul li a:hover, ul li a:focus{text-decoration: none;}
 
 #managePubliKeys ul li textarea{color: black;}
-#keys ul{list-style-type:none;}
+#managePublicKeys ul{list-style-type:none;}
 
 hr{ border-top: 1px solid #D1D1D1}
 h4{margin-bottom:5px !important}
@@ -183,7 +187,8 @@ input.search-query{height:24px !important;}
 #navs{	margin-top:10px;}
 #navs ul{ margin-bottom: 0px;}
 #navs ul li{ margin-right:15px}
-#navs .nav-pills>li>a{ color:#2E2E2E}
+#navs .nav-pills>li>a{color:#2E2E2E}
+		
 #navs .nav-pills>.active>a { color:white;background-color: #212121;}
 #header{
 	background: #212121;
@@ -193,8 +198,6 @@ input.search-query{height:24px !important;}
 	background: -o-linear-gradient(top, #373737, #212121);
 	background: linear-gradient(top, #373737, #212121);
 }
-
-
 
 #rememberMe{ margin-top:10px}
 
@@ -250,8 +253,6 @@ input.search-query{height:24px !important;}
     display: compact;
 }
 
-#generatedPrivateKey{margin-top: 40px}
-
 @media (max-width:979px){
 		#navs ul {margin-bottom: 20px}
 		
@@ -288,20 +289,6 @@ input.search-query{height:24px !important;}
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-	
-	.alert{ text-align:center !important}
-	
-	.mainWindow  #navigation{
-		position: fixed;
-		z-index: 100;
-		top: 0;
-		}
-		
-	#fancyLogins{
-		margin-top:30px;
-	}
-		
-	.mainWindow  #header{padding-top:52px;}
 	#publicKeysList .publicKey{margin-top:20px}
 
 	#fancyLoginList ul{margin:0}
@@ -360,6 +347,83 @@ input.search-query{height:24px !important;}
 
 }
 
+
+/*#statusTable{
+	width: 75%;
+	position:relative;
+ 	top:80px;
+ 	left:160px;
+}
+#statusTable > tbody > tr   {
+	padding-top: 2%;
+}
+
+#statusTable > tbody > tr:nth-child(odd){background-color:#fff;}
+	
+/*#statusTable > tbody > tr:hover td  {
+	background-color: #c7c7c7;
+	
+}*!/
+#statusTable > tbody > tr > td.statusRow  {
+	cursor: pointer;
+	width: 10%;
+	
+}
+
+#statusTable > tbody > tr > td.rowAlignLeft  {
+	text-align: left;
+	
+}
+
+#statusTable > tbody > tr:hover td.statusRow  {
+	font-size: 140%;
+		
+}
+
+#statusTable > thead {
+	white-space: nowrap;
+}
+
+#statusTable > tbody > tr > td  {
+	text-align: center;
+	
+	
+}
+
+#statusTable > tbody > tr > td > img.status {
+	max-width: 2em;
+	min-width: 1em;
+}
+#popup {
+	min-width: 40%;
+	alignment-baseline: central;
+}
+#popup div  {
+	background: #d7d7d7;
+	
+}
+
+#popup div.modal-body > table  {
+	width: 75%;
+	
+}
+
+#popup div.modal-body > table > thead > tr >th {
+	padding: 5%;
+	border-bottom: 2px solid #333;
+	
+}
+#popup div.modal-body > table > tbody > tr >td {
+	padding: 2%;
+	text-align: center;
+	
+}
+#popup div.modal-body >table > tbody > tr > td > img.status {
+	width: 25%;
+}
+*/
+
+=======
 /* LOGIN BUTTON STYLES */
 
 #fancyLoginList .btn{
@@ -434,4 +498,6 @@ input.search-query{height:24px !important;}
 }
 
 
+
+#navs ul { white-space:nowrap; }
 

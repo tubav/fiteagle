@@ -1,7 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryUserDB implements UserPersistable {
 
@@ -19,13 +18,13 @@ public class InMemoryUserDB implements UserPersistable {
 	public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) != null)
 			throw new DuplicateUsernameException();
-		checkForDuplicateEmail(u.getUsername(), u.getEmail());
+		checkForDuplicateEmail(u);
 		users.put(u.getUsername(), u);
 	}
 
-  private void checkForDuplicateEmail(String username, String newEmail) {
+  private void checkForDuplicateEmail(User newUser) {
     for(User user : users.values()){
-		  if(user.getEmail().equals(newEmail) && user.getUsername() != username){
+		  if(user.getEmail().equals(newUser.getEmail()) && user.getUsername() != newUser.getUsername()){
 		    throw new DuplicateEmailException();
 		  }
 		}
@@ -42,11 +41,13 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-	  User user = get(username);
-	  checkForDuplicateEmail(username, newEmail);
-	  user.update(newFirstName, newLastName, newEmail, newAffiliation, newPassword, newPublicKeys); 
-	  users.put(username, user);    
+	public void update(User u) throws UserNotFoundException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+		if(users.get(u.getUsername()) == null)
+			throw new UserNotFoundException();
+		checkForDuplicateEmail(u);
+	  User newUser = get(u.getUsername());
+	  newUser.mergeWithUser(u);		 
+	  users.put(u.getUsername(), newUser);    
 	}
 
 	@Override

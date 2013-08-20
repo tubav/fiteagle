@@ -14,7 +14,9 @@ public class SQLiteUserDBIT extends UserPersistableTest {
   public void cleanUp() {
     database.delete(USER1);
     database.delete(USER2);
+    database.delete(USER3);
     database.delete(USER4);
     database.delete(USER5);
+    database.delete(USER6);
   }   
 }

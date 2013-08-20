@@ -9,7 +9,6 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.List;
 
 import net.iharder.Base64;
 
@@ -78,8 +77,8 @@ public class UserDBManager {
     database.delete(u);
   }
   
-  public void update(String username, String newFirstName, String newLastName, String newEmail, String newAffiliation, String newPassword, List<UserPublicKey> newPublicKeys) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-    database.update(username, newFirstName, newLastName, newEmail, newAffiliation, newPassword, newPublicKeys);
+  public void update(User u) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+    database.update(u);
   }
   
   public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException, InValidAttributeException, DuplicatePublicKeyException {

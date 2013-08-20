@@ -1,0 +1,152 @@
+{
+   "tags":[
+      "FIRE"
+   ],
+   "logo":null,
+   "status":"",
+   "infradescid":901,
+   "ownerType":{
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":"0",
+            "other":null,
+            "name":null,
+            "value":"European / National / Regional / Local Government",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"2",
+            "other":null,
+            "name":null,
+            "value":"Research Institution",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   },
+   "blocks":{
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":"230",
+            "other":null,
+            "name":null,
+            "value":"WIFI Network",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"242",
+            "other":null,
+            "name":null,
+            "value":"Backbone Network",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"161",
+            "other":null,
+            "name":null,
+            "value":"Societal Perspective",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"170",
+            "other":null,
+            "name":null,
+            "value":"Economic Perspective",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"172",
+            "other":null,
+            "name":null,
+            "value":"Technical Perspective",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   },
+   "nendusers":{
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":"0",
+            "other":null,
+            "name":null,
+            "value":"0-10",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   },
+   "name_":"Trentino Testbed",
+   "scenarios":{
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":"J",
+            "other":null,
+            "name":null,
+            "value":"Information & Communication",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"M",
+            "other":null,
+            "name":null,
+            "value":"Profession, Scientific & Technical Services",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"O",
+            "other":null,
+            "name":null,
+            "value":"Public Administration & Defence",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"P",
+            "other":null,
+            "name":null,
+            "value":"Education",
+            "javaClass":"org.infinity.model.ValueID"
+         },
+         {
+            "id":"R",
+            "other":null,
+            "name":null,
+            "value":"Arts, entertainment & recreation",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   },
+   "country":"IT",
+   "id":900,
+   "organization":"Autonomous Province of Trento",
+   "nameToUpperCase":"TRENTINO TESTBED",
+   "javaClass":"org.infinity.model.InfrastructureSummary",
+   "longitude":"11.11954840",
+   "categories":{
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":"1",
+            "other":null,
+            "name":null,
+            "value":"Test bed",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   },
+   "latitude":"46.09085880",
+   "shortName":"TRENTINO TESTBED",
+   "endusers":{
+      "javaClass":"java.util.ArrayList",
+      "list":[
+         {
+            "id":"4",
+            "other":null,
+            "name":null,
+            "value":"Students / Researchers",
+            "javaClass":"org.infinity.model.ValueID"
+         }
+      ]
+   }
+}

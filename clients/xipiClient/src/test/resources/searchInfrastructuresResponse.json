@@ -1,0 +1,901 @@
+[{
+    "id": "2943",
+    "other": null,
+    "name": null,
+    "value": "NDIX B.V.",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2927",
+    "other": null,
+    "name": null,
+    "value": "GRNET S.A.",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2912",
+    "other": null,
+    "name": null,
+    "value": "Pervasive Tourism Platform",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2893",
+    "other": null,
+    "name": null,
+    "value": "SmartSantander Testbed - Lübeck Facility",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2872",
+    "other": null,
+    "name": null,
+    "value": "awiloc® testbed ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2855",
+    "other": null,
+    "name": null,
+    "value": "national NGN (Next Generation Network) Test Centre",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2843",
+    "other": null,
+    "name": null,
+    "value": "GPU Hybrid Cluster ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2836",
+    "other": null,
+    "name": null,
+    "value": "16K Visualization Tiled Display",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2821",
+    "other": null,
+    "name": null,
+    "value": "PACA Grid ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2794",
+    "other": null,
+    "name": null,
+    "value": "ADRENALINE Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2787",
+    "other": null,
+    "name": null,
+    "value": "FOKUS FUSECO Playground",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2779",
+    "other": null,
+    "name": null,
+    "value": "LOG-a-TEC",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2747",
+    "other": null,
+    "name": null,
+    "value": "iMarine",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2731",
+    "other": null,
+    "name": null,
+    "value": "Kujawsko-Pomorska Sie? Informacyjna",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2709",
+    "other": null,
+    "name": null,
+    "value": "SMART NORMANDY",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2674",
+    "other": null,
+    "name": null,
+    "value": "PL-LAB",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2663",
+    "other": null,
+    "name": null,
+    "value": "Community-Lab.net",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2640",
+    "other": null,
+    "name": null,
+    "value": "ISTS.PL",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2632",
+    "other": null,
+    "name": null,
+    "value": "I-Centrum",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2616",
+    "other": null,
+    "name": null,
+    "value": "RWTH Aachen University, Laboratory of Institute for Automation of Comp",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2607",
+    "other": null,
+    "name": null,
+    "value": "SWITCH",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2590",
+    "other": null,
+    "name": null,
+    "value": "Academic Network of Serbia",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2577",
+    "other": null,
+    "name": null,
+    "value": "Testing and Quality Assurance",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2554",
+    "other": null,
+    "name": null,
+    "value": "OpenSand (Open Satellite Access Network Demonstrator)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2498",
+    "other": null,
+    "name": null,
+    "value": "NIIF/HUNGARNET",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2479",
+    "other": null,
+    "name": null,
+    "value": "BonFIRE",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2465",
+    "other": null,
+    "name": null,
+    "value": "Croatian Academic and Research Network - CARNet",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2456",
+    "other": null,
+    "name": null,
+    "value": "Cluster Isabella",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2447",
+    "other": null,
+    "name": null,
+    "value": "CITC-EURARFID",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2440",
+    "other": null,
+    "name": null,
+    "value": "CRO NGI",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2409",
+    "other": null,
+    "name": null,
+    "value": "OFELIA Testbed ETHZ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2371",
+    "other": null,
+    "name": null,
+    "value": "DIMES",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2361",
+    "other": null,
+    "name": null,
+    "value": "HPC Center",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2353",
+    "other": null,
+    "name": null,
+    "value": "GBIF Austria",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2302",
+    "other": null,
+    "name": null,
+    "value": "HEAnet Ltd",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2294",
+    "other": null,
+    "name": null,
+    "value": "RENATER",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2263",
+    "other": null,
+    "name": null,
+    "value": "The Academic and Research Network of Slovenia (ARNES)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2255",
+    "other": null,
+    "name": null,
+    "value": "Der Verein zur Förderung eines Deutschen Forschungsnetzes",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2171",
+    "other": null,
+    "name": null,
+    "value": "The Digital Repository of Ireland",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2154",
+    "other": null,
+    "name": null,
+    "value": "GreenStar Network",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2135",
+    "other": null,
+    "name": null,
+    "value": "Smart Street Lighting",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2119",
+    "other": null,
+    "name": null,
+    "value": "INNOVATION  AGENCY OF THE CITY COUNCIL OF VALLADOLID - Smart City",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2111",
+    "other": null,
+    "name": null,
+    "value": "AMazING - Advanced Mobile wIreless Network playGround",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2080",
+    "other": null,
+    "name": null,
+    "value": "European Grid Infrastructure (EGI)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2073",
+    "other": null,
+    "name": null,
+    "value": "MURCIA",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2059",
+    "other": null,
+    "name": null,
+    "value": "EXPERIMEDIA CAR",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2047",
+    "other": null,
+    "name": null,
+    "value": "EXPERIMEDIA Foundation for the Hellenic World",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2038",
+    "other": null,
+    "name": null,
+    "value": "NiWi, Nicta Wireless Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2025",
+    "other": null,
+    "name": null,
+    "value": "EXPERIMEDIA Schladming Ski Resort",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "2009",
+    "other": null,
+    "name": null,
+    "value": "EXPERIMENTA PLATFORM",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1998",
+    "other": null,
+    "name": null,
+    "value": "Grafenwörth bewegt",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1990",
+    "other": null,
+    "name": null,
+    "value": "RECORD online Living Lab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1976",
+    "other": null,
+    "name": null,
+    "value": "CENTRO ANDALUZ DE INNOVACIÓN Y TECNOLOGÍAS DE LA INFORMACIÓN Y LAS COMUNICACIONES",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1968",
+    "other": null,
+    "name": null,
+    "value": "Finnish Ontology Library Service ONKI",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1959",
+    "other": null,
+    "name": null,
+    "value": "CLARA",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1950",
+    "other": null,
+    "name": null,
+    "value": "CROSS-TEC LABORATORY of ENEA TECHNOPOLE IN BOLOGNA",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1943",
+    "other": null,
+    "name": null,
+    "value": "SmartBay Ireland ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1933",
+    "other": null,
+    "name": null,
+    "value": "Ify",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1925",
+    "other": null,
+    "name": null,
+    "value": "CloudComputingUFC",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1914",
+    "other": null,
+    "name": null,
+    "value": "eHealth&AAL platform",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1896",
+    "other": null,
+    "name": null,
+    "value": "espaitec, Science & Technology Park of Jaume I University",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1874",
+    "other": null,
+    "name": null,
+    "value": "Arctur-1",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1866",
+    "other": null,
+    "name": null,
+    "value": "FOTSIS",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1852",
+    "other": null,
+    "name": null,
+    "value": "MTT CropInfra",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1838",
+    "other": null,
+    "name": null,
+    "value": "SQS Mobile Excellence Center",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1828",
+    "other": null,
+    "name": null,
+    "value": "Wireless Trondheim Living Lab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1811",
+    "other": null,
+    "name": null,
+    "value": "CISEM - Integrated Security and Emergency Center of Madrid",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1798",
+    "other": null,
+    "name": null,
+    "value": "IBILNET",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1790",
+    "other": null,
+    "name": null,
+    "value": "IHE Gazelle Management Tool in eHealth Interoperability",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1772",
+    "other": null,
+    "name": null,
+    "value": "Barcelona Smart Cities Pilot Network at 22@ District and WIFI/WIMAX Network (30% of the Urban City area: 469 Nodes)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1761",
+    "other": null,
+    "name": null,
+    "value": "Rede Comunitária de Banda Larga da Terra Quente Transmontana",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1736",
+    "other": null,
+    "name": null,
+    "value": "Turk Telecom",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1706",
+    "other": null,
+    "name": null,
+    "value": "e-lab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1697",
+    "other": null,
+    "name": null,
+    "value": "Greek School Network",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1729",
+    "other": null,
+    "name": null,
+    "value": "CONSORZIO NAZIONALE INTERUNIVERSITARIO PER LE TELECOMUNICAZIONI    (CNIT)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1690",
+    "other": null,
+    "name": null,
+    "value": "PRACE - Partnership for Advanced Computing in Europe",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1682",
+    "other": null,
+    "name": null,
+    "value": "Rural information Society - network ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1673",
+    "other": null,
+    "name": null,
+    "value": "CRON: A 10Gbps Reconfigurable Optical Networking Testbed for Large-Scale Scientific Discovery",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1663",
+    "other": null,
+    "name": null,
+    "value": "MALAGA CITY COUNCIL",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1653",
+    "other": null,
+    "name": null,
+    "value": "Intellectia Bank S.A.",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1643",
+    "other": null,
+    "name": null,
+    "value": "RCIKT-NET",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1634",
+    "other": null,
+    "name": null,
+    "value": "MONACO",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1627",
+    "other": null,
+    "name": null,
+    "value": "Gov2DemOSS",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1619",
+    "other": null,
+    "name": null,
+    "value": "Broadband Wireless Network in the Kozani Region ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1609",
+    "other": null,
+    "name": null,
+    "value": "Fundació i2CAT. Recerca i Innovació en l'Àmbit d'Internet",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1600",
+    "other": null,
+    "name": null,
+    "value": "MyMobileWeb",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1589",
+    "other": null,
+    "name": null,
+    "value": "Mobile Innovation Centre Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1580",
+    "other": null,
+    "name": null,
+    "value": "FIRST@PC",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1566",
+    "other": null,
+    "name": null,
+    "value": "Metropolitan Planning Council",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1553",
+    "other": null,
+    "name": null,
+    "value": "HPWNET",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1543",
+    "other": null,
+    "name": null,
+    "value": "UMA Testing Facility",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1536",
+    "other": null,
+    "name": null,
+    "value": "Microwaves and Fibre Optics Laboratory",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1524",
+    "other": null,
+    "name": null,
+    "value": "VTT Converging Networks Laboratory",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1509",
+    "other": null,
+    "name": null,
+    "value": "National Public Demostrator Center in Audiovisual Technologies",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1493",
+    "other": null,
+    "name": null,
+    "value": "Digital Region Ltd",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1479",
+    "other": null,
+    "name": null,
+    "value": "LeYLab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1464",
+    "other": null,
+    "name": null,
+    "value": "Mediatuin",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1453",
+    "other": null,
+    "name": null,
+    "value": "Stichting Wireless Leiden",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1445",
+    "other": null,
+    "name": null,
+    "value": "Landmand.dk",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1432",
+    "other": null,
+    "name": null,
+    "value": "6net / Kuuskaista",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1423",
+    "other": null,
+    "name": null,
+    "value": "INTRANET JUNTA DE EXTREMADURA",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1415",
+    "other": null,
+    "name": null,
+    "value": "POZMAN",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1407",
+    "other": null,
+    "name": null,
+    "value": "Polish Optical Internet PIONIER",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1386",
+    "other": null,
+    "name": null,
+    "value": "Mira Telecom Research Centre",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1376",
+    "other": null,
+    "name": null,
+    "value": "Sustainable DTN testbed in Slovenia",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1365",
+    "other": null,
+    "name": null,
+    "value": "Trial Environment for Cognitive Radio and Networks 2011-2014",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1352",
+    "other": null,
+    "name": null,
+    "value": "Fibre rings in Vejen Municipality and Midtsoenderjylland, Denmark",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1341",
+    "other": null,
+    "name": null,
+    "value": "Connected Communities - Wireless broadband network",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1332",
+    "other": null,
+    "name": null,
+    "value": "Grid'5000",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1321",
+    "other": null,
+    "name": null,
+    "value": "Atlantic Labs",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1314",
+    "other": null,
+    "name": null,
+    "value": "Intersection",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1307",
+    "other": null,
+    "name": null,
+    "value": "Emersat",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1300",
+    "other": null,
+    "name": null,
+    "value": "Satellite Wi Fi handover",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1280",
+    "other": null,
+    "name": null,
+    "value": "ENEAGRID CRESCO",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1271",
+    "other": null,
+    "name": null,
+    "value": "DOTSEL",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1246",
+    "other": null,
+    "name": null,
+    "value": "FUNDACION CARTIF BUILDINGS",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1239",
+    "other": null,
+    "name": null,
+    "value": "Com4Innov",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1230",
+    "other": null,
+    "name": null,
+    "value": "\\\\ Urban Media // HeerlenLive - The city as a media platform",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1222",
+    "other": null,
+    "name": null,
+    "value": "Gestión de Infraestructuras Públicas de Telecomunicaciones del Principado de Asturias S.A.",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1210",
+    "other": null,
+    "name": null,
+    "value": "OFELIA TUB-Island",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1194",
+    "other": null,
+    "name": null,
+    "value": "Acreo National Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1187",
+    "other": null,
+    "name": null,
+    "value": "European Data",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1162",
+    "other": null,
+    "name": null,
+    "value": "Network Implementation Testbed using Open Source code (NITOS)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1171",
+    "other": null,
+    "name": null,
+    "value": "Open Geospatial Consortium (OGC) Europe Ltd",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1154",
+    "other": null,
+    "name": null,
+    "value": "LTE/LTE+ Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1142",
+    "other": null,
+    "name": null,
+    "value": "High Performance Network Group, University Of Essex",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1130",
+    "other": null,
+    "name": null,
+    "value": "Fraunhofer FOKUS SmartTV Lab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1122",
+    "other": null,
+    "name": null,
+    "value": "Opportunistic Networks and Cognitive Management Systems for Efficient Application Provision in the Future Internet - OneFIT",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1104",
+    "other": null,
+    "name": null,
+    "value": "FlowPE",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1095",
+    "other": null,
+    "name": null,
+    "value": "CloudVille",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1087",
+    "other": null,
+    "name": null,
+    "value": "OFELIA Testbed i2CAT ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1112",
+    "other": null,
+    "name": null,
+    "value": "SmartSantander Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1079",
+    "other": null,
+    "name": null,
+    "value": "European Traffic Observatory Measurement Infrastructure",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1064",
+    "other": null,
+    "name": null,
+    "value": "Dark Fiber Experimental Facility",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1057",
+    "other": null,
+    "name": null,
+    "value": "Satellite Network Emulation Platform",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1046",
+    "other": null,
+    "name": null,
+    "value": "Glasfasernetzverbund Lainsitztal - Open Access Network",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1032",
+    "other": null,
+    "name": null,
+    "value": "EmanicsLab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1008",
+    "other": null,
+    "name": null,
+    "value": "Trondheim Pilot",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1000",
+    "other": null,
+    "name": null,
+    "value": "OSIMS: Open Source IMS testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "1022",
+    "other": null,
+    "name": null,
+    "value": "PlanetLab Europe",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "989",
+    "other": null,
+    "name": null,
+    "value": "Tkn Wireless Indoor Sensor network Testbed (TWIST)",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "972",
+    "other": null,
+    "name": null,
+    "value": "FOKUS Smart Communications Playground",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "959",
+    "other": null,
+    "name": null,
+    "value": "ImaginLab",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "948",
+    "other": null,
+    "name": null,
+    "value": "Exemplar Network Testbed ",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "940",
+    "other": null,
+    "name": null,
+    "value": "GEANT",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "931",
+    "other": null,
+    "name": null,
+    "value": "FEDERICA Federated E-infrastructure Dedicated to European Researchers Innovating in Computing network Architectures",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "917",
+    "other": null,
+    "name": null,
+    "value": "iMinds iLab.t",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "909",
+    "other": null,
+    "name": null,
+    "value": "RedIRIS",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "900",
+    "other": null,
+    "name": null,
+    "value": "Trentino Testbed",
+    "javaClass": "org.infinity.model.ValueID"
+}, {
+    "id": "893",
+    "other": null,
+    "name": null,
+    "value": "TEFIS",
+    "javaClass": "org.infinity.model.ValueID"
+}]

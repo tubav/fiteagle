@@ -10,12 +10,12 @@ import org.fiteagle.interactors.api.ConfigurationManagerBoundary;
 import com.google.inject.Inject;
 
 @Path("v1/config")
-public class ConfigurationPresenter {
+public class ConfigurationController {
   
   private final ConfigurationManagerBoundary interactor;
   
   @Inject
-  public ConfigurationPresenter(final ConfigurationManagerBoundary interactor) {
+  public ConfigurationController(final ConfigurationManagerBoundary interactor) {
     this.interactor = interactor;
   }
   
