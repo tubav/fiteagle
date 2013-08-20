@@ -29,7 +29,6 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 	private ResourceAdapterManager resourceManager;
 	private ListResourceOptionsService optionsService;
-	
 
 	public ListResourceRequestProcessor() {
 		resourceManager = ResourceAdapterManager.getInstance();
@@ -39,7 +38,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	public ListResourcesResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
 		resourceManager = ResourceAdapterManager.getInstance();
-		
+
 		ListResourceOptions options = (ListResourceOptions) specificArgs[0];
 		// has to be modified to check credentials
 		ListResourcesResult result = getResult(credentials, options);
@@ -47,38 +46,38 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
-	private ListResourcesResult getResult(ListCredentials listCredentials, ListResourceOptions options) {
+	private ListResourcesResult getResult(ListCredentials listCredentials,
+			ListResourceOptions options) {
 
 		Object value = "";
 		String output = "";
 		AMCode returnCode = null;
-		
+
 		Authorization auth = new Authorization();
-		
+
 		auth.checkCredentialsList(listCredentials);
-		
-		if(!auth.areCredentialTypeAndVersionValid()){
-			returnCode=auth.getReturnCode();
-			output=auth.getAuthorizationFailMessage();
+
+		if (!auth.areCredentialTypeAndVersionValid()) {
+			returnCode = auth.getReturnCode();
+			output = auth.getAuthorizationFailMessage();
 			ListResourcesResult result = new ListResourcesResult();
 			result.setCode(returnCode);
 			result.setOutput(output);
 			return result;
 		}
-		
+
 		checkOptions(options);
-		
-		
+
 		ListResourcesResult result = new ListResourcesResult();
 		if (optionsAreValid()) {
 			value = getValue();
-			
-			if(this.optionsService.isCompressed()){
-				result.setValue(this.compress((String)value));
-			}else {
+
+			if (this.optionsService.isCompressed()) {
+				result.setValue(this.compress((String) value));
+			} else {
 				result.setValue(value);
 			}
-			
+
 			output = getOutput();
 			returnCode = getRuntimeReturnCode();
 		} else {
@@ -96,8 +95,8 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	}
 
 	private AMCode getRuntimeReturnCode() {
-		if(runTimeReturnCode == null){
-			runTimeReturnCode =  new AMCode();
+		if (runTimeReturnCode == null) {
+			runTimeReturnCode = new AMCode();
 			runTimeReturnCode.setGeni_code(GENI_CodeEnum.SUCCESS);
 		}
 		return runTimeReturnCode;
@@ -116,32 +115,31 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	}
 
 	private Object getValue() {
-	
+
 		List<ResourceAdapter> resourceAdapters = resourceManager
 				.getResourceAdapters();
-	
-		RSpecContents advertisedRspec;
-		
-		if(optionsService.isAvailableSet()){
-		  ArrayList<ResourceAdapter> availableResourceAdapters = new ArrayList<ResourceAdapter>();
-		  for (Iterator iterator = resourceAdapters.iterator(); iterator.hasNext();) {
-        ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
-        if(resourceAdapter.isAvailable())
-          availableResourceAdapters.add(resourceAdapter);
-      }
-		  
-		  advertisedRspec = getAdvertisedRSpec(availableResourceAdapters);
-		}else
-		  advertisedRspec = getAdvertisedRSpec(resourceAdapters);
 
-		String advertisedRspecSTR = this.getAdvertisedRSpecString(advertisedRspec);
+		RSpecContents advertisedRspec;
+
+		if (optionsService.isAvailableSet()) {
+			ArrayList<ResourceAdapter> availableResourceAdapters = new ArrayList<ResourceAdapter>();
+			for (Iterator iterator = resourceAdapters.iterator(); iterator
+					.hasNext();) {
+				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
+						.next();
+				if (resourceAdapter.isAvailable())
+					availableResourceAdapters.add(resourceAdapter);
+			}
+
+			advertisedRspec = getAdvertisedRSpec(availableResourceAdapters);
+		} else
+			advertisedRspec = getAdvertisedRSpec(resourceAdapters);
+
+		String advertisedRspecSTR = this
+				.getAdvertisedRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
 	}
-
-
-
-
 
 	private boolean optionsAreValid() {
 
@@ -152,6 +150,5 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 		return optionsService.getErrorCode();
 	}
-
 
 }

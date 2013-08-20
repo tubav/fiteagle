@@ -7,6 +7,8 @@ import java.util.List;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -63,8 +65,9 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
     //TODO: the urn is a slice urn..
     String test = urns.get(0);
     if(urns.get(0).contains("+slice+")){
-      Group group=resourceManager.getGroup(urns.get(0));
-      List<ResourceAdapter> resourceAdapterInstances = group.getResources();
+      Group group=GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
+      List<String> resourceAdapterInstanceIds = group.getResources();
+      List<ResourceAdapter> resourceAdapterInstances = resourceManager.getResourceAdapterInstancesById(resourceAdapterInstanceIds);
       while(resourceAdapterInstances.size()>0){
         ResourceAdapter resourceAdapter = (ResourceAdapter) resourceAdapterInstances.get(0);
         String id=resourceAdapter.getId();
@@ -80,7 +83,9 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
       }
       
     } else{
-      Group group = resourceManager.getGroupOfInstance(translator.getIdFromSliverUrn(urns.get(0)));
+    	
+    	//TODO völlig falsch!!!
+      Group group = GroupDBManager.getInstance().getGroup(new URN(translator.getIdFromSliverUrn(urns.get(0))).getSubjectAtDomain());
       
       for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
         String urn = (String) iterator.next();
@@ -88,7 +93,7 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
         if(!group.contains(id))
           throw new RuntimeException();//TODO: define this exception concrete
         
-        ResourceAdapter resourceAdapter = group.getResource(id);
+        group.deleteResource(id);
         
         resourceManager.deleteResource(id);
         

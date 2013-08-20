@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa.register;
 
 import java.io.StringReader;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.util.URN;
@@ -17,6 +19,7 @@ import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Credential;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Signatures;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
+import org.fiteagle.interactors.sfa.util.CredentialFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +36,10 @@ Logger log = LoggerFactory.getLogger(getClass());
     String type = getType(parameters);
     String credentialString = getCredential(parameters);
     SignedCredential cred = null;
+    X509Certificate userCertificate = null;
     try {
        cred =buildCredential(credentialString);
+       userCertificate  =X509Util.buildX509Certificate(cred.getCredential().getOwnerGid());
     } catch (JAXBException e) {
       log.error(e.getMessage(),e);
     }
@@ -44,8 +49,12 @@ Logger log = LoggerFactory.getLogger(getClass());
     	Group slice = new Group(slicUrn.getSubjectAtDomain(), userURN.getSubjectAtDomain() );
     	GroupDBManager groupmananger = GroupDBManager.getInstance();
     	groupmananger.addGroup(slice);
-    	SignedCredential sliceCredential = createSignedCredential(slice);
-    	return new HashMap<String, Object>();
+    	String sliceCredential = createSignedCredential(slice,userCertificate);
+    	HashMap<String, Object> returnMap =  new HashMap<String, Object>();
+    	returnMap.put("code", new Integer(0));
+    	returnMap.put("value", sliceCredential);
+    	returnMap.put("output", "");
+    	return returnMap;
     }
     else {
       return new HashMap<String, Object>();
@@ -54,10 +63,10 @@ Logger log = LoggerFactory.getLogger(getClass());
     
   }
   
-  private SignedCredential createSignedCredential(Group slice) {
-	SignedCredential sliceCredential = new SignedCredential();
-	sliceCredential.setCredential(createCredential(slice));
-	sliceCredential.setSignatures(createSignature());
+  private String createSignedCredential(Group slice, X509Certificate userCertificate) {
+	
+	Credential credential = createCredential(slice, userCertificate);
+	String sliceCredential = CredentialFactory.signCredential(credential);
 	return sliceCredential;
   }
 
@@ -66,10 +75,8 @@ private Signatures createSignature() {
 	return null;
 }
 
-private Credential createCredential(Group slice) {
-	Credential credential = new Credential();
-	credential.setSerial(UUID.randomUUID().toString());
-//	credential.setUuid(value);
+private Credential createCredential(Group slice, X509Certificate userCertificate) {
+	Credential credential = CredentialFactory.newCredential(userCertificate, URN.getURNFromGroup(slice));
 	return credential;
 }
 

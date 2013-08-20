@@ -109,20 +109,9 @@ public class CertificateAuthority {
 		}
 	}
 
-	public X509Certificate buildX509Certificate(String certString) {
-		CertificateFactory certificateFactory = getCertifcateFactory();
-		return getX509Certificate(certificateFactory, certString);
-	}
+	
 
-	private X509Certificate getX509Certificate(CertificateFactory cf,
-			String certString) {
-		InputStream in = new ByteArrayInputStream(certString.getBytes());
-		try {
-			return (X509Certificate) cf.generateCertificate(in);
-		} catch (Exception e) {
-			throw new GenerateCertificateException();
-		}
-	}
+	
 
 	private User getUserFromCert(X509Certificate userCert) {
 
@@ -130,13 +119,7 @@ public class CertificateAuthority {
 
 	}
 
-	private CertificateFactory getCertifcateFactory() {
-		try {
-			return CertificateFactory.getInstance("X.509");
-		} catch (CertificateException e) {
-			throw new CertificateFactoryNotCreatedException();
-		}
-	}
+	
 
 	private SubjectPublicKeyInfo getPublicKey(PublicKey key) throws Exception {
 
@@ -151,15 +134,8 @@ public class CertificateAuthority {
 		return x500Name;
 	}
 
-	public class CertificateFactoryNotCreatedException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
 
-	}
-
-	public class GenerateCertificateException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-	}
-
+	
 	public class EncodeCertificateException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 	}

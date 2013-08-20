@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -25,15 +26,14 @@ private static ResourceAdapterManager manager=null;
 
   private ResourceAdapterDatabase adapterInstancesDatabase;
   private ResourceAdapterDatabase adapterDatabase;
-  private GroupPersistable groups;
-
+ 
   
   private ResourceAdapterManager() {
     if (manager!=null) return;
     
     adapterInstancesDatabase = new InMemoryResourceAdapterDatabase();
     adapterDatabase = new InMemoryResourceAdapterDatabase();
-    groups=new InMemoryGroupDatabase();
+    
     
     Class[] allClassesInPackage=null;
     try {
@@ -91,40 +91,16 @@ private static ResourceAdapterManager manager=null;
     
   }
   
-  public void addGroup(Group group){
-    groups.addGroup(group);
-  }
-  
-  public Group getGroup(String groupId){
-    return groups.getGroup(groupId);
-  }
-  
+
   public ResourceAdapter getResourceAdapterInstance(String instanceId){
     return adapterInstancesDatabase.getResourceAdapter(instanceId);
   }
   
-  public Group getGroupOfInstance(String instanceId){
-    
-    List<Group> groupList = groups.getGroups();
-    
-    for (Iterator iterator = groupList.iterator(); iterator.hasNext();) {
-      Group group = (Group) iterator.next();
-      List<ResourceAdapter> instances = group.getResources();
-      for (Iterator iterator2 = instances.iterator(); iterator2.hasNext();) {
-        ResourceAdapter resourceAdapter = (ResourceAdapter) iterator2.next();
-        if(resourceAdapter.getId().compareTo(instanceId)==0)
-          return group;
-      }
-    }
-    
-    return null;
-    
-  }
+  
+ 
 
   public void deleteResource(String resourceAdapterId) {
     adapterInstancesDatabase.deleteResourceAdapter(resourceAdapterId);
-    Group groupOfResourceAdapter = getGroupOfInstance(resourceAdapterId);
-    groupOfResourceAdapter.deleteResource(resourceAdapterId);
   }
   
   
@@ -203,6 +179,15 @@ private static ResourceAdapterManager manager=null;
 			
 		}
 		return classes;
+	}
+
+	public List<ResourceAdapter> getResourceAdapterInstancesById(
+			List<String> resourceIds) {
+		List<ResourceAdapter> resources = new LinkedList<>();
+		for(String resourceId:resourceIds){
+			resources.add(adapterInstancesDatabase.getResourceAdapter(resourceId));
+		}
+		return resources;
 	}
   
   

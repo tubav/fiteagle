@@ -1,6 +1,10 @@
 package org.fiteagle.core.aaa.x509;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -12,14 +16,17 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
+import net.iharder.Base64;
+
 import org.fiteagle.core.util.URN;
 import org.fiteagle.core.util.URN.URNParsingException;
 
-import net.iharder.Base64;
-
 public class X509Util {
   
-  public static String getUserNameFromX509Certificate(X509Certificate cert) throws CertificateParsingException {
+private static String prefix = "-----BEGIN CERTIFICATE-----\n";
+private static String suffix = "\n-----END CERTIFICATE-----\n";
+
+public static String getUserNameFromX509Certificate(X509Certificate cert) throws CertificateParsingException {
     String username = "";
     URN urn = null;
     try{
@@ -94,8 +101,7 @@ public class X509Util {
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
     
     bout.write(Base64.encodeBytesToBytes(cert.getEncoded(), 0, cert.getEncoded().length, Base64.NO_OPTIONS));
-    String prefix = "-----BEGIN CERTIFICATE-----\n";
-    String suffix = "\n-----END CERTIFICATE-----\n";
+   
     String encodedCert = new String(bout.toByteArray());
     bout.close();
     int i = 0;
@@ -124,4 +130,43 @@ public class X509Util {
   public static boolean isSelfSigned(X509Certificate xCert) {
 	    return xCert.getIssuerX500Principal().equals(xCert.getSubjectX500Principal());
 	  }
+  
+  public static X509Certificate buildX509Certificate(String certString) {
+	  	if(!certString.startsWith(prefix)){
+	  		certString = prefix + certString + suffix;
+	  	}
+		CertificateFactory certificateFactory = getCertifcateFactory();
+		return getX509Certificate(certificateFactory, certString);
+	}
+  
+  private static CertificateFactory getCertifcateFactory() {
+		try {
+			return CertificateFactory.getInstance("X.509");
+		} catch (CertificateException e) {
+			throw new CertificateFactoryNotCreatedException();
+		}
+	}
+  
+  private static X509Certificate getX509Certificate(CertificateFactory cf,
+			String certString) {
+		InputStream in = new ByteArrayInputStream(certString.getBytes());
+		try {
+			return (X509Certificate) cf.generateCertificate(in);
+		} catch (Exception e) {
+			throw new GenerateCertificateException();
+		}
+	}
+  
+ 
+  
+	public static class CertificateFactoryNotCreatedException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+
+	}
+	
+	public static class GenerateCertificateException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+	}
+
+
 }

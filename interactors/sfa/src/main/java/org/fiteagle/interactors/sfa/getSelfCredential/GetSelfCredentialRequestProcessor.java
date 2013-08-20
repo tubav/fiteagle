@@ -2,7 +2,7 @@ package org.fiteagle.interactors.sfa.getSelfCredential;
 
 import java.security.cert.X509Certificate;
 
-import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -42,8 +42,8 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor {
 
 	private X509Certificate getUserCertificate(String cert) {
 		String theCertificate = parseSentCertificate(cert);
-		CertificateAuthority ca = CertificateAuthority.getInstance();
-		X509Certificate xCert = ca.buildX509Certificate(theCertificate);
+	
+		X509Certificate xCert = X509Util.buildX509Certificate(theCertificate);
 		return xCert;
 	}
 

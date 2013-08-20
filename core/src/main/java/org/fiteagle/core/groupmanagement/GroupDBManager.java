@@ -51,6 +51,9 @@ public class GroupDBManager {
     }
     return gm;
   }
+public void updateGroup(Group g3) {
+	groupDatabase.updateGroup(g3);
+}
   
   
 }

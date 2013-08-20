@@ -8,27 +8,32 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Group {
   
   private String groupId;
   private String groupOwnerId;
   @JsonIgnore
-  private List<ResourceAdapter> resources;
+  private List<String> resources;
   @JsonIgnore
   private List<String> authorizedUsers;
 
+  @JsonIgnore
+  private Logger log = LoggerFactory.getLogger(getClass());
 
   public Group(String groupId, String groupOwnerId) {
     this.groupId = groupId;
     this.groupOwnerId = groupOwnerId;
+    this.resources = new LinkedList<>();
   }
-
-  public Group(String urn, String groupOwnerId, List<ResourceAdapter> resourcesList) {
-    this.groupId=urn;
-    this.groupOwnerId=groupOwnerId;
-    this.resources=resourcesList;
-  }
+//
+//  public Group(String urn, String groupOwnerId, List<ResourceAdapter> resourcesList) {
+//    this.groupId=urn;
+//    this.groupOwnerId=groupOwnerId;
+//    this.resources=resourcesList;
+//  }
 
   public String getGroupId() {
     return groupId;
@@ -46,11 +51,11 @@ public class Group {
     this.groupOwnerId = groupOwnerId;
   }
   
-  public List<ResourceAdapter> getResources() {
+  public List<String> getResources() {
     return resources;
   }
   
-  public void setResources(List<ResourceAdapter> resources) {
+  public void setResources(List<String> resources) {
     this.resources = resources;
   }
   
@@ -70,38 +75,17 @@ public class Group {
   }
   public void addResource(ResourceAdapter resource) {
     if(this.resources == null)
-      this.resources = new ArrayList<ResourceAdapter>();
-    this.resources.add(resource);
+      this.resources = new ArrayList<String>();
+    this.resources.add(resource.getId());
   }
   
   public boolean contains(String resourceAdapterId){
-    for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
-      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
-      if (resourceAdapter.getId().compareTo(resourceAdapterId)==0)
-        return true;
-    }
-    return false;
+    return resources.contains(resourceAdapterId);
   }
   
-  public ResourceAdapter getResource(String adapterId){
-    for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
-      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
-      if (resourceAdapter.getId().compareTo(adapterId)==0)
-        return resourceAdapter;
-    }
-    return null;
-  }
   
   public void deleteResource(String adapterId){
-    
-    Iterator iterator = resources.iterator();
-    while (iterator.hasNext()) {
-      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
-      if (resourceAdapter.getId().compareTo(adapterId)==0){
-        resources.remove(resourceAdapter);
-        return;
-      }
-    }
+    resources.remove(adapterId);
     
   }
   

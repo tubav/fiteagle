@@ -8,6 +8,8 @@ import java.util.List;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -55,13 +57,13 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor{
     
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
-    Group group = resourceManager.getGroup(urns.get(0));
+    Group group = GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
     
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     ProvisionValue resultValue = new ProvisionValue();
     
-    List<ResourceAdapter> resources = group.getResources();
-    
+    List<String> resourceIds = group.getResources();
+    List<ResourceAdapter> resources = resourceManager.getResourceAdapterInstancesById(resourceIds);
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       if(resourceAdapter.getStatus().compareToIgnoreCase(GENISliverAllocationState.geni_allocated.toString())==0){

@@ -14,6 +14,8 @@ import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -43,7 +45,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
     String value = "";
     String output = "";
     AMCode returnCode = null;
-    
+    URN sliceURN = new URN(urn);
     Authorization auth = new Authorization();
     
     auth.checkCredentialsList(credentials);
@@ -87,8 +89,10 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
       
     }
     
-    Group group = new Group(urn, groupOwnerId, resourcesList);
-    resourceManager.addGroup(group);
+    Group group = GroupDBManager.getInstance().getGroup(sliceURN.getSubjectAtDomain());
+    for(ResourceAdapter rs: resourcesList){
+    	group.addResource(rs);
+    }
     
     returnCode = getSuccessReturnCode();
     
@@ -102,10 +106,11 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor{
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     AllocateValue resultValue = new AllocateValue();
     ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
-    Group group = resourceManager.getGroup(urn);
+    Group group = GroupDBManager.getInstance().getGroup(new URN(urn).getSubjectAtDomain());
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
-    List<ResourceAdapter> resources = group.getResources();
+    List<String> resourceIds = group.getResources();
+    List<ResourceAdapter> resources = resourceManager.getResourceAdapterInstancesById(resourceIds);
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();

@@ -94,7 +94,7 @@ public class CredentialFactoryWorker {
 		}
 		String returnString;
 		try {
-			returnString = X509Util.getCertficateEncoded(returnCert);
+			returnString = X509Util.getCertificateBodyEncoded(returnCert);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage());
@@ -122,7 +122,7 @@ public class CredentialFactoryWorker {
 	public void setTargetGID() {
 		try {
 			credential.setTargetGid(X509Util
-					.getCertficateEncoded(targetCertificate));
+					.getCertificateBodyEncoded(targetCertificate));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);

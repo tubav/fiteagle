@@ -11,5 +11,7 @@ public interface GroupPersistable {
   public List<Group> getGroups();
   
   public void deleteGroup(String groupId);
+
+  public void updateGroup(Group g3);
   
 }

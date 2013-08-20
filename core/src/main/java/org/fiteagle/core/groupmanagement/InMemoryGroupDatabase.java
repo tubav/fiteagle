@@ -28,6 +28,12 @@ public class InMemoryGroupDatabase implements GroupPersistable {
   public void deleteGroup(String groupId) {
     groupMap.remove(groupId);
   }
+
+@Override
+public void updateGroup(Group g3) {
+	
+	groupMap.put(g3.getGroupId(), g3);
+}
   
   
 }

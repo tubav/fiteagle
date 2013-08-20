@@ -7,16 +7,14 @@ import java.util.List;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
-import org.fiteagle.interactors.sfa.allocate.AllocateValue;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
-import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
-import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
@@ -96,10 +94,11 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	  SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     DescribeValue resultValue = new DescribeValue();
     ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
-    Group group = resourceManager.getGroup(urns.get(0));
+    Group group = GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
-    List<ResourceAdapter> resources = group.getResources();
+    List<String> resourceIds = group.getResources();
+    List<ResourceAdapter> resources = resourceManager.getResourceAdapterInstancesById(resourceIds);
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();

@@ -258,7 +258,13 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     } catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException e) {
       throw new DatabaseException(e.getMessage());
     }	
-		return User.createUserWithExistingPassword(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
+    	if(passwordHash!=null){
+    		return User.createUserWithExistingPassword(username, firstname, lastname, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
+    	}else{
+    		User u =  User.createUser(username);
+    		u.setPublicKeys(publicKeys);
+    		return u;
+    	}
 	}
 
   private List<UserPublicKey> getPublicKeysFromResultSet(ResultSet rs) throws SQLException, InvalidKeySpecException, NoSuchAlgorithmException, IOException {

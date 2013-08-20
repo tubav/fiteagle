@@ -8,6 +8,7 @@ import java.util.List;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -69,15 +70,13 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
     String instaNceId = translator.getIdFromSliverUrn(urns.get(0)); 
-    Group group = resourceManager.getGroupOfInstance(instaNceId);
+    //Group group = GroupDBManager.getInstance().getGroup(instaNceId);
 
     for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
       String urn = (String) iterator.next();
       String id=translator.getIdFromSliverUrn(urn);
-      if(!group.contains(id))
-        throw new RuntimeException();//TODO: define this exception concrete
-
-      ResourceAdapter resourceAdapter = group.getResource(id);
+     
+      ResourceAdapter resourceAdapter = resourceManager.getResourceAdapterInstance(instaNceId);
       GeniSlivers tmpSliver = new GeniSlivers();
       tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(resourceAdapter.getId(),urn));
       tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));//TODO: set right status information over translator(implement this in translator)
@@ -89,7 +88,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
     }
     
       StatusValue statusResultValue = new StatusValue();
-      statusResultValue.setGeni_urn(group.getGroupId());
+   
       statusResultValue.setGeni_slivers(slivers );
       
       return statusResultValue;
