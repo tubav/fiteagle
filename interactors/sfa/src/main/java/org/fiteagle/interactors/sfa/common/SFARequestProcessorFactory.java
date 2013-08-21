@@ -7,6 +7,7 @@ import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
@@ -38,6 +39,7 @@ public class SFARequestProcessorFactory {
 			result = (E) new ListResourceRequestProcessor();
 			break;
 		case PERFORM_OPERATIONAL_ACTION:
+			result = (E) new PerformOperationalActionRequestProcessor();
 			break;
 		case PROVISION:
 		  result = (E) new ProvisionRequestProcessor();

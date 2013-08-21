@@ -31,6 +31,7 @@ import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.delete.DeleteOptions;
 import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
@@ -174,14 +175,29 @@ public GeniAMHandler() {
       
     }
     
+    if (to.getClass().isAssignableFrom(PerformOperationalActionOptions.class)){
+        return parsePerformOperationalActionOptions(from);
+        
+      }
+    
     throw new ParsingException();
 
   }
 
-  private Object parseDeleteOptions(Object from) {
+  private Object parsePerformOperationalActionOptions(Object from) {
+	  XmlRpcStruct performOperationalActionStruct = (XmlRpcStruct) from;
+	  PerformOperationalActionOptions performOperationalActionOptions = new PerformOperationalActionOptions();
+	  if(performOperationalActionStruct.get("geni_best_effort")!=null){
+		  GeniBestEffortOption geni_best_effort = new GeniBestEffortOption(performOperationalActionStruct.getBoolean("geni_best_effort"));
+		  performOperationalActionOptions.setGeni_best_effort(geni_best_effort);
+	  }
+	  return performOperationalActionOptions;
+}
+
+private Object parseDeleteOptions(Object from) {
     XmlRpcStruct deleteOptionsStruct = (XmlRpcStruct) from;
     DeleteOptions deleteOptions = new DeleteOptions();
-    if(deleteOptionsStruct.getString("geni_best_effort")!=null && deleteOptionsStruct.getString("geni_best_effort").compareTo("")!=0){
+    if(deleteOptionsStruct.getString("geni_best_effort")!=null && deleteOptionsStruct.getString("geni_best_effort").compareTo("")!=0){//TODO: test this!
       GeniBestEffortOption geni_best_effort = new GeniBestEffortOption(deleteOptionsStruct.getBoolean("geni_best_effort"));
       deleteOptions.setGeni_best_effort(geni_best_effort);
     }

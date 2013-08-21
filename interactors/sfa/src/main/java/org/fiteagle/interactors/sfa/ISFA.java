@@ -16,6 +16,8 @@ import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionOptions;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
@@ -54,5 +56,7 @@ public interface ISFA {
       throws IOException;
   HashMap<String, Object> getCredential();
   HashMap<String, Object> register(HashMap<String, Object> registerParameters);
+PerformOperationalActionResult performOperationalAction(ArrayList<String> urns, ListCredentials credentials, String action,	PerformOperationalActionOptions performOpActionOptions)
+		throws IOException;
 
 }
