@@ -31,7 +31,6 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
   
   private DeleteResult getResult(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions) {
     
-    String value = "";
     String output = "";
     AMCode returnCode = null;
     
@@ -79,7 +78,6 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
         //TODO: expires????!!!
         //TODO error(optional)??
         slivers.add(tmpSliver);
-        
       }
       
     } else{

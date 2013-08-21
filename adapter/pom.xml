@@ -16,7 +16,8 @@
 		<module>stopwatch</module>
 		<module>common</module>
 		<module>sshdeployadapter</module>
-	</modules>
+    <module>attenuatoradapter</module>
+  </modules>
 
    <repositories>
     <repository>

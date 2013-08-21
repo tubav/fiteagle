@@ -30,6 +30,9 @@ import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionOptions;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionRequestProcessor;
+import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
@@ -188,6 +191,16 @@ public class SFAInteractor_v3 implements ISFA {
     DeleteRequestProcessor deleteRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.DELETE);
     DeleteResult result = deleteRequestProcessor.processRequest(urns, credentials, deleteOptions);
     
+    return result;
+    
+  }
+  
+  
+  @Override
+  public PerformOperationalActionResult performOperationalAction(ArrayList<String> urns, ListCredentials credentials, String action, PerformOperationalActionOptions performOpActionOptions) throws IOException {
+    SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    PerformOperationalActionRequestProcessor performOperationalActionProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.PERFORM_OPERATIONAL_ACTION);
+    PerformOperationalActionResult result = performOperationalActionProcessor.processRequest(urns, credentials, action, performOpActionOptions);
     return result;
     
   }
