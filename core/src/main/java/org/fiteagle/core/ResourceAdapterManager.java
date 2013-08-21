@@ -56,6 +56,8 @@ private static ResourceAdapterManager manager=null;
 					List<ResourceAdapter> resourceAdapters = resourceAdapter.getJavaInstances();
 					resourceAdapter.setLoaded(true);
 					adapterDatabase.addResourceAdapters(resourceAdapters);
+					if(resourceAdapter.isExclusive())
+						adapterInstancesDatabase.addResourceAdapters(resourceAdapters);
 				}
 			} catch (InstantiationException e) {
 				continue;

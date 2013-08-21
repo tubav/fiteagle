@@ -16,6 +16,7 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable{
   private String sshKey="";
   
   private SSHDeployAdapterConfiguration sshDeployAdapterConfig=SSHDeployAdapterConfiguration.getInstance();
+private String port;
   
   public SSHDeployAdapter(){
 	  
@@ -27,17 +28,20 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable{
 //	  this.setHardwareType(hardwareType); //TODO get hardware type from configuration
   }
   
-  public SSHDeployAdapter(String ip, String username, String password, String sshKey){
+  public SSHDeployAdapter(String ip,String port, String username, String password, String sshKey){
 	    super();
 	    this.setType("org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter");
 	    this.setIp(ip);
+	    this.setPort(port);
 	    this.setUsername(username);
 	    this.setPassword(password);
 	    this.setSshKey(sshKey);
-//	    this.create();
 	  }
 
-  @Override
+  
+
+
+@Override
   public void start() {
     // TODO Auto-generated method stub
     
@@ -80,9 +84,21 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable{
 public String getIp() {
 	return ip;
 }
+
+
 @Override
 public void setIp(String ip) {
 	this.ip = ip;
+}
+
+@Override
+public String getPort(){
+	return this.port;
+}
+@Override
+public void setPort(String port) {
+	this.port = port;
+	
 }
 @Override
 public String getUsername() {
@@ -115,6 +131,7 @@ public List<ResourceAdapter> getJavaInstances() {
 	
 	
 	String[] ips = null;
+	String[] ports = null;
 	String[] usernames = null;
 	String[] passwords = null;
 	String[] sshKeys = null;
@@ -157,13 +174,16 @@ public List<ResourceAdapter> getJavaInstances() {
 	if (sshDeployAdapterConfig.getHardwareTypes()!=null) {
 		hardwareTypes = sshDeployAdapterConfig.getHardwareTypes().split(",");
 	}
+	if (sshDeployAdapterConfig.getPorts()!=null) {
+		ports = sshDeployAdapterConfig.getPorts().split(",");
+	}
 	
 	
 	if(!(ips.length==usernames.length && usernames.length==passwords.length)&&(!(ips.length==usernames.length && usernames.length==sshKeys.length)))
 	return resourceAdapters;
 	
 	for (int i = 0; i < usernames.length; i++) {
-		SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(ips[i].trim(), usernames[i].trim(), passwords[i].trim(), sshKeys[i].trim());
+		SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(ips[i].trim(),ports[i].trim(), usernames[i].trim(), passwords[i].trim(), sshKeys[i].trim());
 		
 		if(hardwareTypes!=null && i<hardwareTypes.length)
 		sshDeployAdapter.setHardwareType(hardwareTypes[i].trim());

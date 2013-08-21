@@ -9,6 +9,10 @@ public interface SSHAccessable {
 	public String getIp();
 
 	public void setIp(String ip);
+	
+	public String getPort();
+	
+	public void setPort(String port);
 
 	public String getUsername();
 

@@ -148,6 +148,20 @@ public class SSHDeployAdapterConfiguration {
 	public void removeLongitues() {
 		preferences.remove("longitudes");
 	}
+
+
+	public String getPorts() {
+		return getPreference("ports");
+	}
+	
+
+	public void removePorts() {
+		preferences.remove("ports");
+	}
+	
+	public void setPorts(String ports){
+		addPreference("ports", ports);
+	}
 	
 	
 

@@ -118,8 +118,8 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 
 	private List<String> getResourceIdsFromResultset(ResultSet result) throws SQLException {
 		List<String> resourceIds = new LinkedList<>();	
-		log.info(result.getString(3));
-		resourceIds.add(result.getString(3));
+		if(result.getString(3)!=null)
+				resourceIds.add(result.getString(3));
 		while(result.next()){
 			
 			resourceIds.add(result.getString(3));
