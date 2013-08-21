@@ -71,8 +71,7 @@ public class PerformOperationalActionRequestProcessor extends
 				.getInstance();
 		ArrayList<GeniSliversOperationalStatus> slivers = new ArrayList<GeniSliversOperationalStatus>();
 		if (urns.get(0).contains("+slice+")) {
-			Group group = GroupDBManager.getInstance().getGroup(
-					new URN(urns.get(0)).getSubjectAtDomain());
+			Group group = GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
 			List<String> resourceAdapterInstanceIds = group.getResources();
 			List<ResourceAdapter> resourceAdapterInstances = resourceManager
 					.getResourceAdapterInstancesById(resourceAdapterInstanceIds);
@@ -100,14 +99,10 @@ public class PerformOperationalActionRequestProcessor extends
 				slivers.add(tmpSliver);
 			}
 		} else {
-			// TODO völlig falsch!!!
-			Group group = GroupDBManager.getInstance().getGroup(new URN(translator.getIdFromSliverUrn(urns.get(0))).getSubjectAtDomain());
 
 			for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
 				String urn = (String) iterator.next();
 				String id = translator.getIdFromSliverUrn(urn);
-				if (!group.contains(id))
-					throw new RuntimeException();// TODO: define this exception concrete
 				
 				ResourceAdapter resourceAdapter = resourceManager.getResourceAdapterInstance(id);
 				
