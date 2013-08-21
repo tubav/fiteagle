@@ -3,6 +3,7 @@ package org.fiteagle.adapter.attenuatoradapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 
@@ -33,12 +34,7 @@ public class AttenuatorAdapter extends ResourceAdapter{
 		
 	}
 
-	@Override
-	public void configure() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void release() {
 		// TODO Auto-generated method stub
@@ -66,6 +62,12 @@ public class AttenuatorAdapter extends ResourceAdapter{
 	@Override
 	public void setLoaded(boolean loaded) {
 		this.loaded=loaded;
+	}
+
+	@Override
+	public void configure(AdapterConfiguration configuration) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

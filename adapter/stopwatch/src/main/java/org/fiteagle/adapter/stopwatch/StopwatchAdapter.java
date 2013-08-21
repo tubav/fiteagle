@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+import org.fiteagle.adapter.common.AdapterConfiguration;
 //import org.fiteagle.adapter.common.InMemoryResourceDatabase;
 import org.fiteagle.adapter.common.ResourceAdapter;
 
@@ -45,11 +47,7 @@ public class StopwatchAdapter extends ResourceAdapter {
 	
 	}
 
-	@Override
-	public void configure() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void release() {
@@ -73,6 +71,10 @@ public class StopwatchAdapter extends ResourceAdapter {
 	@Override
 	public void setLoaded(boolean loaded) {
 		this.loaded=loaded;
+	}
+	@Override
+	public void configure(AdapterConfiguration configuration) {
+		//TODO do something
 	}
 
 

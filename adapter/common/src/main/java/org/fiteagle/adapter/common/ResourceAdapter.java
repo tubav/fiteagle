@@ -10,7 +10,7 @@ public abstract class ResourceAdapter {
 	public abstract void start();
 	public abstract void stop();
 	public abstract void create();
-	public abstract void configure();
+	public abstract void configure(AdapterConfiguration configuration);
 	public abstract void release();
 	public abstract List<ResourceAdapter> getJavaInstances();
 	

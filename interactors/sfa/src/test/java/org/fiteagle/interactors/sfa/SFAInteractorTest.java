@@ -29,6 +29,7 @@ import org.fiteagle.interactors.sfa.getversion.GetVersionResult;
 import org.fiteagle.interactors.sfa.getversion.GetVersionValue;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourcesResult;
+import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.Property;
@@ -186,14 +187,14 @@ public class SFAInteractorTest {
     Assert.assertEquals(0, allocateResult.getCode().getGeni_code());
     
   }
-	@Ignore
+	
 	@Test
   public void testProvision() throws IOException {
     ArrayList<String> urns = new ArrayList<String>();
     urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
     this.testAllocate();
     
-    ProvisionResult provisionResult = this.sfaInteractor.provision(urns, getListCredentials(), null);
+    ProvisionResult provisionResult = this.sfaInteractor.provision(urns, getListCredentials(), new ProvisionOptions());
     
     Assert.assertEquals(0, provisionResult.getCode().getGeni_code());
   }

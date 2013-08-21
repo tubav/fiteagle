@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 
@@ -17,6 +18,7 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable{
   
   private SSHDeployAdapterConfiguration sshDeployAdapterConfig=SSHDeployAdapterConfiguration.getInstance();
 private String port;
+private AdapterConfiguration adapterConfiguration;
   
   public SSHDeployAdapter(){
 	  
@@ -55,12 +57,6 @@ private String port;
 
   @Override
   public void create() {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void configure() {
     // TODO Auto-generated method stub
     
   }
@@ -254,6 +250,12 @@ public boolean isLoaded() {
 @Override
 public void setLoaded(boolean loaded) {
 	this.loaded=loaded;
+}
+
+@Override
+public void configure(AdapterConfiguration configuration) {
+	this.adapterConfiguration = configuration;
+	
 }
 
 }
