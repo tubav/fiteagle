@@ -1,22 +1,14 @@
 .hidden{display:none}
 body{
 	padding:0 !important;
-<<<<<<< HEAD
-	background: #f7f7f7;
-	background: -moz-linear-gradient(top, #f7f7f7, #aaaaaa);
-	background: -webkit-linear-gradient(top, #f7f7f7, #aaaaaa);
-	background: -ms-linear-gradient(top, #f7f7f7, #aaaaaa);
-	background: -o-linear-gradient(top, #f7f7f7, #aaaaaa);
-	background: linear-gradient(top, #f7f7f7, #aaaaaa);
-	background-size: 100%;
-=======
+
 	background: #fff;
 	background: -moz-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -webkit-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -ms-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: -o-linear-gradient(top, #f7f7f7, #e1e1e1);
 	background: linear-gradient(top, #f7f7f7, #e1e1e1);
->>>>>>> 9fca92614c83d65054fd85b3d9b74e40cbd6e0db
+
 	color: #373737 !important;
 	font-size: 16px !important;
 	line-height: 1.5 !important;

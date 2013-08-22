@@ -112,7 +112,7 @@ function(require,Validation,Registration,Utils,Messages){
       */  
 	Login.load = function(){
 			//console.log("loading Login Page...");
-			var url = "html/login.html";
+			var url = "login.html";
 
 			$("#navigation").load(url + " #navs",
 				function(){

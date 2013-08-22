@@ -125,7 +125,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		
 	Main.load = function(){
 			console.log("loading main Page...");
-			var url = "html/main.html";
+			var url = "main.html";
 			$("#navigation").load(url + " #toolbar",
 				function(){
 					$("#main").load(url + " #mainArea",
