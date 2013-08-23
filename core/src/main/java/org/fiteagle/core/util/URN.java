@@ -1,6 +1,7 @@
 package org.fiteagle.core.util;
 
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.userdatabase.User;
 
 public class URN {
 
@@ -91,6 +92,12 @@ public class URN {
 	public static URN getURNFromGroup(Group g){
 		String[] split = g.getGroupId().split("@");
 		String returnString = prefix + "+" + split[1] + "+slice+" + split[0] ;
+		return new URN(returnString);
+	}
+	
+	public static URN getURNFromUser(User u){
+		String[] split = u.getUsername().split("@");
+		String returnString = prefix + "+" + split[1] + "+user+" + split[0] ;
 		return new URN(returnString);
 	}
 }

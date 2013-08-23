@@ -207,6 +207,127 @@ public class SSHConnector {
 		
 		
 	}
+
+	public void deleteUser(String newUser) {
+		try {
+			Session session = client.startSession();
+			try{
+			
+				Command command = session.exec("echo "+password+"| sudo -S userdel -r "+newUser+"" );
+				System.out.println(IOUtils.readFully(command.getInputStream()).toString());
+				command.join(5, TimeUnit.SECONDS);
+				System.out.println("\n **exit status: "+command.getExitStatus());
+				
+				
+			
+			}finally{
+			session.close();
+			}
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+
+	public void deleteUserDirectory(String newUser) {
+		try {
+			Session session = client.startSession();
+			try{
+			
+				Command command = session.exec("echo "+password+"| sudo -S rm -R /home/"+newUser+"" );
+				System.out.println(IOUtils.readFully(command.getInputStream()).toString());
+				command.join(5, TimeUnit.SECONDS);
+				System.out.println("\n **exit status: "+command.getExitStatus());
+				
+				
+			
+			}finally{
+			session.close();
+			}
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+
+	public void lockAccount(String newUser) {
+		try {
+			Session session = client.startSession();
+			try{
+			
+				Command command = session.exec("echo "+password+"| sudo -S passwd -l "+newUser+"" );
+				System.out.println(IOUtils.readFully(command.getInputStream()).toString());
+				command.join(5, TimeUnit.SECONDS);
+				System.out.println("\n **exit status: "+command.getExitStatus());
+				
+				
+			
+			}finally{
+			session.close();
+			}
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+
+	public void killAllUserProcesses(String newUser) {
+		try {
+			Session session = client.startSession();
+			try{
+			
+				Command command = session.exec("echo "+password+"| sudo -S killall -KILL -u "+newUser+"" );
+				System.out.println(IOUtils.readFully(command.getInputStream()).toString());
+				command.join(5, TimeUnit.SECONDS);
+				System.out.println("\n **exit status: "+command.getExitStatus());
+				
+				
+			
+			}finally{
+			session.close();
+			}
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	}
 	
 	
 }

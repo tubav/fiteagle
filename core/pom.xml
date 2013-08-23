@@ -11,7 +11,7 @@
 	<build>
 		<!-- GIT COMMIT ID PLUGIN CONFIGURATION -->
 
-        
+       
 		<plugins>
 		<plugin>
             <groupId>org.apache.maven.plugins</groupId>

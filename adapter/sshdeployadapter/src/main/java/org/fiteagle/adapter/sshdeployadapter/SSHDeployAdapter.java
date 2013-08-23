@@ -71,7 +71,18 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable {
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+	
+		SSHConnector connector = new SSHConnector(ip, port, username, password, adapterConfiguration);
+		for (AdapterUser user : adapterConfiguration.getUsers()) {
+			String newUser = user.getUsername();
+			connector.connect();
+			connector.lockAccount(newUser);
+			connector.killAllUserProcesses(newUser);
+			connector.deleteUser(newUser);
+			connector.deleteUserDirectory(newUser);
+			connector.disconnect();
+			
+	}
 
 	}
 
