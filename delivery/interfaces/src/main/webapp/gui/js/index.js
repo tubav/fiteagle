@@ -3,31 +3,32 @@ requirejs.config({
     'bootstrap'	: ['jquery','cookie'],
     'history' : ['jquery'],
     'ajaxify' : ['history'],
-	'prettyCheckable' : ['jquery']
+	'prettyCheckable' : ['jquery'],
+	'scrollTo' : ['jquery']
   }
 });
 
-define(['jquery','bootstrap','loginPage','mainPage','utils', 'history', 'ajaxify'], 
+define(['jquery','bootstrap','loginPage','mainPage','utils', 'history', 'ajaxify','fileSaver'], 
 
 function($,Bootstrap,LoginPage,MainPage,Utils){
 					
-	$.ajaxSetup({cache:false});		
+	$.ajaxSetup({cache:false});	
 
-		if(LoginPage.isUserLoggedIn()){
-			MainPage.load();
-		}else{
-			var rememberedUser = Login.getRememberedUsername();
-			//console.log("REMEMBERED: " + rememberedUser);
-			if(rememberedUser){
-				var user = Server.getUser(rememberedUser);
-				if(user){
-					Utils.setCurrentUser(user);
-					MainPage.load();
-				}
-			}else{
-				LoginPage.load();		
+	if(LoginPage.isUserLoggedIn()){
+		MainPage.load();
+	}else{
+		var rememberedUser = Login.getRememberedUsername();
+		//console.log("REMEMBERED: " + rememberedUser);
+		if(rememberedUser){
+			var user = Server.getUser(rememberedUser);
+			if(user){
+				Utils.setCurrentUser(user);
+				MainPage.load();
 			}
+		}else{
+			LoginPage.load();		
 		}
+	}
 	
 	// new Event listener for end of the window resizing. Called : "resizeEnd"	
 	 $(window).resize(function() {
