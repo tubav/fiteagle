@@ -45,7 +45,6 @@ public abstract class ResourceAdapter {
 	}
 	
 	public ResourceAdapter() {
-	  ObjID objId = new ObjID();
 	  this.setId(UUID.randomUUID().toString());
 	  this.setStatus(ResourceAdapterStatus.Available);
   }
