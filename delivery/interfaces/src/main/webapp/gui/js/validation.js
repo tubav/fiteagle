@@ -36,7 +36,7 @@ function(){
 	* @function
 	**/
 	Validation._isUsername = function(username){
-		var usernameRegex = /^[a-zA-Z0-9][a-zA-Z0-9_.]{5,15}$/;
+		var usernameRegex = /^[a-zA-Z0-9][a-zA-Z0-9_.@]{5,15}$/;
 		return (usernameRegex.test(username));
 	};
 	
