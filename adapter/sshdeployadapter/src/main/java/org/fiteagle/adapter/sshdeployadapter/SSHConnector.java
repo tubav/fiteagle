@@ -57,9 +57,6 @@ public class SSHConnector {
 			e.printStackTrace();
 		}
 		
-		
-		
-		
 	}
 
 	public void createUserAccount(String newUser) {

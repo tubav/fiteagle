@@ -1,6 +1,7 @@
 define(['validation','utils','mainPage','messages'],
 function(Validation, Utils, MainPage,Messages){
 
+
 	Registration = {};
 	domain = "";
 	/**
@@ -291,6 +292,7 @@ function(Validation, Utils, MainPage,Messages){
 		Utils.addOnEnterClickEvent('#inputConfirmPassword',"#registerBtn");	
 		Registration.initRegistrationFormHints();
 		Registration.initRegisterNewUserButton();
+
 		Registration.getDomain();
 		Registration.setDomainInput();
 
