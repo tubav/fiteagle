@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -22,11 +20,7 @@ import java.util.jar.JarFile;
 import org.fiteagle.adapter.common.Instantiable;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
-import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.GroupPersistable;
-import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
-import org.fiteagle.core.util.ComparableTuple;
 
 public class ResourceAdapterManager {
   
