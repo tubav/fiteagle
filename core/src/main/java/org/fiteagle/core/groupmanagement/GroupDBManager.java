@@ -54,6 +54,10 @@ public class GroupDBManager {
 public void updateGroup(Group g3) {
 	groupDatabase.updateGroup(g3);
 }
+public void deleteResourceFromGroup(String resourceId) {
+	groupDatabase.deleteResourceFromGroup(resourceId);
+	
+}
   
   
 }

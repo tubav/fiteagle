@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 import org.fiteagle.adapter.common.AdapterConfiguration;
+import org.fiteagle.adapter.common.Instantiable;
 //import org.fiteagle.adapter.common.InMemoryResourceDatabase;
 import org.fiteagle.adapter.common.ResourceAdapter;
 
 
-public class StopwatchAdapter extends ResourceAdapter {
+public class StopwatchAdapter extends ResourceAdapter implements Instantiable {
 
 	private static boolean loaded = false;
 	private transient boolean runningState = false;

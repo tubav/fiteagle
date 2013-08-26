@@ -13,5 +13,7 @@ public interface GroupPersistable {
   public void deleteGroup(String groupId);
 
   public void updateGroup(Group g3);
+
+public void deleteResourceFromGroup(String resourceId);
   
 }

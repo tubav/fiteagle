@@ -12,6 +12,7 @@ import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
@@ -57,7 +58,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
     
     
     //process the correct request..
-    returnCode = getSuccessReturnCode();
+    returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
     
     result.setCode(returnCode);
     result.setValue(getResultStatusValue(urns));

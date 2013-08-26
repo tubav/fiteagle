@@ -5,17 +5,28 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.fiteagle.adapter.common.Instantiable;
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.groupmanagement.GroupPersistable;
 import org.fiteagle.core.groupmanagement.InMemoryGroupDatabase;
+import org.fiteagle.core.util.ComparableTuple;
 
 public class ResourceAdapterManager {
   
@@ -26,15 +37,15 @@ private static ResourceAdapterManager manager=null;
 
   private ResourceAdapterDatabase adapterInstancesDatabase;
   private ResourceAdapterDatabase adapterDatabase;
- 
-  
+  private ScheduledExecutorService executor;
+  private HashMap<String, ScheduledFuture<?>> expirationMap;
   private ResourceAdapterManager() {
     if (manager!=null) return;
     
     adapterInstancesDatabase = new InMemoryResourceAdapterDatabase();
     adapterDatabase = new InMemoryResourceAdapterDatabase();
-    
-    
+    executor = Executors.newScheduledThreadPool(2);
+    expirationMap = new HashMap<>();
     Class[] allClassesInPackage=null;
     try {
 		allClassesInPackage = getAllClassesInPackage(packageName);
@@ -191,7 +202,49 @@ private static ResourceAdapterManager manager=null;
 		}
 		return resources;
 	}
+
+	public void setExpires(String resourceId, Date allocationExpirationTime) {
+		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(resourceId), allocationExpirationTime.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+		expirationMap.put(resourceId,scheduler);
+	}
   
+	private class ExpirationCallback implements Runnable {
+
+		private String resourceId;
+		private String groupId;
+		public ExpirationCallback(String resourceId){
+			this.resourceId = resourceId;
+			
+		}
+		@Override
+		public void run() {
+			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
+			removeAdapterFromGroup(resourceId);
+			if(expiredAdapter instanceof Instantiable){
+				adapterInstancesDatabase.deleteResourceAdapter(resourceId);
+			}else{
+				expiredAdapter.setStatus(ResourceAdapterStatus.Available);
+			}
+			
+		}
+		
+	}
+
+	public void removeAdapterFromGroup(String resourceId) {
+		GroupDBManager.getInstance().deleteResourceFromGroup(resourceId);
+		
+		
+	}
+
+	public void renewExpirationTime(String resourceId, Date expirationTime) {
+	
+		ScheduledFuture<?> existentTimer = expirationMap.get(resourceId);
+		existentTimer.cancel(false);
+		setExpires(resourceId, expirationTime);
+		
+	}
+	
+
   
 
 //  public List<ResourceAdapter> getGroupResources(String groupId) {

@@ -19,12 +19,7 @@ public class AdapterConfiguration {
 	public void setUsers(List<AdapterUser> users) {
 		this.users = users;
 	}
-	public Date getExpirationTime() {
-		return expirationTime;
-	}
-	public void setExpirationTime(Date expirationTime) {
-		this.expirationTime = expirationTime;
-	}
+	
 	
 	
 	

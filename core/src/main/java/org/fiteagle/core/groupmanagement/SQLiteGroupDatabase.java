@@ -149,10 +149,10 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 			log.error(e.getMessage(), e);
 			throw new CouldNotDeleteGroup();
 		}
-		deleteResources(groupId);
+		deleteAllResourcesFromSingleGroup(groupId);
 	}
 
-	private void deleteResources(String groupId) {
+	private void deleteAllResourcesFromSingleGroup(String groupId) {
 		try {
 
 			Connection connection = getConnection();
@@ -204,5 +204,23 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 		}catch(CouldNotCreateGroup e2){
 			addGroup(existent);
 		}
+	}
+
+	@Override
+	public void deleteResourceFromGroup(String resourceId) {
+		try {
+
+			Connection connection = getConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("DELETE FROM Resources WHERE Resources.resourceId = ?");
+			ps.setString(1, resourceId);
+			ps.execute();
+			connection.commit();
+			connection.close();
+		} catch (SQLException e) {
+			log.error(e.getMessage(), e);
+			throw new CouldNotDeleteGroup();
+		}
+		
 	}
 }

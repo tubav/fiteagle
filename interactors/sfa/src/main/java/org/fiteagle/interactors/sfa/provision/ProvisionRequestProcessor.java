@@ -11,6 +11,7 @@ import java.util.List;
 import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.AdapterUser;
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
@@ -20,6 +21,7 @@ import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniEndTimeoption;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.GeniUser;
@@ -82,8 +84,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
 				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
 						.next();
-				if (resourceAdapter.getStatus().compareToIgnoreCase(
-						GENISliverAllocationState.geni_allocated.toString()) == 0) {
+				if (resourceAdapter.getStatus().equals(ResourceAdapterStatus.Reserved)) {
 
 					HashMap<String, Object> props = resourceAdapter
 							.getProperties();
@@ -92,8 +93,11 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 									.toString());
 					resourceAdapter.setProperties(props);
 					AdapterConfiguration config = buildAdapterConfig(provisionOptions);
-
 					resourceAdapter.configure(config);
+					
+					resourceAdapter.setExpirationTime(getExpirationDate(provisionOptions));
+					resourceManager.renewExpirationTime(resourceAdapter.getId(), resourceAdapter.getExpirationTime());
+		
 					props.put("operational_status",
 							GENISliverOperationalState.geni_ready.toString());
 					props.put("allocation_status",
@@ -101,6 +105,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 									.toString());
 					resourceAdapter.setProperties(props);
 
+					
 					GeniSlivers tmpSliver = new GeniSlivers();
 					tmpSliver.setGeni_sliver_urn(translator
 							.translateResourceIdToSliverUrn(
@@ -123,7 +128,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			RSpecContents manifestRSpec = getManifestRSpec(resources);
 			String geni_rspec = getRSpecString(manifestRSpec);
 			resultValue.setGeni_rspec(geni_rspec);
-			returnCode = getSuccessReturnCode();
+			returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
 
 			result.setCode(returnCode);
 			result.setValue(resultValue);
@@ -139,15 +144,14 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		if (provisionOptions.getGeni_users() != null)
 			config.setUsers(getAdapterUsers(provisionOptions.getGeni_users()
 					.getGeniUserList()));
-		if (provisionOptions.getGeni_end_time() != null) 
-			config.setExpirationTime(getExpirationDate(provisionOptions
-				.getGeni_end_time()));
 		
 		return config;
 	}
 
-	private Date getExpirationDate(GeniEndTimeoption geni_end_time) {
-		//TODO write parser for geni_end_time priority loooooooow
+	private Date getExpirationDate(ProvisionOptions options) {
+		if(options.getGeni_end_time() != null){
+			//TOOD parse GENI END TIME and createDATE
+		}
 			return new Date(Calendar.getInstance().getTimeInMillis()
 					+ (1000 * 60 * 60));
 	}
@@ -156,9 +160,9 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		List<AdapterUser> userList = new LinkedList<>();
 
 		for (GeniUser user : geniUserList) {
-			URN urn = new URN(user.getUrn());
+			
 			AdapterUser adapterUser = new AdapterUser();
-			adapterUser.setUsername(urn.getSubject());
+			adapterUser.setUsername(user.getUrn().getSubject());
 			adapterUser.setSshPublicKeys(user.getKeys());
 			userList.add(adapterUser);
 		}

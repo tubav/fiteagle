@@ -14,6 +14,7 @@ import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSliversOperationalStatus;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
@@ -54,7 +55,7 @@ public class PerformOperationalActionRequestProcessor extends
 
 		// TODO: process the correct request..
 
-		returnCode = getSuccessReturnCode();
+		returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
 
 		result.setCode(returnCode);
 		result.setValue(getPerformOperationalActionResultValue(urns, action));
