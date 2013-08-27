@@ -17,7 +17,8 @@
 		<module>common</module>
 		<module>sshdeployadapter</module>
     <module>attenuatoradapter</module>
-  </modules>
+    <module>QoSControl</module>
+	</modules>
 
    <repositories>
     <repository>

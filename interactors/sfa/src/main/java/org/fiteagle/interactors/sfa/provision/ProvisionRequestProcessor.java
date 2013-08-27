@@ -15,7 +15,9 @@ import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.GroupNotFound;
 import org.fiteagle.core.util.URN;
+import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -32,18 +34,29 @@ import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
-	public ProvisionResult processRequest(ArrayList<String> urns,
+	private ResourceAdapterManager resourceManager;
+
+	public ResourceAdapterManager getResourceManager() {
+		return resourceManager;
+	}
+
+	public void setResourceManager(ResourceAdapterManager resourceManager) {
+		this.resourceManager = resourceManager;
+	}
+
+	public ProvisionResult processRequest(List<String> urns,
 			ListCredentials credentials, ProvisionOptions provisionOptions) {
 		ProvisionResult result = getResult(urns, credentials, provisionOptions);
 		return result;
 	}
 
-	private ProvisionResult getResult(ArrayList<String> urns,
+	private ProvisionResult getResult(List<String> urns,
 			ListCredentials credentials, ProvisionOptions provisionOptions) {
 		String value = "";
 		String output = "";
 		AMCode returnCode = null;
 
+		ProvisionValue resultValue = new ProvisionValue();
 		Authorization auth = new Authorization();
 
 		auth.checkCredentialsList(credentials);
@@ -69,71 +82,97 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		// slice urn
 
 		if (urns.size() == 1 && urns.get(0).contains("+slice+")) {
-			SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-			ResourceAdapterManager resourceManager = ResourceAdapterManager
-					.getInstance();
-			Group group = GroupDBManager.getInstance().getGroup(
-					new URN(urns.get(0)).getSubjectAtDomain());
-
-			ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
-			ProvisionValue resultValue = new ProvisionValue();
-
-			List<String> resourceIds = group.getResources();
-			List<ResourceAdapter> resources = resourceManager
-					.getResourceAdapterInstancesById(resourceIds);
-			for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
-				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
-						.next();
-				if (resourceAdapter.getStatus().equals(ResourceAdapterStatus.Reserved)) {
-
-					HashMap<String, Object> props = resourceAdapter
-							.getProperties();
-					props.put("operational_status",
-							GENISliverOperationalState.geni_configuring
-									.toString());
-					resourceAdapter.setProperties(props);
-					AdapterConfiguration config = buildAdapterConfig(provisionOptions);
-					resourceAdapter.configure(config);
-					
-					resourceAdapter.setExpirationTime(getExpirationDate(provisionOptions));
-					resourceManager.renewExpirationTime(resourceAdapter.getId(), resourceAdapter.getExpirationTime());
-		
-					props.put("operational_status",
-							GENISliverOperationalState.geni_ready.toString());
-					props.put("allocation_status",
-							GENISliverAllocationState.geni_provisioned
-									.toString());
-					resourceAdapter.setProperties(props);
-
-					
-					GeniSlivers tmpSliver = new GeniSlivers();
-					tmpSliver.setGeni_sliver_urn(translator
-							.translateResourceIdToSliverUrn(
-									resourceAdapter.getId(), urns.get(0)));
-					tmpSliver
-							.setGeni_allocation_status((String) resourceAdapter
-									.getProperties().get("allocation_status"));
-					tmpSliver
-							.setGeni_operational_status((String) resourceAdapter
-									.getProperties().get("operational_status"));
-					tmpSliver.setGeni_expires("somewhere over the rainbow");
-					
-					slivers.add(tmpSliver);
-
-				}
-
+			boolean badArgs = false;
+			URN sliceURN = null;
+			try {
+				sliceURN = new URN(urns.get(0));
+			} catch (URNParsingException e) {
+				badArgs = true;
+				returnCode = getReturnCode(GENI_CodeEnum.BADARGS);
 			}
-			resultValue.setGeni_slivers(slivers);
+			if (!badArgs) {
+				SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+				Group group = null;
+				boolean groupExists = true;
+				try {
+					group = GroupDBManager.getInstance().getGroup(
+							sliceURN.getSubjectAtDomain());
+				} catch (GroupNotFound e) {
+					groupExists = false;
+					returnCode = getReturnCode(GENI_CodeEnum.SEARCHFAILED);
+				}
+				if (groupExists) {
+					ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
 
-			RSpecContents manifestRSpec = getManifestRSpec(resources);
-			String geni_rspec = getRSpecString(manifestRSpec);
-			resultValue.setGeni_rspec(geni_rspec);
-			returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
+					List<String> resourceIds = group.getResources();
+					List<ResourceAdapter> resources = resourceManager
+							.getResourceAdapterInstancesById(resourceIds);
+					for (Iterator iterator = resources.iterator(); iterator
+							.hasNext();) {
+						ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
+								.next();
+						if (resourceAdapter.getStatus().equals(
+								ResourceAdapterStatus.Reserved)) {
 
-			result.setCode(returnCode);
-			result.setValue(resultValue);
+							HashMap<String, Object> props = resourceAdapter
+									.getProperties();
+							props.put("operational_status",
+									GENISliverOperationalState.geni_configuring
+											.toString());
+							resourceAdapter.setProperties(props);
+							AdapterConfiguration config = buildAdapterConfig(provisionOptions);
+							resourceAdapter.configure(config);
+
+							resourceAdapter
+									.setExpirationTime(getExpirationDate(provisionOptions));
+							resourceManager.renewExpirationTime(
+									resourceAdapter.getId(),
+									resourceAdapter.getExpirationTime());
+
+							props.put("operational_status",
+									GENISliverOperationalState.geni_ready
+											.toString());
+							props.put("allocation_status",
+									GENISliverAllocationState.geni_provisioned
+											.toString());
+							resourceAdapter.setProperties(props);
+
+							GeniSlivers tmpSliver = new GeniSlivers();
+							tmpSliver.setGeni_sliver_urn(translator
+									.translateResourceIdToSliverUrn(
+											resourceAdapter.getId(),
+											urns.get(0)));
+							tmpSliver
+									.setGeni_allocation_status((String) resourceAdapter
+											.getProperties().get(
+													"allocation_status"));
+							tmpSliver
+									.setGeni_operational_status((String) resourceAdapter
+											.getProperties().get(
+													"operational_status"));
+							tmpSliver
+									.setGeni_expires("somewhere over the rainbow");
+
+							slivers.add(tmpSliver);
+
+						}
+
+					}
+
+					resultValue.setGeni_slivers(slivers);
+
+					RSpecContents manifestRSpec = getManifestRSpec(resources);
+					String geni_rspec = getRSpecString(manifestRSpec);
+					resultValue.setGeni_rspec(geni_rspec);
+					returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
+				}
+			}
+			
+		}else{
+			returnCode = getReturnCode(GENI_CodeEnum.BADARGS);
 		}
-
+		result.setCode(returnCode);
+		result.setValue(resultValue);
 		return result;
 
 	}
@@ -144,23 +183,23 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		if (provisionOptions.getGeni_users() != null)
 			config.setUsers(getAdapterUsers(provisionOptions.getGeni_users()
 					.getGeniUserList()));
-		
+
 		return config;
 	}
 
 	private Date getExpirationDate(ProvisionOptions options) {
-		if(options.getGeni_end_time() != null){
-			//TOOD parse GENI END TIME and createDATE
+		if (options.getGeni_end_time() != null) {
+			// TOOD parse GENI END TIME and createDATE
 		}
-			return new Date(Calendar.getInstance().getTimeInMillis()
-					+ (1000 * 60 * 60));
+		return new Date(Calendar.getInstance().getTimeInMillis()
+				+ (1000 * 60 * 60));
 	}
 
 	private List<AdapterUser> getAdapterUsers(ArrayList<GeniUser> geniUserList) {
 		List<AdapterUser> userList = new LinkedList<>();
 
 		for (GeniUser user : geniUserList) {
-			
+
 			AdapterUser adapterUser = new AdapterUser();
 			adapterUser.setUsername(user.getUrn().getSubject());
 			adapterUser.setSshPublicKeys(user.getKeys());

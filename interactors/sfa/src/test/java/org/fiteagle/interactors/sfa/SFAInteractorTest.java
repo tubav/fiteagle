@@ -7,7 +7,6 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;

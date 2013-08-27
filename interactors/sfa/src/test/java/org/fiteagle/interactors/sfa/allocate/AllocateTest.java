@@ -62,20 +62,14 @@ public class AllocateTest {
 
 	private void buildMockObjects() {
 		node = EasyMock.createMock(RSpecContents.class);
-//		
 		resourceAdapterManager = EasyMock.createMock(ResourceAdapterManager.class);
-//		
-//	
-//		
-//		
-//	
-//		
 		resourceAdapterManager.addResourceAdapterInstance((ResourceAdapter) EasyMock.anyObject());
 		EasyMock.expectLastCall();
 		ResourceAdapter adapter = new StopwatchAdapter();
 		adapter.setExclusive(true);
 		Date allocationExpirationTime = Calendar.getInstance().getTime();
-		allocationExpirationTime.setTime(allocationExpirationTime.getTime() + 1 * 1000 * 60);
+		allocationExpirationTime
+				.setTime(allocationExpirationTime.getTime() + 1 * 1000 * 60);
 		adapter.setExpirationTime(allocationExpirationTime);
 		List<ResourceAdapter> resourceAdapters = new LinkedList<>();
 		resourceAdapters.add(adapter);

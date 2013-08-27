@@ -45,7 +45,9 @@ public class SFARequestProcessorFactory {
 			result = (E) new PerformOperationalActionRequestProcessor();
 			break;
 		case PROVISION:
-		  result = (E) new ProvisionRequestProcessor();
+		  ProvisionRequestProcessor provisionRequestProcessor =  new ProvisionRequestProcessor();
+		  provisionRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  result = (E) provisionRequestProcessor;
 			break;
 		case RENEW:
 			break;
