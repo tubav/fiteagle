@@ -6,7 +6,7 @@
 		<artifactId>adapter</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>QoSControl</artifactId>
+	<artifactId>qoSControl</artifactId>
 	<groupId>org.fiteagle.adapter</groupId>
 	<name>FITeagle :: Adapter :: QoSControl</name>
 	<packaging>jar</packaging>
