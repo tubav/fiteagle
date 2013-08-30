@@ -41,8 +41,7 @@ public class AttenuatorAdapter extends ResourceAdapter{
 		
 	}
 
-	@Override
-	public List<ResourceAdapter> getJavaInstances() {
+	public static List<ResourceAdapter> getJavaInstances() {
 		//TODO: set the adapter specific staff to set the correct properties
 		
 		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();

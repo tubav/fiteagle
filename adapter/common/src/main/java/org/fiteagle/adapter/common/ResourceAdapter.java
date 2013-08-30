@@ -13,7 +13,9 @@ public abstract class ResourceAdapter {
 	public abstract void create();
 	public abstract void configure(AdapterConfiguration configuration);
 	public abstract void release();
-	public abstract List<ResourceAdapter> getJavaInstances();
+	public static List<ResourceAdapter> getJavaInstances() throws IllegalAccessException{
+		throw new IllegalAccessException();
+	}
 	
 	public abstract boolean isLoaded();
 	public abstract void setLoaded(boolean loaded);

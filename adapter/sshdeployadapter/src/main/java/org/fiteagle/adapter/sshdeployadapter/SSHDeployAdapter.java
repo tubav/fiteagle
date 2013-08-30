@@ -17,7 +17,7 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable {
 	private String password = "";
 	private String sshKey = "";
 
-	private SSHDeployAdapterConfiguration sshDeployAdapterConfig = SSHDeployAdapterConfiguration
+	private static SSHDeployAdapterConfiguration sshDeployAdapterConfig = SSHDeployAdapterConfiguration
 			.getInstance();
 	private String port;
 	private AdapterConfiguration adapterConfiguration;
@@ -159,8 +159,8 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable {
 		this.sshKey = sshKey;
 	}
 
-	@Override
-	public List<ResourceAdapter> getJavaInstances() {
+	
+	public static List<ResourceAdapter> getJavaInstances() {
 		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
 
 		String[] ips = null;

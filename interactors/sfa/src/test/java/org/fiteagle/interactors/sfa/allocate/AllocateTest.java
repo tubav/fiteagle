@@ -111,6 +111,10 @@ public class AllocateTest {
 		Property type = new Property();
 		type.setName("type");
 		type.setValue(StopwatchAdapter.class.getName());		
+		Property id = new Property();
+		id.setName("id");
+		id.setValue("componentID");
+		props.add(id);
 		props.add(type);
 		EasyMock.expect(resourceMock.getProperty()).andReturn(props);
 		EasyMock.replay(resourceMock);

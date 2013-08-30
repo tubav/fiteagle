@@ -89,6 +89,9 @@ public class PerformOperationalActionRequestProcessor extends
 				if(action.compareToIgnoreCase("geni_stop")==0){
 					resourceAdapter.stop();
 					//TODO: change the state!!!
+				}else{
+					Action requestedAction = new Action(action, resourceAdapter); 
+					requestedAction.doAction();
 				}
 				//TODO: handle other cases here
 				GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();

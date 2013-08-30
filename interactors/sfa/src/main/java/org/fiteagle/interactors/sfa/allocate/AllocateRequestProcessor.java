@@ -35,6 +35,7 @@ import org.fiteagle.interactors.sfa.describe.DescribeResult;
 import org.fiteagle.interactors.sfa.describe.DescribeValue;
 import org.fiteagle.interactors.sfa.rspec.NodeContents;
 import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
+import org.fiteagle.interactors.sfa.rspec.Property;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
@@ -110,11 +111,16 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 						ResourceAdapter resource = null;
 						if (Resource.class.isAssignableFrom(jaxbElem.getValue()
 								.getClass())) {
-							resource = translator
-									.translateResourceToResourceAdapter((Resource) jaxbElem
-											.getValue());
-							resourceManager
-									.addResourceAdapterInstance(resource);
+							
+							Resource jaxBResource = (Resource) jaxbElem.getValue();
+							
+							String instanceId = "";
+							for(Property p: jaxBResource.getProperty()){
+								if(p.getName().equalsIgnoreCase("id")){
+									instanceId = p.getValue();
+								}
+							}
+							resource = resourceManager.getResourceAdapterInstance(instanceId);
 						}
 						if (NodeContents.class.isAssignableFrom(jaxbElem
 								.getValue().getClass())) {

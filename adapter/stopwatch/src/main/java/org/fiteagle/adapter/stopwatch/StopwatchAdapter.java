@@ -54,8 +54,8 @@ public class StopwatchAdapter extends ResourceAdapter implements Instantiable {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public List<ResourceAdapter> getJavaInstances() {
+	
+	public static List<ResourceAdapter> getJavaInstances() {
 		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
 	    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
 	    dummyResourceAdapter.setExclusive(false);
