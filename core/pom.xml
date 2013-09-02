@@ -9,28 +9,12 @@
 	<name>FITeagle :: Core</name>
 	<artifactId>core</artifactId>
 	<build>
-		<!-- GIT COMMIT ID PLUGIN CONFIGURATION -->
-
+	
        
 		<plugins>
-		<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>createFiteagleDir</id>
-                    <phase>initialize</phase>
-                    <configuration>
-                        <tasks>
-                            <mkdir dir="${user.home}${file.separator}fiteagle"/>
-                        </tasks>
-                    </configuration>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                </execution>
-            </executions>
-         </plugin>
+
+         	<!-- GIT COMMIT ID PLUGIN CONFIGURATION -->
+         
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
@@ -114,33 +98,6 @@
 
 			</plugin>
 			<!-- END OF GIT COMMIT ID PLUGIN CONFIGURATION -->
-
-			<plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <!-- here the phase you need -->
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${user.home}${file.separator}fiteagle</outputDirectory>
-              <resources>          
-                <resource>
-                  <directory>src/main/resources/org/fiteagle/core/certificates</directory>
-                  <includes>
-                  <include>jetty-ssl.*</include>
-                  <include> resourceCertificateStore</include>
-                  </includes>
-                </resource>
-              </resources>              
-            </configuration>            
-          </execution>
-        </executions>
-      </plugin>
 		</plugins>
 
 		<pluginManagement>
