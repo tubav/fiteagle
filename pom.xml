@@ -211,40 +211,47 @@
 				<version>0.2.5</version>
 				<executions>
 					<execution>
-						<id>create-archive</id>
-						<phase>package</phase>
+						<id>create-Directories</id>
+						<phase>initialize</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
 						<configuration>
 							<resources>
-								<resource>
-									<targetPath>${user.home}${file.separator}fiteagle</targetPath>
-									<mkdir>true</mkdir>
-								</resource>
 								<!-- ~~~~~~~~~~~~~~ -->
 								<!-- Copy resources -->
 								<!-- ~~~~~~~~~~~~~~ -->
 								<resource>
 									<targetPath>${user.home}${file.separator}fiteagle</targetPath>
+									<mkdir>true</mkdir>
 									<directory>core/src/main/resources/org/fiteagle/core/certificates</directory>
 									<includes>
 										<include>jetty-ssl.*</include>
 										<include> resourceCertificateStore</include>
 									</includes>
 								</resource>
-								<resource>
-									<targetPath>${user.home}${file.separator}fiteagle/adapters</targetPath>
-									<mkdir>true</mkdir>
-									<directory>adapter/</directory>
-									<include>**/target/*.jar</include>
-									<excludes>
-										<exclude>common/**</exclude>
-										<exclude>**/original-*</exclude>
-									</excludes>
-								</resource>
-							
+
+
 							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copyAdapters</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<resource>
+								<targetPath>${user.home}${file.separator}fiteagle/adapters</targetPath>
+								<mkdir>true</mkdir>
+								<directory>adapter/</directory>
+								<include>**/target/*.jar</include>
+								<excludes>
+									<exclude>common/**</exclude>
+									<exclude>**/original-*</exclude>
+								</excludes>
+							</resource>
 						</configuration>
 					</execution>
 				</executions>
