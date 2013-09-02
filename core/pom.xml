@@ -33,7 +33,7 @@
 								<resource>
 									<targetPath>${user.home}${file.separator}fiteagle</targetPath>
 									<mkdir>true</mkdir>
-									<directory>core/src/main/resources/org/fiteagle/core/certificates</directory>
+									<directory>${basedir}/src/main/resources/org/fiteagle/core/certificates</directory>
 									<includes>
 										<include>jetty-ssl.*</include>
 										<include> resourceCertificateStore</include>
@@ -54,7 +54,7 @@
 							<resource>
 								<targetPath>${user.home}${file.separator}fiteagle/adapters</targetPath>
 								<mkdir>true</mkdir>
-								<directory>adapter/</directory>
+								<directory>${basedir}/../adapter/</directory>
 								<include>**/target/*.jar</include>
 								<excludes>
 									<exclude>common/**</exclude>
