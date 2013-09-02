@@ -58,7 +58,7 @@ public class UserPresenter{
   @Path("{username}")
   @Produces(MediaType.APPLICATION_JSON)
   public User getUser(@PathParam("username") String username, @QueryParam("setCookie") boolean setCookie) {
-    username = addDomain(username);
+    
 	try {
       return manager.get(username);
     } catch (UserNotFoundException e) {
@@ -73,7 +73,7 @@ public class UserPresenter{
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addUser(@PathParam("username") String username, NewUser user) {
-	username = addDomain(username);
+	
     user.setUsername(username);
     try {
       manager.add(createUser(user));
@@ -96,7 +96,7 @@ public class UserPresenter{
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response updateUser(@PathParam("username") String username, NewUser user) {
-	username = addDomain(username);
+	
     user.setUsername(username);
     try {
       manager.update(createUser(user));    
@@ -141,7 +141,7 @@ public class UserPresenter{
   @Path("{username}/pubkey/")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response addPublicKey(@PathParam("username") String username, NewPublicKey pubkey) {    
-	username = addDomain(username);
+	
 	try {
       manager.addKey(username, new UserPublicKey(pubkey.getPublicKeyString(), pubkey.getDescription()));
     } catch (CouldNotParse | InValidAttributeException | NotEnoughAttributesException e){
@@ -160,7 +160,7 @@ public class UserPresenter{
   @DELETE
   @Path("{username}/pubkey/{description}")
   public Response deletePublicKey(@PathParam("username") String username, @PathParam("description") String description) {
-	  username = addDomain(username);
+	  
     try {
       manager.deleteKey(username, decode(description));
     } catch (InValidAttributeException e){
@@ -205,7 +205,7 @@ public class UserPresenter{
   @DELETE
   @Path("{username}")
   public Response deleteUser(@PathParam("username") String username) {
-	  username = addDomain(username);
+	 
     try {
       manager.delete(username);
     } catch (DatabaseException e) {
@@ -219,7 +219,7 @@ public class UserPresenter{
   @Path("{username}/certificate")
   @Consumes(MediaType.TEXT_PLAIN)
   public String createUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
-	  username = addDomain(username);
+	  
     try {      
       return manager.createUserPrivateKeyAndCertAsString(username, decode(passphrase));
     } catch (Exception e) {
@@ -232,7 +232,7 @@ public class UserPresenter{
   @Path("{username}/pubkey/{description}/certificate")
   @Produces(MediaType.TEXT_PLAIN)
   public String getUserCertificateForPublicKey(@PathParam("username") String username, @PathParam("description") String description) {
-	  username = addDomain(username);
+	  
     try {
       return manager.createUserCertificateForPublicKey(username, decode(description));
     } catch (PublicKeyNotFoundException e){
@@ -246,7 +246,7 @@ public class UserPresenter{
   @DELETE
   @Path("{username}/cookie")
   public Response deleteCookie(@PathParam("username") String username){
-	  username = addDomain(username);
+	
     UserAuthenticationFilter.getInstance().deleteCookie(username);
     return Response.status(200).build();
   }
@@ -258,11 +258,6 @@ public class UserPresenter{
     }   
   }   
   
-  private String addDomain(String username){
-	  if(!username.contains("@"))
-		  username = username + "@" + configuration.getDomain();
-	  
-	  return username;
-  }
+  
   
 }

@@ -48,7 +48,7 @@ function(require,Validation,Registration,Utils,Messages){
 		return Utils.checkInputField(
 								"#username",
 								"#loginErrors",
-								Validation._isName,
+								Validation._isUsername,
 								Messages.emptyUsername,
 								Messages.wrongUsername
 		);

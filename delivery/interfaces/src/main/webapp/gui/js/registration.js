@@ -293,9 +293,7 @@ function(Validation, Utils, MainPage,Messages){
 		Registration.initRegistrationFormHints();
 		Registration.initRegisterNewUserButton();
 
-		Registration.getDomain();
-		Registration.setDomainInput();
-
+		
 
 	};
 	
@@ -348,26 +346,6 @@ function(Validation, Utils, MainPage,Messages){
 		Utils.clearErrorMessagesFrom("#registrationErrors");
 	}
 	
-	Registration.getDomain = function(){
-		$.get("/api/v1/config/domain",function(data){
-			domain = data;
-		})
-	}
-	
-	Registration.setDomainInput = function(){
-			$("#inputUsername").change(function () {Registration.checkDomainInput()});
-		
-	}
-	
-	Registration.checkDomainInput = function(){
-		var inputField = $("#inputUsername");
-		var value = $(inputField).val();
-		if(~value.indexOf("@")){
-			
-		}else{
-			$(inputField).val(value + "@" +domain);
-		}
-	}
 
 	return Registration;
 });
