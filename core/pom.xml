@@ -14,7 +14,57 @@
 		<plugins>
 
          	<!-- GIT COMMIT ID PLUGIN CONFIGURATION -->
-         
+         <plugin>
+				<groupId>com.github.goldin</groupId>
+				<artifactId>copy-maven-plugin</artifactId>
+				<version>0.2.5</version>
+				<executions>
+					<execution>
+						<id>create-Directories</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<!-- ~~~~~~~~~~~~~~ -->
+								<!-- Copy resources -->
+								<!-- ~~~~~~~~~~~~~~ -->
+								<resource>
+									<targetPath>${user.home}${file.separator}fiteagle</targetPath>
+									<mkdir>true</mkdir>
+									<directory>core/src/main/resources/org/fiteagle/core/certificates</directory>
+									<includes>
+										<include>jetty-ssl.*</include>
+										<include> resourceCertificateStore</include>
+									</includes>
+								</resource>
+
+
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copyAdapters</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<resource>
+								<targetPath>${user.home}${file.separator}fiteagle/adapters</targetPath>
+								<mkdir>true</mkdir>
+								<directory>adapter/</directory>
+								<include>**/target/*.jar</include>
+								<excludes>
+									<exclude>common/**</exclude>
+									<exclude>**/original-*</exclude>
+								</excludes>
+							</resource>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
@@ -123,6 +173,25 @@
 										</versionRange>
 										<goals>
 											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.github.goldin
+										</groupId>
+										<artifactId>
+											copy-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.2.5,)
+										</versionRange>
+										<goals>
+											<goal>copy</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
