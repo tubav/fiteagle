@@ -7,10 +7,10 @@ users = testuser
 
 [testuser]
 urn = urn:publicid:IDN+wall3.test.ibbt.be+user+testuser
-keys = ./src/test/resources/testuser.publickey
+keys = /tmp/testuser.pem
 
 [aggregate_nicknames]
-am-undertest=https://localhost:443/api/sfa/am/v3
+am-undertest=https://localhost:8443/api/sfa/am/v3
 
 [fiteagle]
 type = sfa 
@@ -18,5 +18,5 @@ authority = fiteagle
 registry = https://localhost:8443/api/sfa/registry/v1
 slicemgr = https://localhost:8443/api/sfa/am/v3
 user = wall3.test.ibbt.be+user+testuser
-cert = ./src/test/resources/testuser.pem
-key = ./src/test/resources/testuser.privatekey
+cert = /tmp/testuser.pem
+key = /tmp/testuser.pem
