@@ -159,7 +159,6 @@ function(require,Validation,Registration,Utils,Messages){
 		Registration.initRegistrationForm();	
 		initOnWindowResizeEvent();
 		initHistory();
-		Utils.disableSelectionOnElements();
 		onFITeagleLogoClicked();
 	};
 	
