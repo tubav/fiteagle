@@ -224,21 +224,7 @@ function(){
 			return null;
 	};
 	
-	
-	/**
-	* Helper function that disables text selection for all elements besides all input and textarea elements
-	* @public
-	* @name Utils#disableSelectionOnElements
-	* @function
-	*/	
-	Utils.disableSelectionOnElements = function(){
-		$('body *').not('input').not('textarea').each(function(){
-			$(this).attr('unselectable', 'on')
-                 .css('user-select', 'none')
-                 .on('selectstart', false);
-		});
-	};
-	
+		
 	/**
 	* Removes the all user specific information from a session storage by entirely session storage clearing.
 	* @public
