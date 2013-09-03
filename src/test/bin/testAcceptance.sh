@@ -1,15 +1,33 @@
 #!/bin/bash
 
-: > log
-./src/test/bin/runAddUser.sh >> log
-./src/test/bin/runOmniGetVersionAuto.sh >> log
+function asssert() {
+  testcase="$1"
+  expected="$2"
+  result="$3"
+  echo -n "$testcase: "
+  if [[ "$result" == *"$expected"* ]]; then
+    echo "PASSED"
+  else
+    echo "FAILED (I expected '*$expected*' but got '$result')"; exit 1;
+  fi
+}
 
-result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i f4f_endorsed_tools)
+./src/test/bin/runDelUser.sh > /dev/null
 
-echo -n "GetVersion: "
-if [ "$result" == "" ]; then
-  echo "FAILED (I require the f4f_endorsed_tools tag in the getVersion call but I did not found it)"; exit 1;
-else
-  echo "PASSED"
-fi
+result=$(./src/test/bin/runDelUser.sh)
+asssert "testDelUser" "404" "$result"
 
+result=$(./src/test/bin/runAddUser.sh)
+asssert "testAddUser" "201" "$result"
+
+result=$(./src/test/bin/runGetUser.sh)
+asssert "testGetUser" "200" "$result"
+
+result=$(./src/test/bin/runGetCertificate.sh)
+asssert "testGetCertificate" "200" "$result"
+
+result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i "f4f_endorsed_tools")
+asssert "testOmniGetVersion" "f4f_endorsed_tools" "$result"
+
+result=$(./src/test/bin/runOmniListResourcesAuto.sh|grep -i "available")
+asssert "testOmniListResources" "available" "$result"
