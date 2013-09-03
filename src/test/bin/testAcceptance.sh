@@ -1,16 +1,9 @@
 #!/bin/bash
 
-function asssert() {
-  testcase="$1"
-  expected="$2"
-  result="$3"
-  echo -n "$testcase: "
-  if [[ "$result" == *"$expected"* ]]; then
-    echo "PASSED"
-  else
-    echo "FAILED (I expected '*$expected*' but got '$result')"; exit 1;
-  fi
-}
+_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${_dir}/run.config.sh"
+
+require curl omni.py
 
 ./src/test/bin/runDelUser.sh > /dev/null
 
