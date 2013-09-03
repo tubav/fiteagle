@@ -95,67 +95,67 @@ public class User {
 
 	public static User createUser(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
 	  User u = new User(username, firstName, lastName, email, affiliation, password, publicKeys);
-	  u.checkAttributes();
+	//  u.checkAttributes();
 	  return u;
 	}
 	
 	public static User createUserWithExistingPassword(String username, String firstName, String lastName, String email, String affiliation, String passwordHash, String passwordSalt, Date created, Date lastModified, List<UserPublicKey> publicKeys){
 	  User u = new User(username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified, publicKeys);
-	  u.checkAttributes();
+	//  u.checkAttributes();
 	  return u;
 	}
 	public static User createUser(String username){
 		User u = new User(username, "", "", "", "", "", new LinkedList<UserPublicKey>());
 		return u;
 	}
-	private void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
-	
-	  if(username == null){
-	    throw new NotEnoughAttributesException("no username given");
-	  }
-	  if(firstName == null){
-	    throw new NotEnoughAttributesException("no firstName given");
-	  }
-	  if(lastName == null){
-      throw new NotEnoughAttributesException("no lastName given");
-    }
-	  if(email == null){
-      throw new NotEnoughAttributesException("no email given");
-    }
-	  if(affiliation == null){
-      throw new NotEnoughAttributesException("no affiliation given");
-    }	  
-	  if(passwordHash == null){
-      throw new NotEnoughAttributesException("no password given or password too short");
-    }   
-	  
-	  if(!USERNAME_PATTERN.matcher(username).matches()){
-      throw new InValidAttributeException("invalid username, only letters, numbers and \"-\" is allowed and the username has to be from 3 to 20 characters long");
-    }
-	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
-      throw new InValidAttributeException("firstName too short");
-    }
-	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
-      throw new InValidAttributeException("lastName too short");
-    }
-	  if(!EMAIL_PATTERN.matcher(email).matches()){
-      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
-    }
-	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
-      throw new InValidAttributeException("affiliation too short");
-    }
-	  
-	  for(UserPublicKey userPublicKey : publicKeys){
-	    String description = userPublicKey.getDescription();
-	    String publicKeyString = userPublicKey.getPublicKeyString();
-	    
-	    for(UserPublicKey key : publicKeys){
-	      if(key != userPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
-	        throw new DuplicatePublicKeyException();
-	      }
-	    }
-	  }
-  }
+//	private void checkAttributes() throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{  
+//	
+//	  if(username == null){
+//	    throw new NotEnoughAttributesException("no username given");
+//	  }
+//	  if(firstName == null){
+//	    throw new NotEnoughAttributesException("no firstName given");
+//	  }
+//	  if(lastName == null){
+//      throw new NotEnoughAttributesException("no lastName given");
+//    }
+//	  if(email == null){
+//      throw new NotEnoughAttributesException("no email given");
+//    }
+//	  if(affiliation == null){
+//      throw new NotEnoughAttributesException("no affiliation given");
+//    }	  
+//	  if(passwordHash == null){
+//      throw new NotEnoughAttributesException("no password given or password too short");
+//    }   
+//	  
+//	  if(!USERNAME_PATTERN.matcher(username).matches()){
+//      throw new InValidAttributeException("invalid username, only letters, numbers and \"-\" is allowed and the username has to be from 3 to 20 characters long");
+//    }
+//	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
+//      throw new InValidAttributeException("firstName too short");
+//    }
+//	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
+//      throw new InValidAttributeException("lastName too short");
+//    }
+//	  if(!EMAIL_PATTERN.matcher(email).matches()){
+//      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
+//    }
+//	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
+//      throw new InValidAttributeException("affiliation too short");
+//    }
+//	  
+//	  for(UserPublicKey userPublicKey : publicKeys){
+//	    String description = userPublicKey.getDescription();
+//	    String publicKeyString = userPublicKey.getPublicKeyString();
+//	    
+//	    for(UserPublicKey key : publicKeys){
+//	      if(key != userPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
+//	        throw new DuplicatePublicKeyException();
+//	      }
+//	    }
+//	  }
+//  }
 	
 	private byte[] generatePasswordSalt(){
 	  SecureRandom random = new SecureRandom();
@@ -204,7 +204,7 @@ public class User {
       this.passwordHash = newUser.getPasswordHash();
     }
     this.setLast_modified(Calendar.getInstance().getTime());
-    this.checkAttributes();      
+    //this.checkAttributes();      
   }	
 	
 	public void addPublicKey(UserPublicKey userPublicKey){		
