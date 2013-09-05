@@ -9,6 +9,7 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 import net.iharder.Base64;
 
@@ -88,13 +89,12 @@ public class UserDBManager {
 		database.delete(u);
 	}
 
-	public void update(User u) throws UserNotFoundException,
+	public void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException,
 			DuplicateEmailException, DatabaseException,
 			NotEnoughAttributesException, InValidAttributeException,
 			DuplicatePublicKeyException {
-		String username = addDomain(u.getUsername());
-		u.setUsername(username);
-		database.update(u);
+		username = addDomain(username);
+		database.update(username, firstName, lastName, email, affiliation, password, publicKeys);
 	}
 
 	public void addKey(String username, UserPublicKey key)

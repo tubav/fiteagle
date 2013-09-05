@@ -1,6 +1,7 @@
 package org.fiteagle.core.userdatabase;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryUserDB implements UserPersistable {
 
@@ -18,13 +19,13 @@ public class InMemoryUserDB implements UserPersistable {
 	public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
 		if(users.get(u.getUsername()) != null)
 			throw new DuplicateUsernameException();
-		checkForDuplicateEmail(u);
+		checkForDuplicateEmail(u.getUsername(), u.getEmail());
 		users.put(u.getUsername(), u);
 	}
 
-  private void checkForDuplicateEmail(User newUser) {
+  private void checkForDuplicateEmail(String username, String email) {
     for(User user : users.values()){
-		  if(user.getEmail().equals(newUser.getEmail()) && user.getUsername() != newUser.getUsername()){
+		  if(user.getEmail().equals(email) && user.getUsername() != username){
 		    throw new DuplicateEmailException();
 		  }
 		}
@@ -41,13 +42,13 @@ public class InMemoryUserDB implements UserPersistable {
 	}
 
 	@Override
-	public void update(User u) throws UserNotFoundException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
-		if(users.get(u.getUsername()) == null)
+	public void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException, DuplicateEmailException, NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException {
+		if(users.get(username) == null)
 			throw new UserNotFoundException();
-		checkForDuplicateEmail(u);
-	  User newUser = get(u.getUsername());
-	  newUser.mergeWithUser(u);		 
-	  users.put(u.getUsername(), newUser);    
+		checkForDuplicateEmail(username, email);
+	  User user = get(username);
+	  user.update(firstName, lastName, email, affiliation, password, publicKeys);		 
+	  users.put(username, user);    
 	}
 
 	@Override
