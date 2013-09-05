@@ -6,7 +6,7 @@ aggregates = https://localhost:8443/api/sfa/am/v3
 users = testuser
 
 [testuser]
-urn = urn:publicid:IDN+wall3.test.ibbt.be+user+testuser
+urn = urn:publicid:IDN+localhost.testuser
 keys = /tmp/testuser.pem
 
 [aggregate_nicknames]
@@ -17,6 +17,6 @@ type = sfa
 authority = fiteagle
 registry = https://localhost:8443/api/sfa/registry/v1
 slicemgr = https://localhost:8443/api/sfa/am/v3
-user = wall3.test.ibbt.be+user+testuser
+user = localhost.testuser
 cert = /tmp/testuser.pem
 key = /tmp/testuser.pem
