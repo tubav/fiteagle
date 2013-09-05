@@ -19,8 +19,8 @@ asssert "testGetUser" "200" "$result"
 result=$(./src/test/bin/runGetCertificate.sh)
 asssert "testGetCertificate" "200" "$result"
 
-result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i "f4f_endorsed_tools")
-asssert "testOmniGetVersion" "f4f_endorsed_tools" "$result"
+result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i "fiteagle version")
+asssert "testOmniGetVersion" "fiteagle version" "$result"
 
 result=$(./src/test/bin/runOmniListResourcesAuto.sh|grep -i "available")
 asssert "testOmniListResources" "available" "$result"
