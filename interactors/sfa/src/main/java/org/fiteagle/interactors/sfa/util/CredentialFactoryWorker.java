@@ -99,6 +99,7 @@ public class CredentialFactoryWorker {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage());
 		}
+		userCertificate = returnCert;
 		credential.setOwnerGid(returnString);
 
 	}
