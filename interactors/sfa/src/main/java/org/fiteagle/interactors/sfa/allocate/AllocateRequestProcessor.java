@@ -39,6 +39,7 @@ import org.fiteagle.interactors.sfa.rspec.Property;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.util.DateUtil;
 
 public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
@@ -201,7 +202,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 			tmpSliver.setGeni_allocation_status((String) resourceAdapter
 					.getProperties().get("allocation_status"));
 			tmpSliver
-					.setGeni_expires(getFormatedDate(resourceAdapter.getExpirationTime()));
+					.setGeni_expires(DateUtil.getFormatedDate(resourceAdapter.getExpirationTime()));
 			slivers.add(tmpSliver);
 		}
 		resultValue.setGeni_slivers(slivers);
@@ -213,10 +214,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		return resultValue;
 	}
 
-	private String getFormatedDate(Date expirationTime) {
-	 SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
-		return rfc3339.format(expirationTime);
-	}
+	
 
 	@Override
 	public AMResult processRequest(ListCredentials credentials,

@@ -31,6 +31,7 @@ import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.util.DateUtil;
 
 public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
@@ -151,7 +152,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 											.getProperties().get(
 													"operational_status"));
 							tmpSliver
-									.setGeni_expires("somewhere over the rainbow");
+									.setGeni_expires(DateUtil.getFormatedDate(resourceAdapter.getExpirationTime()));
 
 							slivers.add(tmpSliver);
 
