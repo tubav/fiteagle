@@ -22,7 +22,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
-import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
@@ -46,12 +45,10 @@ public class UserPresenter{
   private static Logger log = LoggerFactory.getLogger(UserPresenter.class);
   
   private final UserManagerBoundary manager;
-  private final InterfaceConfiguration configuration;
   
   @Inject
   public UserPresenter(final UserManagerBoundary manager){
     this.manager = manager;
-    configuration = InterfaceConfiguration.getInstance();
   }
   
   @GET
@@ -96,10 +93,9 @@ public class UserPresenter{
   @Path("{username}")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response updateUser(@PathParam("username") String username, NewUser user) {
-	
-    user.setUsername(username);
     try {
-      manager.update(createUser(user));    
+      List<UserPublicKey> publicKeys = createPublicKeys(user.getPublicKeys());  
+      manager.update(username, user.getFirstName(), user.getLastName(), user.getEmail(), user.getAffiliation(), user.getPassword(), publicKeys);
     } catch (DatabaseException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);  
@@ -117,9 +113,9 @@ public class UserPresenter{
 
   private User createUser(NewUser newUser){
     List<UserPublicKey> publicKeys = createPublicKeys(newUser.getPublicKeys());    
-    return new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);     
+    return User.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);     
   }
-
+  
   private ArrayList<UserPublicKey> createPublicKeys(List<NewPublicKey> keys) {
     if(keys == null){
       return null;

@@ -7,20 +7,26 @@ require curl omni.py
 
 ./src/test/bin/runDelUser.sh > /dev/null
 
+expect="404"
 result=$(./src/test/bin/runDelUser.sh)
-asssert "testDelUser" "404" "$result"
+asssert "testDelUser" "$expect" "$result"
 
+expect="201"
 result=$(./src/test/bin/runAddUser.sh)
-asssert "testAddUser" "201" "$result"
+asssert "testAddUser" "$expect" "$result"
 
+expect="200"
 result=$(./src/test/bin/runGetUser.sh)
-asssert "testGetUser" "200" "$result"
+asssert "testGetUser" "$expect" "$result"
 
+expect="200"
 result=$(./src/test/bin/runGetCertificate.sh)
-asssert "testGetCertificate" "200" "$result"
+asssert "testGetCertificate" "$expect" "$result"
 
-result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i "f4f_endorsed_tools")
-asssert "testOmniGetVersion" "f4f_endorsed_tools" "$result"
+expect="fiteagle version"
+result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i "$expect")
+asssert "testOmniGetVersion" "$expect" "$result"
 
-result=$(./src/test/bin/runOmniListResourcesAuto.sh|grep -i "available")
-asssert "testOmniListResources" "available" "$result"
+expect="<rspec"
+result=$(./src/test/bin/runOmniListResourcesAuto.sh|grep -i "$expect")
+asssert "testOmniListResources" "$expect" "$result"

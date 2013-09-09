@@ -119,7 +119,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     if(session == null){
       return false;
     }
-    if(!isUserAuthorizedForTarget(session.getAttribute("username").toString(), getTarget(request))) {
+    if(!isUserAuthorizedForTarget(session.getAttribute("username").toString(), addDomain(getTarget(request)))) {
       return false;
     }    
     return true;

@@ -31,7 +31,6 @@ public abstract class UserPersistableTest {
 	protected static User USER3;
 	protected static User USER4;
 	protected static User USER5;
-	protected static User USER6;
 	
 	@BeforeClass
 	public static void createUsers() throws DatabaseException, DuplicateUsernameException, NoSuchAlgorithmException, IOException, InvalidKeySpecException{
@@ -45,7 +44,6 @@ public abstract class UserPersistableTest {
 	  USER3 = new User("test2", "herbert", "herbert", "heschmidt@test.org", "herbertAffiliation", "herbertsPassword", KEYS1);
 	  USER4 = new User("test4", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword");	  
 	  USER5 = new User("test5", "mitja", "nikolaus", "mitja@test.org", "mitjaAffiliation", "mitjasPassword");    
-	  USER6 = new User("test5", "mitja", "nikolaus", "hschmidt@test.org", "mitjaAffiliation", "mitjasPassword");    
 	}
 	
 	@Before
@@ -98,25 +96,17 @@ public abstract class UserPersistableTest {
 	public void testUpdate() throws DatabaseException, InterruptedException{
 		database.add(USER2);
 		Thread.sleep(1);
-		database.update(USER3);
-		User updatedUser = database.get(USER3);
-		assertTrue(USER3.equals(updatedUser));
+		database.update(USER2.getUsername(), "herbert", null, null, null, null, null);
+		User updatedUser = database.get(USER2);
+		assertTrue("herbert".equals(updatedUser.getFirstName()));
 		Date created = updatedUser.getCreated();
 		Date lastModified = updatedUser.getLast_modified();
 		assertTrue(created.before(lastModified));
 	}
 	
-	@Test
-	public void testUpdateWithFewArguments(){
-	  database.add(USER1);
-	  database.update(new User("test1", "martin", null, null, null, null, null, null, null, null));
-	  assertEquals("martin", database.get(USER1.getUsername()).getFirstName());
-	  assertEquals("nikolaus", database.get(USER1.getUsername()).getLastName());
-	}
-	
 	@Test(expected=UserPersistable.UserNotFoundException.class)
 	public void testUpdateFails() throws DatabaseException{
-		database.update(USER3);
+		database.update(USER2.getUsername(), null, null, null, null, null, null);
 	}
 	
 	@Test
@@ -175,6 +165,6 @@ public abstract class UserPersistableTest {
   public void testDuplicateEmailExeptionWhenUpdate(){
 	  database.add(USER2);
     database.add(USER5);
-    database.update(USER6);
+    database.update(USER5.getUsername(), "mitja", "nikolaus", "hschmidt@test.org", "mitjaAffiliation", "mitjasPassword", null);
   }
 }
