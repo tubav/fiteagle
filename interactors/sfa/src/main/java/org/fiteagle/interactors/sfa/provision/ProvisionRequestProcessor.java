@@ -37,6 +37,18 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	private ResourceAdapterManager resourceManager;
 
+	GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
+
+	private ProvisionValue resultValue;
+
+	private ProvisionOptions provisionOptions;
+
+	private ArrayList<GeniSlivers> slivers;
+
+	private List<ResourceAdapter> resources;
+
+	private SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
+
 	public ResourceAdapterManager getResourceManager() {
 		return resourceManager;
 	}
@@ -47,6 +59,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	public ProvisionResult processRequest(List<String> urns,
 			ListCredentials credentials, ProvisionOptions provisionOptions) {
+		this.provisionOptions = provisionOptions;
 		ProvisionResult result = getResult(urns, credentials, provisionOptions);
 		return result;
 	}
@@ -57,7 +70,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		String output = "";
 		AMCode returnCode = null;
 
-		ProvisionValue resultValue = new ProvisionValue();
+		resultValue = new ProvisionValue();
 		Authorization auth = new Authorization();
 
 		auth.checkCredentialsList(credentials);
@@ -71,111 +84,140 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			result.setOutput(output);
 			return result;
 		}
-		// TODO: check options
+		List<URN> urnList = parseURNS(urns);
 
-		// process the correct request..
+		provisionURNS(urnList);
 
-		if (urns.size() > 1)
-			;
-		if (urns.size() == 1 && urns.get(0).contains("\\+sliver\\+"))
-			;
-		// TODO: implement if there are one or multiple sliver urns not only one
-		// slice urn
-
-		if (urns.size() == 1 && urns.get(0).contains("+slice+")) {
-			boolean badArgs = false;
-			URN sliceURN = null;
-			try {
-				sliceURN = new URN(urns.get(0));
-			} catch (URNParsingException e) {
-				badArgs = true;
-				returnCode = getReturnCode(GENI_CodeEnum.BADARGS);
-			}
-			if (!badArgs) {
-				SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-				Group group = null;
-				boolean groupExists = true;
-				try {
-					group = GroupDBManager.getInstance().getGroup(
-							sliceURN.getSubjectAtDomain());
-				} catch (GroupNotFound e) {
-					groupExists = false;
-					returnCode = getReturnCode(GENI_CodeEnum.SEARCHFAILED);
-				}
-				if (groupExists) {
-					ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
-
-					List<String> resourceIds = group.getResources();
-					List<ResourceAdapter> resources = resourceManager
-							.getResourceAdapterInstancesById(resourceIds);
-					for (Iterator iterator = resources.iterator(); iterator
-							.hasNext();) {
-						ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
-								.next();
-						if (resourceAdapter.getStatus().equals(
-								ResourceAdapterStatus.Reserved)) {
-
-							HashMap<String, Object> props = resourceAdapter
-									.getProperties();
-							props.put("operational_status",
-									GENISliverOperationalState.geni_configuring
-											.toString());
-							resourceAdapter.setProperties(props);
-							AdapterConfiguration config = buildAdapterConfig(provisionOptions);
-							resourceAdapter.configure(config);
-
-							resourceAdapter
-									.setExpirationTime(getExpirationDate(provisionOptions));
-							resourceManager.renewExpirationTime(
-									resourceAdapter.getId(),
-									resourceAdapter.getExpirationTime());
-
-							props.put("operational_status",
-									GENISliverOperationalState.geni_ready
-											.toString());
-							props.put("allocation_status",
-									GENISliverAllocationState.geni_provisioned
-											.toString());
-							resourceAdapter.setProperties(props);
-
-							GeniSlivers tmpSliver = new GeniSlivers();
-							tmpSliver.setGeni_sliver_urn(translator
-									.translateResourceIdToSliverUrn(
-											resourceAdapter.getId(),
-											urns.get(0)));
-							tmpSliver
-									.setGeni_allocation_status((String) resourceAdapter
-											.getProperties().get(
-													"allocation_status"));
-							tmpSliver
-									.setGeni_operational_status((String) resourceAdapter
-											.getProperties().get(
-													"operational_status"));
-							tmpSliver
-									.setGeni_expires(DateUtil.getFormatedDate(resourceAdapter.getExpirationTime()));
-
-							slivers.add(tmpSliver);
-
-						}
-
-					}
-
-					resultValue.setGeni_slivers(slivers);
-
-					RSpecContents manifestRSpec = getManifestRSpec(resources);
-					String geni_rspec = getRSpecString(manifestRSpec);
-					resultValue.setGeni_rspec(geni_rspec);
-					returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
-				}
-			}
-			
-		}else{
-			returnCode = getReturnCode(GENI_CodeEnum.BADARGS);
-		}
+		returnCode = getReturnCode(code);
 		result.setCode(returnCode);
 		result.setValue(resultValue);
 		return result;
 
+	}
+
+	private void provisionURNS(List<URN> urnList) {
+		if (urnList.size() == 0) {
+			code = GENI_CodeEnum.BADARGS;
+			return;
+		}
+		slivers = new ArrayList<GeniSlivers>();
+		resources = new LinkedList<>();
+
+		if (urnList.size() == 1
+				&& urnList.get(0).getType().equalsIgnoreCase("slice")) {
+			provisionSlice(urnList.get(0));
+		} else {
+			try {
+				for (URN urn : urnList) {
+
+					provsionSliver(urn);
+
+				}
+			} catch (BadArgumentsException e) {
+				code = GENI_CodeEnum.BADARGS;
+			}
+		}
+
+		resultValue.setGeni_slivers(slivers);
+
+		RSpecContents manifestRSpec = getManifestRSpec(resources);
+		String geni_rspec = getRSpecString(manifestRSpec);
+		resultValue.setGeni_rspec(geni_rspec);
+	}
+
+	private void provsionSliver(URN urn) {
+		if (urn.getType().equals("sliver")) {
+			ResourceAdapter ra = resourceManager.getResourceAdapterInstance(urn
+					.getSubject());
+			resources.add(ra);
+			provsionResourceAdapter(ra);
+			GeniSlivers sliver = buildSliver(ra);
+			slivers.add(sliver);
+
+		} else {
+			throw new BadArgumentsException();
+		}
+	}
+
+	private void provisionSlice(URN sliceURN) {
+
+		Group group = null;
+
+		try {
+			group = GroupDBManager.getInstance().getGroup(
+					sliceURN.getSubjectAtDomain());
+		} catch (GroupNotFound e) {
+
+			code = GENI_CodeEnum.SEARCHFAILED;
+			return;
+		}
+
+		List<String> resourceIds = group.getResources();
+		resources = resourceManager
+				.getResourceAdapterInstancesById(resourceIds);
+		for (ResourceAdapter resourceAdapter: resources) {
+			
+			provsionResourceAdapter(resourceAdapter);
+			GeniSlivers sliver = buildSliver(resourceAdapter);
+
+			if (sliver != null)
+				slivers.add(sliver);
+		}
+
+	}
+
+	private void provsionResourceAdapter(ResourceAdapter resourceAdapter) {
+
+		if (resourceAdapter.getStatus().equals(ResourceAdapterStatus.Reserved)) {
+			AdapterConfiguration config = buildAdapterConfig(provisionOptions);
+			resourceAdapter.configure(config);
+			HashMap<String, Object> props = resourceAdapter.getProperties();
+			props.put("operational_status",
+					GENISliverOperationalState.geni_configuring.toString());
+
+			resourceAdapter.setExpirationTime(getExpirationDate(provisionOptions));
+			resourceManager.renewExpirationTime(resourceAdapter.getId(),
+					resourceAdapter.getExpirationTime());
+
+			props.put("operational_status",
+					GENISliverOperationalState.geni_ready.toString());
+			props.put("allocation_status",
+					GENISliverAllocationState.geni_provisioned.toString());
+			resourceAdapter.setProperties(props);
+		}
+
+	}
+
+	private GeniSlivers buildSliver(ResourceAdapter resourceAdapter) {
+		HashMap<String, Object> props = resourceAdapter.getProperties();
+		
+
+
+		GeniSlivers tmpSliver = new GeniSlivers();
+		tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(
+				resourceAdapter).toString());
+		tmpSliver.setGeni_allocation_status((String) resourceAdapter
+				.getProperties().get("allocation_status"));
+		tmpSliver.setGeni_operational_status((String) resourceAdapter
+				.getProperties().get("operational_status"));
+		tmpSliver.setGeni_expires(DateUtil.getFormatedDate(resourceAdapter
+				.getExpirationTime()));
+
+		return tmpSliver;
+	}
+
+	private List<URN> parseURNS(List<String> urns) {
+		List<URN> urnList = new LinkedList<>();
+		try {
+
+			for (String urnString : urns) {
+				URN urn = new URN(urnString);
+				urnList.add(urn);
+			}
+		} catch (URNParsingException e) {
+			code = GENI_CodeEnum.BADARGS;
+		}
+		return urnList;
 	}
 
 	private AdapterConfiguration buildAdapterConfig(
@@ -215,6 +257,10 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			Object... specificArgs) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public class BadArgumentsException extends RuntimeException {
+
 	}
 
 }

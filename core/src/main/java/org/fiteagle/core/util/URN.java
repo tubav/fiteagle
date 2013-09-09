@@ -1,5 +1,7 @@
 package org.fiteagle.core.util;
 
+import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.userdatabase.User;
 
@@ -105,6 +107,11 @@ public class URN {
 	public static URN getURNFromUser(User u) {
 		String[] split = u.getUsername().split("@");
 		String returnString = prefix + "+" + split[1] + "+user+" + split[0];
+		return new URN(returnString);
+	}
+	
+	public static URN getURNFromResourceAdapter(ResourceAdapter ra){
+		String returnString = prefix + "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +ra.getId();
 		return new URN(returnString);
 	}
 }
