@@ -93,27 +93,15 @@ public class Action {
 		return string;
 	}
 
-	public <T> T doAction() {
+	public <T> T doAction() throws InvocationTargetException, IllegalArgumentException, IllegalAccessException {
 
 		T returnValue = null;
-		try {
+		
 			Object[] methodParameters = new Object[] {};
 			if (parameters != null)
 				methodParameters = parameters.toArray();
 			returnValue = (T) method.invoke(object, methodParameters);
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		return returnValue;
 	}
 

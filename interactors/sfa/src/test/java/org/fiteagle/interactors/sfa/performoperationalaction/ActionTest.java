@@ -1,5 +1,7 @@
 package org.fiteagle.interactors.sfa.performoperationalaction;
 
+import java.lang.reflect.InvocationTargetException;
+
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -17,33 +19,34 @@ public class ActionTest {
 	}
 
 	@Test
-	public void testDoSomething(){
+	public void testDoSomething() throws Exception{
 		Action action = new Action("doSomeThingVoid", new DoSomething());
 		Assert.assertTrue((boolean) action.doAction());
 	}
 	
 	@Test
-	public void testDoReturnString(){
+	public void testDoReturnString() throws InvocationTargetException, IllegalArgumentException, IllegalAccessException{
 		Action action = new Action("doReturnString", new DoSomething());
 		Assert.assertEquals("Hallo", action.doAction());
 	}
 	
 	@Test
-	public void testDoSomethingOneSimpleParameter(){
+	public void testDoSomethingOneSimpleParameter() throws InvocationTargetException, IllegalArgumentException, IllegalAccessException{
 		Action action = new Action("doSomethingOneSimpleParameter(5)",new DoSomething());
 		Assert.assertTrue((boolean) action.doAction());
 	}
 	
 	@Test
-	public void testDoSomethingOneObjectParameter(){
+	public void testDoSomethingOneObjectParameter() throws InvocationTargetException, IllegalArgumentException, IllegalAccessException{
 		Action action = new Action("doSomethingOneObjectParameter(o)", new DoSomething());
 		Assert.assertTrue((boolean)action.doAction());
 	}
 	
 	@Test
-	public void testDoSomethingWithString(){
+	public void testDoSomethingWithString() throws InvocationTargetException, IllegalArgumentException, IllegalAccessException{
 		Action action = new Action("doSomethingWithString(hallo)", new DoSomething());
-		System.out.println(action.doAction());
+		System.out.println(
+		action.doAction());
 	}
 
 	
