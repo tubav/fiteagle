@@ -96,8 +96,7 @@ public class CertificateAuthority {
 
 	private String getURN(User newUser) {
 		InterfaceConfiguration config = InterfaceConfiguration.getInstance();
-		return config.getURN_Prefix() + "+" + config.getDomain() + "+user+"
-				+ newUser.getUsername();
+		return URN.getURNFromUser(newUser).toString();
 	}
 
 	public X509Certificate getSliceAuthorityCertificate() {

@@ -117,7 +117,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	private Object getValue() {
 
 		List<ResourceAdapter> resourceAdapters = resourceManager
-				.getResourceAdapters();
+				.getResourceAdapterInstances();
 
 		RSpecContents advertisedRspec;
 

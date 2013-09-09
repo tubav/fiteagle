@@ -9,28 +9,62 @@
 	<name>FITeagle :: Core</name>
 	<artifactId>core</artifactId>
 	<build>
-		<!-- GIT COMMIT ID PLUGIN CONFIGURATION -->
-
-        
+	
+       
 		<plugins>
-		<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>createFiteagleDir</id>
-                    <phase>initialize</phase>
-                    <configuration>
-                        <tasks>
-                            <mkdir dir="${user.home}${file.separator}fiteagle"/>
-                        </tasks>
-                    </configuration>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                </execution>
-            </executions>
-         </plugin>
+
+         	<!-- GIT COMMIT ID PLUGIN CONFIGURATION -->
+         <plugin>
+				<groupId>com.github.goldin</groupId>
+				<artifactId>copy-maven-plugin</artifactId>
+				<version>0.2.5</version>
+				<executions>
+					<execution>
+						<id>create-Directories</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<!-- ~~~~~~~~~~~~~~ -->
+								<!-- Copy resources -->
+								<!-- ~~~~~~~~~~~~~~ -->
+								<resource>
+									<targetPath>${user.home}${file.separator}fiteagle</targetPath>
+									<mkdir>true</mkdir>
+									<directory>${basedir}/src/main/resources/org/fiteagle/core/certificates</directory>
+									<includes>
+										<include>jetty-ssl.*</include>
+										<include> resourceCertificateStore</include>
+									</includes>
+								</resource>
+
+
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copyAdapters</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<resource>
+								<targetPath>${user.home}${file.separator}fiteagle/adapters</targetPath>
+								<mkdir>true</mkdir>
+								<directory>${basedir}/../adapter/</directory>
+								<include>**/target/*.jar</include>
+								<excludes>
+									<exclude>common/**</exclude>
+									<exclude>**/original-*</exclude>
+								</excludes>
+							</resource>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
@@ -114,33 +148,6 @@
 
 			</plugin>
 			<!-- END OF GIT COMMIT ID PLUGIN CONFIGURATION -->
-
-			<plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <!-- here the phase you need -->
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${user.home}${file.separator}fiteagle</outputDirectory>
-              <resources>          
-                <resource>
-                  <directory>src/main/resources/org/fiteagle/core/certificates</directory>
-                  <includes>
-                  <include>jetty-ssl.*</include>
-                  <include> resourceCertificateStore</include>
-                  </includes>
-                </resource>
-              </resources>              
-            </configuration>            
-          </execution>
-        </executions>
-      </plugin>
 		</plugins>
 
 		<pluginManagement>
@@ -172,6 +179,25 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.github.goldin
+										</groupId>
+										<artifactId>
+											copy-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.2.5,)
+										</versionRange>
+										<goals>
+											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -189,11 +215,6 @@
 		<dependency>
 			<groupId>org.fiteagle.adapter</groupId>
 			<artifactId>stopwatch</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.fiteagle.adapter</groupId>
-			<artifactId>sshdeployadapter</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -237,5 +258,23 @@
       <artifactId>jersey-json</artifactId>
       <version>1.17</version>
     </dependency>
+    <dependency>
+  <groupId>org.clapper</groupId>
+  <artifactId>javautil</artifactId>
+  <version>3.1.1</version>
+</dependency>
 	</dependencies>
+	<repositories>
+  <repository>
+    <releases>
+      <enabled>true</enabled>
+      <updatePolicy>always</updatePolicy>
+      <checksumPolicy>warn</checksumPolicy>
+    </releases>
+    <id>clapper-org-maven-repo</id>
+    <name>org.clapper Maven Repo</name>
+    <url>http://maven.clapper.org/</url>
+    <layout>default</layout>
+  </repository>
+</repositories>
 </project>

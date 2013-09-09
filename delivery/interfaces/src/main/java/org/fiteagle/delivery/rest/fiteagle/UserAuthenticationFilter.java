@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,10 +67,21 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
   private void createSession(HttpServletRequest request) {
     HttpSession session = request.getSession(true);
     if(session != null){
-      session.setAttribute("username", getTarget(request));
+      String username =  getTarget(request);
+      username = addDomain(username);
+      session.setAttribute("username",username);
     }
   }
 
+  private String addDomain(String username) {
+
+		InterfaceConfiguration configuration = null;
+		if (!username.contains("@")) {
+			configuration = InterfaceConfiguration.getInstance();
+			username = username + "@" + configuration.getDomain();
+		}
+		return username;
+	}
   private void addCookieOnLogin(HttpServletRequest request, HttpServletResponse response) {    
     boolean setCookie = Boolean.parseBoolean(request.getParameter("setCookie"));
     if(request.getMethod().equals("GET") && setCookie == true && getAuthCookieFromRequest(request) == null){      
@@ -107,7 +119,7 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     if(session == null){
       return false;
     }
-    if(!isUserAuthorizedForTarget(session.getAttribute("username").toString(), getTarget(request))) {
+    if(!isUserAuthorizedForTarget(session.getAttribute("username").toString(), addDomain(getTarget(request)))) {
       return false;
     }    
     return true;

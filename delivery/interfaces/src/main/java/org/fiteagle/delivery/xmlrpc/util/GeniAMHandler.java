@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.ISFA;
 import org.fiteagle.interactors.sfa.SFAInteractor_v3;
 import org.fiteagle.interactors.sfa.allocate.AllocateOptions;
@@ -253,7 +254,7 @@ private Object parseDeleteOptions(Object from) {
             .get(i);
         GeniUser geniUser = new GeniUser();
         if (userStruct.getString("urn") != null) {
-          geniUser.setUrn(userStruct.getString("urn"));
+          geniUser.setUrn(new URN(userStruct.getString("urn")));
         }
         
         if (userStruct.getArray("keys") != null) {

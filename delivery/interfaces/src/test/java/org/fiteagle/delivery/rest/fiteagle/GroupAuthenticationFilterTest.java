@@ -80,5 +80,6 @@ public class GroupAuthenticationFilterTest {
   @After
   public void cleanUp(){
     GroupDBManager.getInstance().deleteGroup("testGroup");
+    UserDBManager.getInstance().delete("test");
   }
 }

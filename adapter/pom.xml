@@ -16,8 +16,9 @@
 		<module>stopwatch</module>
 		<module>common</module>
 		<module>sshdeployadapter</module>
-    <module>attenuatoradapter</module>
-  </modules>
+    <module>qoSControl</module>
+   
+	</modules>
 
    <repositories>
     <repository>
@@ -25,4 +26,5 @@
       <url>http://fiteagle.org/maven</url>
     </repository>
   </repositories>
+
 </project>

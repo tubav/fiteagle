@@ -71,9 +71,10 @@ static {
       ps.setObject(i+1, params.get(i));
     }
     ps.execute();
-    ps.close();
+    
     connection.commit();
     connection.close();
+    ps.close();
   }
   
   protected int executeSQLUpdateString(String SQLString, List<Object> params) throws SQLException {
@@ -83,9 +84,10 @@ static {
       ps.setObject(i+1, params.get(i));
     }
     int count = ps.executeUpdate();
-    ps.close();
+   
     connection.commit();
     connection.close();
+    ps.close();
     return count;
   }
 }

@@ -3,6 +3,7 @@ package org.fiteagle.interactors.sfa.getSelfCredential;
 import java.security.cert.X509Certificate;
 
 import org.fiteagle.core.aaa.x509.X509Util;
+import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -33,8 +34,13 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor {
 		
 		X509Certificate userCert = getUserCertificate(cert);
 		URN target = new URN(xrn);
-		Credential credential = CredentialFactory.newCredential(userCert,
+		Credential credential = null;
+		try{
+			 credential = CredentialFactory.newCredential(userCert,
 				target);
+		}catch(RuntimeException e){
+			return "";
+		}
 		String signedCredential = CredentialFactory.signCredential(credential);
 
 		return signedCredential;

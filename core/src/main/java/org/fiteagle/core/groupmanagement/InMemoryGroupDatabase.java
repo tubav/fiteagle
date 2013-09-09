@@ -34,6 +34,14 @@ public void updateGroup(Group g3) {
 	
 	groupMap.put(g3.getGroupId(), g3);
 }
+
+@Override
+public void deleteResourceFromGroup(String resourceId) {
+	for(Group g: groupMap.values()){
+		g.deleteResource(resourceId);
+	}
+	
+}
   
   
 }

@@ -22,7 +22,7 @@ public class UserDBManagerTest {
   @Before
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
-    testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password");
+    testUser = new User("test1@localhost", "test", "testName", "test@test.org", "testAffiliation", "password");
     try{
       userDBManager.add(testUser);
     } catch(DuplicateUsernameException | DuplicateEmailException e){  
@@ -33,7 +33,7 @@ public class UserDBManagerTest {
     
   @Test
   public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException { 
-    Assert.assertEquals("test1", testUser.getUsername());
+    Assert.assertEquals("test1@localhost", testUser.getUsername());
     Assert.assertEquals("test", testUser.getFirstName());    
     Assert.assertEquals("testName", testUser.getLastName());
     Assert.assertEquals("test@test.org", testUser.getEmail());

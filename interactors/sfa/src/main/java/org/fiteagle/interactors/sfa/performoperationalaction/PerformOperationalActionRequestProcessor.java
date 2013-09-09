@@ -1,8 +1,11 @@
 package org.fiteagle.interactors.sfa.performoperationalaction;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.mail.MethodNotSupportedException;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
@@ -14,13 +17,17 @@ import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSliversOperationalStatus;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.performoperationalaction.Action.MethodNotFound;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class PerformOperationalActionRequestProcessor extends
 		SFAv3RequestProcessor {
+
+	GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
 
 	public PerformOperationalActionResult processRequest(
 			ArrayList<String> urns, ListCredentials credentials, String action,
@@ -50,87 +57,107 @@ public class PerformOperationalActionRequestProcessor extends
 			result.setOutput(output);
 			return result;
 		}
-		// TODO: check options!!!
 
-		// TODO: process the correct request..
-
-		returnCode = getSuccessReturnCode();
-
-		result.setCode(returnCode);
 		result.setValue(getPerformOperationalActionResultValue(urns, action));
+		returnCode = getReturnCode(code);
+		result.setCode(returnCode);
+		result.setOutput(returnCode.retrieveGeni_code().getDescription());
 		return result;
 	}
 
 	private ArrayList<GeniSliversOperationalStatus> getPerformOperationalActionResultValue(
 			ArrayList<String> urns, String action) {
-		
-		if(urns==null || urns.size()==0) throw new RuntimeException();
+
+		if (urns == null || urns.size() == 0)
+			throw new RuntimeException();
 
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 		ResourceAdapterManager resourceManager = ResourceAdapterManager
 				.getInstance();
 		ArrayList<GeniSliversOperationalStatus> slivers = new ArrayList<GeniSliversOperationalStatus>();
 		if (urns.get(0).contains("+slice+")) {
-			Group group = GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
+			Group group = GroupDBManager.getInstance().getGroup(
+					new URN(urns.get(0)).getSubjectAtDomain());
 			List<String> resourceAdapterInstanceIds = group.getResources();
 			List<ResourceAdapter> resourceAdapterInstances = resourceManager
 					.getResourceAdapterInstancesById(resourceAdapterInstanceIds);
 
 			for (Iterator iterator = resourceAdapterInstances.iterator(); iterator
 					.hasNext();) {
-				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
-				
-				if(action.compareToIgnoreCase("geni_start")==0){
-					resourceAdapter.start();
-					//TODO: change the state!!!
+				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
+						.next();
+
+				performActionOnAdapter(action, resourceAdapter);
+
+				if (isStillSuccessfull()) {
+					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
+					String urn = translator.translateResourceIdToSliverUrn(
+							resourceAdapter.getId(), urns.get(0));
+					tmpSliver.setGeni_sliver_urn(urn);
+					tmpSliver
+							.setGeni_allocation_status((String) resourceAdapter
+									.getProperties().get("allocation_status"));
+					slivers.add(tmpSliver);
+				} else {
+					break;
 				}
-				
-				if(action.compareToIgnoreCase("geni_stop")==0){
-					resourceAdapter.stop();
-					//TODO: change the state!!!
-				}
-				//TODO: handle other cases here
-				GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
-				String urn = translator.translateResourceIdToSliverUrn(resourceAdapter.getId(), urns.get(0));
-				tmpSliver.setGeni_sliver_urn(urn);
-				tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));
-				// TODO: expires????!!!
-				// TODO error(optional)??
-				slivers.add(tmpSliver);
+
 			}
 		} else {
 
 			for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
 				String urn = (String) iterator.next();
 				String id = translator.getIdFromSliverUrn(urn);
-				
-				ResourceAdapter resourceAdapter = resourceManager.getResourceAdapterInstance(id);
-				
-				if(action.compareToIgnoreCase("geni_start")==0){
-					resourceAdapter.start();
-					resourceAdapter.addProperty("operational_status", GENISliverOperationalState.geni_ready);
-				}
-				
-				if(action.compareToIgnoreCase("geni_stop")==0){
-					resourceAdapter.addProperty("operational_status", GENISliverOperationalState.geni_stopping);
-					resourceAdapter.stop();
-					resourceAdapter.addProperty("operational_status", GENISliverOperationalState.geni_notready);
-				}
-				
-				
-				GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
-				tmpSliver.setGeni_sliver_urn(urn);
-				tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));
-				// TODO: expires????!!!
-				// TODO error(optional)??
-				slivers.add(tmpSliver);
 
+				ResourceAdapter resourceAdapter = resourceManager
+						.getResourceAdapterInstance(id);
+				performActionOnAdapter(action, resourceAdapter);
+				if (isStillSuccessfull()) {
+					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
+					tmpSliver.setGeni_sliver_urn(urn);
+					tmpSliver
+							.setGeni_allocation_status((String) resourceAdapter
+									.getProperties().get("allocation_status"));
+					slivers.add(tmpSliver);
+				} else {
+					break;
+				}
 			}
 
 		}
 
 		return slivers;
 
+	}
+
+	private boolean isStillSuccessfull() {
+		return code.equals(GENI_CodeEnum.SUCCESS);
+	}
+
+	private void performActionOnAdapter(String action,
+			ResourceAdapter resourceAdapter) {
+		try {
+			if (action.compareToIgnoreCase("geni_start") == 0) {
+				resourceAdapter.start();
+				// TODO: change the state!!!
+			}
+
+			if (action.compareToIgnoreCase("geni_stop") == 0) {
+				resourceAdapter.stop();
+				// TODO: change the state!!!
+			} else {
+				Action requestedAction = new Action(action, resourceAdapter);
+				requestedAction.doAction();
+			}
+		} catch (IllegalArgumentException argumentError) {
+			code = GENI_CodeEnum.BADARGS;
+		} catch (MethodNotFound methodNotFound) {
+			code = GENI_CodeEnum.UNSUPPORTED;
+		} catch (InvocationTargetException e) {
+			code = GENI_CodeEnum.SERVERERROR;
+		} catch (IllegalAccessException e) {
+			code = GENI_CodeEnum.FORBIDDEN;
+		}
 	}
 
 	@Override

@@ -2,22 +2,24 @@ package org.fiteagle.interactors.sfa.common;
 
 import java.util.ArrayList;
 
+import org.fiteagle.core.util.URN;
+
 public class GeniUser {
   
-  private String urn;
+  private URN urn;
   private ArrayList<String> keys;
   
   public GeniUser() {
-    this.setUrn("");
+    this.setUrn(null);
     this.setKeys(new ArrayList<String>());
   }
 
-  public String getUrn() {
+  public URN getUrn() {
     return urn;
   }
 
-  public void setUrn(String urn) {
-    this.urn = urn;
+  public void setUrn(URN urn2) {
+    this.urn = urn2;
   }
 
   public ArrayList<String> getKeys() {

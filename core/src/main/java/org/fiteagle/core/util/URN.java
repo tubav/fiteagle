@@ -1,6 +1,7 @@
 package org.fiteagle.core.util;
 
 import org.fiteagle.core.groupmanagement.Group;
+import org.fiteagle.core.userdatabase.User;
 
 public class URN {
 
@@ -25,7 +26,14 @@ public class URN {
 			}
 
 		} else {
-			throw new URNParsingException();
+			splitted = urnString.split("\\.");
+			if (splitted.length == 2) {
+				this.domain = splitted[0];
+				this.type = "user";
+				this.subject = splitted[1];
+			} else {
+				throw new URNParsingException();
+			}
 		}
 	}
 
@@ -87,10 +95,16 @@ public class URN {
 		}
 		return subject + "@" + domain;
 	}
-	
-	public static URN getURNFromGroup(Group g){
+
+	public static URN getURNFromGroup(Group g) {
 		String[] split = g.getGroupId().split("@");
-		String returnString = prefix + "+" + split[1] + "+slice+" + split[0] ;
+		String returnString = prefix + "+" + split[1] + "+slice+" + split[0];
+		return new URN(returnString);
+	}
+
+	public static URN getURNFromUser(User u) {
+		String[] split = u.getUsername().split("@");
+		String returnString = prefix + "+" + split[1] + "+user+" + split[0];
 		return new URN(returnString);
 	}
 }

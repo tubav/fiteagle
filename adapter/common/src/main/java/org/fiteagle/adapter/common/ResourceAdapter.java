@@ -1,6 +1,7 @@
 package org.fiteagle.adapter.common;
 
 import java.rmi.server.ObjID;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +13,9 @@ public abstract class ResourceAdapter {
 	public abstract void create();
 	public abstract void configure(AdapterConfiguration configuration);
 	public abstract void release();
-	public abstract List<ResourceAdapter> getJavaInstances();
+	public static List<ResourceAdapter> getJavaInstances() throws IllegalAccessException{
+		throw new IllegalAccessException();
+	}
 	
 	public abstract boolean isLoaded();
 	public abstract void setLoaded(boolean loaded);
@@ -21,9 +24,10 @@ public abstract class ResourceAdapter {
 	private String type;//class of the implementing adapter
 	private String id;
 	private String groupId;
-	private String status;
+	private ResourceAdapterStatus status;
 	private boolean exclusive = false;
 	private boolean available = true;
+	private Date expirationTime;
 	
 	public HashMap<String, Object> getProperties() {
 	  if (properties !=null){
@@ -43,9 +47,8 @@ public abstract class ResourceAdapter {
 	}
 	
 	public ResourceAdapter() {
-	  ObjID objId = new ObjID();
 	  this.setId(UUID.randomUUID().toString());
-	  this.setStatus("geni_allocated");
+	  this.setStatus(ResourceAdapterStatus.Available);
   }
 	
 	public String getType() {
@@ -66,10 +69,10 @@ public abstract class ResourceAdapter {
   public void setGroupId(String groupId) {
     this.groupId = groupId;
   }
-  public String getStatus() {
+  public ResourceAdapterStatus getStatus() {
     return status;
   }
-  public void setStatus(String status) {
+  public void setStatus(ResourceAdapterStatus status) {
     this.status = status;
   }
   public boolean isExclusive() {
@@ -86,6 +89,12 @@ public abstract class ResourceAdapter {
   public void setAvailable(boolean available) {
     this.available = available;  
   }
+public Date getExpirationTime() {
+	return expirationTime;
+}
+public void setExpirationTime(Date expirationTime) {
+	this.expirationTime = expirationTime;
+}
 	
 	
 	

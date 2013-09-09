@@ -1,20 +1,12 @@
 package org.fiteagle.interactors.monitoring;
 
-import static org.junit.Assert.*;
-
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.List;
 
-import org.fiteagle.ui.infinity.InfinityClient;
-import org.fiteagle.ui.infinity.InfinityClientMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import orgt.fiteagle.core.monitoring.StatusTable;
-
-import com.sun.jersey.server.impl.managedbeans.ManagedBeanComponentProviderFactoryInitilizer;
 
 public class MonitoringManagerTest {
 

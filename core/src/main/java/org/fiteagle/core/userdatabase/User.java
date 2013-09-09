@@ -38,7 +38,7 @@ public class User {
 	private List<UserPublicKey> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
-	private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-|@]{3,20}");
+	private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-|@]{3,200}");
 	private final static Pattern EMAIL_PATTERN = Pattern.compile("[^@]+@{1}[^@]+\\.+[^@]+");
 	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 2;
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
@@ -114,23 +114,23 @@ public class User {
 	    throw new NotEnoughAttributesException("no username given");
 	  }
 	  if(firstName == null){
-	    throw new NotEnoughAttributesException("no firstName given");
+	    this.firstName = "default";
 	  }
 	  if(lastName == null){
-      throw new NotEnoughAttributesException("no lastName given");
+      this.lastName = "default";
     }
 	  if(email == null){
-      throw new NotEnoughAttributesException("no email given");
+      this.email = "default";
     }
 	  if(affiliation == null){
-      throw new NotEnoughAttributesException("no affiliation given");
+      this.affiliation = "default";
     }	  
 	  if(passwordHash == null){
       throw new NotEnoughAttributesException("no password given or password too short");
     }   
 	  
 	  if(!USERNAME_PATTERN.matcher(username).matches()){
-      throw new InValidAttributeException("invalid username, only letters, numbers and \"-\" is allowed and the username has to be from 3 to 20 characters long");
+      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
     }
 	  if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
       throw new InValidAttributeException("firstName too short");
@@ -138,7 +138,7 @@ public class User {
 	  if(lastName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
       throw new InValidAttributeException("lastName too short");
     }
-	  if(!EMAIL_PATTERN.matcher(email).matches()){
+	  if(!EMAIL_PATTERN.matcher(email).matches() && !email.equals("default")){
       throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
     }
 	  if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
@@ -183,25 +183,26 @@ public class User {
     return digest.digest(password.getBytes());
   }
 	
-  public void mergeWithUser(User newUser) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
-    if(newUser.getFirstName() != null){
-     this.firstName = newUser.getFirstName();
+  public void update(String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
+    if(firstName != null){
+     this.firstName = firstName;
     }
-    if(newUser.getLastName() != null){
-      this.lastName = newUser.getLastName();
+    if(lastName != null){
+      this.lastName = lastName;
     }
-    if(newUser.getPublicKeys() != null && newUser.getPublicKeys().size() != 0){
-      this.publicKeys = newUser.getPublicKeys();
+    if(publicKeys != null && publicKeys.size() != 0){
+      this.publicKeys = publicKeys;
     }
-    if(newUser.getEmail() != null){
-      this.email = newUser.getEmail();
+    if(email != null){
+      this.email = email;
     }
-    if(newUser.getAffiliation() != null){
-      this.affiliation = newUser.getAffiliation();
+    if(affiliation != null){
+      this.affiliation = affiliation;
     }
-    if(newUser.getPasswordHash() != null){
-      this.passwordSalt = newUser.getPasswordSalt();
-      this.passwordHash = newUser.getPasswordHash();
+    if(password != null){
+      byte[] salt = generatePasswordSalt();
+      this.passwordSalt = Base64.encodeBytes(salt);        
+      this.passwordHash = generatePasswordHash(salt, password);
     }
     this.setLast_modified(Calendar.getInstance().getTime());
     this.checkAttributes();      

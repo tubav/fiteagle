@@ -7,7 +7,6 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.fiteagle.adapter.sshdeployadapter.SSHDeployAdapter;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
@@ -108,7 +107,7 @@ public class SFAInteractorTest {
 		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 
 	}
-	
+	@Ignore
   @Test
   public void testListAvailableResources() throws IOException {
     ListResourceOptions options = createMinimalListResourceOptions("GENI",
@@ -121,7 +120,7 @@ public class SFAInteractorTest {
 //    Assert.assertTrue(listResourcesValue.contains("available now=\"true\""));
 
   }
-  
+  @Ignore
   @Test
   public void tesGetResourceAdapterOverPreferences() throws IOException {
 	  
@@ -134,7 +133,7 @@ public class SFAInteractorTest {
     String listResourcesValue = (String)listResourcesResult.getValue();
 //    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResourceHardwareType1"));
   }
-	
+  @Ignore
 	@Test
   public void testListResourcesWithNode() throws IOException {
     ListResourceOptions options = createMinimalListResourceOptions("GENI",
@@ -149,7 +148,7 @@ public class SFAInteractorTest {
 //    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResource"));
 
   }
-
+	@Ignore
 	@Test
 	public void testCombinedGetVersionAndListResources() throws IOException {
 		final GetVersionResult getVersionResult = this.getGeniVersion();
@@ -176,7 +175,7 @@ public class SFAInteractorTest {
 		DescribeResult describeResult = this.sfaInteractor.describe(urns, getListCredentials(), createTestDescribeOptions("GENI", "3", false));
 		Assert.assertEquals(0, describeResult.getCode().getGeni_code());
 	}
-	
+	@Ignore
 	@Test
   public void testAllocate() throws IOException {
     ArrayList<String> urns = new ArrayList<String>();
@@ -187,7 +186,7 @@ public class SFAInteractorTest {
     Assert.assertEquals(0, allocateResult.getCode().getGeni_code());
     
   }
-	
+	@Ignore
 	@Test
   public void testProvision() throws IOException {
     ArrayList<String> urns = new ArrayList<String>();
@@ -226,7 +225,7 @@ public class SFAInteractorTest {
     Assert.assertEquals(0, deleteResult.getCode().getGeni_code());
   }
 
-	
+	@Ignore
 	@Test
 	public void testInvalidListResourcesVersion() throws IOException {
 
@@ -333,13 +332,13 @@ public class SFAInteractorTest {
     Resource fiteagleResource1 = new Resource();
     List<Property> properties = fiteagleResource1.getProperty();
     Property idProperty= new Property();
-//    idProperty.setName("id");
-//    idProperty.setValue("TestId");
+   idProperty.setName("id");
+  idProperty.setValue("TestId");
     Property typeProperty= new Property();
     typeProperty.setName("type");
     typeProperty.setValue("org.fiteagle.adapter.stopwatch.StopwatchAdapter");
     
-//    properties.add(idProperty);
+    properties.add(idProperty);
     properties.add(typeProperty);
     fiteagleResources.add(new ObjectFactory().createResource(fiteagleResource1));
     return testRSpec;

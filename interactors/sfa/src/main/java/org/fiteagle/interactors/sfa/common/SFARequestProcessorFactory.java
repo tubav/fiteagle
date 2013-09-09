@@ -1,9 +1,9 @@
 package org.fiteagle.interactors.sfa.common;
 
+import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.delete.DeleteRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
-
 import org.fiteagle.interactors.sfa.getSelfCredential.GetSelfCredentialRequestProcessor;
 import org.fiteagle.interactors.sfa.getversion.GetVersionRequestProcessor;
 import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
@@ -27,7 +27,10 @@ public class SFARequestProcessorFactory {
 		E result = null;
 		switch(method){
 		case ALLOCATE:
-		  result = (E) new AllocateRequestProcessor();
+		  AllocateRequestProcessor allocateRequestProcessor = new AllocateRequestProcessor();
+		  allocateRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  result = (E) allocateRequestProcessor;
+		  
 			break;
 		case DELETE:
 		  result = (E) new DeleteRequestProcessor();
@@ -42,7 +45,9 @@ public class SFARequestProcessorFactory {
 			result = (E) new PerformOperationalActionRequestProcessor();
 			break;
 		case PROVISION:
-		  result = (E) new ProvisionRequestProcessor();
+		  ProvisionRequestProcessor provisionRequestProcessor =  new ProvisionRequestProcessor();
+		  provisionRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  result = (E) provisionRequestProcessor;
 			break;
 		case RENEW:
 			break;

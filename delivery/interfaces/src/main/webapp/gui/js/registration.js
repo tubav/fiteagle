@@ -1,14 +1,39 @@
 define(['validation','utils','mainPage','messages'],
 function(Validation, Utils, MainPage,Messages){
+
+
+	Registration = {};
+	domain = "";
+	/**
+	* 
+	* Gets the username from the ristration form
+	* @returns value from an element with the id "inputFirstName" 
+	*/
+	Registration._getUsername = function(){
+		var _username = $('#inputUsername').val();
+		return _username;
+	};
 	
-	/** 
-     * Registration class
-     * The Registration class contains functions for user registration form initialisation. 
-     * @class
-     * @constructor
-     * @return Registration object
-     */
-	Registration = {};		
+	/**
+	* 
+	* Gets the user's first name from the ristration form
+	* @returns value from an element with the id "inputFirstName" 
+	*/
+	Registration._getFirstName = function(){
+		var _firstName = $('#inputFirstName').val();
+		return _firstName;
+	};
+			
+	/**
+	* Gets the user's last name from the registration form.
+	* @returns value from an element by '#inputLastName'.
+	*/
+	Registration._getLastName = function(){
+		var _lastName = $('#inputLastName').val();
+		return _lastName;
+	};
+			
+
 			
 	
 	/**
@@ -267,6 +292,9 @@ function(Validation, Utils, MainPage,Messages){
 		Utils.addOnEnterClickEvent('#inputConfirmPassword',"#registerBtn");	
 		Registration.initRegistrationFormHints();
 		Registration.initRegisterNewUserButton();
+
+		
+
 	};
 	
 	
@@ -312,6 +340,12 @@ function(Validation, Utils, MainPage,Messages){
 			Utils.initTooltipFor(selectors[i],messages[i],position,trigger);
 		}
 	};
+
+	
+	Registration.clearAllErrorMessages = function(){
+		Utils.clearErrorMessagesFrom("#registrationErrors");
+	}
+	
 
 	return Registration;
 });

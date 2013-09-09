@@ -1,13 +1,17 @@
 package org.fiteagle.interactors.sfa.rspec;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.fiteagle.adapter.common.Named;
+import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
+import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 
 public class SFAv3RspecTranslator {
@@ -125,17 +129,20 @@ public class SFAv3RspecTranslator {
 		java.lang.reflect.Method[] resourceAdapterMethods = resourceAdapter
 				.getClass().getDeclaredMethods();
 		for (int i = 0; i < resourceAdapterMethods.length; i++) {
-			Method tmpRspecMethod = new Method();
-			tmpRspecMethod.setName(resourceAdapterMethods[i].getName());
-			tmpRspecMethod.setReturnType(resourceAdapterMethods[i]
-					.getReturnType().getName());
-			if (!getRspecParametersFromResourceAdapterMethod(
-					resourceAdapterMethods[i]).isEmpty()) {
-				tmpRspecMethod
-						.getParameter()
-						.addAll(getRspecParametersFromResourceAdapterMethod(resourceAdapterMethods[i]));
+			java.lang.reflect.Method method = resourceAdapterMethods[i];
+			if (method.isAnnotationPresent(Publish.class)) {
+				Method tmpRspecMethod = new Method();
+
+				tmpRspecMethod.setName(method.getName());
+				tmpRspecMethod.setReturnType(method.getReturnType().getName());
+				if (!getRspecParametersFromResourceAdapterMethod(method)
+						.isEmpty()) {
+					tmpRspecMethod
+							.getParameter()
+							.addAll(getRspecParametersFromResourceAdapterMethod(method));
+				}
+				result.add(tmpRspecMethod);
 			}
-			result.add(tmpRspecMethod);
 		}
 		return result;
 
@@ -146,11 +153,19 @@ public class SFAv3RspecTranslator {
 
 		ArrayList<Parameter> result = new ArrayList<Parameter>();
 		Class<?>[] paramTypes = method.getParameterTypes();
+		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 		for (int i = 0; i < paramTypes.length; i++) {
 			Parameter rspecParameter = new Parameter();
-			rspecParameter.setType(paramTypes[0].getName());
-			// get the method names.
-			rspecParameter.setName("arg0" + paramTypes[0].getName());
+			rspecParameter.setType(paramTypes[i].getName());
+			if (parameterAnnotations[i][0] != null
+					&& parameterAnnotations[i][0].annotationType().equals(
+							Named.class)) {
+				rspecParameter.setName(((Named)parameterAnnotations[i][0]).name());
+			} else {
+
+				rspecParameter.setName("arg0" + paramTypes[i].getName());
+
+			}
 			result.add(rspecParameter);
 		}
 		return result;
@@ -158,49 +173,20 @@ public class SFAv3RspecTranslator {
 
 	public ResourceAdapter translateResourceToResourceAdapter(Resource object) {
 		List<Property> properties = object.getProperty();
-		String type = "";
+
 		ResourceAdapter resource;
 		HashMap<String, Object> resourceProperties = new HashMap<String, Object>();
-
+		String id = "";
 		for (Iterator iterator = properties.iterator(); iterator.hasNext();) {
 			Property property = (Property) iterator.next();
-			if (property.getName().compareToIgnoreCase("type") == 0) {
-				type = property.getValue();
+			if (property.getName().compareToIgnoreCase("id") == 0) {
+				id = property.getValue();
 
 				break;
 			}
 		}
-		try {
-			Class<?> clazz = Class.forName(type);
-			resource = (ResourceAdapter) clazz.newInstance();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new RuntimeException();// TODO: change this.
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-			throw new RuntimeException();// TODO: change this.
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			throw new RuntimeException();// TODO: change this.
-		}
-
-		for (Iterator iterator = properties.iterator(); iterator.hasNext();) {
-			Property property = (Property) iterator.next();
-			if (property.getName().compareToIgnoreCase("id") == 0) {
-				resource.setId(property.getValue());
-				continue;
-			}
-			if (property.getName().compareToIgnoreCase("type") == 0) {
-				resource.setType(property.getValue());
-				continue;
-			}
-			if (property.getName().compareToIgnoreCase("status") == 0) {
-				// resource.setStatus(property.getValue());
-				continue;
-			}
-			resourceProperties.put(property.getName(), property.getValue());
-		}
-		resource.setProperties(resourceProperties);
+		resource = ResourceAdapterManager.getInstance()
+				.getResourceAdapterInstance(id);
 		return resource;
 	}
 
@@ -218,52 +204,56 @@ public class SFAv3RspecTranslator {
 	// TODO quick and dirty for demo, new concept of resource description and
 	// management urgently needed!!!!!
 	public Object translateToNode(ResourceAdapter resourceAdapter) {
-    
+
 		NodeContents node = new NodeContents();
-    HashMap<String, Object> resourceAdapterProperties = resourceAdapter.getProperties();
-    
-    if (resourceAdapterProperties != null) {
-      ObjectFactory factory = new ObjectFactory();
-      Set<String> propKeys = resourceAdapterProperties.keySet();
-      node.setComponentId(COMPONENT_ID_PREFIX+resourceAdapter.getId());
-      node.setComponentManagerId(COMPONENT_MANAGER_ID);
-      node.setExclusive(resourceAdapter.isExclusive());
-      List<Object> nodeContent = node.getAnyOrRelationOrLocation();
-      AvailableContents available = new AvailableContents();
-      available.setNow(resourceAdapter.isAvailable());
-      nodeContent.add(factory.createAvailable(available));
-      
-      LocationContents location = new LocationContents();
-      location.setCountry((String)resourceAdapterProperties.get("country"));
-      location.setLatitude((String)resourceAdapterProperties.get("latitude"));
-      location.setLongitude((String)resourceAdapterProperties.get("longitude"));
-      nodeContent.add(factory.createLocation(location));
-      
-      if(resourceAdapter instanceof SSHAccessable){
-    	SSHAccessable  sshAccessableResource = (SSHAccessable) resourceAdapter;
-     
-        HardwareTypeContents hardwareType = new HardwareTypeContents();
-        hardwareType.setName(sshAccessableResource.getHardwareType());
-        nodeContent.add(factory.createHardwareType(hardwareType));
-      
-        List<Object> services = node.getAnyOrRelationOrLocation();
-        ServiceContents service = new ServiceContents();
-        List<Object> logins = service.getAnyOrLoginOrInstall();
-        LoginServiceContents login = new LoginServiceContents();
-        
-        login.setAuthentication("ssh-keys");
-        login.setHostname(sshAccessableResource.getIp());
-        login.setPort(sshAccessableResource.getPort());
-        
-        logins.add(new ObjectFactory().createLogin(login));
-        
-        services.add(new ObjectFactory().createServices(service));
-        // TODO: add node properties
-      }
-    }
-    
-    return new ObjectFactory().createNode(node);
-  }
+		HashMap<String, Object> resourceAdapterProperties = resourceAdapter
+				.getProperties();
+
+		if (resourceAdapterProperties != null) {
+			ObjectFactory factory = new ObjectFactory();
+			Set<String> propKeys = resourceAdapterProperties.keySet();
+			node.setComponentId(COMPONENT_ID_PREFIX + resourceAdapter.getId());
+			node.setComponentManagerId(COMPONENT_MANAGER_ID);
+			node.setExclusive(resourceAdapter.isExclusive());
+			List<Object> nodeContent = node.getAnyOrRelationOrLocation();
+			AvailableContents available = new AvailableContents();
+			available.setNow(resourceAdapter.isAvailable());
+			nodeContent.add(factory.createAvailable(available));
+
+			LocationContents location = new LocationContents();
+			location.setCountry((String) resourceAdapterProperties
+					.get("country"));
+			location.setLatitude((String) resourceAdapterProperties
+					.get("latitude"));
+			location.setLongitude((String) resourceAdapterProperties
+					.get("longitude"));
+			nodeContent.add(factory.createLocation(location));
+
+			if (resourceAdapter instanceof SSHAccessable) {
+				SSHAccessable sshAccessableResource = (SSHAccessable) resourceAdapter;
+
+				HardwareTypeContents hardwareType = new HardwareTypeContents();
+				hardwareType.setName(sshAccessableResource.getHardwareType());
+				nodeContent.add(factory.createHardwareType(hardwareType));
+
+				List<Object> services = node.getAnyOrRelationOrLocation();
+				ServiceContents service = new ServiceContents();
+				List<Object> logins = service.getAnyOrLoginOrInstall();
+				LoginServiceContents login = new LoginServiceContents();
+
+				login.setAuthentication("ssh-keys");
+				login.setHostname(sshAccessableResource.getIp());
+				login.setPort(sshAccessableResource.getPort());
+
+				logins.add(new ObjectFactory().createLogin(login));
+
+				services.add(new ObjectFactory().createServices(service));
+				// TODO: add node properties
+			}
+		}
+
+		return new ObjectFactory().createNode(node);
+	}
 
 	public Object translateSSHAccesableToAdvertisementNode(
 			ResourceAdapter resourceAdapter) {

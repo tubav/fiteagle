@@ -180,7 +180,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		PublicKeys.initForm();
 		Certificates.initForm();
 		checkForStoredHashTags();
-		Utils.disableSelectionOnElements();
 		disableAsideLinks();
 	};
 	
