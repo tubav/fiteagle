@@ -8,9 +8,9 @@ requirejs.config({
   }
 });
 
-define(['jquery','bootstrap','loginPage','mainPage','utils', 'history', 'ajaxify','fileSaver'], 
+define(['jquery','bootstrap','loginPage','mainPage','statusPage', 'utils', 'history', 'ajaxify','fileSaver'], 
 
-function($,Bootstrap,LoginPage,MainPage,Utils){
+function($,Bootstrap,LoginPage,MainPage,StatusPage,Utils){
 					
 	$.ajaxSetup({cache:false});	
 
@@ -26,7 +26,7 @@ function($,Bootstrap,LoginPage,MainPage,Utils){
 				MainPage.load();
 			}
 		}else{
-			LoginPage.load();		
+			LoginPage.load();
 		}
 	}
 	
