@@ -169,20 +169,22 @@ public class KeyManagement {
     
   }
   
-  public String encryptPrivateKey(PrivateKey privateKey, String password) throws IOException, GeneralSecurityException {
-    
-   
+  public String encryptPrivateKey(PrivateKey privateKey, String password) throws IOException, GeneralSecurityException {   
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    PEMWriter writer = new PEMWriter(new BufferedWriter(new OutputStreamWriter(out)));
-    JcePEMEncryptorBuilder builder = new JcePEMEncryptorBuilder("DES-EDE3-CBC");
-    PEMEncryptor encryptor = builder.build(password.toCharArray());
-    writer.writeObject(privateKey, encryptor);
+    PEMWriter writer = new PEMWriter(new BufferedWriter(new OutputStreamWriter(out)));    
+    if(password.length() > 0){
+      JcePEMEncryptorBuilder builder = new JcePEMEncryptorBuilder("DES-EDE3-CBC");
+      PEMEncryptor encryptor = builder.build(password.toCharArray());
+      writer.writeObject(privateKey, encryptor);
+    }
+    else{
+      writer.writeObject(privateKey);
+    }   
     writer.flush();
     writer.close();
     String returnString = out.toString();
     out.close();
-    return returnString;
-    
+    return returnString;    
   }
   
   private String bytesToHex(byte[] bytes) {
