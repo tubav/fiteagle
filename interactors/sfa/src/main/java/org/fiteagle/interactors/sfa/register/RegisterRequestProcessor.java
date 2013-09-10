@@ -12,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -47,8 +48,16 @@ Logger log = LoggerFactory.getLogger(getClass());
     if(isSliceType(type)){
     	URN userURN = new URN(cred.getCredential().getOwnerURN());
     	Group slice = new Group(slicUrn.getSubjectAtDomain(), userURN.getSubjectAtDomain() );
-    	GroupDBManager groupmananger = GroupDBManager.getInstance();
-    	groupmananger.addGroup(slice);
+    	try{
+    		GroupDBManager groupmananger = GroupDBManager.getInstance();
+    		groupmananger.addGroup(slice);
+    	}catch(CouldNotCreateGroup e){
+    		HashMap<String, Object> returnMap =  new HashMap<String, Object>();
+        	returnMap.put("code", new Integer(17));
+        	returnMap.put("value","");
+        	returnMap.put("output", "");
+        	return returnMap;
+    	}
     	String sliceCredential = createSignedCredential(slice,userCertificate);
     	HashMap<String, Object> returnMap =  new HashMap<String, Object>();
     	returnMap.put("code", new Integer(0));

@@ -12,12 +12,13 @@ import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 
 public class SFAv3RspecTranslator {
 
-	private static final String COMPONENT_ID_PREFIX = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+";
-	private static final String COMPONENT_MANAGER_ID = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+authority+root";
+	private static final String COMPONENT_ID_PREFIX = "urn:publicid:IDN+"+InterfaceConfiguration.getInstance().getDomain()+"+";
+	private static final String COMPONENT_MANAGER_ID = InterfaceConfiguration.getInstance().getAM_URN();
 	private final Geni_RSpec_Version geni_rspec_version;
 	private final String adRspecNamespace = "http://www.geni.net/resources/rspec/3";
 	private final String adRspecSchema = "http://www.geni.net/resources/rspec/3/ad.xsd";
@@ -35,6 +36,7 @@ public class SFAv3RspecTranslator {
 		geni_rspec_version.setVersion("3");
 		addAdRspecExtension(this.RSPEC_EXTENSION);
 		addRequestRspecExtension(RSPEC_EXTENSION);
+		
 	}
 
 	public String getAdRspecNamespace() {

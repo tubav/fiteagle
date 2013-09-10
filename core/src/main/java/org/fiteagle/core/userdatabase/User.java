@@ -38,7 +38,7 @@ public class User {
 	private List<UserPublicKey> publicKeys;
 
 	private final static int MINIMUM_PASSWORD_LENGTH = 3;
-	private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-|@]{3,200}");
+	private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-|@.]{3,200}");
 	private final static Pattern EMAIL_PATTERN = Pattern.compile("[^@]+@{1}[^@]+\\.+[^@]+");
 	private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 2;
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
