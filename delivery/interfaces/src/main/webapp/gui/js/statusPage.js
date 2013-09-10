@@ -8,7 +8,7 @@ function(){
 	rowId = "";
 	Status.init = function(){
 		
-		$.get("https://localhost:8443/api/v1/status", function(data){
+		$.get("/api/v1/status", function(data){
 			showStatus(data);
 		});
 		$(document).on("click",".statusRow",function(){
@@ -16,7 +16,7 @@ function(){
 			$("#popup").modal("show");
 		});
 		$("#popup").on("show", function(){
-			$.get("https://localhost:8443/api/v1/status/"+rowId,function (data) {
+			$.get("/api/v1/status/"+rowId,function (data) {
 				$(".modal-body").html(showDetailedStatus(data));
 				 
 			});
