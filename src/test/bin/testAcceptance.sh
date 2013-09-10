@@ -24,9 +24,9 @@ result=$(./src/test/bin/runGetCertificate.sh)
 asssert "testGetCertificate" "$expect" "$result"
 
 expect="fiteagle version"
-result=$(./src/test/bin/runOmniGetVersionAuto.sh|grep -i "$expect")
+result=$(./src/test/bin/runOmniGetVersion.sh|grep -i "$expect")
 asssert "testOmniGetVersion" "$expect" "$result"
 
 expect="<rspec"
-result=$(./src/test/bin/runOmniListResourcesAuto.sh|grep -i "$expect")
+result=$(./src/test/bin/runOmniListResources.sh|grep -i "$expect")
 asssert "testOmniListResources" "$expect" "$result"
