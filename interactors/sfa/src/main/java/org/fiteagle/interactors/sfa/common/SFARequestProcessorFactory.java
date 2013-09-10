@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa.common;
 
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.delete.DeleteRequestProcessor;
 import org.fiteagle.interactors.sfa.describe.DescribeRequestProcessor;
@@ -33,7 +34,10 @@ public class SFARequestProcessorFactory {
 		  
 			break;
 		case DELETE:
-		  result = (E) new DeleteRequestProcessor();
+			DeleteRequestProcessor delProc = new DeleteRequestProcessor();
+			delProc.setResourceManager(ResourceAdapterManager.getInstance());
+			delProc.setGroupDBManager(GroupDBManager.getInstance());
+		  result = (E) delProc;
 			break;
 		case DESCRIBE:
 			result = (E) new DescribeRequestProcessor();

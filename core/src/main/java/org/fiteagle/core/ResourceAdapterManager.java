@@ -284,5 +284,14 @@ private URLClassLoader sysloader;
 //  public void addGroup(String groupId, List<ResourceAdapter> adapters) {
 //    this.groups.put(groupId, adapters);
 //  }
+	
+	public static class ResourceNotFound extends RuntimeException{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+	}
   
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.fiteagle.core.persistence.SQLiteDatabase;
 
 public class SQLiteGroupDatabase extends SQLiteDatabase implements
@@ -168,15 +169,7 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 		}
 	}
 
-	public class GroupNotFound extends RuntimeException {
-
-		private static final long serialVersionUID = 1L;
-
-		public GroupNotFound(String message) {
-			super(message);
-		}
-
-	}
+	
 
 	public class CouldNotCreateGroup extends RuntimeException {
 		private static final long serialVersionUID = 1L;

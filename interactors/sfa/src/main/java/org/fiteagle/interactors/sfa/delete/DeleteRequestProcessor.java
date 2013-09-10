@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
@@ -25,12 +27,16 @@ import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class DeleteRequestProcessor extends SFAv3RequestProcessor {
   
-  public DeleteResult processRequest(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions) {
+  private ResourceAdapterManager resourceManager;
+  private GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
+private GroupDBManager groupManager;
+  
+public DeleteResult processRequest(List<String> urns, ListCredentials credentials, DeleteOptions deleteOptions) {
     DeleteResult result = getResult(urns, credentials, deleteOptions);
     return result;
   }
   
-  private DeleteResult getResult(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions) {
+  private DeleteResult getResult(List<String> urns, ListCredentials credentials, DeleteOptions deleteOptions) {
     
     String output = "";
     AMCode returnCode = null;
@@ -48,24 +54,27 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
       result.setOutput(output);
       return result;
     }
-    // TODO: check options!!!
-    
-    // TODO: process the correct request..
-    returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
+    result.setValue(getDeleteResultValue(urns));
+    returnCode = getReturnCode(code);
     
     result.setCode(returnCode);
-    result.setValue(getDeleteResultValue(urns));
+   
     return result;
   }
   
-  private ArrayList<GeniSlivers> getDeleteResultValue(ArrayList<String> urns) {
+  private ArrayList<GeniSlivers> getDeleteResultValue(List<String> urns) {
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
-    ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     //TODO: the urn is a slice urn..
     String test = urns.get(0);
-    if(urns.get(0).contains("+slice+")){
-      Group group=GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
+    ArrayList<GeniSlivers> slivers = new ArrayList<>();
+	if(urns.get(0).contains("+slice+")){
+	  Group group = null;
+	  try{
+		   group=groupManager.getGroup(new URN(urns.get(0)).getSubjectAtDomain());
+	  }catch(GroupNotFound e){
+		  code = GENI_CodeEnum.SEARCHFAILED;
+		  return slivers;
+	  }
       List<String> resourceAdapterInstanceIds = group.getResources();
       List<ResourceAdapter> resourceAdapterInstances = resourceManager.getResourceAdapterInstancesById(resourceAdapterInstanceIds);
       while(resourceAdapterInstances.size()>0){
@@ -78,24 +87,24 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
         tmpSliver.setGeni_allocation_status(GENISliverAllocationState.geni_unallocated.toString());
         //TODO: expires????!!!
         //TODO error(optional)??
-        slivers.add(tmpSliver);
+        slivers .add(tmpSliver);
       }
       
     } else{
     	
     	//TODO völlig falsch!!!
-      Group group = GroupDBManager.getInstance().getGroup(new URN(translator.getIdFromSliverUrn(urns.get(0))).getSubjectAtDomain());
+    
       
-      for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
-        String urn = (String) iterator.next();
+      for (String urn: urns) {
+     
         String id=translator.getIdFromSliverUrn(urn);
-        if(!group.contains(id))
-          throw new RuntimeException();//TODO: define this exception concrete
-        
-        group.deleteResource(id);
-        
-        resourceManager.deleteResource(id);
-        
+       
+        try{
+        	resourceManager.deleteResource(id);
+        }catch(ResourceNotFound e){
+        	code = GENI_CodeEnum.SEARCHFAILED;
+        	return new ArrayList<GeniSlivers>();
+        }
         GeniSlivers tmpSliver = new GeniSlivers();
 //      tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(id,urn));
         
@@ -139,5 +148,15 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
     // TODO Auto-generated method stub
     return null;
   }
+
+public void setResourceManager(ResourceAdapterManager instance) {
+	this.resourceManager = instance;
+}
+
+public void setGroupDBManager(GroupDBManager groupManager) {
+	this.groupManager = groupManager;
+	
+}
   
+
 }
