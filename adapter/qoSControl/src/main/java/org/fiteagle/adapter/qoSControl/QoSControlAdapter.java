@@ -147,7 +147,7 @@ private String clientIP;
 		otherProps.add(protocol);
 		otherProps.add(framedIp);
 		otherProps.add(direction);
-		client.startSession(null, username, props);
+		client.startSession("", username, props);
 	}
 
 	@Publish

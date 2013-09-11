@@ -2,7 +2,9 @@ package org.fiteagle.interactors.sfa.getSelfCredential;
 
 import java.security.cert.X509Certificate;
 
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.x509.X509Util;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
@@ -36,6 +38,8 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor {
 		URN target = new URN(xrn);
 		Credential credential = null;
 		try{
+			CredentialFactory.setGroupDBManager(GroupDBManager.getInstance());
+			CredentialFactory.setKeystoreManagement(KeyStoreManagement.getInstance());
 			 credential = CredentialFactory.newCredential(userCert,
 				target);
 		}catch(RuntimeException e){
