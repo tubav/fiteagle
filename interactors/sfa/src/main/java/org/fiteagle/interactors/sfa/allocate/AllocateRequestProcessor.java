@@ -1,25 +1,19 @@
 package org.fiteagle.interactors.sfa.allocate;
 
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.GroupNotFound;
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
@@ -31,10 +25,7 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.describe.DescribeResult;
-import org.fiteagle.interactors.sfa.describe.DescribeValue;
 import org.fiteagle.interactors.sfa.rspec.NodeContents;
-import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.Property;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.Resource;

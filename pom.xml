@@ -253,6 +253,7 @@
 					<!-- Work around Cobertura incompatibilty with Java 7 -->
 					<configuration>
 						<argLine>-XX:-UseSplitVerifier ${argLine}</argLine>
+						<argLine>-Djava.security.egd=file:/dev/./urandom</argLine>
 					</configuration>
 				</plugin>
 				<plugin>
