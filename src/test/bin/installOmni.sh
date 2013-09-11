@@ -9,6 +9,7 @@ _data="software=${_version}.tar.gz&accept=I+have+read+and+accept+the+GPO+terms+o
 require curl tar
 
 echo -n "Downloading..."
+mkdir -p target
 curl -s --data ${_data} ${_url}|tar xz -C target
 echo "done"
 
