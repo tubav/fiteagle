@@ -2,7 +2,7 @@
 
 _username="testuser"
 _password="Password"
-_json="./src/test/resources/${_username}.json"
+_json="${_dir}/../resources/${_username}.json"
 _host="https://localhost:8443/api/v1/user"
 _cert="/tmp/${_username}.pem"
 
@@ -22,7 +22,7 @@ function asssert() {
 function require() {
   error=0;
   for bin in "$@"; do
-    type $bin >/dev/null 2>&1 || { echo >&2 "I require $bin but it's not installed."; error=1; }
+    type $bin >/dev/null 2>&1 || { echo >&2 "WARNING: I require $bin but it's not installed. (skipping this test)"; error=1; }
   done
-  [ $error == 1 ] && exit 1;
+  [ $error == 1 ] && exit 0;
 }
