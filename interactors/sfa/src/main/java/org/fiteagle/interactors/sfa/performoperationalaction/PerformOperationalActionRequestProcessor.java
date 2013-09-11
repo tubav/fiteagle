@@ -23,10 +23,13 @@ import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.performoperationalaction.Action.MethodNotFound;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PerformOperationalActionRequestProcessor extends
 		SFAv3RequestProcessor {
 
+	Logger log = LoggerFactory.getLogger(getClass()); 
 	GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
 
 	public PerformOperationalActionResult processRequest(
@@ -150,12 +153,16 @@ public class PerformOperationalActionRequestProcessor extends
 				requestedAction.doAction();
 			}
 		} catch (IllegalArgumentException argumentError) {
+			log.error(argumentError.getMessage(),argumentError);
 			code = GENI_CodeEnum.BADARGS;
 		} catch (MethodNotFound methodNotFound) {
+			log.error(methodNotFound.getMessage(),methodNotFound);
 			code = GENI_CodeEnum.UNSUPPORTED;
 		} catch (InvocationTargetException e) {
+			log.error(e.getMessage(),e);
 			code = GENI_CodeEnum.SERVERERROR;
 		} catch (IllegalAccessException e) {
+			log.error(e.getMessage(),e);
 			code = GENI_CodeEnum.FORBIDDEN;
 		}
 	}

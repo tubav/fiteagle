@@ -58,7 +58,8 @@ private String clientIP;
 
 	@Override
 	public void configure(AdapterConfiguration configuration) {
-		String url = 	"http://" + preferences.getIP() + ":" + preferences.getPort();
+		String url = 	"http://" + preferences.getIP() + ":" + preferences.getPort()+"/ngsi.applicationDrivenQoS/rest/1/QoSManager";
+		log.info("creating client for: "+ url);
 		client = new QoSClient(url);
 		clientIP = preferences.getClientIP();
 	}
@@ -98,6 +99,10 @@ private String clientIP;
 	@Publish
 	public void setBandwidthDL(@Named(name="source_ip")String ip, @Named(name="bandwidth") String bandwitdh ){
 		log.info("Adapter received action setBandwidth");
+		if(client == null)
+		log.info("client is not ready ... aboarting");
+		
+		
 		QoSFeatureProperties props = new QoSFeatureProperties();
 		List<NameValuePair> otherProps = props.getOtherProperties();
 //		
