@@ -22,7 +22,7 @@ function asssert() {
 function require() {
   error=0;
   for bin in "$@"; do
-    type $bin >/dev/null 2>&1 || { echo >&2 "I require $bin but it's not installed."; error=1; }
+    type $bin >/dev/null 2>&1 || { echo >&2 "WARNING: I require $bin but it's not installed. (skipping this test)"; error=1; }
   done
-  [ $error == 1 ] && exit 1;
+  [ $error == 1 ] && exit 0;
 }
