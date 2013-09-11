@@ -5,28 +5,28 @@ source "${_dir}/run.config.sh"
 
 require curl omni.py
 
-./src/test/bin/runDelUser.sh > /dev/null
+${_dir}/runDelUser.sh > /dev/null
 
 expect="404"
-result=$(./src/test/bin/runDelUser.sh)
+result=$(${_dir}/runDelUser.sh)
 asssert "testDelUser" "$expect" "$result"
 
 expect="201"
-result=$(./src/test/bin/runAddUser.sh)
+result=$(${_dir}/runAddUser.sh)
 asssert "testAddUser" "$expect" "$result"
 
 expect="200"
-result=$(./src/test/bin/runGetUser.sh)
+result=$(${_dir}/runGetUser.sh)
 asssert "testGetUser" "$expect" "$result"
 
 expect="200"
-result=$(./src/test/bin/runGetCertificate.sh)
+result=$(${_dir}/runGetCertificate.sh)
 asssert "testGetCertificate" "$expect" "$result"
 
 expect="fiteagle version"
-result=$(./src/test/bin/runOmniGetVersion.sh|grep -i "$expect")
+result=$(${_dir}/runOmniGetVersion.sh|grep -i "$expect")
 asssert "testOmniGetVersion" "$expect" "$result"
 
 expect="<rspec"
-result=$(./src/test/bin/runOmniListResources.sh|grep -i "$expect")
+result=$(${_dir}/runOmniListResources.sh|grep -i "$expect")
 asssert "testOmniListResources" "$expect" "$result"
