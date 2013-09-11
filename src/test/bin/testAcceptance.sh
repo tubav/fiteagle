@@ -3,7 +3,7 @@
 _dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${_dir}/run.config.sh"
 
-require curl omni.py
+require curl
 
 ${_dir}/runDelUser.sh > /dev/null
 
@@ -22,6 +22,8 @@ asssert "testGetUser" "$expect" "$result"
 expect="200"
 result=$(${_dir}/runGetCertificate.sh)
 asssert "testGetCertificate" "$expect" "$result"
+
+require omni.py
 
 expect="fiteagle version"
 result=$(${_dir}/runOmniGetVersion.sh|grep -i "$expect")
