@@ -1,10 +1,6 @@
 language: java
 jdk:
   - oraclejdk7
-before_script:
-  - ./src/test/bin/installOmni.sh
-  - export OMNI_HOME=$(pwd)/target/gcf-2.3.3
-  - export PATH=$OMNI_HOME/src:$PATH
 script: mvn install
 notifications:
   email:
