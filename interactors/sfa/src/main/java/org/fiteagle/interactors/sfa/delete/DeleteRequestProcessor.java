@@ -91,14 +91,11 @@ public DeleteResult processRequest(List<String> urns, ListCredentials credential
       }
       
     } else{
-    	
-    	//TODO völlig falsch!!!
     
-      
       for (String urn: urns) {
      
         String id=translator.getIdFromSliverUrn(urn);
-       
+    
         try{
         	resourceManager.deleteResource(id);
         }catch(ResourceNotFound e){
@@ -106,12 +103,10 @@ public DeleteResult processRequest(List<String> urns, ListCredentials credential
         	return new ArrayList<GeniSlivers>();
         }
         GeniSlivers tmpSliver = new GeniSlivers();
-//      tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(id,urn));
-        
+
         tmpSliver.setGeni_sliver_urn(urn);
         tmpSliver.setGeni_allocation_status(GENISliverAllocationState.geni_unallocated.toString());
-        //TODO: expires????!!!
-        //TODO error(optional)??
+        //tmpSliver.setGeni_expires(geni_expires);
         slivers.add(tmpSliver);
         
       }

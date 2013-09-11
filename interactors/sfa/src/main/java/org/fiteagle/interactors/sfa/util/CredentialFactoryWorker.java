@@ -31,12 +31,18 @@ public class CredentialFactoryWorker {
 	private X509Certificate targetCertificate;
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private GroupDBManager groupManager;
+	private KeyStoreManagement keyStoreManagement;
 
-	public CredentialFactoryWorker(Credential credential,
+	public CredentialFactoryWorker(
 			X509Certificate credentialCertificate, URN target) {
-		this.credential = credential;
+	
 		this.userCertificate = credentialCertificate;
 		this.target = getTargetURN(target);
+		
+	}
+
+	private void setTargetCertificate() {
 		try {
 			targetCertificate = getTargetCertificate();
 		} catch (Exception e) {
@@ -46,10 +52,9 @@ public class CredentialFactoryWorker {
 	}
 
 	private X509Certificate getTargetCertificate() throws Exception {
-		KeyStoreManagement keyStoreManagement = KeyStoreManagement
-				.getInstance();
+		
 		if (target.getType().equalsIgnoreCase("slice")) {
-			GroupDBManager groupManager = GroupDBManager.getInstance();
+		
 			Group group = groupManager.getGroup(target.getSubjectAtDomain());
 			try {
 
@@ -64,24 +69,23 @@ public class CredentialFactoryWorker {
 
 		}
 		if (target.getType().equalsIgnoreCase("authority")) {
-			KeyStoreManagement keyStoreManagment = KeyStoreManagement
-					.getInstance();
-			return keyStoreManagment.getSliceAuthorityCert();
+			
+			return keyStoreManagement.getSliceAuthorityCert();
 		}
 		throw new RuntimeException();
 	}
 
-	public void setId() {
+	private void setId() {
 		credential.setId(UUID.randomUUID().toString());
 
 	}
 
-	public void setType() {
+	private void setType() {
 		credential.setType("privilege");
 
 	}
 
-	public void setOwnerGID() {
+	private void setOwnerGID() {
 		X509Certificate returnCert = userCertificate;
 		CertificateAuthority ca = CertificateAuthority.getInstance();
 		if (X509Util.isSelfSigned(userCertificate)) {
@@ -104,7 +108,7 @@ public class CredentialFactoryWorker {
 
 	}
 
-	public void setOwnerURN() {
+	private void setOwnerURN() {
 		URN urn = getSubjectUrn();
 		credential.setOwnerURN(urn.toString());
 
@@ -120,7 +124,7 @@ public class CredentialFactoryWorker {
 
 	}
 
-	public void setTargetGID() {
+	private void setTargetGID() {
 		try {
 			credential.setTargetGid(X509Util
 					.getCertificateBodyEncoded(targetCertificate));
@@ -131,11 +135,11 @@ public class CredentialFactoryWorker {
 
 	}
 
-	public void setTargetURN() {
+	private void setTargetURN() {
 		credential.setTargetURN(target.toString());
 	}
 
-	public void setExpirationDate() {
+	private void setExpirationDate() {
 
 		GregorianCalendar gregCalendar = new GregorianCalendar();
 		gregCalendar
@@ -151,7 +155,7 @@ public class CredentialFactoryWorker {
 
 	}
 
-	public void setPrivleges() {
+	private void setPrivleges() {
 		Privileges privileges = new Privileges();
 		Privilege userPriv = new Privilege();
 		userPriv.setCanDelegate(false);
@@ -185,6 +189,29 @@ public class CredentialFactoryWorker {
 
 		private static final long serialVersionUID = -7821229625163019933L;
 
+	}
+
+	public void setGroupManager(GroupDBManager groupManager) {
+		this.groupManager = groupManager;
+		
+	}
+	
+	public void setKeyStoreManager(KeyStoreManagement keyStoreManagement){
+		this.keyStoreManagement = keyStoreManagement;
+	}
+
+	public Credential getCredential() {
+		credential = new Credential();
+		setTargetCertificate();
+		setId();
+		setType();
+		setOwnerGID();
+		setOwnerURN();
+		setTargetGID();
+		setTargetURN();
+		setExpirationDate();
+		setPrivleges();
+		return credential;
 	}
 
 }

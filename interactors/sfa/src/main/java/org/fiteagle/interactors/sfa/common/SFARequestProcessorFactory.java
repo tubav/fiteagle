@@ -1,6 +1,7 @@
 package org.fiteagle.interactors.sfa.common;
 
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.delete.DeleteRequestProcessor;
@@ -67,7 +68,8 @@ public class SFARequestProcessorFactory {
 			result = (E) new GetVersionRequestProcessor();
 			break;
 		case REGISTER: 
-		  result = (E) new RegisterRequestProcessor();
+		RegisterRequestProcessor registerRequestProcessor = new RegisterRequestProcessor(KeyStoreManagement.getInstance(), GroupDBManager.getInstance());
+		  result = (E) registerRequestProcessor;
 		  break;
 		case RESOLVE: 
       result = (E) new ResolveRequestProcessor();
