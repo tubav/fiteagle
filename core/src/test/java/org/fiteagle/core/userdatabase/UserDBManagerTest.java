@@ -53,7 +53,12 @@ public class UserDBManagerTest {
   
   @Test
   public void testCreateUserCertAndPrivateKey() throws Exception{
-    Assert.assertNotNull(userDBManager.createUserPrivateKeyAndCertAsString(testUser.getUsername(), "my passphrase"));
+    Assert.assertTrue(userDBManager.createUserPrivateKeyAndCertAsString(testUser.getUsername(), "my passphrase").contains("ENCRYPTED"));
+  }  
+  
+  @Test
+  public void testCreateUserCertAndPrivateKeyWithoutPasshphrase() throws Exception{
+    Assert.assertFalse(userDBManager.createUserPrivateKeyAndCertAsString(testUser.getUsername(), "").contains("ENCRYPTED"));
   }  
   
   @Test
