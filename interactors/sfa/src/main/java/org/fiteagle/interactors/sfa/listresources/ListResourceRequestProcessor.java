@@ -63,6 +63,7 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 			ListResourcesResult result = new ListResourcesResult();
 			result.setCode(returnCode);
 			result.setOutput(output);
+			result.setValue(value);
 			return result;
 		}
 

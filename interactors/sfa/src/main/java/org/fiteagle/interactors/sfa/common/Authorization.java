@@ -29,7 +29,7 @@ public class Authorization {
 	}
 
 	public void checkCredentialsList(ListCredentials listCredentials) {
-		if (listCredentials != null) {
+		if (listCredentials != null && listCredentials.getCredentialsList().size() != 0) {
 			try{
 			List<Credentials> credentialList = listCredentials
 					.getCredentialsList();
@@ -49,7 +49,8 @@ public class Authorization {
 			}
 		}else{
 			returnCode = new AMCode();
-			returnCode.setGeni_code(GENI_CodeEnum.FORBIDDEN);
+			returnCode.setGeni_code(GENI_CodeEnum.BADARGS);
+			authorizationFailMessage = GENI_CodeEnum.BADARGS.getDescription();
 		}
 	}
 

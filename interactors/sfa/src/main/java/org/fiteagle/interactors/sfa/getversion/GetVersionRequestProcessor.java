@@ -109,10 +109,10 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		List<GeniRequestRSpecVersions> geni_request_rspec_versions_list = getGeniRequestRspecVersionsList(translator);
 		value.setGeni_request_rspec_versions(geni_request_rspec_versions_list);
 		
-		Map<String, String> geniApiVersions= new HashMap<String, String>();
+		Map<Integer, String> geniApiVersions= new HashMap<Integer, String>();
 //		String version="3";
 //    String url="https://fiteagle.org:9112/api/sfa/v3/am";
-		String version=new Integer(GetVersionRequestProcessor.GENI_API_VERSION).toString();
+		Integer version=new Integer(GetVersionRequestProcessor.GENI_API_VERSION);
 		String url=this.interfaceConfig.getAM_URL();
     
 		geniApiVersions.put(version, url);

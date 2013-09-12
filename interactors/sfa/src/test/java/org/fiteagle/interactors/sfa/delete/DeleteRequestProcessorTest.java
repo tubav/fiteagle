@@ -15,6 +15,7 @@ import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.Credentials;
+import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.junit.After;
 import org.junit.Before;
@@ -55,10 +56,11 @@ public class DeleteRequestProcessorTest {
 
 	@Test
 	public void testProcessRequestNoCredentials() {
+	
 		List<String> urns = new LinkedList<>();
 		urns.add(sliceUrn.toString());
-		DeleteResult result = deleteProc.processRequest(urns, listCredentials, deleteOptions);
-		Assert.assertEquals(3, result.getCode().getGeni_code());
+		DeleteResult result = deleteProc.processRequest(urns, null, deleteOptions);
+		Assert.assertEquals(GENI_CodeEnum.BADARGS.getValue(), result.getCode().getGeni_code());
 	}
 
 	@Test
@@ -89,6 +91,7 @@ public class DeleteRequestProcessorTest {
 
 	private void setUpCredentialMock() {
 		EasyMock.expect(listCredentials.getCredentialsList()).andReturn(credentialList);
+		EasyMock.expectLastCall().anyTimes();
 		EasyMock.expect(credentials.getGeni_type()).andReturn("geni_sfa");
 		EasyMock.replay(listCredentials);
 		EasyMock.replay(credentials);
