@@ -12,9 +12,21 @@ public class SQLiteUserDBIT extends UserPersistableTest {
   
   @After
   public void cleanUp() {
-    database.delete(USER1);
-    database.delete(USER2);
-    database.delete(USER4);
-    database.delete(USER5);
+    if(USER1 != null){
+      database.delete("test1");
+      USER1 = null;
+    }
+    if(USER2 != null){
+      database.delete("test2");
+      USER2 = null;
+    }
+    if(USER3 != null){
+      database.delete("test3");
+      USER3 = null;
+    }
+    if(USER4 != null){
+      database.delete("test4");
+      USER4 = null;
+    }
   }   
 }

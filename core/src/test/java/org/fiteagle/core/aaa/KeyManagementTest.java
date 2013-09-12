@@ -31,7 +31,6 @@ public class KeyManagementTest {
   
     KeyPair keyPair = keyManagement.generateKeyPair();
     String encryptedPrivateKey = keyManagement.encryptPrivateKey(keyPair.getPrivate(), "password");
-    System.out.println(encryptedPrivateKey);
     Assert.assertNotNull(encryptedPrivateKey);
     
   }
