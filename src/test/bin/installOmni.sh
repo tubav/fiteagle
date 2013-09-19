@@ -2,7 +2,7 @@
 
 _dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${_dir}/run.config.sh"
-_version="gcf-2.3.3"
+_version="gcf-2.4"
 _url="http://software.geni.net/local-sw/real_download"
 _data="software=${_version}.tar.gz&accept=I+have+read+and+accept+the+GPO+terms+of+service+and+disclaimer"
 
