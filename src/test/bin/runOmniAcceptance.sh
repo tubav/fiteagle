@@ -33,7 +33,7 @@ function runTest {
   return $?
 }
 
-echo "Log files at: $logdir/TEST.test_*";
+echo "Log files at: $logdir/Test.test_*";
 
 for test in "${tests[@]}"; do
     echo -n "$test: "
