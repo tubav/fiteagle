@@ -17,7 +17,8 @@
 		<module>common</module>
 		<module>sshdeployadapter</module>
     <module>qoSControl</module>
-   
+
+    <module>dummyNode</module>
 	</modules>
 
    <repositories>

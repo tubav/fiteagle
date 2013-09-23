@@ -1,17 +1,6 @@
 package org.fiteagle.interactors.sfa.listresources;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.zip.Deflater;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 //import org.fiteagle.adapter.common.ResourceProperties;
@@ -21,9 +10,8 @@ import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
-import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.advertisement.AdvertisementRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.advertisement.RSpecContents;
 
 public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
@@ -117,29 +105,21 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 	private Object getValue() {
 
-		List<ResourceAdapter> resourceAdapters = resourceManager
-				.getResourceAdapterInstances();
-
+		List<ResourceAdapter> resourceAdapters;
 		RSpecContents advertisedRspec;
-
+		
 		if (optionsService.isAvailableSet()) {
-			ArrayList<ResourceAdapter> availableResourceAdapters = new ArrayList<ResourceAdapter>();
-			for (Iterator iterator = resourceAdapters.iterator(); iterator
-					.hasNext();) {
-				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
-						.next();
-				if (resourceAdapter.isAvailable())
-					availableResourceAdapters.add(resourceAdapter);
-			}
-
-			advertisedRspec = getAdvertisedRSpec(availableResourceAdapters);
-		} else
-			advertisedRspec = getAdvertisedRSpec(resourceAdapters);
-
-		String advertisedRspecSTR = this
-				.getAdvertisedRSpecString(advertisedRspec);
+			resourceAdapters = resourceManager.getResourceAdapterInstancesAvailable();
+		} 
+		else{
+			resourceAdapters = resourceManager.getResourceAdapterInstances();
+		}
+		AdvertisementRspecTranslator adTranslator = new AdvertisementRspecTranslator();
+		advertisedRspec = adTranslator.getAdvertisedRSpec(resourceAdapters);
+		String advertisedRspecSTR = adTranslator.getAdvertisedRSpecString(advertisedRspec);
 
 		return advertisedRspecSTR;
+		
 	}
 
 	private boolean optionsAreValid() {

@@ -36,11 +36,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	}
 	
 	private SQLiteUserDB() throws DatabaseException, SQLException{
-	  try{	   
-  		createTable("CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username), UNIQUE (email))");
-  		createTable("CREATE TABLE IF NOT EXISTS Keys (username, description, key, created, PRIMARY KEY (username, key), UNIQUE (username, description))");  		
+	  Connection connection = getConnection();
+		try{	   
+  		createTable(connection,"CREATE TABLE IF NOT EXISTS Users (username, firstName, lastName, email, affiliation, passwordHash, passwordSalt, created, lastModified , PRIMARY KEY (username), UNIQUE (email))");
+  		createTable(connection,"CREATE TABLE IF NOT EXISTS Keys (username, description, key, created, PRIMARY KEY (username, key), UNIQUE (username, description))");  		
 	  } catch(SQLException e){	    
 	    throw new DatabaseException(e.getMessage());
+	  }finally{
+		  connection.close();
 	  }
 	}
 	
@@ -65,8 +68,9 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     params.add(u.getPasswordSalt());
     params.add(new java.sql.Date(u.getCreated().getTime()));
     params.add(new java.sql.Date(u.getLast_modified().getTime()));
+    Connection connection = getConnection();
     try{
-      executeSQLString("INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)", params);    
+      executeSQLString(connection, "INSERT INTO Users VALUES (?,?,?,?,?,?,?,?,?)", params);    
     } catch(SQLException e){
       if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (column username is not unique)")){
         throw new DuplicateUsernameException();
@@ -75,6 +79,9 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
         throw new DuplicateEmailException();
       }
       throw e;
+    }
+    finally{
+    	connection.close();
     }
   }
 	
@@ -90,22 +97,30 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     params.add(key.getDescription());
     params.add(key.getPublicKeyString());
     params.add(new java.sql.Date(key.getCreated().getTime()));    
+    Connection connection = getConnection();
     try{
-      executeSQLString("INSERT INTO Keys VALUES (?,?,?,?)", params);
+      executeSQLString(connection,"INSERT INTO Keys VALUES (?,?,?,?)", params);
     } catch(SQLException e){
       if(e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, description are not unique)")
           || e.getMessage().equals("[SQLITE_CONSTRAINT]  Abort due to constraint violation (columns username, key are not unique)")){
         throw new DuplicatePublicKeyException();
       }      
       throw e;      
-    }     
+    }finally{
+    	connection.close();
+    }
   }
 	
 	private void deleteKeyFromDatabase(String username, String description) throws SQLException {
 	  ArrayList<Object> params = new ArrayList<>();
 	  params.add(username);
 	  params.add(description);
-    executeSQLString("DELETE FROM Keys WHERE username=? AND description=?", params);   
+	  Connection connection = getConnection();
+	  try{
+      executeSQLString(connection, "DELETE FROM Keys WHERE username=? AND description=?", params);   
+	  }finally{
+		  connection.close();
+	  }
 	}
 
 	@Override
@@ -126,13 +141,23 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
 	private void deleteKeysFromDatabase(String username) throws SQLException {
 	  ArrayList<Object> params = new ArrayList<>();
     params.add(username);
-		executeSQLString("DELETE FROM Keys WHERE username=?", params);		
+    Connection connection = getConnection();
+    try{
+		executeSQLString(connection,"DELETE FROM Keys WHERE username=?", params);		
+	}finally{
+		connection.close();
+	}
 	}
 
 	private void deleteUserFromDatabase(String username) throws SQLException {
 	  ArrayList<Object> params = new ArrayList<>();
     params.add(username);
-	  executeSQLString("DELETE FROM Users WHERE username=?", params);	 
+    Connection connection = getConnection();
+    try{
+	  executeSQLString(connection,"DELETE FROM Users WHERE username=?", params);	 
+	}finally{
+		connection.close();
+	}
 	}
 
 	@Override
@@ -163,10 +188,14 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     params.add(u.getPasswordSalt());    
     params.add(new java.sql.Date(java.util.Calendar.getInstance().getTimeInMillis()));
     params.add(u.getUsername());
-    
-		if(executeSQLUpdateString("UPDATE Users SET firstName=?, lastname=?, email=?, affiliation=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?", params) == 0){
+    Connection connection = getConnection();
+    try{
+		if(executeSQLUpdateString(connection,"UPDATE Users SET firstName=?, lastname=?, email=?, affiliation=?, passwordHash=?, passwordSalt=?, lastModified=? WHERE username=?", params) == 0){
 			throw new UserNotFoundException();
 		}		
+    }finally{
+    	connection.close();
+    }
 	}
 
 	@Override
@@ -208,9 +237,13 @@ public class SQLiteUserDB extends SQLiteDatabase implements UserPersistable {
     params.add(newDescription);
     params.add(username);
     params.add(description);
-    
-    if(executeSQLUpdateString("UPDATE Keys SET description=? WHERE username=? AND description = ?", params) == 0){
+    Connection connection = getConnection();
+    try{
+    if(executeSQLUpdateString(connection,"UPDATE Keys SET description=? WHERE username=? AND description = ?", params) == 0){
       throw new PublicKeyNotFoundException();
+    }
+    }finally{
+    	connection.close();
     }
   } 
 	

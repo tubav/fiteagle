@@ -40,8 +40,10 @@ public class QoSClient implements QoSManager {
 	public String startSession(String authkey, String userName, QoSFeatureProperties props) {
 		String path = "startSession";
 		WebResource webResource = client.resource(url + "/" + path);
+		
 		webResource = webResource.queryParam("authkey", authkey).queryParam("userName", userName);
-		String rsp = webResource.accept(MediaType.TEXT_XML).post(String.class,props);
+//		String rsp = webResource.accept(MediaType.TEXT_XML).post(String.class,props);
+		String rsp = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.TEXT_XML).post(String.class,props);
 		return rsp;
 	}
 

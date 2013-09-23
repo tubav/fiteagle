@@ -1,5 +1,8 @@
 package org.fiteagle.core.groupmanagement;
 
+import java.sql.SQLException;
+
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,8 +19,8 @@ public class SQLiteGroupDatabaseTest {
   
  
   
-  @Test(expected=RuntimeException.class)
-  public void testSetAndGetAndDeleteAndGetGroup(){
+  @Test(expected=GroupNotFound.class)
+  public void testSetAndGetAndDeleteAndGetGroup() throws SQLException{
     database.addGroup(g);
     Group g2 = database.getGroup(g.getGroupId());
     database.deleteGroup(g2.getGroupId());

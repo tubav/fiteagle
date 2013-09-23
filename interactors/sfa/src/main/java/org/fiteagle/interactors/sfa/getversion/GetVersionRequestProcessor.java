@@ -12,6 +12,8 @@ import org.fiteagle.interactors.sfa.common.GeniCredentialType;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.advertisement.AdvertisementRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.request.RequestRspecTranslator;
 
 public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 
@@ -25,7 +27,6 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		value.addGenericAttribute("hostname", interfaceConfig.getHostname());
 		value.addGenericAttribute("fiteagle version", interfaceConfig.getCommitVersion());
 		Map<String, String> peers = new HashMap<>();
-//		peers.put("fiteagle", interfaceConfig.getAM_URL());
 		value.addGenericAttribute("peers", peers);
 
 		int geniAllocate = interfaceConfig.getGeni_allocate();
@@ -38,16 +39,11 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_disjoint);
 			break;
 		
-//		case 2:
-//			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_many);
-//			break;
-			
 		default:
 			value.addGenericAttribute("geni_allocate", GeniAllocateEnum.geni_many);
 			break;
 		}
 		
-//		value.addGenericAttribute("geni_allocate", );
 		//Set F4F extensions
 		value.setF4f_describe_testbed(interfaceConfig.getTestbed_description());
 		value.setF4f_testbed_homepage(interfaceConfig.getTestbed_homepage());
@@ -62,15 +58,6 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 			String[] toolVersions = interfaceConfig.getEndorsed_tool_versions().split(",");
 			
 			for (int i = 0; i < toolNames.length; i++) {
-//				String toolName = toolNames[i].trim();
-//				String toolLogo = toolLogos[i].trim();
-//				String toolHomepage = toolHomepages[i].trim();
-//				String toolVersion = toolVersions[i].trim();
-//				F4FEndorsedTools f4fEndorsedTool = new F4FEndorsedTools();
-//				f4fEndorsedTool.setTool_name(toolName);
-//				f4fEndorsedTool.setTool_logo(toolLogo);
-//				f4fEndorsedTool.setTool_homepage(toolHomepage);
-//				f4fEndorsedTool.setTool_version(toolVersion);
 				
 				F4FEndorsedTools f4fEndorsedTool = new F4FEndorsedTools();
 				f4fEndorsedTool.setTool_name(toolNames[i].trim());
@@ -104,14 +91,12 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		//Set GENI API
 		value.setGeni_api(GetVersionRequestProcessor.GENI_API_VERSION);
 		//Set GENI request Rspec versions
-		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-		
-		List<GeniRequestRSpecVersions> geni_request_rspec_versions_list = getGeniRequestRspecVersionsList(translator);
+		AdvertisementRspecTranslator adTranslator = new AdvertisementRspecTranslator();
+		RequestRspecTranslator requestTranslator = new RequestRspecTranslator();
+		List<GeniRequestRSpecVersions> geni_request_rspec_versions_list = getGeniRequestRspecVersionsList(requestTranslator);
 		value.setGeni_request_rspec_versions(geni_request_rspec_versions_list);
 		
 		Map<Integer, String> geniApiVersions= new HashMap<Integer, String>();
-//		String version="3";
-//    String url="https://fiteagle.org:9112/api/sfa/v3/am";
 		Integer version=new Integer(GetVersionRequestProcessor.GENI_API_VERSION);
 		String url=this.interfaceConfig.getAM_URL();
     
@@ -122,7 +107,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 		//Set GENI ad rspec versions;
 		
 		value.setGeni_single_allocation(0);
-		List<GeniAdRSpecVersions> geni_ad_rspec_versions_list = getGeniAdRspecVersionsList(translator);
+		List<GeniAdRSpecVersions> geni_ad_rspec_versions_list = getGeniAdRspecVersionsList(adTranslator);
 		value.setGeni_ad_rspec_versions(geni_ad_rspec_versions_list);
 		
 		//Set GENI credential types 
@@ -142,7 +127,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 	}
 
 	private List<GeniAdRSpecVersions> getGeniAdRspecVersionsList(
-			SFAv3RspecTranslator translator) {
+			AdvertisementRspecTranslator translator) {
 		List<GeniAdRSpecVersions> geni_ad_rspec_versions_list = new ArrayList<>();
 		GeniAdRSpecVersions geniAdRSpecVersions = new GeniAdRSpecVersions();
 		geniAdRSpecVersions.setType(translator.getType());
@@ -155,7 +140,7 @@ public class GetVersionRequestProcessor extends SFAv3RequestProcessor {
 	}
 
 	private List<GeniRequestRSpecVersions> getGeniRequestRspecVersionsList(
-			SFAv3RspecTranslator translator) {
+			RequestRspecTranslator translator) {
 		List<GeniRequestRSpecVersions> geni_request_rspec_versions_list = new ArrayList<>();
 		GeniRequestRSpecVersions geniRequestRSpecVersions = new GeniRequestRSpecVersions();
 		geniRequestRSpecVersions.setType(translator.getType());

@@ -20,15 +20,15 @@ public class DescribeOptionsService extends SFAOptionsService {
 	}
 
 	private boolean isRspecVersionValid() {
-
-		SFAv3RspecTranslator sfaV3RspecTranslator = new SFAv3RspecTranslator();
-		Geni_RSpec_Version geniRspecVersion = this.options
-				.getGeni_rspec_version();
-
-		return geniRspecVersion.getVersion().compareToIgnoreCase(
-				sfaV3RspecTranslator.getVersion()) == 0
-				&& geniRspecVersion.getType().compareToIgnoreCase(
-						sfaV3RspecTranslator.getType()) == 0;
+return true;
+//		SFAv3RspecTranslator sfaV3RspecTranslator = new SFAv3RspecTranslator();
+//		Geni_RSpec_Version geniRspecVersion = this.options
+//				.getGeni_rspec_version();
+//
+//		return geniRspecVersion.getVersion().compareToIgnoreCase(
+//				sfaV3RspecTranslator.getVersion()) == 0
+//				&& geniRspecVersion.getType().compareToIgnoreCase(
+//						sfaV3RspecTranslator.getType()) == 0;
 
 	}
 

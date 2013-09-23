@@ -18,7 +18,7 @@ public class QoSControlAdapter extends ResourceAdapter {
 Logger log = LoggerFactory.getLogger(getClass());
 private QoSAdapterPreferences preferences;
 private QoSClient client;
-private String username = "alice@openepc.test";
+private String username = "001011234567890";
 private String clientIP;
 	public QoSControlAdapter() {
 		super();
