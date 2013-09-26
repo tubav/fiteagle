@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
@@ -39,6 +40,8 @@ import org.fiteagle.interactors.sfa.rspec.Property;
 import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
 
 public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
@@ -122,6 +125,23 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 							}
 							resource = resourceManager.getResourceAdapterInstance(instanceId);
 						}
+						
+						if (OpenstackResource.class.isAssignableFrom(jaxbElem.getValue()
+								.getClass())) {
+							
+							OpenstackResource openstackResource = (OpenstackResource) jaxbElem.getValue();
+							
+							VmToInstantiate vmToInstantiate = openstackResource.getVmToInstantiate();
+							
+							OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter)resourceManager.getResourceAdapterInstance(openstackResource.getResourceId());
+//							resource = (ResourceAdapter) openstackResourceAdapter.create(vmToInstantiate.getImageId(), vmToInstantiate.getFlavorId(), vmToInstantiate.getVmName());
+//							resource = (ResourceAdapter) openstackResourceAdapter.create(vmToInstantiate.getImageId(), vmToInstantiate.getFlavorId(), vmToInstantiate.getVmName(), this.getUserCertificate());
+							resource = (ResourceAdapter) openstackResourceAdapter.create(vmToInstantiate.getImageId(), vmToInstantiate.getFlavorId(), vmToInstantiate.getVmName(),vmToInstantiate.getKeyPairName() , this.getUserCertificate());
+							
+							resourceManager.addResourceAdapter(resource);
+						}
+						
+						
 						if (NodeContents.class.isAssignableFrom(jaxbElem
 								.getValue().getClass())) {
 							NodeContents node = (NodeContents) jaxbElem
@@ -137,6 +157,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 							resource = resourceManager
 									.getResourceAdapterInstance(id);
 						}
+						
 						if (resource != null
 								&& !(resource.isExclusive() && !resource
 										.getStatus().equals(ResourceAdapterStatus.Available))) {
@@ -194,6 +215,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 				.getResourceAdapterInstancesById(resourceIds);
 		for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
 			ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+//			if(resourceAdapter==null) continue;
 			GeniSlivers tmpSliver = new GeniSlivers();
 			tmpSliver.setGeni_sliver_urn(translator
 					.translateResourceIdToSliverUrn(resourceAdapter.getId(),

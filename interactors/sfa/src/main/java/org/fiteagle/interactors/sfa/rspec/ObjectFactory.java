@@ -13,6 +13,13 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.Flavor;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.Flavors;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.Image;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.Vm;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
+
 
 /**
  * This object contains factory methods for each 
@@ -62,6 +69,16 @@ public class ObjectFactory {
     private final static QName _Method_QNAME = new QName("http://fiteagle.org/rspec/ext/1", "method");
     private final static QName _Resource_QNAME = new QName("http://fiteagle.org/rspec/ext/1", "resource");
     private final static QName _Parameter_QNAME = new QName("http://fiteagle.org/rspec/ext/1", "parameter");
+    
+    
+    
+  //Additional QNames for Openstack resource description
+    private final static QName _Vm_QNAME = new QName("http://fiteagle.org/rspec/ext/1/openstackVMResource", "vm");
+    private final static QName _VmToInstantiate_QNAME = new QName("http://fiteagle.org/rspec/ext/1/openstackVMResource", "vmToInstantiate");
+    private final static QName _OpenstackResource_QNAME = new QName("http://fiteagle.org/rspec/ext/1/openstackVMResource", "openstackResource");
+    private final static QName _Flavors_QNAME = new QName("http://fiteagle.org/rspec/ext/1/openstackVMResource", "flavors");
+    private final static QName _Image_QNAME = new QName("http://fiteagle.org/rspec/ext/1/openstackVMResource", "image");
+    private final static QName _Flavor_QNAME = new QName("http://fiteagle.org/rspec/ext/1/openstackVMResource", "flavor");
     
     
     /**
@@ -545,6 +562,111 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1", name = "parameter")
     public JAXBElement<Parameter> createParameter(Parameter value) {
         return new JAXBElement<Parameter>(_Parameter_QNAME, Parameter.class, null, value);
+    }
+    
+    
+    //Openstack specific resource description!!!!!!!!!!!!!!!!!!!!
+    
+    /**
+     * Create an instance of {@link VmToInstantiate }
+     * 
+     */
+    public VmToInstantiate createVmToInstantiate() {
+        return new VmToInstantiate();
+    }
+
+    /**
+     * Create an instance of {@link Vm }
+     * 
+     */
+    public Vm createVm() {
+        return new Vm();
+    }
+
+    /**
+     * Create an instance of {@link Flavor }
+     * 
+     */
+    public Flavor createFlavor() {
+        return new Flavor();
+    }
+
+    /**
+     * Create an instance of {@link Image }
+     * 
+     */
+    public Image createImage() {
+        return new Image();
+    }
+
+    /**
+     * Create an instance of {@link Flavors }
+     * 
+     */
+    public Flavors createFlavors() {
+        return new Flavors();
+    }
+
+    /**
+     * Create an instance of {@link OpenstackResource }
+     * 
+     */
+    public OpenstackResource createOpenstackResource() {
+        return new OpenstackResource();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Vm }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1/openstackVMResource", name = "vm")
+    public JAXBElement<Vm> createVm(Vm value) {
+        return new JAXBElement<Vm>(_Vm_QNAME, Vm.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link VmToInstantiate }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1/openstackVMResource", name = "vmToInstantiate")
+    public JAXBElement<VmToInstantiate> createVmToInstantiate(VmToInstantiate value) {
+        return new JAXBElement<VmToInstantiate>(_VmToInstantiate_QNAME, VmToInstantiate.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link OpenstackResource }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1/openstackVMResource", name = "openstackResource")
+    public JAXBElement<OpenstackResource> createOpenstackResource(OpenstackResource value) {
+        return new JAXBElement<OpenstackResource>(_OpenstackResource_QNAME, OpenstackResource.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Flavors }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1/openstackVMResource", name = "flavors")
+    public JAXBElement<Flavors> createFlavors(Flavors value) {
+        return new JAXBElement<Flavors>(_Flavors_QNAME, Flavors.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Image }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1/openstackVMResource", name = "image")
+    public JAXBElement<Image> createImage(Image value) {
+        return new JAXBElement<Image>(_Image_QNAME, Image.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Flavor }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://fiteagle.org/rspec/ext/1/openstackVMResource", name = "flavor")
+    public JAXBElement<Flavor> createFlavor(Flavor value) {
+        return new JAXBElement<Flavor>(_Flavor_QNAME, Flavor.class, null, value);
     }
     
 

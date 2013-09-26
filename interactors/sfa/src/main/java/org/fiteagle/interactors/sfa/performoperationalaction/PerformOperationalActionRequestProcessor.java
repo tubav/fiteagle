@@ -142,7 +142,7 @@ public class PerformOperationalActionRequestProcessor extends
 				// TODO: change the state!!!
 			}
 
-			if (action.compareToIgnoreCase("geni_stop") == 0) {
+			else if (action.compareToIgnoreCase("geni_stop") == 0) {
 				resourceAdapter.stop();
 				// TODO: change the state!!!
 			} else {

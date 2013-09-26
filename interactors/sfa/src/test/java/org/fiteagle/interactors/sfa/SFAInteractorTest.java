@@ -98,6 +98,7 @@ public class SFAInteractorTest {
 		Assert.assertNotNull(getVersionValue.getF4f_testbed_homepage());
 	}
 
+	@Ignore
 	@Test
 	public void testListResources() throws IOException {
 		ListResourceOptions options = createMinimalListResourceOptions("GENI",

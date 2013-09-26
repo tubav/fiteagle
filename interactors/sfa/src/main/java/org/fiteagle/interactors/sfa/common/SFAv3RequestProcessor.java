@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.zip.Deflater;
 
@@ -14,6 +15,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.bouncycastle.jcajce.provider.symmetric.AES.OFB;
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.core.config.InterfaceConfiguration;
@@ -25,6 +27,7 @@ public abstract class SFAv3RequestProcessor {
 
 	public AMCode runTimeReturnCode;
 	public String outPutString = "";
+	private X509Certificate userCertificate;
 
 	protected InterfaceConfiguration interfaceConfig = InterfaceConfiguration
 			.getInstance();
@@ -168,7 +171,10 @@ public abstract class SFAv3RequestProcessor {
 		for (ResourceAdapter resourceAdapter : resourceAdapters) {
 			// TODO: if option available set check the resource adapter
 			Object resource;
-			if (resourceAdapter instanceof SSHAccessable)
+			if (resourceAdapter instanceof OpenstackResourceAdapter)
+				resource = translator
+				.translateOpenstackResourceAdapterToAdvertisementOpenstackResource((OpenstackResourceAdapter)resourceAdapter);
+			else if (resourceAdapter instanceof SSHAccessable)
 				resource = translator
 						.translateSSHAccesableToAdvertisementNode(resourceAdapter);
 			else
@@ -191,6 +197,8 @@ public abstract class SFAv3RequestProcessor {
 			Object resource;
 			if (resourceAdapter instanceof SSHAccessable)
 				resource = translator.translateToNode(resourceAdapter);
+			else if (resourceAdapter instanceof OpenstackResourceAdapter)
+				resource = translator.translateToOpenstackResource(resourceAdapter);
 			else
 				resource = translator
 						.translateToFITeagleResource(resourceAdapter);
@@ -198,5 +206,14 @@ public abstract class SFAv3RequestProcessor {
 		}
 		return advertisedRspec;
 	}
+
+	public X509Certificate getUserCertificate() {
+		return userCertificate;
+	}
+
+	public void setUserCertificate(X509Certificate userCertificate) {
+		this.userCertificate = userCertificate;
+	}
+	
 
 }

@@ -17,7 +17,7 @@
 		<module>common</module>
 		<module>sshdeployadapter</module>
     <module>qoSControl</module>
-   
+   <module>openstackvmadapter</module>
 	</modules>
 
    <repositories>

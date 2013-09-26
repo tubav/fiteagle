@@ -1,0 +1,197 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.fiteagle</groupId>
+		<artifactId>adapter</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<name>FITeagle :: Adapter :: OpenstackVMAdapter</name>
+	<groupId>org.fiteagle.adapter</groupId>
+	<artifactId>openstackvmadapter</artifactId>
+	<packaging>jar</packaging>
+
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.fiteagle</groupId>
+			<artifactId>common</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>keystone-client</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.iharder</groupId>
+			<artifactId>base64</artifactId>
+			<version>2.3.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>nova-client</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>glance-client</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>swift-client</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>nova-model</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>quantum-client</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.woorea</groupId>
+			<artifactId>jersey-connector</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<minimizeJar>false</minimizeJar>
+					<filters>
+						<filter>
+							<artifact>*</artifact>
+							<excludes>
+								<exclude>META-INF/*.SF</exclude>
+								<exclude>META-INF/*.RSA</exclude>
+								<exclude>META-INF/*.INF</exclude>
+							</excludes>
+						</filter>
+					</filters>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.eclipse.m2e</groupId> -->
+<!-- 				<artifactId>lifecycle-mapping</artifactId> -->
+<!-- 				<version>1.0.0</version> -->
+<!-- 				<configuration> -->
+<!-- 					<lifecycleMappingMetadata> -->
+<!-- 						<pluginExecutions> -->
+<!-- 							<pluginExecution> -->
+<!-- 								<pluginExecutionFilter> -->
+<!-- 									<groupId>org.codehaus.mojo</groupId> -->
+<!-- 									<artifactId>aspectj-maven-plugin</artifactId> -->
+<!-- 									<versionRange>[1.0,)</versionRange> -->
+<!-- 									<goals> -->
+<!-- 										<goal>test-compile</goal> -->
+<!-- 										<goal>compile</goal> -->
+<!-- 									</goals> -->
+<!-- 								</pluginExecutionFilter> -->
+<!-- 								<action> -->
+<!-- 									<execute /> -->
+<!-- 								</action> -->
+<!-- 							</pluginExecution> -->
+<!-- 						</pluginExecutions> -->
+<!-- 					</lifecycleMappingMetadata> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+
+
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>license-maven-plugin</artifactId> -->
+<!-- 				<version>1.5</version> -->
+<!-- 				<configuration> -->
+<!-- 					<verbose>false</verbose> -->
+<!-- 					<addSvnKeyWords>true</addSvnKeyWords> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>first</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>update-file-header</goal> -->
+<!-- 						</goals> -->
+<!-- 						<phase>process-sources</phase> -->
+<!-- 						<configuration> -->
+<!-- 							<organizationName>Architektur der Vermittlungsknoten, TU-Berlin</organizationName> -->
+<!-- 							<projectName>FITeagle</projectName> -->
+<!-- 							<inceptionYear>2012</inceptionYear> -->
+
+<!-- 							<licenseName>apache_v2</licenseName> -->
+<!-- 							<roots> -->
+<!-- 							<root>src/main/java/org/fiteagle/adapter/openstackvmadapter/client/model</root> -->
+<!-- 							</roots> -->
+<!-- 							<roots> -->
+<!-- 								<root>src/main/java/org/fiteagle/adapter/openstackvmadapter/client/model</root> -->
+<!-- 								<root>src/main/java/org/fiteagle/adapter/openstackvmadapter/client</root> -->
+<!-- 							</roots> -->
+
+
+<!-- 							<includes> -->
+<!-- 								<include>OpenstackClient.java</include> -->
+<!-- 								<include>Image.java</include> -->
+<!-- 								<include>Images.java</include> -->
+<!-- 								<include>Server.java</include> -->
+<!-- 								<include>ServerForCreate.java</include> -->
+<!-- 							</includes> -->
+
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
+
+		</plugins>
+	</build>
+
+
+</project>
