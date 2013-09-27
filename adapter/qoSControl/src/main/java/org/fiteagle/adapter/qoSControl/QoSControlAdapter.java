@@ -18,7 +18,7 @@ public class QoSControlAdapter extends ResourceAdapter {
 Logger log = LoggerFactory.getLogger(getClass());
 private QoSAdapterPreferences preferences;
 private QoSClient client;
-private String username = "alice@openepc.test";
+private String username = "001011234567890";
 private String clientIP;
 	public QoSControlAdapter() {
 		super();
@@ -58,7 +58,8 @@ private String clientIP;
 
 	@Override
 	public void configure(AdapterConfiguration configuration) {
-		String url = 	"http://" + preferences.getIP() + ":" + preferences.getPort();
+		String url = 	"http://" + preferences.getIP() + ":" + preferences.getPort()+"/ngsi.applicationDrivenQoS/rest/1/QoSManager";
+		log.info("creating client for: "+ url);
 		client = new QoSClient(url);
 		clientIP = preferences.getClientIP();
 	}
@@ -98,6 +99,10 @@ private String clientIP;
 	@Publish
 	public void setBandwidthDL(@Named(name="source_ip")String ip, @Named(name="bandwidth") String bandwitdh ){
 		log.info("Adapter received action setBandwidth");
+		if(client == null)
+		log.info("client is not ready ... aboarting");
+		
+		
 		QoSFeatureProperties props = new QoSFeatureProperties();
 		List<NameValuePair> otherProps = props.getOtherProperties();
 //		
@@ -142,7 +147,7 @@ private String clientIP;
 		otherProps.add(protocol);
 		otherProps.add(framedIp);
 		otherProps.add(direction);
-		client.startSession(null, username, props);
+		client.startSession("", username, props);
 	}
 
 	@Publish

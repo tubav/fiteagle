@@ -16,8 +16,8 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
-import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 
 public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 
@@ -77,7 +77,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 		
 		//TODO: process the correct request..
 		returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
-		
+		result.setOutput(output);
 		result.setCode(returnCode);
 		result.setValue(getResultValue(urns));
 		return result;
@@ -92,7 +92,6 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	  if(urns.size()==1 && urns.get(0).contains("\\+sliver\\+"));
 	//TODO: implement if there are one or multiple sliver urns not only one slice urn
 	  
-	  SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     DescribeValue resultValue = new DescribeValue();
     ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     Group group = GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
@@ -103,7 +102,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
     for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
       ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
       GeniSlivers tmpSliver = new GeniSlivers();
-      tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(resourceAdapter.getId(),urns.get(0)));
+      tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(resourceAdapter).toString());
       tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));
       tmpSliver.setGeni_operational_status((String)resourceAdapter.getProperties().get("operational_status"));
       //TODO: expires????!!!
@@ -111,11 +110,13 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
       slivers.add(tmpSliver);
     }
     resultValue.setGeni_slivers(slivers);
-    RSpecContents manifestRSpec = getManifestRSpec(resources);
-    String geni_rspec = getRSpecString(manifestRSpec);
+    ManifestRspecTranslator translator = new ManifestRspecTranslator();
+    RSpecContents manifestRSpec = translator.getManifestRSpec(resources);
+    String geni_rspec = translator.getRSpecString(manifestRSpec);
     if(this.optionsService.isCompressed()){
       resultValue.setGeni_rspec(this.compress(geni_rspec));
-    } else resultValue.setGeni_rspec(geni_rspec);
+    } 
+    else resultValue.setGeni_rspec(geni_rspec);
     
     return resultValue;
 		

@@ -19,81 +19,74 @@ import org.fiteagle.adapter.common.Named;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
 import org.fiteagle.interactors.sfa.rspec.ext.openstack.Flavor;
 import org.fiteagle.interactors.sfa.rspec.ext.openstack.Flavors;
 import org.fiteagle.interactors.sfa.rspec.ext.openstack.Image;
 import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
 import org.fiteagle.interactors.sfa.rspec.ext.openstack.Vm;
+import org.fiteagle.interactors.sfa.rspec.ext.Method;
+import org.fiteagle.interactors.sfa.rspec.ext.Parameter;
+import org.fiteagle.interactors.sfa.rspec.ext.Property;
+import org.fiteagle.interactors.sfa.rspec.ext.Resource;
+
 
 public class SFAv3RspecTranslator {
-
-	private static final String COMPONENT_ID_PREFIX = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+";
-	private static final String COMPONENT_MANAGER_ID = "urn:publicid:IDN+fiteagle.fuseco.fokus.fraunhofer.de+authority+root";
+	//
+	protected static final String COMPONENT_ID_PREFIX = "urn:publicid:IDN+"
+			+ InterfaceConfiguration.getInstance().getDomain();
+	protected static final String COMPONENT_MANAGER_ID = InterfaceConfiguration
+			.getInstance().getAM_URN();
 	private final Geni_RSpec_Version geni_rspec_version;
-	private final String adRspecNamespace = "http://www.geni.net/resources/rspec/3";
-	private final String adRspecSchema = "http://www.geni.net/resources/rspec/3/ad.xsd";
-	private final ArrayList<String> adRspecExtensions = new ArrayList<String>();
 
-	private final String requestRspecNamespace = "http://www.geni.net/resources/rspec/3";
-	private final String requestRspecSchema = "http://www.geni.net/resources/rspec/3/request.xsd";
-	private final ArrayList<String> requestRspecExtensions = new ArrayList<String>();
 
-	private final String RSPEC_EXTENSION = "http://fiteagle.org/rspec/ext/1";
-
+	//
 	public SFAv3RspecTranslator() {
 		geni_rspec_version = new Geni_RSpec_Version();
 		geni_rspec_version.setType("GENI");
 		geni_rspec_version.setVersion("3");
-		addAdRspecExtension(this.RSPEC_EXTENSION);
-		addRequestRspecExtension(RSPEC_EXTENSION);
-	}
 
-	public String getAdRspecNamespace() {
-		return adRspecNamespace;
-	}
-
-	public String getAdRspecSchema() {
-		return adRspecSchema;
-	}
-
-	public String[] getAdRspecExtensions() {
-		return adRspecExtensions.toArray(new String[adRspecExtensions.size()]);
-	}
-
-	public String getRequestRspecNamespace() {
-		return requestRspecNamespace;
-	}
-
-	public String getRequestRspecSchema() {
-		return requestRspecSchema;
-	}
-
-	public String[] getRequestRspecExtensions() {
-		return requestRspecExtensions.toArray(new String[requestRspecExtensions
-				.size()]);
-	}
-
-	public String getType() {
-		return this.geni_rspec_version.getType();
 	}
 
 	public String getVersion() {
 		return this.geni_rspec_version.getVersion();
 	}
 
-	private void addRequestRspecExtension(String extension) {
-		requestRspecExtensions.add(extension);
+	
+
+
+	public String getType() {
+		return this.geni_rspec_version.getType();
 	}
+	private List<Method> getResourceAdapterRspecMethods(
+			ResourceAdapter resourceAdapter) {
+		ArrayList<Method> result = new ArrayList<Method>();
+		java.lang.reflect.Method[] resourceAdapterMethods = resourceAdapter
+				.getClass().getDeclaredMethods();
+		for (int i = 0; i < resourceAdapterMethods.length; i++) {
+			java.lang.reflect.Method method = resourceAdapterMethods[i];
+			if (method.isAnnotationPresent(Publish.class)) {
+				Method tmpRspecMethod = new Method();
 
-	private void addAdRspecExtension(String extension) {
-		adRspecExtensions.add(extension);
+				tmpRspecMethod.setName(method.getName());
+				tmpRspecMethod.setReturnType(method.getReturnType().getName());
+				if (!getRspecParametersFromResourceAdapterMethod(method)
+						.isEmpty()) {
+					tmpRspecMethod
+							.getParameter()
+							.addAll(getRspecParametersFromResourceAdapterMethod(method));
+				}
+				result.add(tmpRspecMethod);
+			}
+		}
+		return result;
+
 	}
-
-	public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
-
+	
+public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
+		
 		Resource fiteagleSFAResource = new Resource();
 
 		fiteagleSFAResource.getMethod().addAll(
@@ -134,33 +127,10 @@ public class SFAv3RspecTranslator {
 		idProperty.setValue(resourceAdapter.getId());
 		fiteagleSFAResource.getProperty().add(idProperty);
 
-		return new ObjectFactory().createResource(fiteagleSFAResource);
+		return new org.fiteagle.interactors.sfa.rspec.ext.ObjectFactory().createResource(fiteagleSFAResource);
 	}
 
-	private List<Method> getResourceAdapterRspecMethods(
-			ResourceAdapter resourceAdapter) {
-		ArrayList<Method> result = new ArrayList<Method>();
-		java.lang.reflect.Method[] resourceAdapterMethods = resourceAdapter
-				.getClass().getDeclaredMethods();
-		for (int i = 0; i < resourceAdapterMethods.length; i++) {
-			java.lang.reflect.Method method = resourceAdapterMethods[i];
-			if (method.isAnnotationPresent(Publish.class)) {
-				Method tmpRspecMethod = new Method();
 
-				tmpRspecMethod.setName(method.getName());
-				tmpRspecMethod.setReturnType(method.getReturnType().getName());
-				if (!getRspecParametersFromResourceAdapterMethod(method)
-						.isEmpty()) {
-					tmpRspecMethod
-							.getParameter()
-							.addAll(getRspecParametersFromResourceAdapterMethod(method));
-				}
-				result.add(tmpRspecMethod);
-			}
-		}
-		return result;
-
-	}
 
 	private ArrayList<Parameter> getRspecParametersFromResourceAdapterMethod(
 			java.lang.reflect.Method method) {
@@ -216,113 +186,12 @@ public class SFAv3RspecTranslator {
 		return str[1];
 	}
 
-	// TODO quick and dirty for demo, new concept of resource description and
-	// management urgently needed!!!!!
-	public Object translateToNode(ResourceAdapter resourceAdapter) {
-
-		NodeContents node = new NodeContents();
-		HashMap<String, Object> resourceAdapterProperties = resourceAdapter
-				.getProperties();
-
-		if (resourceAdapterProperties != null) {
-			ObjectFactory factory = new ObjectFactory();
-			Set<String> propKeys = resourceAdapterProperties.keySet();
-			node.setComponentId(COMPONENT_ID_PREFIX + resourceAdapter.getId());
-			node.setComponentManagerId(COMPONENT_MANAGER_ID);
-			node.setExclusive(resourceAdapter.isExclusive());
-			List<Object> nodeContent = node.getAnyOrRelationOrLocation();
-			AvailableContents available = new AvailableContents();
-			available.setNow(resourceAdapter.isAvailable());
-			nodeContent.add(factory.createAvailable(available));
-
-			LocationContents location = new LocationContents();
-			location.setCountry((String) resourceAdapterProperties
-					.get("country"));
-			location.setLatitude((String) resourceAdapterProperties
-					.get("latitude"));
-			location.setLongitude((String) resourceAdapterProperties
-					.get("longitude"));
-			nodeContent.add(factory.createLocation(location));
-
-			if (resourceAdapter instanceof SSHAccessable) {
-				SSHAccessable sshAccessableResource = (SSHAccessable) resourceAdapter;
-
-				HardwareTypeContents hardwareType = new HardwareTypeContents();
-				hardwareType.setName(sshAccessableResource.getHardwareType());
-				nodeContent.add(factory.createHardwareType(hardwareType));
-
-				List<Object> services = node.getAnyOrRelationOrLocation();
-				ServiceContents service = new ServiceContents();
-				List<Object> logins = service.getAnyOrLoginOrInstall();
-				LoginServiceContents login = new LoginServiceContents();
-
-				login.setAuthentication("ssh-keys");
-				login.setHostname(sshAccessableResource.getIp());
-				login.setPort(sshAccessableResource.getPort());
-
-				logins.add(new ObjectFactory().createLogin(login));
-
-				services.add(new ObjectFactory().createServices(service));
-				// TODO: add node properties
-			}
-		}
-
-		return new ObjectFactory().createNode(node);
-	}
-
-	public Object translateSSHAccesableToAdvertisementNode(
-			ResourceAdapter resourceAdapter) {
-		NodeContents node = new NodeContents();
-
-		HashMap<String, Object> resourceAdapterProperties = resourceAdapter
-				.getProperties();
-
-		if (resourceAdapterProperties != null) {
-
-			ObjectFactory factory = new ObjectFactory();
-
-			HashMap<String, Object> resourceProperties = resourceAdapter
-					.getProperties();
-			node.setComponentId(COMPONENT_ID_PREFIX + resourceAdapter.getId());
-			node.setComponentManagerId(COMPONENT_MANAGER_ID);
-			node.setExclusive(resourceAdapter.isExclusive());
-
-			List<Object> nodeContent = node.getAnyOrRelationOrLocation();
-
-			AvailableContents available = new AvailableContents();
-			// available.setNow((boolean)resourceAdapterProperties.get("available"));
-			available.setNow(resourceAdapter.isAvailable());
-			nodeContent.add(factory.createAvailable(available));
-
-			LocationContents location = new LocationContents();
-			location.setCountry((String) resourceAdapterProperties
-					.get("country"));
-			location.setLatitude((String) resourceAdapterProperties
-					.get("latitude"));
-			location.setLongitude((String) resourceAdapterProperties
-					.get("longitude"));
-			nodeContent.add(factory.createLocation(location));
-
-			SSHAccessable sshAccesableResource = (SSHAccessable) resourceAdapter;
-
-			HardwareTypeContents hardwareType = new HardwareTypeContents();
-			hardwareType.setName(sshAccesableResource.getHardwareType());
-			nodeContent.add(factory.createHardwareType(hardwareType));
-
-		}
-
-		return new ObjectFactory().createNode(node);
-	}
 
 	public Object translateOpenstackResourceAdapterToAdvertisementOpenstackResource(
 			OpenstackResourceAdapter resourceAdapter) {
 
-		// TODO: add flavors!!
-
 		// TODO: check here the constraints!!
 		OpenstackResource openstackResource = new OpenstackResource();
-
-		// TODO: set openstack resource id!!
 
 		openstackResource.setResourceId(resourceAdapter.getId());
 
@@ -477,7 +346,7 @@ public class SFAv3RspecTranslator {
 		// resource.setFlavors(flavors);
 		resource.setVm(vm);
 		// new ObjectFactory().createNode(node);
-		return new ObjectFactory().createOpenstackResource(resource);
+		return new org.fiteagle.interactors.sfa.rspec.ext.openstack.ObjectFactory().createOpenstackResource(resource);
 	}
 
 	private Vm getVMFromOpenstackAdapter(
@@ -498,9 +367,6 @@ public class SFAv3RspecTranslator {
 		if (vmProperties.get(OpenstackResourceAdapter.VM_ConfigDrive) != null)
 			vm.setConfigDrive(vmProperties
 					.get(OpenstackResourceAdapter.VM_ConfigDrive));
-
-		// if(vmProperties.get(OpenstackResourceAdapter.VM_Created)!=null)
-		// vm.setCreated(vmProperties.get(OpenstackResourceAdapter.VM_Created));
 
 		if (vmProperties.get(OpenstackResourceAdapter.VM_FlavorId) != null)
 			vm.setFlavorId(vmProperties
@@ -553,8 +419,6 @@ public class SFAv3RspecTranslator {
 			vm.setTenantId(vmProperties
 					.get(OpenstackResourceAdapter.VM_TenantId));
 
-		// if(vmProperties.get(OpenstackResourceAdapter.VM_Updated)!=null)
-		// vm.setUpdated(vmProperties.get(OpenstackResourceAdapter.VM_Updated));
 
 		if (vmProperties.get(OpenstackResourceAdapter.VM_UserId) != null)
 			vm.setUserId(vmProperties.get(OpenstackResourceAdapter.VM_UserId));

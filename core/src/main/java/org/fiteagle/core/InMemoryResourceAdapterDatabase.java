@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
 
 public class InMemoryResourceAdapterDatabase implements ResourceAdapterDatabase {
 
-	private static Map<String, ResourceAdapter> adapterMap = new HashMap<>();
+	private  Map<String, ResourceAdapter> adapterMap = new HashMap<>();
 
 	@Override
 	public void addResourceAdapter(ResourceAdapter resourceAdapter) {
@@ -18,8 +19,13 @@ public class InMemoryResourceAdapterDatabase implements ResourceAdapterDatabase 
 	}
 
 	@Override
-	public ResourceAdapter getResourceAdapter(String resourceAdapterId) {
-		return adapterMap.get(resourceAdapterId);
+	public ResourceAdapter getResourceAdapter(String resourceAdapterId){
+		if(adapterMap.containsKey(resourceAdapterId)){
+			return adapterMap.get(resourceAdapterId);
+		}
+		else{
+			throw new ResourceNotFound();
+		}
 	}
 
 	@Override
@@ -29,8 +35,11 @@ public class InMemoryResourceAdapterDatabase implements ResourceAdapterDatabase 
 
 	@Override
 	public void deleteResourceAdapter(String resourceAdapterId) {
-		adapterMap.remove(resourceAdapterId);
-
+		if(adapterMap.containsKey(resourceAdapterId)){
+			adapterMap.remove(resourceAdapterId);
+		}else{
+			throw new ResourceNotFound();
+		}
 	}
 
 	@Override

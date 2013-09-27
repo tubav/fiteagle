@@ -5,4 +5,4 @@ source "${_dir}/run.config.sh"
 
 require curl
 
-curl -s -o ${_cert} -w "%{http_code}" -k --request POST "${_host}/${_username}/certificate" --data "${_password}" -H "Content-type: text/plain" --user ${_username}:${_password}
+curl -s -o ${_cert} -w "%{http_code}" -k --request POST "${_host}/${_username}/certificate" --data "" -H "Content-type: text/plain" --user ${_username}:${_password}

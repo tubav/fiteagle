@@ -23,10 +23,13 @@ import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.performoperationalaction.Action.MethodNotFound;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PerformOperationalActionRequestProcessor extends
 		SFAv3RequestProcessor {
 
+	Logger log = LoggerFactory.getLogger(getClass()); 
 	GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
 
 	public PerformOperationalActionResult processRequest(
@@ -91,8 +94,7 @@ public class PerformOperationalActionRequestProcessor extends
 
 				if (isStillSuccessfull()) {
 					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
-					String urn = translator.translateResourceIdToSliverUrn(
-							resourceAdapter.getId(), urns.get(0));
+					String urn = URN.getURNFromResourceAdapter(resourceAdapter).toString();
 					tmpSliver.setGeni_sliver_urn(urn);
 					tmpSliver
 							.setGeni_allocation_status((String) resourceAdapter
@@ -107,7 +109,8 @@ public class PerformOperationalActionRequestProcessor extends
 
 			for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
 				String urn = (String) iterator.next();
-				String id = translator.getIdFromSliverUrn(urn);
+				URN u = new URN(urn);
+				String id = u.getSubject();
 
 				ResourceAdapter resourceAdapter = resourceManager
 						.getResourceAdapterInstance(id);
@@ -137,12 +140,13 @@ public class PerformOperationalActionRequestProcessor extends
 	private void performActionOnAdapter(String action,
 			ResourceAdapter resourceAdapter) {
 		try {
-			if (action.compareToIgnoreCase("geni_start") == 0) {
+			if (action.equalsIgnoreCase("geni_start")) {
 				resourceAdapter.start();
-				// TODO: change the state!!!
+				return;
 			}
 
-			else if (action.compareToIgnoreCase("geni_stop") == 0) {
+			else if (action.equalsIgnoreCase("geni_stop")) {
+
 				resourceAdapter.stop();
 				// TODO: change the state!!!
 			} else {
@@ -150,12 +154,16 @@ public class PerformOperationalActionRequestProcessor extends
 				requestedAction.doAction();
 			}
 		} catch (IllegalArgumentException argumentError) {
+			log.error(argumentError.getMessage(),argumentError);
 			code = GENI_CodeEnum.BADARGS;
 		} catch (MethodNotFound methodNotFound) {
+			log.error(methodNotFound.getMessage(),methodNotFound);
 			code = GENI_CodeEnum.UNSUPPORTED;
 		} catch (InvocationTargetException e) {
+			log.error(e.getMessage(),e);
 			code = GENI_CodeEnum.SERVERERROR;
 		} catch (IllegalAccessException e) {
+			log.error(e.getMessage(),e);
 			code = GENI_CodeEnum.FORBIDDEN;
 		}
 	}

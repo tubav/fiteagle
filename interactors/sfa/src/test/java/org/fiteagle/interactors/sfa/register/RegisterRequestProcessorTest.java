@@ -1,10 +1,14 @@
 package org.fiteagle.interactors.sfa.register;
 
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 
 import javax.xml.bind.JAXBException;
 
+import org.easymock.EasyMock;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.x509.X509Util.GenerateCertificateException;
+import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
@@ -21,7 +25,23 @@ public class RegisterRequestProcessorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		proc = new RegisterRequestProcessor();
+	
+		KeyStoreManagement keyStoreManagement = EasyMock.createMock(KeyStoreManagement.class);
+		GroupDBManager groupDBManager = EasyMock.createMock(GroupDBManager.class);
+		groupDBManager.addGroup(EasyMock.anyObject(Group.class));
+		EasyMock.expectLastCall();
+		Group g = new Group("grmps@wall3.test.ibbt.be", "dnehls@something");
+		EasyMock.expect(groupDBManager.getGroup(EasyMock.anyObject(String.class))).andReturn(g);
+		
+		EasyMock.replay(groupDBManager);
+		
+		X509Certificate dummyCert = EasyMock.createMock(X509Certificate.class);
+		EasyMock.expect(dummyCert.getEncoded()).andReturn(new byte[]{});
+		EasyMock.expectLastCall().anyTimes();
+		EasyMock.replay(dummyCert);
+		EasyMock.expect(keyStoreManagement.getResourceCertificate(EasyMock.anyObject(String.class))).andReturn(dummyCert);
+		EasyMock.replay(keyStoreManagement);
+		proc = new RegisterRequestProcessor(keyStoreManagement,groupDBManager);
 		hashMap = new HashMap<String, Object>();
 		hashMap.put("type", "Slice");
 		urnString = "urn:publicid:IDN+wall3.test.ibbt.be+slice+grmps";

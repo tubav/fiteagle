@@ -14,7 +14,9 @@ import javax.security.auth.x500.X500Principal;
 
 import junit.framework.Assert;
 
+import org.easymock.EasyMock;
 import org.fiteagle.core.aaa.CertificateAuthority;
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.util.URN;
@@ -32,6 +34,7 @@ public class CredentialFactoryTest {
 	URN target = new URN("urn:publicid:IDN+av.tu-berlin.de+user+test");
 	GroupDBManager groupManager;
 
+
 	@Before
 	public void setUp() throws Exception {
 		userCert = createMock(X509Certificate.class);
@@ -47,11 +50,30 @@ public class CredentialFactoryTest {
 				createSubjectAlternativeNamesCollection());
 		expectLastCall().times(3);
 		replay(userCert);
+		groupManager = EasyMock.createMock(GroupDBManager.class);
+		
+		CredentialFactory.setGroupDBManager(groupManager);
+		X509Certificate sliceAuthCert = EasyMock.createMock(X509Certificate.class);
+		EasyMock.expect(sliceAuthCert.getEncoded()).andReturn(new byte[]{});
+		EasyMock.expectLastCall().anyTimes();
+		EasyMock.replay(sliceAuthCert);
+		KeyStoreManagement keyStoreManagement = EasyMock.createMock(KeyStoreManagement.class);
+		EasyMock.expect(keyStoreManagement.getSliceAuthorityCert()).andReturn(sliceAuthCert);
+		EasyMock.expectLastCall().anyTimes();
+		EasyMock.expect(keyStoreManagement.getResourceCertificate(EasyMock.anyObject(String.class))).andReturn(sliceAuthCert);
+		EasyMock.replay(keyStoreManagement);
+		CredentialFactory.setKeystoreManagement(keyStoreManagement);
+		
+		
 		c1 = CredentialFactory.newCredential(userCert, target);
-		groupManager = GroupDBManager.getInstance();
+		
+		
 		Group g = new Group("mySlice@localhost", "test@av.tu-berlin.de");
-		groupManager.addGroup(g);
-
+	//	groupManager.addGroup(g);
+		//EasyMock.expectLastCall();
+		EasyMock.expect(groupManager.getGroup(EasyMock.anyObject(String.class))).andReturn(g);
+	
+		EasyMock.replay(groupManager);
 		CertificateAuthority ca = CertificateAuthority.getInstance();
 		ca.createCertificate(g);
 
@@ -67,14 +89,7 @@ public class CredentialFactoryTest {
 		return collection;
 	}
 
-	@Ignore
-	@Test
-	public void createTwoDifferentCredentials() {
 
-		Credential second = CredentialFactory.newCredential(userCert, target);
-
-		Assert.assertNotSame(c1.getId(), second.getId());
-	}
 
 	@Test
 	public void checkTypePrivlege() {
@@ -133,7 +148,8 @@ public class CredentialFactoryTest {
 
 	@After
 	public void cleanUp() {
-		groupManager.deleteGroup("mySlice@localhost");
+		
 	}
 
+	
 }

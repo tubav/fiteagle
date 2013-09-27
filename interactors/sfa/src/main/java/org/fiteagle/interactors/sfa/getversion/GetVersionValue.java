@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 public class GetVersionValue extends AMValue {
 
 //	private Map<String, GeniAPIVersion> geni_api_versions = new HashMap<>();
-	private Map<String, String> geni_api_versions = new HashMap<String, String>();
+	private Map<Integer, String> geni_api_versions = new HashMap<Integer, String>();
 	private List<GeniRequestRSpecVersions> geni_request_rspec_versions = new ArrayList<>();
 	private List<GeniAdRSpecVersions> geni_ad_rspec_versions = new ArrayList<>();
 	// add in GAPI_AM_API_V3
@@ -22,7 +22,7 @@ public class GetVersionValue extends AMValue {
 	private String geni_allocate;
 
 	private int geni_api;
-	private Map<String, Object> genericAttributes;
+	private Map<Object, Object> genericAttributes;
 	
 	//F4F extensions
 	private String f4f_describe_testbed;
@@ -44,7 +44,7 @@ public class GetVersionValue extends AMValue {
 
 
 	@JsonAnyGetter
-	public Map<String, Object> any(){
+	public Map<Object, Object> any(){
 		return genericAttributes;
 	}
 	public int getGeni_single_allocation() {
@@ -107,12 +107,12 @@ public class GetVersionValue extends AMValue {
 		this.geni_credential_types = geni_credential_types;
 	}
 
-  public Map<String, String> getGeni_api_versions() {
+  public Map<Integer, String> getGeni_api_versions() {
     return geni_api_versions;
   }
 
-  public void setGeni_api_versions(Map<String, String> geni_api_versions) {
-    this.geni_api_versions = geni_api_versions;
+  public void setGeni_api_versions(Map<Integer, String> geniApiVersions) {
+    this.geni_api_versions = geniApiVersions;
   }
 
 public String getF4f_describe_testbed() {

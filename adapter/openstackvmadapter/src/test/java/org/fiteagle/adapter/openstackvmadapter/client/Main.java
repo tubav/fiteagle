@@ -35,13 +35,13 @@ public class Main {
 //		addFloatingIp(client);
 		
 ////		getFloatingIpPools(client);
-		client.addKeyPair("test", "");
+//		client.addKeyPair("test", "");
 //		Server server = client.createServer(imageId, flavorId, serverName);
 ////		
 //		Server serverDetails = client.getServerDetails(server.getId());
 ////		Server serverDetails = client.getServerDetails("");
 //		
-//		FloatingIp floatingIp = client.addFloatingIp();
+		FloatingIp floatingIp = client.addFloatingIp();
 //		client.allocateFloatingIpForServer("", floatingIp.getIp());
 //		client.allocateFloatingIpForServer(serverDetails.getId(), floatingIp.getIp());
 ////		client.allocateFloatingIpForServer(server.getId(), "");

@@ -118,6 +118,23 @@
 					</webResources>
 				</configuration>
 			</plugin>
+			<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+           <execution>
+                <id>run testAcceptance.sh</id>
+                <phase>integration-test</phase>
+                <goals>
+                    <goal>exec</goal>
+                </goals>
+                <configuration>
+                    <executable>./../../src/test/bin/testAcceptance.sh</executable>
+                </configuration>
+            </execution>
+        </executions>
+      </plugin>
 		</plugins>
 	</build>
 	<dependencies>

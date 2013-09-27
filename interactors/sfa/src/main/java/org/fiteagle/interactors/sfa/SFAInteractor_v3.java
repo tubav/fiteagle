@@ -38,7 +38,7 @@ import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
 import org.fiteagle.interactors.sfa.status.StatusResult;
@@ -101,16 +101,16 @@ public class SFAInteractor_v3 implements ISFA {
 	  SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
 	  GetSelfCredentialRequestProcessor getSelfCredentialRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.GET_SELF_CREDENTIAL);
 	  String result = getSelfCredentialRequestProcessor.processRequest(certificate, xrn, type);
-	  log.info(result.toString());
+	  log.debug(result.toString());
 	  return result;
   }
 
   @Override
   public String getCredential(String credential, String xrn, String type) {
-    log.info("GetCredential");
-    log.info(credential);
-    log.info("target: " + xrn);
-    log.info("type: "+ type);
+    log.debug("GetCredential");
+    log.debug(credential);
+    log.debug("target: " + xrn);
+    log.debug("type: "+ type);
     return credential;
 //    return "";
   }

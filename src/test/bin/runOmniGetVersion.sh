@@ -5,4 +5,4 @@ source "${_dir}/run.config.sh"
 
 require omni.py
 
-omni.py -V3 -c ./src/test/resources/omni_config getversion 2>&1
+omni.py -V3 -c ${_dir}/../resources/omni_config getversion 2>&1

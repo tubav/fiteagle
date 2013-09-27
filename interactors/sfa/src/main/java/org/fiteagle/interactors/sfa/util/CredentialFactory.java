@@ -9,7 +9,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.SignatureCreator;
+import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Credential;
 import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Signatures;
@@ -18,18 +20,22 @@ import org.xml.sax.InputSource;
 
 public class CredentialFactory {
 
+	private static GroupDBManager groupManager;
+	private static KeyStoreManagement _keyStoreManagement;
 	public static Credential newCredential(X509Certificate userCert, URN target) {
-		Credential c =  new Credential();
-		CredentialFactoryWorker worker = new CredentialFactoryWorker(c, userCert, target);
-		worker.setId();
-		worker.setType();
-		worker.setOwnerGID();
-		worker.setOwnerURN();
-		worker.setTargetGID();
-		worker.setTargetURN();
-		worker.setExpirationDate();
-		worker.setPrivleges();
-		return c;
+		
+		CredentialFactoryWorker worker = new CredentialFactoryWorker(userCert, target);
+		worker.setGroupManager(groupManager);
+		worker.setKeyStoreManager(_keyStoreManagement);
+		return worker.getCredential();
+	}
+	
+	public static void setGroupDBManager(GroupDBManager groupDBManager){
+		groupManager = groupDBManager;
+	}
+	
+	public static void setKeystoreManagement(KeyStoreManagement keyStoreManagement){
+		_keyStoreManagement = keyStoreManagement;
 	}
 	
 	public static String signCredential(Credential credential){

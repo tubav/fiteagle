@@ -3,12 +3,16 @@ package org.fiteagle.interactors.sfa.status;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
+import org.fiteagle.core.util.URN;
+import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
@@ -17,10 +21,13 @@ import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.util.DateUtil;
 
 public class StatusRequestProcessor extends SFAv3RequestProcessor {
 
   private StatusOptionsService optionsService;
+private GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
+private String output = "";
 
 
   public StatusResult processRequest(List<String> urns, ListCredentials credentials, Object... specificArgs) {
@@ -32,7 +39,6 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
 
   private StatusResult getResult(List<String> urns, ListCredentials credentials, StatusOptions options) {
     String value = "";
-    String output = "";
     AMCode returnCode = null;
     
     Authorization auth = new Authorization();
@@ -42,6 +48,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
     StatusResult result = new StatusResult();
     
     if(!auth.areCredentialTypeAndVersionValid()){
+    	 
       returnCode=auth.getReturnCode();
       output=auth.getAuthorizationFailMessage();
       result.setCode(returnCode);
@@ -58,35 +65,54 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
     
     
     //process the correct request..
-    returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
+   
     
-    result.setCode(returnCode);
     result.setValue(getResultStatusValue(urns));
+    returnCode = getReturnCode(code);
+    result.setOutput(output);
+    result.setCode(returnCode);
     return result;
   }
   private StatusValue getResultStatusValue(List<String> urns) {
 
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
     ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
-    ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
-    
-    String instaNceId = translator.getIdFromSliverUrn(urns.get(0)); 
-    //Group group = GroupDBManager.getInstance().getGroup(instaNceId);
-
-    for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
-      String urn = (String) iterator.next();
-      String id=translator.getIdFromSliverUrn(urn);
-     
-      ResourceAdapter resourceAdapter = resourceManager.getResourceAdapterInstance(instaNceId);
-      GeniSlivers tmpSliver = new GeniSlivers();
-      tmpSliver.setGeni_sliver_urn(translator.translateResourceIdToSliverUrn(resourceAdapter.getId(),urn));
-      tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));//TODO: set right status information over translator(implement this in translator)
-      tmpSliver.setGeni_operational_status((String)resourceAdapter.getProperties().get("operational_status"));
-      //TODO: expires????!!!
-      //TODO error(optional)??
-      slivers.add(tmpSliver);
-      
+    List<URN> urnList = buildURNS(urns);
+    if(urnList == null){
+    	return new StatusValue();
     }
+    ArrayList<GeniSlivers> slivers = null;
+    for(URN u: urnList){
+    	if(u.getType().equalsIgnoreCase("slice")){
+    		Group g = null;
+    		try{
+    			 g = GroupDBManager.getInstance().getGroup(u.getSubjectAtDomain());
+    		}catch(GroupNotFound e){
+    			code = GENI_CodeEnum.SEARCHFAILED;
+    			output = GENI_CodeEnum.SEARCHFAILED.getDescription();
+    			return new StatusValue();
+    		}
+    		List<String> groupResources = g.getResources();
+    		slivers = new ArrayList<GeniSlivers>();
+    		for(String resourceID: groupResources){
+    			ResourceAdapter ra = resourceManager.getResourceAdapterInstance(resourceID);
+    			  GeniSlivers tmpSliver = new GeniSlivers();
+    		      tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(ra).toString());
+    		      tmpSliver.setGeni_allocation_status((String)ra.getProperties().get("allocation_status"));//TODO: set right status information over translator(implement this in translator)
+    		      tmpSliver.setGeni_operational_status((String)ra.getProperties().get("operational_status"));
+    		      tmpSliver
+					.setGeni_expires(DateUtil.getFormatedDate(ra.getExpirationTime()));
+    		      slivers.add(tmpSliver);
+    			
+    		}
+    	}else{
+    		code = GENI_CodeEnum.SERVERERROR;
+    		output = GENI_CodeEnum.SERVERERROR.getDescription();
+    		
+    		return new StatusValue();
+    	}
+    }
+  
     
       StatusValue statusResultValue = new StatusValue();
    
@@ -97,7 +123,24 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
 
 
 
-  @Override
+  private List<URN> buildURNS(List<String> urns) {
+	List<URN> urnList = new LinkedList<>();
+	  for(String s: urns){
+		  try{
+		URN u = new URN(s);
+		urnList.add(u);
+		  }catch(URNParsingException e){
+			  code = GENI_CodeEnum.BADARGS;
+			  output = GENI_CodeEnum.BADARGS.getDescription();
+			  return null;
+		  }
+		  
+	}
+	  return urnList;
+}
+
+
+@Override
   public AMResult processRequest(ListCredentials credentials, Object... specificArgs) {
     // TODO Auto-generated method stub
     return null;

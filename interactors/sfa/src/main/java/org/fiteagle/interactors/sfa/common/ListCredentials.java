@@ -1,10 +1,11 @@
 package org.fiteagle.interactors.sfa.common;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListCredentials {
 
-	private ArrayList<Credentials> credentialsList;
+	private List<Credentials> credentialsList;
 	
 	int id ;
 	public ListCredentials() {
@@ -12,7 +13,7 @@ public class ListCredentials {
 		 this.id = this.hashCode();
 	}
 	
-	public ArrayList<Credentials> getCredentialsList() {
+	public List<Credentials> getCredentialsList() {
 		return credentialsList;
 	}
 	

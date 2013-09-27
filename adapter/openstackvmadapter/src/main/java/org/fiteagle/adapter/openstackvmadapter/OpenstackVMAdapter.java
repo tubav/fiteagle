@@ -8,7 +8,6 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -31,6 +30,12 @@ import org.fiteagle.adapter.openstackvmadapter.client.model.Server;
 import com.woorea.openstack.nova.model.Flavor;
 import com.woorea.openstack.nova.model.Flavors;
 import com.woorea.openstack.nova.model.FloatingIp;
+//import org.fiteagle.adapter.openstackvmadapter.client.OfflineTestClient;
+//import org.fiteagle.adapter.openstackvmadapter.client.OpenstackClient;
+//import org.fiteagle.adapter.openstackvmadapter.client.Utils;
+//import org.fiteagle.adapter.openstackvmadapter.client.model.Image;
+//import org.fiteagle.adapter.openstackvmadapter.client.model.Images;
+//import org.fiteagle.adapter.openstackvmadapter.client.model.Server;
 
 public class OpenstackVMAdapter extends ResourceAdapter implements
 		OpenstackResourceAdapter {

@@ -142,7 +142,7 @@ private URLClassLoader sysloader;
  
 
   public void deleteResource(String resourceAdapterId) {
-    adapterInstancesDatabase.deleteResourceAdapter(resourceAdapterId);
+	  removeAdapterFromGroup(resourceAdapterId);
   }
   
   
@@ -284,5 +284,23 @@ private URLClassLoader sysloader;
 //  public void addGroup(String groupId, List<ResourceAdapter> adapters) {
 //    this.groups.put(groupId, adapters);
 //  }
+	
+	public static class ResourceNotFound extends RuntimeException{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+	}
+
+	public List<ResourceAdapter> getResourceAdapterInstancesAvailable() {
+		List<ResourceAdapter> availableAdapters = new LinkedList<>();
+		for(ResourceAdapter ra: adapterInstancesDatabase.getResourceAdapters()){
+			if(ra.isAvailable())
+				availableAdapters.add(ra);
+		}
+		return availableAdapters;
+	}
   
 }

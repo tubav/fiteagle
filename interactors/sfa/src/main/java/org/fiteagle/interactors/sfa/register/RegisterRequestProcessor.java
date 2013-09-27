@@ -9,9 +9,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
@@ -24,8 +26,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RegisterRequestProcessor extends SFAv3RequestProcessor{
-Logger log = LoggerFactory.getLogger(getClass()); 
-  @Override
+Logger log = LoggerFactory.getLogger(getClass());
+private KeyStoreManagement keyStoreManagement;
+private GroupDBManager groupDBManager; 
+  public RegisterRequestProcessor(KeyStoreManagement keyStoreManagement,
+		GroupDBManager groupDBManager) {
+	this.keyStoreManagement = keyStoreManagement;
+	this.groupDBManager = groupDBManager;
+}
+
+@Override
   public AMResult processRequest(ListCredentials credentials, Object... specificArgs) {
     
     throw new NotImplemented();
@@ -47,8 +57,16 @@ Logger log = LoggerFactory.getLogger(getClass());
     if(isSliceType(type)){
     	URN userURN = new URN(cred.getCredential().getOwnerURN());
     	Group slice = new Group(slicUrn.getSubjectAtDomain(), userURN.getSubjectAtDomain() );
-    	GroupDBManager groupmananger = GroupDBManager.getInstance();
-    	groupmananger.addGroup(slice);
+    	try{
+    		
+    		groupDBManager.addGroup(slice);
+    	}catch(CouldNotCreateGroup e){
+    		HashMap<String, Object> returnMap =  new HashMap<String, Object>();
+        	returnMap.put("code", new Integer(17));
+        	returnMap.put("value","");
+        	returnMap.put("output", "");
+        	return returnMap;
+    	}
     	String sliceCredential = createSignedCredential(slice,userCertificate);
     	HashMap<String, Object> returnMap =  new HashMap<String, Object>();
     	returnMap.put("code", new Integer(0));
@@ -76,6 +94,8 @@ private Signatures createSignature() {
 }
 
 private Credential createCredential(Group slice, X509Certificate userCertificate) {
+	CredentialFactory.setGroupDBManager(groupDBManager);
+	CredentialFactory.setKeystoreManagement(keyStoreManagement);
 	Credential credential = CredentialFactory.newCredential(userCertificate, URN.getURNFromGroup(slice));
 	return credential;
 }

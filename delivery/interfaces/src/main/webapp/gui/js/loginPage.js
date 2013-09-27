@@ -160,6 +160,7 @@ function(require,Validation,Registration,Utils,Messages){
 		initOnWindowResizeEvent();
 		initHistory();
 		onFITeagleLogoClicked();
+        Status.init();
 	};
 	
 	/**

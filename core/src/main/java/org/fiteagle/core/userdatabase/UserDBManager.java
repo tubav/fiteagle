@@ -175,17 +175,13 @@ public class UserDBManager {
 		return digest.digest(password.getBytes());
 	}
 
-	public String createUserPrivateKeyAndCertAsString(String username,
-			String passphrase) throws Exception {
+	public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
 		username = addDomain(username);
-		KeyPair keypair = keyManager.generateKeyPair();
-		String privateKeyEncoded = keyManager.encryptPrivateKey(
-				keypair.getPrivate(), passphrase);
+		KeyPair keypair = keyManager.generateKeyPair();	
 		String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
-		addKey(username, new UserPublicKey(pubKeyEncoded, "created at "
-				+ System.currentTimeMillis()));
-		String userCertString = createUserCertificate(username,
-				keypair.getPublic());
+		addKey(username, new UserPublicKey(pubKeyEncoded, "created at " + System.currentTimeMillis()));
+		String userCertString = createUserCertificate(username,	keypair.getPublic());
+		String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
 		return privateKeyEncoded + "\n" + userCertString;
 	}
 

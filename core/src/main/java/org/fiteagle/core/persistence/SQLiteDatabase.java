@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class SQLiteDatabase {
-private static Connection connection;
+
 private  final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
 protected FiteaglePreferences preferences;
 protected static Logger log = LoggerFactory.getLogger(SQLiteDatabase.class); 
@@ -34,9 +34,7 @@ static {
  
   
   protected Connection getConnection() throws SQLException{
-    if(connection != null)
-        connection.close();    
-    connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
+	Connection connection =DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
     connection.setAutoCommit(false);
     return connection;
   }
@@ -44,6 +42,8 @@ static {
   private void updatePreferences() {
    this.preferences = new FiteaglePreferencesXML(SQLiteDatabase.class);    
   }
+  
+  
   
   private String getDatabasePath() {
     if(preferences.get("database_path") == null)
@@ -55,38 +55,34 @@ static {
     return path + "database.db";
   }
   
-  protected void createTable(String command) throws SQLException{
-    Connection connection = getConnection();
+  protected void createTable(Connection connection, String command) throws SQLException{
+    
     Statement st = connection.createStatement();
     st.executeUpdate(command);
     st.close();
     connection.commit();
-    connection.close();
   }
   
-  protected void executeSQLString(String SQLString, List<Object> params) throws SQLException {
-    Connection connection = getConnection();
+  protected void executeSQLString(Connection connection, String SQLString, List<Object> params) throws SQLException {
+  
     PreparedStatement ps = connection.prepareStatement(SQLString);
     for(int i = 0; i < params.size(); i++){
       ps.setObject(i+1, params.get(i));
     }
     ps.execute();
-    
     connection.commit();
-    connection.close();
     ps.close();
+    
   }
   
-  protected int executeSQLUpdateString(String SQLString, List<Object> params) throws SQLException {
-    Connection connection = getConnection();
+  protected int executeSQLUpdateString(Connection connection, String SQLString, List<Object> params) throws SQLException {
+   
     PreparedStatement ps = connection.prepareStatement(SQLString);
     for(int i = 0; i < params.size(); i++){
       ps.setObject(i+1, params.get(i));
     }
     int count = ps.executeUpdate();
-   
     connection.commit();
-    connection.close();
     ps.close();
     return count;
   }

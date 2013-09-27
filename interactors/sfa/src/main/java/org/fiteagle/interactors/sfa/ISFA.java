@@ -20,7 +20,7 @@ import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalA
 import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusResult;
 
