@@ -30,9 +30,9 @@ public class OpenstackVMAdapterTest {
 	
 	@Test
 	public void testGetPreference(){
-		Preferences preferences = Preferences.userNodeForPackage(getClass());
-		preferences.put("floating_ip_pool_name", "test");
-		System.out.println(preferences.get("floating_ip_pool_name", null));
+//		Preferences preferences = Preferences.userNodeForPackage(getClass());
+//		preferences.put("floating_ip_pool_name", "test");
+//		System.out.println(preferences.get("floating_ip_pool_name", null));
 	}
 	
 	
