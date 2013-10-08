@@ -2,13 +2,14 @@ package org.fiteagle.core.userdatabase;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import junit.framework.Assert;
 
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.eclipse.persistence.exceptions.DatabaseException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class UserDBManagerTest {
   @Before
   public void setUp() throws Exception {
     userDBManager = UserDBManager.getInstance();
-    testUser = new User("test1@localhost", "test", "testName", "test@test.org", "testAffiliation", "password");
+    testUser = new User("test1@localhost", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<UserPublicKey>());
     try{
       userDBManager.add(testUser);
     } catch(DuplicateUsernameException | DuplicateEmailException e){  

@@ -8,6 +8,7 @@ import static org.easymock.EasyMock.verify;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,11 +16,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.persistence.exceptions.DatabaseException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
+import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.usermanagement.UserManager;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -35,15 +39,18 @@ public class UserAuthenticationFilterTest {
   private static HttpServletResponse resp;
   private static FilterChain chain;
   
-  private static UserManager userManager;
+  private static UserManagerBoundary userManager;
   
   @BeforeClass
   public static void setUp() throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, NoSuchAlgorithmException {
-     userManager = new UserManager();
-     userManager.delete("test");
-     userManager.add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test"));     
+     userManager = UserManager.getInstance();
+     try{
+       userManager.delete("test");
+     } catch(UserNotFoundException e){}
+     
+     userManager.add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test", new ArrayList<UserPublicKey>()));     
   }
-  
+
   @Before
   public void createMocks(){
     req = createMock(HttpServletRequest.class);
@@ -108,6 +115,8 @@ public class UserAuthenticationFilterTest {
   
   @AfterClass
   public static void cleanUp(){
-    userManager.delete("test");
+    try{
+      userManager.delete("test");
+    } catch(UserNotFoundException e){}
   }
 }
