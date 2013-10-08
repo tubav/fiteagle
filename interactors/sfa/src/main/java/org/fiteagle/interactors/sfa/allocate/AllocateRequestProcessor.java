@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.ResourceAdapterManager;
@@ -25,11 +26,14 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.NodeContents;
-import org.fiteagle.interactors.sfa.rspec.Property;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
-import org.fiteagle.interactors.sfa.rspec.Resource;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
+import org.fiteagle.interactors.sfa.rspec.ext.Property;
+import org.fiteagle.interactors.sfa.rspec.ext.Resource;
+import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.request.NodeContents;
+import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.util.DateUtil;
 
 public class AllocateRequestProcessor extends SFAv3RequestProcessor {
@@ -88,7 +92,6 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 					return result;
 				}
 
-				SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 				List<Object> rspecRequestedResources = requestRspec
 						.getAnyOrNodeOrLink();
 
@@ -114,21 +117,41 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 							}
 							resource = resourceManager.getResourceAdapterInstance(instanceId);
 						}
+						
+						if (OpenstackResource.class.isAssignableFrom(jaxbElem.getValue()
+								.getClass())) {
+							
+							OpenstackResource openstackResource = (OpenstackResource) jaxbElem.getValue();
+							
+							VmToInstantiate vmToInstantiate = openstackResource.getVmToInstantiate();
+							
+							OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter)resourceManager.getResourceAdapterInstance(openstackResource.getResourceId());
+//							resource = (ResourceAdapter) openstackResourceAdapter.create(vmToInstantiate.getImageId(), vmToInstantiate.getFlavorId(), vmToInstantiate.getVmName());
+//							resource = (ResourceAdapter) openstackResourceAdapter.create(vmToInstantiate.getImageId(), vmToInstantiate.getFlavorId(), vmToInstantiate.getVmName(), this.getUserCertificate());
+							resource = (ResourceAdapter) openstackResourceAdapter.create(vmToInstantiate.getImageId(), vmToInstantiate.getFlavorId(), vmToInstantiate.getVmName(),vmToInstantiate.getKeyPairName() , this.getUserCertificate());
+							
+//							resourceManager.addResourceAdapter(resource);//TODO: adapter instance!!===!?!!??
+							resourceManager.addResourceAdapterInstance(resource);
+						}
+						
+						
 						if (NodeContents.class.isAssignableFrom(jaxbElem
 								.getValue().getClass())) {
 							NodeContents node = (NodeContents) jaxbElem
 									.getValue();
-							String id = "";
-							if (node.getComponentId().contains("+")) {
-								String[] splitted = node.getComponentId()
-										.split("\\+");
-								id = splitted[splitted.length - 1];
-							} else {
-								id = node.getComponentId();
-							}
+							String id = node.getClientId();
+//							if (node.getComponentId().contains("+")) {
+//								String[] splitted = node.getComponentId()
+//										.split("\\+");
+//								id = splitted[splitted.length - 1];
+//							} else {
+//								id = node.getComponentId();
+//							}
+							
 							resource = resourceManager
 									.getResourceAdapterInstance(id);
 						}
+						
 						if (resource != null
 								&& !(resource.isExclusive() && !resource
 										.getStatus().equals(ResourceAdapterStatus.Available))) {
@@ -171,11 +194,11 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		}
 		result.setCode(returnCode);
 		result.setValue(allocateValue);
+		
 		return result;
 	}
 
 	private AllocateValue getValue(String urn) {
-		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 		AllocateValue resultValue = new AllocateValue();
 		Group group = GroupDBManager.getInstance().getGroup(
 				new URN(urn).getSubjectAtDomain());
@@ -186,10 +209,9 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 				.getResourceAdapterInstancesById(resourceIds);
 		for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
 			ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+//			if(resourceAdapter==null) continue;
 			GeniSlivers tmpSliver = new GeniSlivers();
-			tmpSliver.setGeni_sliver_urn(translator
-					.translateResourceIdToSliverUrn(resourceAdapter.getId(),
-							urn));
+			tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(resourceAdapter).toString());
 			tmpSliver.setGeni_allocation_status((String) resourceAdapter
 					.getProperties().get("allocation_status"));
 			tmpSliver
@@ -198,8 +220,9 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		}
 		resultValue.setGeni_slivers(slivers);
 
-		RSpecContents manifestRSpec = getManifestRSpec(resources);
-		String geni_rspec = getRSpecString(manifestRSpec);
+		ManifestRspecTranslator translator = new ManifestRspecTranslator();
+		org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents manifestRSpec = translator.getManifestRSpec(resources);
+		String geni_rspec = translator.getRSpecString(manifestRSpec);
 		resultValue.setGeni_rspec(geni_rspec);
 
 		return resultValue;
@@ -221,5 +244,11 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 	public void setResourceManager(ResourceAdapterManager resourceManager) {
 		this.resourceManager = resourceManager;
 	}
+
+	
+
+//	
+
+
 
 }

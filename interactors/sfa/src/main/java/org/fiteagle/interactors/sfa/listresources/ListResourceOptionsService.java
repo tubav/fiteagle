@@ -33,8 +33,9 @@ public class ListResourceOptionsService extends SFAOptionsService {
   
   private boolean isExpectedRSpecVersion() {
     double sentVersion  = Double.parseDouble(this.options.getGeni_rspec_version().getVersion());
-    double myVersion =  Double.parseDouble(new SFAv3RspecTranslator().getVersion());
-    return sentVersion == myVersion;
+//    double myVersion =  Double.parseDouble(new SFAv3RspecTranslator().getVersion());
+//    return sentVersion == myVersion;
+   return sentVersion == 3.0;
   }
   
   private boolean IsAvailableOptionSupported() {

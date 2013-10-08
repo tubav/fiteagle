@@ -27,8 +27,9 @@ import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.GeniUser;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 import org.fiteagle.interactors.sfa.util.DateUtil;
 
 public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
@@ -45,7 +46,6 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	private List<ResourceAdapter> resources;
 
-	private SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 
 	public ResourceAdapterManager getResourceManager() {
 		return resourceManager;
@@ -117,9 +117,9 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		}
 
 		resultValue.setGeni_slivers(slivers);
-
-		RSpecContents manifestRSpec = getManifestRSpec(resources);
-		String geni_rspec = getRSpecString(manifestRSpec);
+		ManifestRspecTranslator translator = new ManifestRspecTranslator();
+		RSpecContents manifestRSpec = translator.getManifestRSpec(resources);
+		String geni_rspec = translator.getRSpecString(manifestRSpec);
 		resultValue.setGeni_rspec(geni_rspec);
 	}
 

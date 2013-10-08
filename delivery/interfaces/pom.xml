@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>FITeagle :: Delivery Mechanisms :: Interfaces</name>
 	<groupId>org.fiteagle.delivery</groupId>
@@ -74,7 +75,7 @@
 							<maxIdleTime>60000</maxIdleTime>
 							<keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
 							<password>jetty6</password>
-							<!-- 							<keyPassword>jetty6</keyPassword> -->
+							<!-- <keyPassword>jetty6</keyPassword> -->
 							<truststore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.truststore</truststore>
 							<trustPassword>jetty6</trustPassword>
 							<allowRenegotiate>true</allowRenegotiate>
@@ -208,10 +209,18 @@
 			<version>1.17</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.17</version>
+		<groupId>com.sun.jersey</groupId>
+		<artifactId>jersey-server</artifactId>
+		<version>1.17</version>
 		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.glassfish.jersey.core</groupId> -->
+<!-- 			<artifactId>jersey-server</artifactId> -->
+<!-- 			<version>2.0</version> -->
+<!-- 		</dependency> -->
+
+
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
@@ -222,5 +231,38 @@
 			<artifactId>jersey-servlet</artifactId>
 			<version>1.17</version>
 		</dependency>
+
+
+
+
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.core</groupId> -->
+		<!-- <artifactId>jersey-client</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.contribs</groupId> -->
+		<!-- <artifactId>jersey-guice</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.core</groupId> -->
+		<!-- <artifactId>jersey-server</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey</groupId> -->
+		<!-- <artifactId>jersey-json</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.containers</groupId> -->
+		<!-- <artifactId>jersey-container-servlet-core</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+
+
 	</dependencies>
 </project>

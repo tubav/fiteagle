@@ -34,7 +34,7 @@ import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.slf4j.Logger;
 
@@ -46,10 +46,7 @@ public class GeniAMHandler extends SFAHandler {
   ISFA interactor;
 
   private final Logger log = org.slf4j.LoggerFactory.getLogger(this.getClass());
-  
-//  public GeniAMHandler(SFAInteractor_v3 sfaInteractor_v3) {
-//    setInteractor(sfaInteractor_v3);
-//  }
+
   
 public GeniAMHandler() {
 }
@@ -300,7 +297,7 @@ private Object parseDeleteOptions(Object from) {
     JAXBContext jc;
     try {
 //      jc = JAXBContext.newInstance( "org.fiteagle.interactors.sfa.rspec" );
-      jc = JAXBContext.newInstance(RSpecContents.class);
+      jc = JAXBContext.newInstance("org.fiteagle.interactors.sfa.rspec.request:org.fiteagle.interactors.sfa.rspec.ext:org.fiteagle.interactors.sfa.rspec.ext.openstack");
       Unmarshaller u = jc.createUnmarshaller();
       JAXBElement obj = (JAXBElement) u.unmarshal(fromIs);
       rSpec=(RSpecContents)obj.getValue();

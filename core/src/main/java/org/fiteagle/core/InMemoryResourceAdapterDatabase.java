@@ -11,7 +11,7 @@ import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
 
 public class InMemoryResourceAdapterDatabase implements ResourceAdapterDatabase {
 
-	private static Map<String, ResourceAdapter> adapterMap = new HashMap<>();
+	private  Map<String, ResourceAdapter> adapterMap = new HashMap<>();
 
 	@Override
 	public void addResourceAdapter(ResourceAdapter resourceAdapter) {

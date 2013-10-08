@@ -14,18 +14,24 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 		GroupPersistable {
 
 	public SQLiteGroupDatabase() throws SQLException {
-
-		createTable("CREATE TABLE IF NOT EXISTS Groups (groupId, ownerId, PRIMARY KEY(groupId))");
-		createTable("CREATE TABLE IF NOT EXISTS Resources (id INTEGER PRIMARY KEY AUTOINCREMENT,resourceId,groupId)");
-	
+		Connection connection = getConnection();
+		try {
+			createTable(connection,
+					"CREATE TABLE IF NOT EXISTS Groups (groupId, ownerId, PRIMARY KEY(groupId))");
+			createTable(
+					connection,
+					"CREATE TABLE IF NOT EXISTS Resources (id INTEGER PRIMARY KEY AUTOINCREMENT,resourceId,groupId)");
+		} finally {
+			connection.close();
+		}
 	}
 
 	@Override
-	public void addGroup(Group group) {
+	public void addGroup(Group group) throws SQLException {
 		PreparedStatement ps = null;
-
+		Connection connection = getConnection();
 		try {
-			Connection connection = getConnection();
+
 			ps = connection.prepareStatement("INSERT INTO Groups VALUES(?,?)");
 
 			ps.setString(1, group.getGroupId());
@@ -38,6 +44,7 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 			log.error(e.getMessage(), e);
 			throw new CouldNotCreateGroup();
 		} finally {
+			connection.close();
 			try {
 				ps.close();
 			} catch (SQLException e) {
@@ -51,62 +58,70 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 
 	private void addResources(Group group) {
 		for (String resourceId : group.getResources()) {
-			addResource(group.getGroupId(), resourceId);
+			try {
+				addResource(group.getGroupId(), resourceId);
+			} catch (SQLException e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException();
+			}
 		}
 	}
 
-	private void addResource(String groupId, String resourceId) {
+	private void addResource(String groupId, String resourceId)
+			throws SQLException {
 		PreparedStatement ps = null;
+		Connection connection = getConnection();
 		try {
-			Connection connection = getConnection();
-			ps = connection.prepareStatement("INSERT INTO Resources(id,resourceId,groupId) VALUES($next_id,?,?)");
+
+			ps = connection
+					.prepareStatement("INSERT INTO Resources(id,resourceId,groupId) VALUES($next_id,?,?)");
 			ps.setString(2, resourceId);
 			ps.setString(3, groupId);
 			ps.execute();
 			connection.commit();
-			connection.close();
+			
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException("could not add resource");
-		}finally {
-			try {
-				ps.close();
-				
-			} catch (SQLException e2) {
-				throw new RuntimeException(e2);
-			}
-		}
+		} finally {
+			connection.close();
+			ps.close();
 
+		}
 	}
 
 	@Override
-	public Group getGroup(String groupId) {
-
+	public Group getGroup(String groupId) throws SQLException {
+		Group g = null;
+		Connection connection = getConnection();
 		try {
-			Connection connection = getConnection();
+			
 			PreparedStatement ps = connection
 					.prepareStatement("SELECT Groups.groupId, Groups.ownerId, Resources.resourceId FROM Groups LEFT OUTER JOIN Resources ON Groups.groupId=Resources.groupId WHERE Groups.groupId = ? ");
 			ps.setString(1, groupId);
 			ResultSet result = ps.executeQuery();
-			Group g = null;
+			
 			if (result.next()) {
 				g = evaluateResultSet(result);
 				connection.commit();
-				connection.close();
-				return g;
+				
+			}else{
+				throw new GroupNotFound(groupId);
 			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
-
+		}catch(SQLException e){
+			throw new GroupNotFound("Group not found");
+		}finally{
+			connection.close();
 		}
-		throw new GroupNotFound("Group not found");
+	
+			return g;
 	}
 
 	private Group evaluateResultSet(ResultSet result) {
 		try {
 			String groupId = result.getString(1);
 			String ownerId = result.getString(2);
-			Group g =  new Group(groupId, ownerId);
+			Group g = new Group(groupId, ownerId);
 			List<String> resourceIds = getResourceIdsFromResultset(result);
 			g.setResources(resourceIds);
 			return g;
@@ -117,18 +132,19 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 
 	}
 
-	private List<String> getResourceIdsFromResultset(ResultSet result) throws SQLException {
-		List<String> resourceIds = new LinkedList<>();	
-		if(result.getString(3)!=null)
-				resourceIds.add(result.getString(3));
-		while(result.next()){
-			
+	private List<String> getResourceIdsFromResultset(ResultSet result)
+			throws SQLException {
+		List<String> resourceIds = new LinkedList<>();
+		if (result.getString(3) != null)
+			resourceIds.add(result.getString(3));
+		while (result.next()) {
+
 			resourceIds.add(result.getString(3));
 		}
 		return resourceIds;
-		
+
 	}
-	
+
 	@Override
 	public List<Group> getGroups() {
 		// TODO Auto-generated method stub
@@ -136,84 +152,102 @@ public class SQLiteGroupDatabase extends SQLiteDatabase implements
 	}
 
 	@Override
-	public void deleteGroup(String groupId) {
+	public void deleteGroup(String groupId) throws SQLException {
+		Connection connection = getConnection();
 		try {
 
-			Connection connection = getConnection();
+			
 			PreparedStatement ps = connection
 					.prepareStatement("DELETE FROM Groups WHERE Groups.groupId = ?");
 			ps.setString(1, groupId);
 			ps.execute();
 			connection.commit();
-			connection.close();
+			
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw new CouldNotDeleteGroup();
+		}finally{
+			connection.close();
 		}
 		deleteAllResourcesFromSingleGroup(groupId);
 	}
 
-	private void deleteAllResourcesFromSingleGroup(String groupId) {
+	private void deleteAllResourcesFromSingleGroup(String groupId) throws SQLException {
+		Connection connection = getConnection();
 		try {
 
-			Connection connection = getConnection();
+			
 			PreparedStatement ps = connection
 					.prepareStatement("DELETE FROM Resources WHERE Resources.groupId = ?");
 			ps.setString(1, groupId);
 			ps.execute();
 			connection.commit();
-			connection.close();
+			
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw new CouldNotDeleteGroup();
+		}finally{
+			connection.close();
 		}
 	}
 
 	
-
-	public class CouldNotCreateGroup extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-	}
-
-	public class CouldNotDeleteGroup extends RuntimeException {
-		private static final long serialVersionUID = 2L;
-	}
-
 	@Override
-	public void updateGroup(Group g3) {
+	public void updateGroup(Group g3) throws SQLException {
 		Group existent = null;
-		try{
-			 existent = getGroup(g3.getGroupId());
-		}catch(GroupNotFound e1){
+		try {
+			existent = getGroup(g3.getGroupId());
+		} catch (GroupNotFound e1) {
 			return;
 		}
-		try{
+		try {
 			deleteGroup(g3.getGroupId());
-		}catch(CouldNotDeleteGroup e){
+		} catch (CouldNotDeleteGroup e) {
 			return;
 		}
-		try{
+		try {
 			addGroup(g3);
-		}catch(CouldNotCreateGroup e2){
+		} catch (CouldNotCreateGroup e2) {
 			addGroup(existent);
 		}
 	}
 
 	@Override
-	public void deleteResourceFromGroup(String resourceId) {
+	public void deleteResourceFromGroup(String resourceId) throws SQLException {
+
+		Connection connection = getConnection();
 		try {
 
-			Connection connection = getConnection();
 			PreparedStatement ps = connection
 					.prepareStatement("DELETE FROM Resources WHERE Resources.resourceId = ?");
 			ps.setString(1, resourceId);
 			ps.execute();
 			connection.commit();
-			connection.close();
+		
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw new CouldNotDeleteGroup();
+		}finally{
+			connection.close();
 		}
+
+	}
+	
+	public static class CouldNotCreateGroup extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+	}
+
+	public static class CouldNotDeleteGroup extends RuntimeException {
+		private static final long serialVersionUID = 2L;
+	}
+	public static class CouldNotUpdateGroup extends RuntimeException{
+
+		private static final long serialVersionUID = 1L;
+		
+	}
+	public static class CouldNotDeleteResource extends RuntimeException{
+
+		private static final long serialVersionUID = 1L;
 		
 	}
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.zip.Deflater;
 
@@ -14,17 +15,19 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.bouncycastle.jcajce.provider.symmetric.AES.OFB;
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.core.config.InterfaceConfiguration;
-import org.fiteagle.interactors.sfa.rspec.ObjectFactory;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.advertisement.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.ext.ObjectFactory;
 
 public abstract class SFAv3RequestProcessor {
 
 	public AMCode runTimeReturnCode;
 	public String outPutString = "";
+	private X509Certificate userCertificate;
 
 	protected InterfaceConfiguration interfaceConfig = InterfaceConfiguration
 			.getInstance();
@@ -62,82 +65,27 @@ public abstract class SFAv3RequestProcessor {
 		return returnCode;
 	}
 
-	public RSpecContents parseRSpecContents(String str) {
-		InputStream fromIs = new ByteArrayInputStream(str.getBytes());
-		RSpecContents rSpec = new RSpecContents();
-		JAXBContext jc;
-		try {
-			// jc = JAXBContext.newInstance(
-			// "org.fiteagle.interactors.sfa.rspec" );
-			jc = JAXBContext.newInstance(RSpecContents.class);
-			Unmarshaller u = jc.createUnmarshaller();
-			JAXBElement obj = (JAXBElement) u.unmarshal(fromIs);
-			rSpec = (RSpecContents) obj.getValue();
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return rSpec;
-	}
+//	public RSpecContents parseRSpecContents(String str) {
+//		InputStream fromIs = new ByteArrayInputStream(str.getBytes());
+//		RSpecContents rSpec = new RSpecContents();
+//		JAXBContext jc;
+//		try {
+//			// jc = JAXBContext.newInstance(
+//			// "org.fiteagle.interactors.sfa.rspec" );
+//			jc = JAXBContext.newInstance(RSpecContents.class);
+//			Unmarshaller u = jc.createUnmarshaller();
+//			JAXBElement obj = (JAXBElement) u.unmarshal(fromIs);
+//			rSpec = (RSpecContents) obj.getValue();
+//		} catch (JAXBException e) {
+//			e.printStackTrace();
+//		}
+//		return rSpec;
+//	}
 
-	public String getAdvertisedRSpecString(RSpecContents rspec) {
-		String advertisedRspecSTR = "";
+//
 
-		JAXBElement<RSpecContents> rspecElem = new ObjectFactory()
-				.createRspec(rspec);
 
-		try {
-			advertisedRspecSTR = getAdvertisedString(rspecElem);
-		} catch (JAXBException e) {
-			setRuntimeReturnCode(GENI_CodeEnum.ERROR);
-			setOutput("Internal Server Error!");
-		}
 
-		// result.setValue(advertisedRspecSTR);
-		return advertisedRspecSTR;
-	}
-
-	private String getAdvertisedString(Object jaxbObject) throws JAXBException {
-		JAXBContext context = JAXBContext
-				.newInstance("org.fiteagle.interactors.sfa.rspec");
-		Marshaller marshaller = context.createMarshaller();
-		marshaller
-				.setProperty(
-						Marshaller.JAXB_SCHEMA_LOCATION,
-						"http://www.geni.net/resources/rspec/3 http://www.geni.net/resources/rspec/3/ad.xsd http://fiteagle.org/rspec/ext/1 http://fiteagle.org/rspec/ext/1");
-		StringWriter stringWriter = new StringWriter();
-		marshaller.marshal(jaxbObject, stringWriter);
-
-		return stringWriter.toString();
-
-	}
-
-	public String getRSpecString(RSpecContents rspec) {
-		String advertisedRspecSTR = "";
-
-		JAXBElement<RSpecContents> rspecElem = new ObjectFactory()
-				.createRspec(rspec);
-
-		try {
-			advertisedRspecSTR = getString(rspecElem);
-		} catch (JAXBException e) {
-			setRuntimeReturnCode(GENI_CodeEnum.ERROR);
-			setOutput("Internal Server Error!");
-		}
-
-		// result.setValue(advertisedRspecSTR);
-		return advertisedRspecSTR;
-	}
-
-	private String getString(Object jaxbObject) throws JAXBException {
-		JAXBContext context = JAXBContext
-				.newInstance("org.fiteagle.interactors.sfa.rspec");
-		Marshaller marshaller = context.createMarshaller();
-		StringWriter stringWriter = new StringWriter();
-		marshaller.marshal(jaxbObject, stringWriter);
-
-		return stringWriter.toString();
-
-	}
 
 	private void setOutput(String string) {
 		this.outPutString = string;
@@ -150,11 +98,6 @@ public abstract class SFAv3RequestProcessor {
 
 	}
 
-	public RSpecContents getManifestRSpec(List<ResourceAdapter> resourceAdapters) {
-		RSpecContents manifestRspec = getRSpecFromAdapters(resourceAdapters);
-		manifestRspec.setType("manifest");
-		return manifestRspec;
-	}
 
 	public RSpecContents getAdvertisedRSpec(
 			List<ResourceAdapter> resourceAdapters) {
@@ -168,9 +111,12 @@ public abstract class SFAv3RequestProcessor {
 		for (ResourceAdapter resourceAdapter : resourceAdapters) {
 			// TODO: if option available set check the resource adapter
 			Object resource;
-			if (resourceAdapter instanceof SSHAccessable)
+			if (resourceAdapter instanceof OpenstackResourceAdapter)
 				resource = translator
-						.translateSSHAccesableToAdvertisementNode(resourceAdapter);
+				.translateOpenstackResourceAdapterToAdvertisementOpenstackResource((OpenstackResourceAdapter)resourceAdapter);
+//			else if (resourceAdapter instanceof SSHAccessable)
+//				resource = translator
+//						.translateSSHAccesableToAdvertisementNode(resourceAdapter);
 			else
 				resource = translator
 						.translateToFITeagleResource(resourceAdapter);
@@ -189,8 +135,10 @@ public abstract class SFAv3RequestProcessor {
 
 		for (ResourceAdapter resourceAdapter : resourceAdapters) {
 			Object resource;
-			if (resourceAdapter instanceof SSHAccessable)
-				resource = translator.translateToNode(resourceAdapter);
+//			if (resourceAdapter instanceof SSHAccessable)
+//				resource = translator.translateToNode(resourceAdapter);
+			if (resourceAdapter instanceof OpenstackResourceAdapter)
+				resource = translator.translateToOpenstackResource(resourceAdapter);
 			else
 				resource = translator
 						.translateToFITeagleResource(resourceAdapter);
@@ -198,5 +146,14 @@ public abstract class SFAv3RequestProcessor {
 		}
 		return advertisedRspec;
 	}
+
+	public X509Certificate getUserCertificate() {
+		return userCertificate;
+	}
+
+	public void setUserCertificate(X509Certificate userCertificate) {
+		this.userCertificate = userCertificate;
+	}
+	
 
 }

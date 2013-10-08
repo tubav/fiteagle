@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotDeleteGroup;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotDeleteResource;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotUpdateGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +33,27 @@ public class GroupDBManager {
   }
   public void addGroup(Group group) throws CouldNotCreateGroup {
     
-    groupDatabase.addGroup(group);
+    try {
+		groupDatabase.addGroup(group);
+	} catch (SQLException e) {
+		throw new CouldNotCreateGroup();
+	}
   }
 
-  public Group getGroup(String groupId) {
-    return groupDatabase.getGroup(groupId);
+  public Group getGroup(String groupId) throws GroupNotFound{
+    try {
+		return groupDatabase.getGroup(groupId);
+	} catch (SQLException e) {
+		throw new GroupNotFound(groupId);
+	}
   }
 
-  public void deleteGroup(String groupId) {
-      groupDatabase.deleteGroup(groupId);
+  public void deleteGroup(String groupId) throws CouldNotDeleteGroup {
+      try {
+		groupDatabase.deleteGroup(groupId);
+	} catch (SQLException e) {
+		throw new CouldNotDeleteGroup();
+	}
   }
   
   public static GroupDBManager getInstance()  {
@@ -51,11 +66,19 @@ public class GroupDBManager {
     }
     return gm;
   }
-public void updateGroup(Group g3) {
-	groupDatabase.updateGroup(g3);
+public void updateGroup(Group g3) throws CouldNotUpdateGroup{
+	try {
+		groupDatabase.updateGroup(g3);
+	} catch (SQLException e) {
+		throw new CouldNotUpdateGroup();
+	}
 }
-public void deleteResourceFromGroup(String resourceId) {
-	groupDatabase.deleteResourceFromGroup(resourceId);
+public void deleteResourceFromGroup(String resourceId) throws  CouldNotDeleteResource{
+	try {
+		groupDatabase.deleteResourceFromGroup(resourceId);
+	} catch (SQLException e) {
+		throw new CouldNotDeleteResource();
+	}
 	
 }
 public static class GroupNotFound extends RuntimeException {

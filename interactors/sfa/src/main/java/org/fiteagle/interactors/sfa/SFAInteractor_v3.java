@@ -38,7 +38,7 @@ import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
 import org.fiteagle.interactors.sfa.status.StatusResult;
@@ -156,6 +156,7 @@ public class SFAInteractor_v3 implements ISFA {
     
     SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
     AllocateRequestProcessor allocateRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.ALLOCATE);
+    allocateRequestProcessor.setUserCertificate(certificate);
     AllocateResult result = allocateRequestProcessor.processRequest(urn, credentials, requestRspec, allocateOptions);
     return result;
     
