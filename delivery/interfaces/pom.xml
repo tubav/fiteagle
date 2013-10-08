@@ -22,6 +22,32 @@
 			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
 		</repository>
 	</repositories>
+	<profiles>
+	 <profile>
+	   <id>skipTests1</id>
+	   <activation>
+	     <property>
+	       <name>maven.test.skip</name>
+	       <value>true</value>
+	     </property>
+	   </activation>
+	   <properties>
+	     <testsAreNotExecuted>true</testsAreNotExecuted>
+	   </properties>
+	 </profile>
+	 <profile>
+     <id>skipTests2</id>
+     <activation>
+       <property>
+         <name>skipTests</name>
+         <value>true</value>
+       </property>
+     </activation>
+     <properties>
+       <testsAreNotExecuted>true</testsAreNotExecuted>
+     </properties>
+   </profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -97,6 +123,7 @@
 						<configuration>
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
+							<skip>${testsAreNotExecuted}</skip>
 						</configuration>
 					</execution>
 					<execution>
@@ -134,7 +161,8 @@
                     <goal>exec</goal>
                 </goals>
                 <configuration>
-                    <executable>./../../src/test/bin/testAcceptance.sh</executable>
+                  <skip>${testsAreNotExecuted}</skip>
+                  <executable>./../../src/test/bin/testAcceptance.sh</executable>
                 </configuration>
             </execution>
         </executions>
