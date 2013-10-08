@@ -5,16 +5,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
-import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.eclipse.persistence.exceptions.DatabaseException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
+import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.UserPublicKey;
 
 public interface UserManagerBoundary {
   

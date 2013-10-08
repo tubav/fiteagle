@@ -22,16 +22,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
-import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
-import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.core.userdatabase.JPAUserDB.DatabaseException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
+import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
-import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +113,7 @@ public class UserPresenter{
 
   private User createUser(NewUser newUser){
     List<UserPublicKey> publicKeys = createPublicKeys(newUser.getPublicKeys());    
-    return User.createUser(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);     
+    return new User(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getAffiliation(), newUser.getPassword(), publicKeys);     
   }
   
   private ArrayList<UserPublicKey> createPublicKeys(List<NewPublicKey> keys) {

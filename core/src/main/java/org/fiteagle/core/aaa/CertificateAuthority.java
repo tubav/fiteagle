@@ -33,11 +33,11 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.util.URN;
 
 public class CertificateAuthority {
@@ -145,9 +145,9 @@ public class CertificateAuthority {
 
 	public X509Certificate createCertificate(X509Certificate xCert)
 			throws Exception {
-		User user = getUserFromCert(xCert);
+		User User = getUserFromCert(xCert);
 		PublicKey pubkey = xCert.getPublicKey();
-		return createCertificate(user, pubkey);
+		return createCertificate(User, pubkey);
 	}
 
 	public X509Certificate createCertificate(Group g) throws Exception {

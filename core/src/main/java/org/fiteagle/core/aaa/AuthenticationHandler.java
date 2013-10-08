@@ -20,7 +20,6 @@ import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,8 +149,8 @@ public class AuthenticationHandler {
       UserDBManager userDBManager = UserDBManager.getInstance();
       userDBManager.addKey(identifiedUser.getUsername(), identifiedUser.getPublicKeys().get(0));
     }
-    for (UserPublicKey userPublicKey : identifiedUser.getPublicKeys()) {      
-      PublicKey pubKey = userPublicKey.getPublicKey();
+    for (UserPublicKey oldUserPublicKey : identifiedUser.getPublicKeys()) {      
+      PublicKey pubKey = oldUserPublicKey.getPublicKey();
       
       verified = verifyCertificateWithPublicKey(certificate, pubKey);
       if (verified) {

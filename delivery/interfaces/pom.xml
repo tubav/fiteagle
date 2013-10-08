@@ -81,7 +81,11 @@
 							<wantClientAuth>true</wantClientAuth>
 						</connector>
 					</connectors>
+					<webAppConfig>
+            <parentLoaderPriority>true</parentLoaderPriority>
+          </webAppConfig>
 				</configuration>
+				
 				<executions>
 					<execution>
 						<id>start-jetty</id>
@@ -194,10 +198,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
+    </dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-guice</artifactId>
