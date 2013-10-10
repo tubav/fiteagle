@@ -10,23 +10,38 @@ import javax.persistence.Persistence;
 
 public class JPAUserDB{
   
-  private static EntityManagerFactory factory;  
-  private static final String PERSISTENCE_UNIT_NAME = "FiteagleUsers";
+  private EntityManagerFactory factory;
+  private final String PERSISTENCE_TYPE;
   
-  private static JPAUserDB jpaUserDB;
+  private static final String PERSISTENCE_UNIT_NAME_DERBY = "Users_Derby";
+  private static final String PERSISTENCE_UNIT_NAME_INMEMORY = "Users_InMemory";
   
-  public static JPAUserDB getInstance(){
-    if(jpaUserDB == null){
-      jpaUserDB = new JPAUserDB();
+  private static JPAUserDB derbyInstance;
+  private static JPAUserDB inMemoryInstance;
+  
+  private JPAUserDB(String persistenceUnitName) {
+    PERSISTENCE_TYPE = persistenceUnitName;
+  }
+  
+  public static JPAUserDB getInMemoryInstance(){
+    if(inMemoryInstance == null){
+      inMemoryInstance = new JPAUserDB(PERSISTENCE_UNIT_NAME_INMEMORY);
     }
-    return jpaUserDB;
+    return inMemoryInstance;
+  }
+  
+  public static JPAUserDB getDerbyInstance(){
+    if(derbyInstance == null){
+      derbyInstance = new JPAUserDB(PERSISTENCE_UNIT_NAME_DERBY);
+    }
+    return derbyInstance;
   }
   
   private synchronized EntityManager getEntityManager() {
     if (factory == null){
       //TODO: Not so nice
       System.setProperty("derby.system.home", System.getProperty("user.home"));
-      factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+      factory = Persistence.createEntityManagerFactory(PERSISTENCE_TYPE);
     }
     try{
       return factory.createEntityManager();

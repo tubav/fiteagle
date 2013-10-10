@@ -62,7 +62,7 @@ public class JPAUserDBTest {
   
   @BeforeClass
   public static void setUp(){
-    manager = new JPAUserDB();
+    manager = JPAUserDB.getInMemoryInstance();
   }
   
   @Test
@@ -72,15 +72,6 @@ public class JPAUserDBTest {
     assertTrue(USER1.equals(manager.get(USER1)));    
   }
   
-//  
-//  @Test
-//  public void testAdd() throws DatabaseException{
-//    createUser1();
-//    int numberOfUsers = manager.getNumberOfUsers();
-//    manager.add(USER1);
-//    assertEquals(numberOfUsers+1,manager.getNumberOfUsers());
-//  }
-//  
   @Test(expected=DuplicateUsernameException.class)
   public void testAddFails() {
     createUser2();

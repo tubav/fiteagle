@@ -33,7 +33,7 @@ public class UserDBManager {
 
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
 
-	private static enum databaseType {
+	protected static enum databaseType {
 		InMemory, Persistent
 	}
 
@@ -58,10 +58,9 @@ public class UserDBManager {
 			preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
 		}
 		if (preferences.get("databaseType").equals(databaseType.Persistent.name())) {
-		  database = JPAUserDB.getInstance();		  
+		  database = JPAUserDB.getDerbyInstance();
 		} else {
-		  // TODO: inmemory version
-			database = JPAUserDB.getInstance();
+			database = JPAUserDB.getInMemoryInstance();
 		}
 	}
 

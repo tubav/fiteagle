@@ -22,6 +22,7 @@ public class UserDBManagerTest {
   
   @Before
   public void setUp() throws Exception {
+   
     userDBManager = UserDBManager.getInstance();
     testUser = new User("test1@localhost", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<UserPublicKey>());
     try{
@@ -73,4 +74,5 @@ public class UserDBManagerTest {
   public void deleteTestUser(){
     userDBManager.delete(testUser);
   }
+  
 }
