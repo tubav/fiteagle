@@ -97,8 +97,8 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
-    return manager.createUserPrivateKeyAndCertAsString(username, passphrase);
+  public String createUserKeyPairAndCertificate(String username, String passphrase) throws Exception {
+    return manager.createUserKeyPairAndCertificate(username, passphrase);
   }
 
   @Override

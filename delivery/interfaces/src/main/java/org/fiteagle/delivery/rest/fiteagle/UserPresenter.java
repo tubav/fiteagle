@@ -217,7 +217,7 @@ public class UserPresenter{
   public String createUserCertAndPrivateKey(@PathParam("username") String username, String passphrase) {  
 	  
     try {      
-      return manager.createUserPrivateKeyAndCertAsString(username, decode(passphrase));
+      return manager.createUserKeyPairAndCertificate(username, decode(passphrase));
     } catch (Exception e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);

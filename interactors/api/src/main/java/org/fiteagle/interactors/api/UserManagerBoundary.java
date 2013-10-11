@@ -47,7 +47,7 @@ public interface UserManagerBoundary {
   public abstract boolean verifyCredentials(String username, String password) throws NoSuchAlgorithmException,
       IOException, UserNotFoundException, DatabaseException;
   
-  public abstract String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception;
+  public abstract String createUserKeyPairAndCertificate(String username, String passphrase) throws Exception;
   
   public abstract String createUserCertificateForPublicKey(String uid, String description) throws Exception, PublicKeyNotFoundException;
   

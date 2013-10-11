@@ -33,7 +33,7 @@ public class UserDBManager {
 
 	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
 
-	protected static enum databaseType {
+	private static enum databaseType {
 		InMemory, Persistent
 	}
 
@@ -170,16 +170,19 @@ public class UserDBManager {
 		return digest.digest(password.getBytes());
 	}
 
-	public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
+	public String createUserCertificate(String username, String passphrase, KeyPair keyPair) throws Exception {
 		username = addDomain(username);
-		KeyPair keypair = keyManager.generateKeyPair();	
-		String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
+		String pubKeyEncoded = keyManager.encodePublicKey(keyPair.getPublic());
 		addKey(username, new UserPublicKey(pubKeyEncoded, "created at " + System.currentTimeMillis()));
-		String userCertString = createUserCertificate(username,	keypair.getPublic());
-		String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
+		String userCertString = createUserCertificate(username,	keyPair.getPublic());
+		String privateKeyEncoded = keyManager.encryptPrivateKey(keyPair.getPrivate(), passphrase);
 		return privateKeyEncoded + "\n" + userCertString;
 	}
 
+	public String createUserKeyPairAndCertificate(String username, String passphrase) throws Exception{
+	  return createUserCertificate(username, passphrase, keyManager.generateKeyPair());
+	}
+	
 	public String createUserCertificateForPublicKey(String username,
 			String description) throws Exception, PublicKeyNotFoundException {
 		username = addDomain(username);

@@ -3,6 +3,8 @@ package org.fiteagle.core.aaa;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
@@ -18,7 +20,9 @@ import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.DSAPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -283,6 +287,29 @@ public class KeyManagement {
     }
     throw new CouldNotParse("Could not find encrypted key string");
     
+  }
+  
+  public KeyPair loadKeyPairFromFile(String pathPublicKey, String pathPrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException{
+    File filePublicKey = new File(pathPublicKey);
+    FileInputStream fis = new FileInputStream(pathPublicKey);
+    byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
+    fis.read(encodedPublicKey);
+    fis.close();
+    
+    File filePrivateKey = new File(pathPrivateKey);
+    fis = new FileInputStream(pathPrivateKey);
+    byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
+    fis.read(encodedPrivateKey);
+    fis.close();
+ 
+    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+    PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+ 
+    PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
+    PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+ 
+    return new KeyPair(publicKey, privateKey);
   }
   
   public class CouldNotParse extends RuntimeException {
