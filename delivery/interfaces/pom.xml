@@ -47,7 +47,19 @@
        <testsAreNotExecuted>true</testsAreNotExecuted>
      </properties>
    </profile>
-	</profiles>
+	<profile>
+     <id>skipTests3</id>
+     <activation>
+       <property>
+         <name>skipITs</name>
+         <value>true</value>
+       </property>
+     </activation>
+     <properties>
+       <testsAreNotExecuted>true</testsAreNotExecuted>
+     </properties>
+   </profile>
+  </profiles>
 	<build>
 		<plugins>
 			<plugin>
