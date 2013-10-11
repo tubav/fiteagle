@@ -21,8 +21,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
-import org.fiteagle.core.userdatabase.JPAUserDB.DatabaseException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;

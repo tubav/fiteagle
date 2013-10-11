@@ -56,11 +56,7 @@ public class JPAUserDB{
     if (factory == null){
       factory = Persistence.createEntityManagerFactory(PERSISTENCE_TYPE);
     }
-    try{
-      return factory.createEntityManager();
-    } catch(Exception e){
-      throw new DatabaseException(e.getMessage());
-    }
+    return factory.createEntityManager();
   }
   
   public void add(User user){
@@ -94,6 +90,8 @@ public class JPAUserDB{
         throw new UserNotFoundException();
       }
       return user;
+    }catch(Exception e){
+      throw e;
     }finally{
       em.close();
     }
@@ -164,6 +162,8 @@ public class JPAUserDB{
       em.getTransaction().begin();
       user.deletePublicKey(description);
       em.getTransaction().commit();
+    }catch(Exception e){
+      throw e;
     }finally{
       em.close();
     }
@@ -218,14 +218,6 @@ public class JPAUserDB{
     
     public DuplicatePublicKeyException(){
       super("either this public key already exists or another public key with the same description already exists for this user");
-    }
-  }
-  
-  public class DatabaseException extends RuntimeException {
-    private static final long serialVersionUID = -8002909402748409082L;
-    
-    public DatabaseException(String message){
-      super(message);
     }
   }
   

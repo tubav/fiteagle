@@ -1,23 +1,22 @@
 package org.fiteagle.interactors.usermanagement;
 
 import java.io.IOException;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
-import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
 import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
+import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.interactors.api.UserManagerBoundary;
 
 public class UserManager implements UserManagerBoundary{
 

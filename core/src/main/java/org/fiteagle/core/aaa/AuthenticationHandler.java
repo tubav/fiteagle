@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
@@ -16,7 +15,6 @@ import java.util.List;
 import javax.security.auth.x500.X500Principal;
 
 import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
-import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;

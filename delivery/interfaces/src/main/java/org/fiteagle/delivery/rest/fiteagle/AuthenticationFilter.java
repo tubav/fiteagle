@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 
-import org.fiteagle.core.userdatabase.JPAUserDB.DatabaseException;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.usermanagement.UserManager;
