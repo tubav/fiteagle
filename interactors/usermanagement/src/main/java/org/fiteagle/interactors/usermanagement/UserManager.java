@@ -9,10 +9,10 @@ import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
+import org.fiteagle.core.userdatabase.User.InValidAttributeException;
+import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
@@ -37,8 +37,8 @@ public class UserManager implements UserManagerBoundary{
   }
   
   @Override
-  public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
-      InValidAttributeException, DuplicatePublicKeyException {
+  public void add(User u) throws DuplicateUsernameException, DuplicateEmailException, DatabaseException, User.NotEnoughAttributesException,
+      User.InValidAttributeException, DuplicatePublicKeyException {
     manager.add(u);    
   }
 
@@ -53,14 +53,14 @@ public class UserManager implements UserManagerBoundary{
   }
 
   @Override
-  public void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException, DuplicateEmailException, DatabaseException, NotEnoughAttributesException,
-      InValidAttributeException, DuplicatePublicKeyException {
+  public void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException, DuplicateEmailException, DatabaseException, User.NotEnoughAttributesException,
+      User.InValidAttributeException, DuplicatePublicKeyException {
     manager.update(username, firstName, lastName, email, affiliation, password, publicKeys);
   }
 
   @Override
   public void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException,
-      InValidAttributeException, DuplicatePublicKeyException {
+      User.InValidAttributeException, DuplicatePublicKeyException {
     manager.addKey(username, key);
   }
 
@@ -107,7 +107,7 @@ public class UserManager implements UserManagerBoundary{
 
   @Override
   public void renameKey(String username, String description, String newDescription) throws UserNotFoundException,
-      DatabaseException, DuplicatePublicKeyException, InValidAttributeException, PublicKeyNotFoundException {
+      DatabaseException, DuplicatePublicKeyException, User.InValidAttributeException, PublicKeyNotFoundException {
     manager.renameKey(username, description, newDescription);    
   }
   

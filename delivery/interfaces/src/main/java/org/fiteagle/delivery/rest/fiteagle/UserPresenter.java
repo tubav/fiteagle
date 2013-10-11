@@ -26,10 +26,10 @@ import org.fiteagle.core.aaa.KeyManagement.CouldNotParse;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
+import org.fiteagle.core.userdatabase.User.InValidAttributeException;
+import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
@@ -83,7 +83,7 @@ public class UserPresenter{
     } catch (DatabaseException e) {
       log.error(e.getMessage());
       throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-    } catch (NotEnoughAttributesException | InValidAttributeException e) {
+    } catch (User.NotEnoughAttributesException | User.InValidAttributeException e) {
       throw new FiteagleWebApplicationException(422, e.getMessage());
     }
     return Response.status(201).build();
@@ -105,7 +105,7 @@ public class UserPresenter{
       throw new FiteagleWebApplicationException(409, e.getMessage());
     } catch (DuplicatePublicKeyException e){
       throw new FiteagleWebApplicationException(409, e.getMessage());
-    } catch (NotEnoughAttributesException | InValidAttributeException e) {
+    } catch (User.NotEnoughAttributesException | User.InValidAttributeException e) {
       throw new FiteagleWebApplicationException(422, e.getMessage());
     }
     return Response.status(200).build();
@@ -140,7 +140,7 @@ public class UserPresenter{
 	
 	try {
       manager.addKey(username, new UserPublicKey(pubkey.getPublicKeyString(), pubkey.getDescription()));
-    } catch (CouldNotParse | InValidAttributeException | NotEnoughAttributesException e){
+    } catch (CouldNotParse | User.InValidAttributeException | User.NotEnoughAttributesException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (UserNotFoundException e) {
       throw new FiteagleWebApplicationException(404, e.getMessage());
@@ -159,7 +159,7 @@ public class UserPresenter{
 	  
     try {
       manager.deleteKey(username, decode(description));
-    } catch (InValidAttributeException e){
+    } catch (User.InValidAttributeException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (UserNotFoundException e) {
       throw new FiteagleWebApplicationException(404, e.getMessage());
@@ -176,7 +176,7 @@ public class UserPresenter{
   public Response renamePublicKey(@PathParam("username") String username, @PathParam("description") String description, String newDescription) {    
     try {
       manager.renameKey(username, decode(description), newDescription);
-    } catch (InValidAttributeException e){
+    } catch (User.InValidAttributeException e){
       throw new FiteagleWebApplicationException(422, e.getMessage());
     } catch (DuplicatePublicKeyException e){
       throw new FiteagleWebApplicationException(409, e.getMessage());

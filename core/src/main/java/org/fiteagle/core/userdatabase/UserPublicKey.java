@@ -21,8 +21,6 @@ import javax.persistence.UniqueConstraint;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.core.aaa.KeyManagement;
-import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
 
 
 @Entity
@@ -57,37 +55,37 @@ public class UserPublicKey implements Serializable{
   } 
   
   public UserPublicKey(String publicKeyString, String description) throws InvalidKeySpecException, NoSuchAlgorithmException, IOException{
+    checkPublicKeyString(publicKeyString);
     this.publicKeyString = publicKeyString;
-    checkPublicKeyString();
     
     this.publicKey = keyManager.decodePublicKey(publicKeyString);    
     
+    checkDescription(description); 
     this.description = description;      
-    checkDescription();  
   }
   
-  public UserPublicKey(PublicKey publicKey, String description) throws NotEnoughAttributesException, IOException {
+  public UserPublicKey(PublicKey publicKey, String description) throws User.NotEnoughAttributesException, IOException {
     this.publicKey = publicKey;
     
     this.publicKeyString = keyManager.encodePublicKey(publicKey);
-    checkPublicKeyString();
+    checkPublicKeyString(publicKeyString);
     
+    checkDescription(description); 
     this.description = description;
-    checkDescription();
   } 
   
-  private void checkDescription() throws NotEnoughAttributesException {
+  private void checkDescription(String description) throws User.NotEnoughAttributesException {
     if(description == null || description.length() == 0){
-      throw new NotEnoughAttributesException("no description for public key given");
+      throw new User.NotEnoughAttributesException("no description for public key given");
     }
     if(!KEY_DESCRIPTION_PATTERN.matcher(description).matches()){
-      throw new InValidAttributeException("empty or invalid key description, only letters, numbers and whitespace is allowed: "+description);
+      throw new User.InValidAttributeException("empty or invalid key description, only letters, numbers and whitespace is allowed: "+description);
     }
   }   
   
-  private void checkPublicKeyString() throws NotEnoughAttributesException {
+  private void checkPublicKeyString(String publicKeyString) throws User.NotEnoughAttributesException {
     if(publicKeyString == null || publicKeyString.length() == 0){
-      throw new NotEnoughAttributesException("no publicKeyString given");
+      throw new User.NotEnoughAttributesException("no publicKeyString given");
     }
   }   
   
@@ -129,6 +127,7 @@ public class UserPublicKey implements Serializable{
   }
 
   public void setDescription(String description) {
+    checkDescription(description);
     this.description = description;
   }
 

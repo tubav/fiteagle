@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
+import org.fiteagle.core.userdatabase.User.InValidAttributeException;
+import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.usermanagement.UserManager;
@@ -42,7 +42,7 @@ public class UserAuthenticationFilterTest {
   private static UserManagerBoundary userManager;
   
   @BeforeClass
-  public static void setUp() throws DuplicateUsernameException, DatabaseException, NotEnoughAttributesException, InValidAttributeException, NoSuchAlgorithmException {
+  public static void setUp() throws DuplicateUsernameException, DatabaseException, User.NotEnoughAttributesException, User.InValidAttributeException, NoSuchAlgorithmException {
      userManager = UserManager.getInstance();
      try{
        userManager.delete("test");

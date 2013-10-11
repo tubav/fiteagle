@@ -22,9 +22,9 @@ import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
+import org.fiteagle.core.userdatabase.User.InValidAttributeException;
+import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class UserDBManager {
 
 	public void add(User u) throws DuplicateUsernameException,
 			DuplicateEmailException, DatabaseException,
-			NotEnoughAttributesException, InValidAttributeException,
+			User.NotEnoughAttributesException, User.InValidAttributeException,
 			DuplicatePublicKeyException {
 		String username = addDomain(u.getUsername());
 		u.setUsername(username);
@@ -86,7 +86,7 @@ public class UserDBManager {
 
 	public void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException,
 			DuplicateEmailException, DatabaseException,
-			NotEnoughAttributesException, InValidAttributeException,
+			User.NotEnoughAttributesException, User.InValidAttributeException,
 			DuplicatePublicKeyException {
 		username = addDomain(username);
 		database.update(username, firstName, lastName, email, affiliation, password, publicKeys);
@@ -94,7 +94,7 @@ public class UserDBManager {
 
 	public void addKey(String username, UserPublicKey key)
 			throws UserNotFoundException, DatabaseException,
-			InValidAttributeException, DuplicatePublicKeyException {
+			User.InValidAttributeException, DuplicatePublicKeyException {
 		username = addDomain(username);
 		database.addKey(username, key);
 	}
@@ -108,7 +108,7 @@ public class UserDBManager {
 	public void renameKey(String username, String description,
 			String newDescription) throws UserNotFoundException,
 			DatabaseException, DuplicatePublicKeyException,
-			InValidAttributeException, PublicKeyNotFoundException {
+			User.InValidAttributeException, PublicKeyNotFoundException {
 		username = addDomain(username);
 		database.renameKey(username, description, newDescription);
 	}

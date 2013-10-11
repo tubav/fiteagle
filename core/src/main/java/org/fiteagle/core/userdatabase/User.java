@@ -25,8 +25,6 @@ import net.iharder.Base64;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
-import org.fiteagle.core.userdatabase.JPAUserDB.InValidAttributeException;
-import org.fiteagle.core.userdatabase.JPAUserDB.NotEnoughAttributesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +56,7 @@ public class User implements Serializable{
   private List<UserPublicKey> publicKeys;
   
   private final static int MINIMUM_PASSWORD_LENGTH = 3;
-  private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-|@.]{3,200}");
+  private final static Pattern USERNAME_PATTERN = Pattern.compile("[\\w|-|@|.]{3,200}");
   private final static Pattern EMAIL_PATTERN = Pattern.compile("[^@]+@{1}[^@]+\\.+[^@]+");
   private final static int MINIMUM_FIRST_AND_LASTNAME_LENGTH = 2;
   private final static int MINIMUM_AFFILITAION_LENGTH = 2;
@@ -83,11 +81,8 @@ public class User implements Serializable{
     checkAttributes();
   }
   
-  public static User createUser(String username) {
-    User user = new User();
-    user.username = username;
-    user.publicKeys = new ArrayList<UserPublicKey>();
-    return user;
+  public static User createDefaultUser(String username) {
+    return new User(username, "default", "default", "default", "default", "default", new ArrayList<UserPublicKey>());
   }
   
   private void setOwners(List<UserPublicKey> publicKeys){
@@ -119,7 +114,7 @@ public class User implements Serializable{
     }   
     
     if(!USERNAME_PATTERN.matcher(username).matches()){
-      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
+      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
     }
     if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
       throw new InValidAttributeException("firstName too short");
@@ -132,17 +127,6 @@ public class User implements Serializable{
     }
     if(affiliation.length() < MINIMUM_AFFILITAION_LENGTH){
       throw new InValidAttributeException("affiliation too short");
-    }
-    
-    for(UserPublicKey oldUserPublicKey : publicKeys){
-      String description = oldUserPublicKey.getDescription();
-      String publicKeyString = oldUserPublicKey.getPublicKeyString();
-      
-      for(UserPublicKey key : publicKeys){
-        if(key != oldUserPublicKey && (key.getDescription().equals(description) || key.getPublicKeyString().equals(publicKeyString))){
-          throw new DuplicatePublicKeyException();
-        }
-      }
     }
   }
   
@@ -181,7 +165,7 @@ public class User implements Serializable{
     return digest.digest(password.getBytes());
   }
   
-  public void updateAttributes(String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws NotEnoughAttributesException, InValidAttributeException, DuplicatePublicKeyException{
+  public void updateAttributes(String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws User.NotEnoughAttributesException, User.InValidAttributeException, DuplicatePublicKeyException{
     if(firstName != null){
      this.firstName = firstName;
     }
@@ -305,6 +289,9 @@ public class User implements Serializable{
   }
 
   public void setUsername(String username) {
+    if(username == null || !USERNAME_PATTERN.matcher(username).matches()){
+      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
+    }
     this.username = username;
   }
 
@@ -312,16 +299,8 @@ public class User implements Serializable{
     return firstName;
   }
 
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
   public String getLastName() {
     return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
   }
 
   public String getEmail() {
@@ -329,15 +308,14 @@ public class User implements Serializable{
   }
 
   public void setEmail(String email) {
+    if(email == null || (!EMAIL_PATTERN.matcher(email).matches() && !email.equals("default"))){
+      throw new InValidAttributeException("an email needs to contain \"@\" and \".\"");
+    }
     this.email = email;
   }
 
   public String getAffiliation() {
     return affiliation;
-  }
-
-  public void setAffiliation(String affiliation) {
-    this.affiliation = affiliation;
   }
 
   public Date getCreated() {
@@ -352,31 +330,43 @@ public class User implements Serializable{
     return passwordHash;
   }
 
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
-  }
-
   public String getPasswordSalt() {
     return passwordSalt;
-  }
-
-  public void setPasswordSalt(String passwordSalt) {
-    this.passwordSalt = passwordSalt;
   }
 
   public List<UserPublicKey> getPublicKeys() {
     return publicKeys;
   }
 
-  public void setPublicKeys(List<UserPublicKey> publicKeys) {
-    this.publicKeys = publicKeys;
-  }
-  
   public class PublicKeyNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 4906415519200726744L;  
     
     public PublicKeyNotFoundException(){
       super("no public key with this description could be found in the database");
+    }
+  }
+
+  public static class NotEnoughAttributesException extends RuntimeException {
+    private static final long serialVersionUID = -8279867183643310351L;
+    
+    public NotEnoughAttributesException(){
+      super();
+    }
+    
+    public NotEnoughAttributesException(String message){
+      super(message);
+    }
+  }
+
+  public static class InValidAttributeException extends RuntimeException {
+    private static final long serialVersionUID = -1299121776233955847L;
+    
+    public InValidAttributeException(){
+      super();
+    }
+    
+    public InValidAttributeException(String message){
+      super(message);      
     }
   }
 
