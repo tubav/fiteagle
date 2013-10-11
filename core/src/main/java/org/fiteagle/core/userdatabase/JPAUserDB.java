@@ -8,10 +8,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.fiteagle.core.config.FiteaglePreferences;
+import org.fiteagle.core.config.FiteaglePreferencesXML;
+
 public class JPAUserDB{
   
   private EntityManagerFactory factory;
-  private final String PERSISTENCE_TYPE;
+  private final String PERSISTENCE_TYPE;  
+  
+  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
+  private static FiteaglePreferences preferences = new FiteaglePreferencesXML(JPAUserDB.class);
   
   private static final String PERSISTENCE_UNIT_NAME_DERBY = "Users_Derby";
   private static final String PERSISTENCE_UNIT_NAME_INMEMORY = "Users_InMemory";
@@ -32,15 +38,22 @@ public class JPAUserDB{
   
   public static JPAUserDB getDerbyInstance(){
     if(derbyInstance == null){
+      System.setProperty("derby.system.home", getDatabasePath());
       derbyInstance = new JPAUserDB(PERSISTENCE_UNIT_NAME_DERBY);
     }
     return derbyInstance;
   }
   
+  private static String getDatabasePath() {
+    if(preferences.get("databasePath") == null){
+      preferences.put("databasePath", DEFAULT_DATABASE_PATH);
+    }
+    return preferences.get("databasePath");
+  }
+  
+  
   private synchronized EntityManager getEntityManager() {
     if (factory == null){
-      //TODO: Not so nice
-      System.setProperty("derby.system.home", System.getProperty("user.home"));
       factory = Persistence.createEntityManagerFactory(PERSISTENCE_TYPE);
     }
     try{

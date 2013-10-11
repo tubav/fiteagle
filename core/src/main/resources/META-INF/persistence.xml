@@ -6,7 +6,7 @@
 	    <properties>
 	      <property name="eclipselink.logging.level"       value="SEVERE"/>
 	      <property name="javax.persistence.jdbc.driver"   value="org.apache.derby.jdbc.EmbeddedDriver" />
-	      <property name="javax.persistence.jdbc.url"      value="jdbc:derby:.fiteagle/db/users.db;create=true" />
+	      <property name="javax.persistence.jdbc.url"      value="jdbc:derby:users;create=true" />
 	      <property name="javax.persistence.jdbc.user"     value="default" />
 	      <property name="javax.persistence.jdbc.password" value="default" />
 	      <property name="eclipselink.ddl-generation"             value="create-tables"/>
