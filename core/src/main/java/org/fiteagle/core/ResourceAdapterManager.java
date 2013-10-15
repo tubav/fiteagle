@@ -10,7 +10,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.clapper.util.classutil.ClassFilter;
 import org.clapper.util.classutil.ClassFinder;
@@ -37,7 +34,7 @@ private static ResourceAdapterManager manager=null;
 
 
   private ResourceAdapterDatabase adapterInstancesDatabase;
-  private ResourceAdapterDatabase adapterDatabase;
+  private ResourceAdapterDatabase adapterTypesDatabase;
   private ScheduledExecutorService executor;
   private HashMap<String, ScheduledFuture<?>> expirationMap;
 private URLClassLoader sysloader;
@@ -45,7 +42,7 @@ private URLClassLoader sysloader;
     if (manager!=null) return;
     sysloader = (URLClassLoader) this.getClass().getClassLoader();
     adapterInstancesDatabase = new InMemoryResourceAdapterDatabase();
-    adapterDatabase = new InMemoryResourceAdapterDatabase();
+    adapterTypesDatabase = new InMemoryResourceAdapterDatabase();
     executor = Executors.newScheduledThreadPool(2);
     expirationMap = new HashMap<>();
     List<Class> allClassesInPackage=null;
@@ -55,7 +52,7 @@ private URLClassLoader sysloader;
     	File directory = new File(directoryName);
 		allClassesInPackage = findClassesInDirectory(directory, packageName);
 	} catch (ClassNotFoundException | IOException e) {
-		throw new RuntimeException();//TODO: give more information in exception
+		throw new RuntimeException();
 	} catch (NoSuchMethodException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -116,12 +113,12 @@ private URLClassLoader sysloader;
   
   public List<ResourceAdapter> getResourceAdapters() {
     
-    return adapterDatabase.getResourceAdapters();
+    return adapterTypesDatabase.getResourceAdapters();
     
   }
   
   public void addResourceAdapter(ResourceAdapter resourceAdapter) {
-    adapterDatabase.addResourceAdapter(resourceAdapter);
+    adapterTypesDatabase.addResourceAdapter(resourceAdapter);
   }
   
   public void addResourceAdapterInstance(ResourceAdapter resourceAdapter) {
@@ -145,27 +142,6 @@ private URLClassLoader sysloader;
 	  removeAdapterFromGroup(resourceAdapterId);
   }
   
-  
-//  private static Class[] getAllClassesInPackage(String packageName)
-//			throws ClassNotFoundException, IOException {
-//		ClassLoader classLoader = Thread.currentThread()
-//				.getContextClassLoader();
-//		if(classLoader == null) throw new RuntimeException();//TODO: give more information in exception
-//		String path = packageName.replace('.', '/');
-//		Enumeration<URL> resources = classLoader.getResources(path);
-//		List<File> dirs = new ArrayList<File>();
-//		while (resources.hasMoreElements()) {
-//			URL resource = resources.nextElement();
-//			dirs.add(new File(resource.getFile()));
-//		}
-//		ArrayList<Class> classes = new ArrayList<Class>();
-//		for (File directory : dirs) {
-//			classes.addAll(findClassesInDirectory(directory, packageName));
-//		}
-//		
-//		//this has duplicate entries in classes!
-//		return classes.toArray(new Class[classes.size()]);
-//	}
 
 	private  List<Class> findClassesInDirectory(File directory, String packageName)
 			throws ClassNotFoundException, IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -188,20 +164,6 @@ private URLClassLoader sysloader;
 		
 		List<Class> classes = new ArrayList<Class>();
 		addURLToSystemClassLoader(jarFile.toURI().toURL());
-
-//		JarFile jar = new JarFile(jarFile);
-//		Enumeration<JarEntry> jarEntries = jar.entries();
-//		while (jarEntries.hasMoreElements()) {
-//			JarEntry jarEntry = (JarEntry) jarEntries.nextElement();
-//			if(jarEntry.getName().endsWith(".class")){
-//				String clazzName = jarEntry.getName().replace('/', '.');
-//				clazzName =  clazzName.substring(0, clazzName.length()-6);
-//				Class clazz = Class.forName(clazzName);
-//				if(ResourceAdapter.class.isAssignableFrom(clazz))
-//					classes.add(clazz);
-//			}
-//			
-//		}
 		ClassFilter filter = new SubclassClassFilter(ResourceAdapter.class);
 		ClassFinder classFinder = new ClassFinder();
 		classFinder.add(jarFile);
@@ -275,16 +237,7 @@ private URLClassLoader sysloader;
 		    
 		  } 
 		}
-  
 
-//  public List<ResourceAdapter> getGroupResources(String groupId) {
-//    return groups.get(groupId);
-//  }
-//
-//  public void addGroup(String groupId, List<ResourceAdapter> adapters) {
-//    this.groups.put(groupId, adapters);
-//  }
-	
 	public static class ResourceNotFound extends RuntimeException{
 
 		/**
