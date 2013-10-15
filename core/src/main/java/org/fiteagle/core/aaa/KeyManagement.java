@@ -3,49 +3,41 @@ package org.fiteagle.core.aaa;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.DSAPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 
 import net.iharder.Base64;
 
-import org.apache.commons.ssl.DerivedKey;
-import org.apache.commons.ssl.OpenSSL;
 import org.bouncycastle.openssl.PEMEncryptor;
 import org.bouncycastle.openssl.PEMWriter;
 import org.bouncycastle.openssl.jcajce.JcePEMEncryptorBuilder;
-import org.fiteagle.core.userdatabase.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -295,6 +287,29 @@ public class KeyManagement {
     }
     throw new CouldNotParse("Could not find encrypted key string");
     
+  }
+  
+  public KeyPair loadKeyPairFromFile(String pathPublicKey, String pathPrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException{
+    File filePublicKey = new File(pathPublicKey);
+    FileInputStream fis = new FileInputStream(pathPublicKey);
+    byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
+    fis.read(encodedPublicKey);
+    fis.close();
+    
+    File filePrivateKey = new File(pathPrivateKey);
+    fis = new FileInputStream(pathPrivateKey);
+    byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
+    fis.read(encodedPrivateKey);
+    fis.close();
+ 
+    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+    PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+ 
+    PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
+    PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+ 
+    return new KeyPair(publicKey, privateKey);
   }
   
   public class CouldNotParse extends RuntimeException {

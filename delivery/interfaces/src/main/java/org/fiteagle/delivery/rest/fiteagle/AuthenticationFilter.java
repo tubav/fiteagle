@@ -14,9 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 
-import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.eclipse.persistence.exceptions.DatabaseException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
+import org.fiteagle.interactors.api.UserManagerBoundary;
+import org.fiteagle.interactors.usermanagement.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ import com.sun.jersey.core.util.Base64;
 
 public abstract class AuthenticationFilter implements Filter {
   
-  private UserDBManager manager;
+  private UserManagerBoundary manager;
   private Logger log = LoggerFactory.getLogger(getClass());
   
   protected HashMap<String, Cookie> cookies = new HashMap<>();
@@ -64,7 +65,7 @@ public abstract class AuthenticationFilter implements Filter {
       return false;
     }
     
-    manager = UserDBManager.getInstance();
+    manager = UserManager.getInstance();
     try {
       if (!manager.verifyCredentials(credentials[0], credentials[1])) {
         response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());

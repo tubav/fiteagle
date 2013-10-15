@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>FITeagle :: Delivery Mechanisms :: Interfaces</name>
 	<groupId>org.fiteagle.delivery</groupId>
@@ -21,6 +22,44 @@
 			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
 		</repository>
 	</repositories>
+	<profiles>
+	 <profile>
+	   <id>skipTests1</id>
+	   <activation>
+	     <property>
+	       <name>maven.test.skip</name>
+	       <value>true</value>
+	     </property>
+	   </activation>
+	   <properties>
+	     <testsAreNotExecuted>true</testsAreNotExecuted>
+	   </properties>
+	 </profile>
+	 <profile>
+     <id>skipTests2</id>
+     <activation>
+       <property>
+         <name>skipTests</name>
+         <value>true</value>
+       </property>
+     </activation>
+     <properties>
+       <testsAreNotExecuted>true</testsAreNotExecuted>
+     </properties>
+   </profile>
+	<profile>
+     <id>skipTests3</id>
+     <activation>
+       <property>
+         <name>skipITs</name>
+         <value>true</value>
+       </property>
+     </activation>
+     <properties>
+       <testsAreNotExecuted>true</testsAreNotExecuted>
+     </properties>
+   </profile>
+  </profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -74,14 +113,18 @@
 							<maxIdleTime>60000</maxIdleTime>
 							<keystore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.keystore</keystore>
 							<password>jetty6</password>
-							<!-- 							<keyPassword>jetty6</keyPassword> -->
+							<!-- <keyPassword>jetty6</keyPassword> -->
 							<truststore>${user.home}${file.separator}fiteagle${file.separator}jetty-ssl.truststore</truststore>
 							<trustPassword>jetty6</trustPassword>
 							<allowRenegotiate>true</allowRenegotiate>
 							<wantClientAuth>true</wantClientAuth>
 						</connector>
 					</connectors>
+					<webAppConfig>
+            <parentLoaderPriority>true</parentLoaderPriority>
+          </webAppConfig>
 				</configuration>
+				
 				<executions>
 					<execution>
 						<id>start-jetty</id>
@@ -92,6 +135,7 @@
 						<configuration>
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
+							<skip>${testsAreNotExecuted}</skip>
 						</configuration>
 					</execution>
 					<execution>
@@ -129,7 +173,8 @@
                     <goal>exec</goal>
                 </goals>
                 <configuration>
-                    <executable>./../../src/test/bin/testAcceptance.sh</executable>
+                  <skip>${testsAreNotExecuted}</skip>
+                  <executable>./../../src/test/bin/testAcceptance.sh</executable>
                 </configuration>
             </execution>
         </executions>
@@ -194,20 +239,28 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
+    </dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-guice</artifactId>
 			<version>1.17</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.17</version>
+		<groupId>com.sun.jersey</groupId>
+		<artifactId>jersey-server</artifactId>
+		<version>1.17</version>
 		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.glassfish.jersey.core</groupId> -->
+<!-- 			<artifactId>jersey-server</artifactId> -->
+<!-- 			<version>2.0</version> -->
+<!-- 		</dependency> -->
+
+
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
@@ -218,5 +271,38 @@
 			<artifactId>jersey-servlet</artifactId>
 			<version>1.17</version>
 		</dependency>
+
+
+
+
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.core</groupId> -->
+		<!-- <artifactId>jersey-client</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.contribs</groupId> -->
+		<!-- <artifactId>jersey-guice</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.core</groupId> -->
+		<!-- <artifactId>jersey-server</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey</groupId> -->
+		<!-- <artifactId>jersey-json</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.containers</groupId> -->
+		<!-- <artifactId>jersey-container-servlet-core</artifactId> -->
+		<!-- <version>2.2</version> -->
+		<!-- </dependency> -->
+
+
 	</dependencies>
 </project>

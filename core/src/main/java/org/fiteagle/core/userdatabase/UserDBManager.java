@@ -7,71 +7,66 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 import net.iharder.Base64;
 
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.aaa.CertificateAuthority;
 import org.fiteagle.core.aaa.KeyManagement;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
 import org.fiteagle.core.config.InterfaceConfiguration;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicatePublicKeyException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.InValidAttributeException;
-import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
-import org.fiteagle.core.userdatabase.UserPersistable.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
+import org.fiteagle.core.userdatabase.User.InValidAttributeException;
+import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserDBManager {
 
-	private UserPersistable database;
-	private FiteaglePreferences preferences = new FiteaglePreferencesXML(
-			this.getClass());
+	private FiteaglePreferences preferences = new FiteaglePreferencesXML(this.getClass());
 
 	private static enum databaseType {
-		InMemory, SQLite
+		InMemory, Persistent
 	}
 
-	private static final String DEFAULT_DATABASE_TYPE = databaseType.SQLite
-			.name();
+	private static final String DEFAULT_DATABASE_TYPE = databaseType.Persistent.name();
+	private static JPAUserDB database;
+
 	private static UserDBManager dbManager = null;
 	static Logger log = LoggerFactory.getLogger(UserDBManager.class);
 	KeyManagement keyManager = null;
 
 	public static UserDBManager getInstance() {
-		if (dbManager == null) {
-			try {
-				dbManager = new UserDBManager();
-			} catch (DatabaseException | SQLException e) {
-				log.error(e.getMessage(), e);
-			}
-		}
+	  if(dbManager == null){
+	    dbManager = new UserDBManager();
+	  }
 		return dbManager;
 	}
-
-	private UserDBManager() throws DatabaseException, SQLException {
-		keyManager = KeyManagement.getInstance();
+	
+	private UserDBManager() {
+	  keyManager = KeyManagement.getInstance();
+	  
 		if (preferences.get("databaseType") == null) {
 			preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
 		}
-		if (preferences.get("databaseType").equals(databaseType.SQLite.name())) {
-			database = SQLiteUserDB.getInstance();
+		if (preferences.get("databaseType").equals(databaseType.Persistent.name())) {
+		  database = JPAUserDB.getDerbyInstance();
 		} else {
-			database = new InMemoryUserDB();
+			database = JPAUserDB.getInMemoryInstance();
 		}
 	}
 
 	public void add(User u) throws DuplicateUsernameException,
 			DuplicateEmailException, DatabaseException,
-			NotEnoughAttributesException, InValidAttributeException,
+			User.NotEnoughAttributesException, User.InValidAttributeException,
 			DuplicatePublicKeyException {
 		String username = addDomain(u.getUsername());
 		u.setUsername(username);
@@ -91,7 +86,7 @@ public class UserDBManager {
 
 	public void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException,
 			DuplicateEmailException, DatabaseException,
-			NotEnoughAttributesException, InValidAttributeException,
+			User.NotEnoughAttributesException, User.InValidAttributeException,
 			DuplicatePublicKeyException {
 		username = addDomain(username);
 		database.update(username, firstName, lastName, email, affiliation, password, publicKeys);
@@ -99,7 +94,7 @@ public class UserDBManager {
 
 	public void addKey(String username, UserPublicKey key)
 			throws UserNotFoundException, DatabaseException,
-			InValidAttributeException, DuplicatePublicKeyException {
+			User.InValidAttributeException, DuplicatePublicKeyException {
 		username = addDomain(username);
 		database.addKey(username, key);
 	}
@@ -113,7 +108,7 @@ public class UserDBManager {
 	public void renameKey(String username, String description,
 			String newDescription) throws UserNotFoundException,
 			DatabaseException, DuplicatePublicKeyException,
-			InValidAttributeException, PublicKeyNotFoundException {
+			User.InValidAttributeException, PublicKeyNotFoundException {
 		username = addDomain(username);
 		database.renameKey(username, description, newDescription);
 	}
@@ -154,9 +149,9 @@ public class UserDBManager {
 			throws NoSuchAlgorithmException, IOException,
 			UserNotFoundException, DatabaseException {
 		username = addDomain(username);
-		User user = get(username);
-		return verifyPassword(password, user.getPasswordHash(),
-				user.getPasswordSalt());
+		User User = get(username);
+		return verifyPassword(password, User.getPasswordHash(),
+				User.getPasswordSalt());
 	}
 
 	private String createUserCertificate(String username, PublicKey publicKey)
@@ -175,16 +170,19 @@ public class UserDBManager {
 		return digest.digest(password.getBytes());
 	}
 
-	public String createUserPrivateKeyAndCertAsString(String username, String passphrase) throws Exception {
+	public String createUserCertificate(String username, String passphrase, KeyPair keyPair) throws Exception {
 		username = addDomain(username);
-		KeyPair keypair = keyManager.generateKeyPair();	
-		String pubKeyEncoded = keyManager.encodePublicKey(keypair.getPublic());
+		String pubKeyEncoded = keyManager.encodePublicKey(keyPair.getPublic());
 		addKey(username, new UserPublicKey(pubKeyEncoded, "created at " + System.currentTimeMillis()));
-		String userCertString = createUserCertificate(username,	keypair.getPublic());
-		String privateKeyEncoded = keyManager.encryptPrivateKey(keypair.getPrivate(), passphrase);
+		String userCertString = createUserCertificate(username,	keyPair.getPublic());
+		String privateKeyEncoded = keyManager.encryptPrivateKey(keyPair.getPrivate(), passphrase);
 		return privateKeyEncoded + "\n" + userCertString;
 	}
 
+	public String createUserKeyPairAndCertificate(String username, String passphrase) throws Exception{
+	  return createUserCertificate(username, passphrase, keyManager.generateKeyPair());
+	}
+	
 	public String createUserCertificateForPublicKey(String username,
 			String description) throws Exception, PublicKeyNotFoundException {
 		username = addDomain(username);

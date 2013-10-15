@@ -2,7 +2,6 @@ package org.fiteagle.core.aaa;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyStoreException;
@@ -10,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -18,7 +16,6 @@ import java.util.Date;
 
 import javax.security.auth.x500.X500Principal;
 
-import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -31,13 +28,12 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
 import org.fiteagle.core.util.URN;
 
 public class CertificateAuthority {
@@ -145,9 +141,9 @@ public class CertificateAuthority {
 
 	public X509Certificate createCertificate(X509Certificate xCert)
 			throws Exception {
-		User user = getUserFromCert(xCert);
+		User User = getUserFromCert(xCert);
 		PublicKey pubkey = xCert.getPublicKey();
-		return createCertificate(user, pubkey);
+		return createCertificate(User, pubkey);
 	}
 
 	public X509Certificate createCertificate(Group g) throws Exception {

@@ -56,5 +56,18 @@
   		<artifactId>core</artifactId>
   		<version>0.1-SNAPSHOT</version>
   	</dependency>
+  	
+  	<dependency>
+      <groupId>org.fiteagle.interactors</groupId>
+      <artifactId>usermanagement</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.fiteagle.interactors</groupId>
+      <artifactId>api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+  	
   </dependencies>
 </project>

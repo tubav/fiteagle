@@ -12,6 +12,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
@@ -34,11 +35,17 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 	//TODO: mapping between type of resource and sfa type, waiting for ontology based solution
 	public RSpecContents getAdvertisedRSpec(
 			List<ResourceAdapter> resourceAdapters) {
+		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 		RSpecContents adRSpecContents = new RSpecContents();
 		adRSpecContents.setType("advertisement");
 		List<Object> rspecElements = adRSpecContents.getAnyOrNodeOrLink();
 		for (ResourceAdapter ra : resourceAdapters) {
-			if (ra instanceof SSHAccessable) {
+			if (ra instanceof OpenstackResourceAdapter){
+				Object resource = translator
+						.translateOpenstackResourceAdapterToAdvertisementOpenstackResource((OpenstackResourceAdapter)ra);
+				rspecElements.add(resource);
+			}
+			else if (ra instanceof SSHAccessable) {
 				Object node = translateSSHAccesableToAdvertisementNode(ra);
 				rspecElements.add(node);
 			}else{
@@ -96,14 +103,15 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		try {
 			advertisedRspecSTR = getAdvertisedString(rspecElem);
 		} catch (JAXBException e) {
-
+			e.printStackTrace();
 		}
 		return advertisedRspecSTR;
 	}
 
+	//TODO: this doesn't work!!!
 	private String getAdvertisedString(Object jaxbObject) throws JAXBException {
 		JAXBContext context = JAXBContext
-				.newInstance("org.fiteagle.interactors.sfa.rspec.advertisement:org.fiteagle.interactors.sfa.rspec.ext");
+				.newInstance("org.fiteagle.interactors.sfa.rspec.advertisement:org.fiteagle.interactors.sfa.rspec.ext:org.fiteagle.interactors.sfa.rspec.ext.openstack");
 		Marshaller marshaller = context.createMarshaller();
 		marshaller
 				.setProperty(
@@ -131,4 +139,8 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 	private void addAdRspecExtension(String extension) {
 		adRspecExtensions.add(extension);
 	}
+	
+	
+	
+	
 }

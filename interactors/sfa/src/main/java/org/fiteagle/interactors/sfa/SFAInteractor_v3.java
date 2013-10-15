@@ -156,6 +156,7 @@ public class SFAInteractor_v3 implements ISFA {
     
     SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
     AllocateRequestProcessor allocateRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.ALLOCATE);
+    allocateRequestProcessor.setUserCertificate(certificate);
     AllocateResult result = allocateRequestProcessor.processRequest(urn, credentials, requestRspec, allocateOptions);
     return result;
     

@@ -297,7 +297,7 @@ private Object parseDeleteOptions(Object from) {
     JAXBContext jc;
     try {
 //      jc = JAXBContext.newInstance( "org.fiteagle.interactors.sfa.rspec" );
-      jc = JAXBContext.newInstance("org.fiteagle.interactors.sfa.rspec.request:org.fiteagle.interactors.sfa.rspec.ext");
+      jc = JAXBContext.newInstance("org.fiteagle.interactors.sfa.rspec.request:org.fiteagle.interactors.sfa.rspec.ext:org.fiteagle.interactors.sfa.rspec.ext.openstack");
       Unmarshaller u = jc.createUnmarshaller();
       JAXBElement obj = (JAXBElement) u.unmarshal(fromIs);
       rSpec=(RSpecContents)obj.getValue();

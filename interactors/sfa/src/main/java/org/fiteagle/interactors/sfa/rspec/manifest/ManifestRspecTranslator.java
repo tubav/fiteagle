@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.Named;
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
@@ -40,7 +41,10 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 
 		for (ResourceAdapter resourceAdapter : resourceAdapters) {
 			Object resource;
-			if (resourceAdapter instanceof SSHAccessable)
+			
+			if (resourceAdapter instanceof OpenstackResourceAdapter)
+				resource = new SFAv3RspecTranslator().translateToOpenstackResource(resourceAdapter);
+			else if (resourceAdapter instanceof SSHAccessable)
 				resource = translateToNode(resourceAdapter);
 			else
 				resource = translateToFITeagleResource(resourceAdapter);
@@ -117,7 +121,7 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 
 	private String getString(Object jaxbObject) throws JAXBException {
 		JAXBContext context = JAXBContext
-				.newInstance("org.fiteagle.interactors.sfa.rspec.manifest:org.fiteagle.interactors.sfa.rspec.ext");
+				.newInstance("org.fiteagle.interactors.sfa.rspec.manifest:org.fiteagle.interactors.sfa.rspec.ext:org.fiteagle.interactors.sfa.rspec.ext.openstack");
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter stringWriter = new StringWriter();
 		marshaller.marshal(jaxbObject, stringWriter);

@@ -58,7 +58,6 @@ public DeleteResult processRequest(List<String> urns, ListCredentials credential
     returnCode = getReturnCode(code);
     
     result.setCode(returnCode);
-   
     return result;
   }
   
@@ -79,15 +78,29 @@ public DeleteResult processRequest(List<String> urns, ListCredentials credential
       List<ResourceAdapter> resourceAdapterInstances = resourceManager.getResourceAdapterInstancesById(resourceAdapterInstanceIds);
       while(resourceAdapterInstances.size()>0){
         ResourceAdapter resourceAdapter = (ResourceAdapter) resourceAdapterInstances.get(0);
+        
+        //TODO: test this line
+        resourceAdapter.release();
+        
         String id=resourceAdapter.getId();
 //        String urn = translator.translateResourceIdToSliverUrn(id, urns.get(0));
         resourceManager.deleteResource(id);
+        //delete this from the group
+//        group = GroupDBManager.getInstance().getGroup(
+//				sliceURN.getSubjectAtDomain());
+        
+        group.deleteResource(id);
+		GroupDBManager.getInstance().updateGroup(group);
+        
+        
         GeniSlivers tmpSliver = new GeniSlivers();
 //        tmpSliver.setGeni_sliver_urn(urn);
         tmpSliver.setGeni_allocation_status(GENISliverAllocationState.geni_unallocated.toString());
         //TODO: expires????!!!
         //TODO error(optional)??
-        slivers .add(tmpSliver);
+        slivers.add(tmpSliver);
+        
+        resourceAdapterInstances.remove(0);
       }
       
     } else{
