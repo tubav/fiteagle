@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 public class GroupManager implements GroupManagerBoundary {
   private Logger log = LoggerFactory.getLogger(getClass());
   private GroupDBManager groupDBManager;
-  
-  public GroupManager() {
+  private static GroupManager gManager;
+  private GroupManager() {
     
     this.groupDBManager = GroupDBManager.getInstance();
     
@@ -33,5 +33,14 @@ public class GroupManager implements GroupManagerBoundary {
     groupDBManager.deleteGroup(groupId);
     
   }
+
+public static GroupManagerBoundary getInstance() {
+	if(gManager == null)
+		gManager = new GroupManager();
+	
+	return gManager;
+}		
+
+
   
 }

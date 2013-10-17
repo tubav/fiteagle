@@ -21,6 +21,8 @@ import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.interactors.api.GroupManagerBoundary;
+import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,23 +33,22 @@ public class GroupAuthenticationFilterTest {
   HttpServletRequest req;
   HttpServletResponse resp ;
   FilterChain chain;
-  
+  GroupManagerBoundary groupManager;
+  UserManagerBoundary userManager;
   @Before
   public void setUp() throws Exception {
      req = createMock(HttpServletRequest.class);
      filter = new GroupAuthenticationFilter();
      resp = createMock(HttpServletResponse.class);
      chain = createMock(FilterChain.class);
-     
-     try{
-       GroupDBManager.getInstance().addGroup(new Group("testGroup", "test"));
-     }catch(CouldNotCreateGroup c){}
-     
-     try{
-       UserDBManager.getInstance().get("test");
-     }catch(UserNotFoundException r){
-       UserDBManager.getInstance().add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test", new ArrayList<UserPublicKey>()));
-     }
+     groupManager = createMock(GroupManagerBoundary.class);
+     expect(groupManager.getGroup("testGroup")).andReturn(new Group("testGroup", "test"));
+     userManager = createMock(UserManagerBoundary.class);
+     replay(userManager);
+     replay(groupManager);
+     filter.setGroupManager(groupManager);
+     filter.setUserManager(userManager);
+   
      
   }
   
@@ -82,9 +83,5 @@ public class GroupAuthenticationFilterTest {
   }
  
   
-  @After
-  public void cleanUp(){
-    GroupDBManager.getInstance().deleteGroup("testGroup");
-    UserDBManager.getInstance().delete("test");
-  }
+
 }

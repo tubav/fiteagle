@@ -42,8 +42,10 @@ public class ServletConfig extends GuiceServletContextListener {
             bind(CertificateManagerBoundary.class).to(CertificateManager.class).in(Scopes.SINGLETON);
             
             bind(GroupPresenter.class).in(Scopes.SINGLETON);
-            bind(GroupManagerBoundary.class).to(GroupManager.class).in(Scopes.SINGLETON);
-            filter("/api/v1/group/*").through(new GroupAuthenticationFilter());
+            bind(GroupManagerBoundary.class).toInstance(GroupManager.getInstance());
+            GroupAuthenticationFilter gFilter = new GroupAuthenticationFilter();
+            gFilter.setGroupManager(GroupManager.getInstance());
+            filter("/api/v1/group/*").through(gFilter);
             
             bind(ResourceMonitoringPresenter.class).in(Scopes.SINGLETON);
             bind(ResourceMonitoringBoundary.class).to(MonitoringManager.class).in(Scopes.SINGLETON);

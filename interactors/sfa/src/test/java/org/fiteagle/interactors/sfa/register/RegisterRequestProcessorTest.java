@@ -186,9 +186,5 @@ public class RegisterRequestProcessorTest {
 		sg.getCredential().getOwnerURN();
 	}
 
-	@After
-	public void deleteTestGroup() {
-		GroupDBManager.getInstance().deleteGroup(
-				new URN(urnString).getSubjectAtDomain());
-	}
+	
 }

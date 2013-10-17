@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.config.InterfaceConfiguration;
+import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,5 +193,6 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
   protected void deleteCookie(String username){
     cookies.remove(username);
   }
-  
+
+
 }

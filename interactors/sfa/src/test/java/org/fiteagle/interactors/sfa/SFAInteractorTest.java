@@ -61,13 +61,13 @@ public class SFAInteractorTest {
 	public void setUp() {
 		this.sfaInteractor = new SFAInteractor_v3();
 	//	new SSHDeployAdapter().setPreferences(ips, usernames, passwords, hardwareTypes, sshKeys, countries, latitudes, longitudes);
-		GroupDBManager.getInstance().addGroup(new Group("testtest@fiteagletest", "test@test"));
+	//	GroupDBManager.getInstance().addGroup(new Group("testtest@fiteagletest", "test@test"));
 	}
 	
 	@After
 	public void tearDown(){
 	//	new SSHDeployAdapter().removeAllPreferences();
-		GroupDBManager.getInstance().deleteGroup("testtest@fiteagletest");
+		//GroupDBManager.getInstance().deleteGroup("testtest@fiteagletest");
 	}
 	
 	

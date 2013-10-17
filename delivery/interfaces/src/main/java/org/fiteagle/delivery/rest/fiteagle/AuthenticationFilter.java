@@ -101,7 +101,11 @@ public abstract class AuthenticationFilter implements Filter {
   protected void saveCookie(String target, Cookie cookie) {
     cookies.put(target, cookie);    
   }
-  
+  public void setUserManager(UserManagerBoundary userManager) {
+		this.manager = userManager;
+		
+	}
+	  
   abstract boolean isUserAuthorizedForTarget(String user, String target);
   
   abstract String getTarget(HttpServletRequest request);

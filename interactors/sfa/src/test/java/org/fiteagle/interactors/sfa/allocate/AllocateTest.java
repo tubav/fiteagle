@@ -97,12 +97,7 @@ public class AllocateTest {
 		
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		GroupDBManager.getInstance().deleteGroup("testtest@fiteagletest");
-
-	}
-
+	
 	@Test
 	public void testAllocateRessource() throws IOException {
 		

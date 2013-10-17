@@ -15,17 +15,23 @@ import javax.ws.rs.core.Response;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.userdatabase.UserDBManager;
+import org.fiteagle.interactors.api.GroupManagerBoundary;
+import org.fiteagle.interactors.groupmanagement.GroupManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GroupAuthenticationFilter extends AuthenticationFilter {
   Logger log = LoggerFactory.getLogger(getClass());
-  UserDBManager userManager;
-  GroupDBManager groupManager;
+  GroupManagerBoundary groupManager;
   private final static String COOKIE_NAME = "fiteagle_group_cookie";
   
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
+	  
+  }
+  
+  public void setGroupManager(GroupManagerBoundary groupManager){
+	  this.groupManager = groupManager;
   }
   
   @Override
@@ -89,7 +95,7 @@ public class GroupAuthenticationFilter extends AuthenticationFilter {
   
   @Override
   boolean isUserAuthorizedForTarget(String user, String target) {
-    groupManager = GroupDBManager.getInstance();
+    
     Group targetGroup = groupManager.getGroup(target);
     String groupOwner = targetGroup.getGroupOwnerId();
     return groupOwner.equals(user);
@@ -103,5 +109,7 @@ public class GroupAuthenticationFilter extends AuthenticationFilter {
     return returnValue;
     
   }
+
+
   
 }

@@ -22,6 +22,7 @@ import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.User.InValidAttributeException;
 import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.usermanagement.UserManager;
@@ -41,22 +42,16 @@ public class UserAuthenticationFilterTest {
   
   private static UserManagerBoundary userManager;
   
-  @BeforeClass
-  public static void setUp() throws DuplicateUsernameException, DatabaseException, User.NotEnoughAttributesException, User.InValidAttributeException, NoSuchAlgorithmException {
-     userManager = UserManager.getInstance();
-     try{
-       userManager.delete("test");
-     } catch(UserNotFoundException e){}
-     
-     userManager.add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test", new ArrayList<UserPublicKey>()));     
-  }
+  
 
   @Before
   public void createMocks(){
     req = createMock(HttpServletRequest.class);
     resp = createMock(HttpServletResponse.class);   
     chain = createMock(FilterChain.class);  
+    userManager = createMock(UserManagerBoundary.class);
     filter = new UserAuthenticationFilter();
+    filter.setUserManager(userManager);
   }
   
   @Test

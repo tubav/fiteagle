@@ -44,7 +44,7 @@ public class JPAGroupDB extends JPADatabase implements GroupPersistable{
 
 	public void delete(Group g) {
 		EntityManager em = getEntityManager();
-
+		g = em.merge(g);
 		try {
 			em.getTransaction().begin();
 			em.remove(g);
@@ -72,6 +72,9 @@ public class JPAGroupDB extends JPADatabase implements GroupPersistable{
 		Group g;
 		try {
 			g = em.find(Group.class, groupId);
+			if(g == null){
+				throw new CouldNotFindGroup();
+			}
 		} catch (Exception e) {
 			throw new CouldNotFindGroup();
 		}
