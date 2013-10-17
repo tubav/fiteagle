@@ -13,15 +13,27 @@ public class GroupManagerTest {
   GroupDBManager gm;
   Group group ;
   ResourceAdapter ra;
+private GroupPersistable gp;
   @Before
   public void setUp() throws Exception {
     gm = GroupDBManager.getInstance();
+    gp = EasyMock.createMock(GroupPersistable.class);
+    gm.setGroupDatabase(gp);
     group = new Group("testGroupId", "testOwnerID");
     gm.addGroup(group);
     ra = EasyMock.createMock(ResourceAdapter.class);
+    EasyMock.expect(gp.get("testGroupId")).andReturn(group);
+    EasyMock.expectLastCall().anyTimes();
+    gp.add(EasyMock.anyObject(Group.class));
+    EasyMock.expectLastCall().anyTimes();
+    gp.update(EasyMock.anyObject(Group.class));
+    EasyMock.expectLastCall().anyTimes();
+    gp.delete(EasyMock.anyObject(String.class));
+    EasyMock.expectLastCall().anyTimes();
     EasyMock.expect(ra.getId()).andReturn("dummyRA");
     EasyMock.expectLastCall().times(2);
     EasyMock.replay(ra);
+    EasyMock.replay(gp);
   }
   @After
   public void deleteGroup(){
@@ -38,6 +50,7 @@ public class GroupManagerTest {
   @Test
   public void testAddGroupWithResources(){
 	Group g2 = new Group("g2", "test");
+	
 	g2.addResource(ra);
 	gm.addGroup(g2);
   }

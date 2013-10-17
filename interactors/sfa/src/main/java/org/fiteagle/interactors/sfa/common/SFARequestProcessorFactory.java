@@ -31,6 +31,7 @@ public class SFARequestProcessorFactory {
 		case ALLOCATE:
 		  AllocateRequestProcessor allocateRequestProcessor = new AllocateRequestProcessor();
 		  allocateRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  allocateRequestProcessor.setGroupDBManager(GroupDBManager.getInstance());
 		  result = (E) allocateRequestProcessor;
 		  
 			break;
@@ -52,6 +53,7 @@ public class SFARequestProcessorFactory {
 		case PROVISION:
 		  ProvisionRequestProcessor provisionRequestProcessor =  new ProvisionRequestProcessor();
 		  provisionRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  provisionRequestProcessor.setGroupDBManager(GroupDBManager.getInstance());
 		  result = (E) provisionRequestProcessor;
 			break;
 		case RENEW:

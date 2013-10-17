@@ -14,7 +14,7 @@ import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
@@ -26,11 +26,10 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
-import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
-import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
 import org.fiteagle.interactors.sfa.rspec.ext.Property;
 import org.fiteagle.interactors.sfa.rspec.ext.Resource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.request.NodeContents;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
@@ -39,6 +38,7 @@ import org.fiteagle.interactors.sfa.util.DateUtil;
 public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
 	private ResourceAdapterManager resourceManager;
+	private GroupDBManager groupDBManager;
 
 	public AllocateResult processRequest(String urn,
 			ListCredentials credentials, RSpecContents requestRspec,
@@ -71,10 +71,10 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 			Group group = null;
 			boolean groupFound = true;
 			try {
-				group = GroupDBManager.getInstance().getGroup(
+				group = groupDBManager.getGroup(
 						sliceURN.getSubjectAtDomain());
 
-			} catch (GroupNotFound e) {
+			} catch (CouldNotFindGroup e) {
 				groupFound = false;
 				returnCode = getReturnCode(GENI_CodeEnum.SEARCHFAILED);
 				
@@ -180,7 +180,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
 					for (ResourceAdapter rs : resourcesList) {
 						group.addResource(rs);
-						GroupDBManager.getInstance().updateGroup(group);
+						groupDBManager.updateGroup(group);
 					}
 
 					returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
@@ -200,7 +200,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
 	private AllocateValue getValue(String urn) {
 		AllocateValue resultValue = new AllocateValue();
-		Group group = GroupDBManager.getInstance().getGroup(
+		Group group = groupDBManager.getGroup(
 				new URN(urn).getSubjectAtDomain());
 		ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
 
@@ -243,6 +243,11 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
 	public void setResourceManager(ResourceAdapterManager resourceManager) {
 		this.resourceManager = resourceManager;
+	}
+
+	public void setGroupDBManager(GroupDBManager groupDBManager) {
+		this.groupDBManager = groupDBManager;
+		
 	}
 
 	

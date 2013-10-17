@@ -1,9 +1,9 @@
 package org.fiteagle.delivery.rest.fiteagle;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.easymock.EasyMock.expectLastCall;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotCreateGroup;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
-import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

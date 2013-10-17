@@ -1,7 +1,6 @@
 package org.fiteagle.interactors.sfa.delete;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
@@ -9,20 +8,16 @@ import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
-import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.describe.DescribeValue;
-import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
-import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class DeleteRequestProcessor extends SFAv3RequestProcessor {
@@ -70,7 +65,7 @@ public DeleteResult processRequest(List<String> urns, ListCredentials credential
 	  Group group = null;
 	  try{
 		   group=groupManager.getGroup(new URN(urns.get(0)).getSubjectAtDomain());
-	  }catch(GroupNotFound e){
+	  }catch(CouldNotFindGroup e){
 		  code = GENI_CodeEnum.SEARCHFAILED;
 		  return slivers;
 	  }

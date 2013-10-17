@@ -2,7 +2,6 @@ package org.fiteagle.interactors.groupmanagement;
 
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
 import org.fiteagle.interactors.api.GroupManagerBoundary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

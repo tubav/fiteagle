@@ -11,8 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fiteagle.core.groupmanagement.Group;
-import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
-import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotDeleteGroup;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotCreateGroup;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotDeleteGroup;
 import org.fiteagle.interactors.api.GroupManagerBoundary;
 
 import com.google.inject.Inject;

@@ -8,11 +8,10 @@ import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -67,7 +66,7 @@ public class DeleteRequestProcessorTest {
 	public void testProcessRequestOnNotExistingSlice() {
 		List<String> urns = new LinkedList<>();
 		setUpCredentialMock();
-		EasyMock.expect(groupManager.getGroup((String) EasyMock.anyObject())).andThrow(new GroupNotFound(""));
+		EasyMock.expect(groupManager.getGroup((String) EasyMock.anyObject())).andThrow(new CouldNotFindGroup());
 	
 		EasyMock.replay(groupManager);
 		urns.add(sliceUrn.toString());

@@ -3,7 +3,6 @@ package org.fiteagle.interactors.sfa.register;
 import java.io.StringReader;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
-import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,7 +12,7 @@ import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotCreateGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;

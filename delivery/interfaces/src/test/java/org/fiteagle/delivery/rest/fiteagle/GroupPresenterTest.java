@@ -1,5 +1,6 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
+import org.easymock.EasyMock;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.interactors.groupmanagement.GroupManager;
 import org.junit.Assert;
@@ -11,8 +12,14 @@ public class GroupPresenterTest {
   Group g;
   @Before
   public void setUp() throws Exception {
-     pre = new GroupPresenter(new GroupManager());
+	 GroupManager gm = EasyMock.createMock(GroupManager.class);
+	 gm.addGroup(EasyMock.anyObject(String.class), EasyMock.anyObject(Group.class));
+	 EasyMock.expectLastCall().anyTimes();
+	
+     pre = new GroupPresenter(gm);
      g = new Group("slice", "owner");
+     EasyMock.expect(gm.getGroup("slice")).andReturn(g);
+	 EasyMock.replay(gm);
   }
   
 

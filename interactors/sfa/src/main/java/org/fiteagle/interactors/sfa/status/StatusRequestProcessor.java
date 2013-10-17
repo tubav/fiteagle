@@ -1,8 +1,6 @@
 package org.fiteagle.interactors.sfa.status;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +8,7 @@ import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
@@ -87,7 +85,7 @@ private String output = "";
     		Group g = null;
     		try{
     			 g = GroupDBManager.getInstance().getGroup(u.getSubjectAtDomain());
-    		}catch(GroupNotFound e){
+    		}catch(CouldNotFindGroup e){
     			code = GENI_CodeEnum.SEARCHFAILED;
     			output = GENI_CodeEnum.SEARCHFAILED.getDescription();
     			return new StatusValue();

@@ -1,8 +1,7 @@
 package org.fiteagle.interactors.sfa.provision;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -15,6 +14,7 @@ import org.fiteagle.adapter.stopwatch.StopwatchAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.Credentials;
@@ -29,20 +29,24 @@ public class ProvisionRequestProcessorTest {
 	private ResourceAdapterManager resourceAdapterManager;
 	private ListCredentials listCredentials;
 	private ProvisionRequestProcessor processor;
+	private GroupDBManager groupDBManager;
 	private List<String> urns;
 	private URN sliceURN = new URN("urn:publicid:IDN+fiteagletest+slice+testtest");
 	private URN notExistingSlice = new URN("urn:publicid:IDN+fiteagletest+slice+doesNotExist");
 	private ProvisionOptions options;
+	private Group g;
 	@Before
 	public void setUp() throws Exception {
 		processor = new ProvisionRequestProcessor();
+		g = new Group(sliceURN.getSubjectAtDomain(), "someone");
 		buildMocks();
 		processor.setResourceManager(resourceAdapterManager);
+		processor.setGroupDBManager(groupDBManager);
 		urns = new LinkedList();
 		createOptionsRSv3();
 		listCredentials = getListCredentials();
-		Group g = new Group(sliceURN.getSubjectAtDomain(), "someone");
-		GroupDBManager.getInstance().addGroup(g);
+		
+		
 		
 	}
 
@@ -70,11 +74,19 @@ public class ProvisionRequestProcessorTest {
 		resourceAdapterManager.renewExpirationTime(EasyMock.anyObject(String.class), EasyMock.anyObject(Date.class));
 		EasyMock.replay(resourceAdapterManager);
 		
+		groupDBManager = EasyMock.createMock(GroupDBManager.class);
+		EasyMock.expect(groupDBManager.getGroup(g.getGroupId())).andReturn(g);
+		EasyMock.expectLastCall().anyTimes();
+		EasyMock.expect(groupDBManager.getGroup("doesNotExist@fiteagletest")).andThrow(new CouldNotFindGroup());
+		EasyMock.expectLastCall().anyTimes();
+		groupDBManager.deleteGroup(EasyMock.anyObject(String.class));
+		EasyMock.expectLastCall().anyTimes();
+		EasyMock.replay(groupDBManager);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		GroupDBManager.getInstance().deleteGroup(sliceURN.getSubjectAtDomain());
+		groupDBManager.deleteGroup(sliceURN.getSubjectAtDomain());
 	}
 
 	@Test

@@ -10,17 +10,11 @@ import javax.persistence.Persistence;
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.persistence.JPADatabase;
 
-public class JPAUserDB{
+public class JPAUserDB extends JPADatabase{
   
-  private EntityManagerFactory factory;
-  private final String PERSISTENCE_TYPE;  
   
-  private static final String DEFAULT_DATABASE_PATH = System.getProperty("user.home")+"/.fiteagle/db/";
-  private static FiteaglePreferences preferences = new FiteaglePreferencesXML(JPAUserDB.class);
-  
-  private static final String PERSISTENCE_UNIT_NAME_DERBY = "Users_Derby";
-  private static final String PERSISTENCE_UNIT_NAME_INMEMORY = "Users_InMemory";
   
   private static JPAUserDB derbyInstance;
   private static JPAUserDB inMemoryInstance;
@@ -44,21 +38,9 @@ public class JPAUserDB{
     return derbyInstance;
   }
   
-  private static String getDatabasePath() {
-    if(preferences.get("databasePath") == null){
-      preferences.put("databasePath", DEFAULT_DATABASE_PATH);
-    }
-    return preferences.get("databasePath");
-  }
   
   
-  private synchronized EntityManager getEntityManager() {
-    if (factory == null){
-      factory = Persistence.createEntityManagerFactory(PERSISTENCE_TYPE);
-    }
-    return factory.createEntityManager();
-  }
-  
+ 
   public void add(User user){
     EntityManager em = getEntityManager();
     try{

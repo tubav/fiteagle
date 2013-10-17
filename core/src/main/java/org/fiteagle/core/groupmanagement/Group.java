@@ -1,18 +1,26 @@
 package org.fiteagle.core.groupmanagement;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Group {
+@Entity
+@Table(name="GROUPS")
+public class Group implements Serializable {
   
+  @Id
   private String groupId;
   private String groupOwnerId;
   @JsonIgnore
@@ -21,8 +29,11 @@ public class Group {
   private List<String> authorizedUsers;
 
   @JsonIgnore
-  private Logger log = LoggerFactory.getLogger(getClass());
+  static Logger log = LoggerFactory.getLogger(Group.class);
 
+  protected Group() {
+	
+}
   public Group(String groupId, String groupOwnerId) {
     this.groupId = groupId;
     this.groupOwnerId = groupOwnerId;
@@ -87,6 +98,11 @@ public class Group {
   public void deleteResource(String adapterId){
     resources.remove(adapterId);
     
+  }
+  
+  @Override
+  public String toString(){
+	  return "Group: "+ this.groupId + "\n" + "Owner: "+ this.groupOwnerId;
   }
   
 }

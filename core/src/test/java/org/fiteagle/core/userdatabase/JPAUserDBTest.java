@@ -61,7 +61,7 @@ public class JPAUserDBTest {
   
   @BeforeClass
   public static void setUp(){
-    manager = JPAUserDB.getInMemoryInstance();
+    manager = JPAUserDB.getInMemoryInstance(); 
   }
   
   @Test

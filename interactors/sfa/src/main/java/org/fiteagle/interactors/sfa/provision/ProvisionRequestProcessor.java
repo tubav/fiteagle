@@ -14,7 +14,7 @@ import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
+import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
@@ -27,7 +27,6 @@ import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.GeniUser;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 import org.fiteagle.interactors.sfa.util.DateUtil;
@@ -46,6 +45,8 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	private List<ResourceAdapter> resources;
 
+	private GroupDBManager groupDBManager;
+
 
 	public ResourceAdapterManager getResourceManager() {
 		return resourceManager;
@@ -53,6 +54,11 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	public void setResourceManager(ResourceAdapterManager resourceManager) {
 		this.resourceManager = resourceManager;
+	}
+
+	public void setGroupDBManager(GroupDBManager groupDBManager) {
+		this.groupDBManager = groupDBManager;
+		
 	}
 
 	public ProvisionResult processRequest(List<String> urns,
@@ -142,9 +148,9 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		Group group = null;
 
 		try {
-			group = GroupDBManager.getInstance().getGroup(
+			group = groupDBManager.getGroup(
 					sliceURN.getSubjectAtDomain());
-		} catch (GroupNotFound e) {
+		} catch (CouldNotFindGroup e) {
 
 			code = GENI_CodeEnum.SEARCHFAILED;
 			return;
@@ -261,4 +267,5 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
+	
 }
