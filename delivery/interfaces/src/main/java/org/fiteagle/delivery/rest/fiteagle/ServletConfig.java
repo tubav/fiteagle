@@ -32,6 +32,7 @@ public class ServletConfig extends GuiceServletContextListener {
             bind(UserPresenter.class).in(Scopes.SINGLETON);
             bind(UserManagerBoundary.class).toInstance(UserManager.getInstance());
             filter("/api/v1/user/*").through(UserAuthenticationFilter.getInstance());
+            filter("/api/v1/user/*").through(UserAuthorizationFilter.getInstance());
             
             bind(ResourceDefinitionPresenter.class).in(Scopes.SINGLETON);
 
