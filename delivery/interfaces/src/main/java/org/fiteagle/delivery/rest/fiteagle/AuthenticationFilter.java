@@ -65,7 +65,7 @@ public abstract class AuthenticationFilter implements Filter {
       return false;
     }
     
-    manager = UserManager.getInstance();
+   
     try {
       if (!manager.verifyCredentials(credentials[0], credentials[1])) {
         response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());

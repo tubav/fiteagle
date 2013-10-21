@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.easymock.EasyMock;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotCreateGroup;
@@ -44,12 +45,11 @@ public class GroupAuthenticationFilterTest {
      groupManager = createMock(GroupManagerBoundary.class);
      expect(groupManager.getGroup("testGroup")).andReturn(new Group("testGroup", "test"));
      userManager = createMock(UserManagerBoundary.class);
+     expect(userManager.verifyCredentials(EasyMock.anyObject(String.class),EasyMock.anyObject(String.class))).andReturn(true);
      replay(userManager);
      replay(groupManager);
      filter.setGroupManager(groupManager);
      filter.setUserManager(userManager);
-   
-     
   }
   
   
@@ -73,13 +73,13 @@ public class GroupAuthenticationFilterTest {
     expect(req.isSecure()).andReturn(true);
     expect(req.getCookies()).andReturn(null);
     expect(req.getHeader("authorization")).andReturn("Basic dGVzdDp0ZXN0"); //user "test" password "test"
-    expect(req.getRequestURI()).andReturn("/api/v1/group/testGroup");
+    expect(req.getRequestURI()).andReturn("/api/v1/group/testGroup"); 
     expectLastCall().times(2);
     replay(req);
     chain.doFilter(req, resp);
     replay(chain);
     filter.doFilter(req, resp, chain);
-    verify(chain);
+    verify(chain); 
   }
  
   

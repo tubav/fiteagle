@@ -8,7 +8,6 @@ import static org.easymock.EasyMock.verify;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -16,19 +15,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.easymock.EasyMock;
 import org.eclipse.persistence.exceptions.DatabaseException;
-import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
-import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.User.InValidAttributeException;
-import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
-import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
-import org.fiteagle.interactors.usermanagement.UserManager;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sun.jersey.core.util.Base64;
@@ -45,11 +37,14 @@ public class UserAuthenticationFilterTest {
   
 
   @Before
-  public void createMocks(){
+  public void createMocks() throws DatabaseException, NoSuchAlgorithmException, UserNotFoundException, IOException{
     req = createMock(HttpServletRequest.class);
     resp = createMock(HttpServletResponse.class);   
     chain = createMock(FilterChain.class);  
     userManager = createMock(UserManagerBoundary.class);
+    userManager.delete(EasyMock.anyObject(String.class));
+    expect(userManager.verifyCredentials(EasyMock.anyObject(String.class), EasyMock.anyObject(String.class))).andReturn(true);
+    replay(userManager);
     filter = new UserAuthenticationFilter();
     filter.setUserManager(userManager);
   }
