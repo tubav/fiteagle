@@ -14,8 +14,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import org.fiteagle.core.monitoring.StatusTable;
 import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
-import orgt.fiteagle.core.monitoring.StatusTable;
 
 import com.google.inject.Inject;
 

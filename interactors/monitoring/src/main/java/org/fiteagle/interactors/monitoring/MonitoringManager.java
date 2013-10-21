@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fiteagle.core.monitoring.StatusTable;
 import org.fiteagle.interactors.api.ResourceMonitoringBoundary;
 import org.fiteagle.interactors.monitoring.server.OMLServer;
 import org.fiteagle.ui.infinity.InfinityClient;
 import org.fiteagle.ui.infinity.InfinityClientWeb;
 import org.fiteagle.ui.infinity.model.InfinityInfrastructure;
 import org.fiteagle.ui.infinity.model.InfinityValueID;
-import orgt.fiteagle.core.monitoring.StatusTable;
 
 public class MonitoringManager implements ResourceMonitoringBoundary {
 	

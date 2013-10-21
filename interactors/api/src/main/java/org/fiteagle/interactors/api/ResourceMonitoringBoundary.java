@@ -2,7 +2,7 @@ package org.fiteagle.interactors.api;
 
 import java.util.Collection;
 
-import orgt.fiteagle.core.monitoring.StatusTable;
+import org.fiteagle.core.monitoring.StatusTable;
 
 public interface ResourceMonitoringBoundary {
 

@@ -3,7 +3,7 @@ package org.fiteagle.core.groupmanagement;
 import org.fiteagle.core.groupmanagement.JPAGroupDB.CouldNotFindGroup;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 public class JPAGroupDBTest {
@@ -11,8 +11,8 @@ public class JPAGroupDBTest {
 	private static Group g;
 	private static JPAGroupDB groupDB;
 
-	@BeforeClass
-	public static void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		g = new Group("testGr", "testOwner");
 		groupDB = JPAGroupDB.getInMemoryInstance();
 		groupDB.add(g); 
@@ -20,7 +20,7 @@ public class JPAGroupDBTest {
 
 	@After
 	public void tearDown() throws Exception {
-		
+		groupDB.delete(g); 
 	}
 
 	

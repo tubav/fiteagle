@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.fiteagle.core.monitoring.StatusTable;
 import org.fiteagle.interactors.monitoring.MonitoringManager;
-import orgt.fiteagle.core.monitoring.StatusTable;
 
 public class ClientHandler implements Runnable {
 	Socket socket;

@@ -3,10 +3,10 @@ package org.fiteagle.interactors.monitoring;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.fiteagle.core.monitoring.StatusTable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import orgt.fiteagle.core.monitoring.StatusTable;
 
 public class MonitoringManagerTest {
 
