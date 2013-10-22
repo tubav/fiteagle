@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://fiteagle.org/rspec/ext/1/openstackVMResource" xmlns:tns="http://fiteagle.org/rspec/ext/1/openstackVMResource" elementFormDefault="qualified">
+
+
+
+    <complexType name="image">
+    	<attribute name="status" type="string"></attribute>
+        <attribute name="updated" type="dateTime"></attribute>
+        <attribute name="id" type="string"></attribute>
+    	<attribute name="OS-EXT-IMG-SIZE" type="double"></attribute>
+    	<attribute name="name" type="string"></attribute>
+    	<attribute name="created" type="dateTime"></attribute>
+    	<attribute name="minDisk" type="int"></attribute>
+    	<attribute name="minRam" type="int"></attribute>
+        <attribute name="progress" type="int"></attribute>
+    </complexType>
+
+    <complexType name="flavor">
+    	<attribute name="name" type="string"></attribute>
+    	<attribute name="ram" type="string"></attribute>
+    	<attribute name="OS-FLV-DISABLED" type="boolean"></attribute>
+    	<attribute name="vcpus" type="string"></attribute>
+    	<attribute name="os-flavor-accessIs_public" type="boolean"></attribute>
+    	<attribute name="swap" type="string"></attribute>
+    	<attribute name="disk" type="string"></attribute>
+    	<attribute name="OS-FLV-EXT-DATAEphemeral" type="int"></attribute>
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="rxtx_factor" type="float"></attribute>
+    </complexType>
+
+    <complexType name="flavors">
+    	<sequence>
+    		<element ref="tns:flavor" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+
+    
+    <element name="flavor" type="tns:flavor"></element>
+
+    <element name="flavors" type="tns:flavors"></element>
+
+    <element name="image" type="tns:image"></element>
+
+    <complexType name="vm">
+    	<attribute name="status" type="string"></attribute>
+    	<attribute name="updated" type="dateTime"></attribute>
+    	<attribute name="hostId" type="string"></attribute>
+    	<attribute name="key_name" type="string"></attribute>
+    	<attribute name="OS-EXT-STS_Task_state" type="string"></attribute>
+    	<attribute name="OS-EXT-STS_Vm_state" type="string"></attribute>
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="OS-EXT-AZ_Availability_zone" type="string"></attribute>
+    	<attribute name="user_id" type="string"></attribute>
+    	<attribute name="name" type="string"></attribute>
+    	<attribute name="created" type="dateTime"></attribute>
+    	<attribute name="tenant_id" type="string"></attribute>
+    	<attribute name="OS-DCF_DiskConfig" type="string"></attribute>
+    	<attribute name="accessIPv4" type="string"></attribute>
+    	<attribute name="accessIPv6" type="string"></attribute>
+    	<attribute name="OS-EXT-STS_Power_state" type="string"></attribute>
+    	<attribute name="config_drive" type="string"></attribute>
+    	<attribute name="progress" type="int"></attribute>
+    	<attribute name="imageId" type="string"></attribute>
+    	<attribute name="flavorId" type="string"></attribute>
+    </complexType>
+
+    <element name="vm" type="tns:vm"></element>
+
+    <attribute name="NewAttribute" type="string"></attribute>
+
+
+    <complexType name="vmToInstantiate">
+    	<attribute name="imageId" type="string"></attribute>
+    	<attribute name="flavorId" type="string"></attribute>
+    	<attribute name="vmName" type="string"></attribute>
+    	<attribute name="keyPairName" type="string"></attribute>
+    </complexType>
+
+    <element name="vmToInstantiate" type="tns:vmToInstantiate"></element>
+
+    <complexType name="openstackResource">
+    	<sequence>
+    		<element ref="tns:flavors"></element>
+    		<element ref="tns:image"></element>
+    		<element ref="tns:vm"></element>
+    		<element ref="tns:vmToInstantiate"></element>
+    	</sequence>
+    	<attribute name="resourceId" type="string"></attribute>
+    </complexType>
+
+    <element name="openstackResource" type="tns:openstackResource"></element>
+</schema>
