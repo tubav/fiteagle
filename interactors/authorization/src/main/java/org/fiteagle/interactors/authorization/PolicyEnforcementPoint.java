@@ -2,12 +2,12 @@ package org.fiteagle.interactors.authorization;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.fiteagle.interactors.api.PolicyEnforcementPointBoundary;
 
+import com.sun.xacml.Indenter;
 import com.sun.xacml.attr.StringAttribute;
 import com.sun.xacml.ctx.Attribute;
 import com.sun.xacml.ctx.RequestCtx;
@@ -41,50 +41,50 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
   private static PolicyDecisionPoint policyDecisionPoint = PolicyDecisionPoint.getInstance();
   
   @Override
-  public boolean isRequestAuthorized(String username) throws URISyntaxException{
-    RequestCtx request = createRequest(username);
+  public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role) throws URISyntaxException{
+    RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role);
 
-    
+    request.encode(System.out, new Indenter());
     
     return policyDecisionPoint.evaluateRequest(request);
   }
 
-  public RequestCtx createRequest(String username) throws URISyntaxException {
+  public RequestCtx createRequest(String subjectUsername, String resourceUsername, String action, String role) throws URISyntaxException {
     RequestCtx request = 
         new RequestCtx(
-            setSubject(username),
-            setResource(),
-            setAction(),
+            setSubject(subjectUsername, role),
+            setResource(resourceUsername),
+            setAction(action),
             setEnvironment());
     return request;
   }
 
-  private Set<Subject> setSubject(String username) throws URISyntaxException {
-    HashSet<Attribute> attributes = new HashSet<Attribute>();
+  private Set<Subject> setSubject(String subjectUsername, String role) throws URISyntaxException {
+    HashSet<Attribute> attributeSet = new HashSet<Attribute>();
 
-    attributes.add(new Attribute(SUBJECT_ID, null, null, new StringAttribute(username)));
+    attributeSet.add(new Attribute(SUBJECT_ID, null, null, new StringAttribute(subjectUsername)));
 
-    attributes.add(new Attribute(new URI("group"), null, null, new StringAttribute("admin")));
+    attributeSet.add(new Attribute(new URI("role"), null, null, new StringAttribute(role)));
 
     HashSet<Subject> subjects = new HashSet<Subject>();
-    subjects.add(new Subject(attributes));
+    subjects.add(new Subject(attributeSet));
 
     return subjects;
   }
 
-  private Set<Attribute> setResource() throws URISyntaxException {
-    HashSet<Attribute> resource = new HashSet<Attribute>();
+  private Set<Attribute> setResource(String resourceUsername) throws URISyntaxException {
+    HashSet<Attribute> resourceSet = new HashSet<Attribute>();
 
-    resource.add(new Attribute(RESOURCE_ID, null, null, new StringAttribute("whatever")));
+    resourceSet.add(new Attribute(RESOURCE_ID, null, null, new StringAttribute(resourceUsername)));
 
-    return resource;
+    return resourceSet;
   }
-  private Set<Attribute> setAction() throws URISyntaxException {
-    HashSet<Attribute> action = new HashSet<Attribute>();
+  private Set<Attribute> setAction(String action) throws URISyntaxException {
+    HashSet<Attribute> actionSet = new HashSet<Attribute>();
 
-    action.add(new Attribute(ACTION_ID, null, null, new StringAttribute("GET")));
+    actionSet.add(new Attribute(ACTION_ID, null, null, new StringAttribute(action)));
 
-    return action;
+    return actionSet;
   }
   
   private Set<Attribute> setEnvironment() throws URISyntaxException {

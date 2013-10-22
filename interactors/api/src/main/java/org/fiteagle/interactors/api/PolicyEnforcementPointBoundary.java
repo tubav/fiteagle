@@ -4,6 +4,6 @@ import java.net.URISyntaxException;
 
 public interface PolicyEnforcementPointBoundary {
   
-  public abstract boolean isRequestAuthorized(String username) throws URISyntaxException;
+  public abstract boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role) throws URISyntaxException;
   
 }

@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Policy PolicyId="FiteaglePolicy"
-          RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides">
+<Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os" xmlns:xsi="http://www.w3.org/2001/XMLSchema−instance"
+ xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+  PolicyId="FiteaglePolicy" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides">
     <Target>
       <Subjects>
         <AnySubject/>
       </Subjects>
       <Resources>
-        <AnyResource></AnyResource>
-<!--         <Resource> -->
-<!--           <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:anyURI-equal"> -->
-<!--             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://server.example.com/code/docs/developer-guide.html</AttributeValue> -->
-<!--             <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#anyURI" -->
-<!--                                          AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/> -->
-<!--           </ResourceMatch> -->
-<!--         </Resource> -->
+        <AnyResource/>
       </Resources>
       <Actions>
         <AnyAction/>
       </Actions>
     </Target>
-        
-    <Rule RuleId="GET" Effect="Permit">
+     
+     
+    <Rule RuleId="PUT_is_always_permitted" Effect="Permit">
+      <Target>
+        <Subjects>
+          <AnySubject/>
+        </Subjects>
+        <Resources>
+         <AnyResource/>
+        </Resources>
+        <Actions>
+          <AnyAction/>
+        </Actions>
+      </Target>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+	        </Apply>
+	        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PUT</AttributeValue>
+        </Apply>
+      </Condition>
+    </Rule>    
     
+    <Rule RuleId="GET/POST/DELETE_is_permitted_if_subject=resource" Effect="Permit">
       <Target>
         <Subjects>
           <AnySubject/>
@@ -30,23 +46,63 @@
           <AnyResource/>
         </Resources>
         <Actions>
-          <Action>
-            <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
-              <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
-                                         AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
-            </ActionMatch>
-          </Action>
+          <AnyAction/>
         </Actions>
       </Target>
-      
-      <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
-          <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
-                                      AttributeId="group"/>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+	          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">POST</AttributeValue> 
+	          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DELETE</AttributeValue>                                 
+	        </Apply>
         </Apply>
-        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
       </Condition>
-      
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	          <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+	                                      AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"/>
+	        </Apply>
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	          <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+	                                      AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>
+	        </Apply>
+        </Apply>
+      </Condition>
     </Rule>
-  </Policy>
+    
+    <Rule RuleId="GET/POST/DELETE_is_permitted_for_admins" Effect="Permit">
+      <Target>
+        <Subjects>
+          <AnySubject/>
+        </Subjects>
+        <Resources>
+          <AnyResource/>
+        </Resources>
+        <Actions>
+          <AnyAction/>
+        </Actions>
+      </Target>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">POST</AttributeValue> 
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DELETE</AttributeValue>                                 
+          </Apply>
+        </Apply>
+      </Condition>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+            <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+                                        AttributeId="role"/>
+          </Apply>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
+        </Apply>
+      </Condition>
+    </Rule>
+</Policy>

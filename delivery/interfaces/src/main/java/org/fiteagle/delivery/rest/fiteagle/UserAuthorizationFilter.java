@@ -12,7 +12,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.DatatypeConverter;
 
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.api.PolicyEnforcementPointBoundary;
 import org.fiteagle.interactors.authorization.PolicyEnforcementPoint;
 
@@ -34,20 +36,43 @@ public class UserAuthorizationFilter implements Filter {
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) resp;
     
-    String username = getUsername(request);
-    try {
-      if(!policyEnforcementPoint.isRequestAuthorized(username)){
-        response.sendError(Response.Status.FORBIDDEN.getStatusCode());
-        return;
-      }
-    } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    String auth = request.getHeader("authorization");
+    String[] credentials = decode(auth);
+    String subjectUsername;
+    if(credentials != null && credentials[0] != null){
+      subjectUsername = addDomain(credentials[0]);
     }
+    else{
+      subjectUsername = "";
+    }
+    
+    String resourceUsername = addDomain(getUsername(request));
+    
+    String action = request.getMethod(); 
+//    try {
+//      if(!policyEnforcementPoint.isRequestAuthorized(subjectUsername, resourceUsername, action, "user")){
+//        response.sendError(Response.Status.FORBIDDEN.getStatusCode());
+//        return; 
+//      }
+//    } catch (URISyntaxException e) {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
     
     chain.doFilter(request, response);
   }
 
+  protected String[] decode(String auth) {
+    if (auth == null || (!auth.startsWith("Basic ") && !auth.startsWith("basic "))) {
+      return null;
+    }
+    auth = auth.replaceFirst("[B|b]asic ", "");
+    byte[] decoded = DatatypeConverter.parseBase64Binary(auth);
+    if (decoded == null || decoded.length == 0) {
+      return null;
+    }
+    return new String(decoded).split(":", 2);
+  }
   
   private String getUsername(HttpServletRequest request) {
     String path = request.getRequestURI();    
@@ -59,6 +84,16 @@ public class UserAuthorizationFilter implements Filter {
     }
     return null;
   } 
+  
+  private String addDomain(String username) {
+
+    InterfaceConfiguration configuration = null;
+    if (!username.contains("@")) {
+      configuration = InterfaceConfiguration.getInstance();
+      username = username + "@" + configuration.getDomain();
+    }
+    return username;
+  }
   
   
   @Override
