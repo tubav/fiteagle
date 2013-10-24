@@ -16,7 +16,7 @@
       </Condition>
     </Rule>    
     
-    <Rule RuleId="GET/POST/DELETE_is_permitted_if_subject=resource" Effect="Permit">
+    <Rule RuleId="GET/POST/DELETE_is_permitted_if_subject=resource_and_user_is_authenticated" Effect="Permit">
       <Target/>
       <Condition>
         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
@@ -38,11 +38,18 @@
 	                                        AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>
 	          </Apply>
           </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                          AttributeId="isAuthenticated"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+          </Apply>
         </Apply>
       </Condition>
     </Rule>
     
-    <Rule RuleId="GET/POST/DELETE_is_permitted_for_admins" Effect="Permit">
+    <Rule RuleId="GET/POST/DELETE_is_permitted_for_admins_and_admin_is_authenticated" Effect="Permit">
       <Target/>
       <Condition>
         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
@@ -61,6 +68,13 @@
 	          </Apply>
 	          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
 	        </Apply>
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                          AttributeId="isAuthenticated"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+          </Apply>
         </Apply>
       </Condition>
     </Rule>

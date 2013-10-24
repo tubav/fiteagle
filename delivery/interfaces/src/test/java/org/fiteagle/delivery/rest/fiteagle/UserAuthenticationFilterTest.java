@@ -65,10 +65,9 @@ public class UserAuthenticationFilterTest {
     expect(req.getHeader("authorization")).andReturn(auth); 
     
     expect(req.getRequestURI()).andReturn("/api/v1/user/test");
-    expectLastCall().times(2);
     
     expect(req.getMethod()).andReturn("GET");
-    expectLastCall().times(3);
+    expectLastCall().times(2);
     
     expect(req.getParameter("setCookie")).andReturn(null);
     expect(req.getSession(false)).andReturn(null);
@@ -76,6 +75,8 @@ public class UserAuthenticationFilterTest {
     
     expect(req.getCookies()).andReturn(null);
     
+    req.setAttribute("isAuthenticated", true);
+    req.setAttribute("action", "GET");
     req.setAttribute("subjectUsername", "test@localhost");
     req.setAttribute("resourceUsername", "test@localhost");
     
@@ -94,19 +95,20 @@ public class UserAuthenticationFilterTest {
     filter.saveCookie("mnikolaus@localhost", cookie);  
     
     expect(req.getMethod()).andReturn("GET");
-    expectLastCall().times(3);
+    expectLastCall().times(2);
     
     expect(req.isSecure()).andReturn(true);
     
     expect(req.getCookies()).andReturn(new Cookie[]{cookie});
     
     expect(req.getRequestURI()).andReturn("/api/v1/user/mnikolaus");
-    expectLastCall().times(2);
     
     expect(req.getParameter("setCookie")).andReturn(null);
     expect(req.getSession(false)).andReturn(null);
     expect(req.getSession(true)).andReturn(null);
     
+    req.setAttribute("isAuthenticated", true);
+    req.setAttribute("action", "GET");
     req.setAttribute("subjectUsername", "mnikolaus@localhost");
     req.setAttribute("resourceUsername", "mnikolaus@localhost");
     

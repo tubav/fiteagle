@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.xacml.Indenter;
+import com.sun.xacml.attr.BooleanAttribute;
 import com.sun.xacml.attr.StringAttribute;
 import com.sun.xacml.ctx.Attribute;
 import com.sun.xacml.ctx.RequestCtx;
@@ -17,7 +18,7 @@ import com.sun.xacml.ctx.Subject;
 
 public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
   
-  private Logger log = LoggerFactory.getLogger(getClass());
+  private static Logger log = LoggerFactory.getLogger(PolicyEnforcementPoint.class);
   
   private static URI SUBJECT_ID;
   private static URI RESOURCE_ID;
@@ -29,8 +30,7 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
       RESOURCE_ID = new URI("urn:oasis:names:tc:xacml:1.0:resource:resource-id");
       ACTION_ID = new URI("urn:oasis:names:tc:xacml:1.0:action:action-id");
     } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.error(e.getMessage());
     }
   }
   
@@ -45,8 +45,8 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
   private static PolicyDecisionPoint policyDecisionPoint = PolicyDecisionPoint.getInstance();
   
   @Override
-  public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role) throws URISyntaxException{
-    RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role);
+  public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated) {
+    RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role, isAuthenticated);
 
     if(log.isDebugEnabled()){
       request.encode(System.out, new Indenter());
@@ -55,13 +55,17 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
     return policyDecisionPoint.evaluateRequest(request);
   }
 
-  public RequestCtx createRequest(String subjectUsername, String resourceUsername, String action, String role) throws URISyntaxException {
-    RequestCtx request = 
-        new RequestCtx(
-            setSubject(subjectUsername, role),
-            setResource(resourceUsername),
-            setAction(action),
-            setEnvironment());
+  private RequestCtx createRequest(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated) {
+    RequestCtx request = null;
+    try {
+      request = new RequestCtx(
+          setSubject(subjectUsername, role),
+          setResource(resourceUsername),
+          setAction(action),
+          setEnvironment(isAuthenticated));
+    } catch (URISyntaxException e) {
+      log.error(e.getMessage());
+    }
     return request;
   }
 
@@ -93,9 +97,12 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
     return actionSet;
   }
   
-  private Set<Attribute> setEnvironment() throws URISyntaxException {
-    HashSet<Attribute> environment = new HashSet<Attribute>();
-    return environment;
+  private Set<Attribute> setEnvironment(Boolean isAuthenticated) throws URISyntaxException {
+    HashSet<Attribute> environmentSet = new HashSet<Attribute>();
+
+    environmentSet.add(new Attribute(new URI("isAuthenticated"), null, null, BooleanAttribute.getInstance(isAuthenticated)));
+    
+    return environmentSet;
   }
   
 }
