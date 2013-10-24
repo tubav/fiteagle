@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.fiteagle.interactors.api.PolicyEnforcementPointBoundary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.xacml.Indenter;
 import com.sun.xacml.attr.StringAttribute;
@@ -14,6 +16,8 @@ import com.sun.xacml.ctx.RequestCtx;
 import com.sun.xacml.ctx.Subject;
 
 public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
+  
+  private Logger log = LoggerFactory.getLogger(getClass());
   
   private static URI SUBJECT_ID;
   private static URI RESOURCE_ID;
@@ -44,7 +48,9 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
   public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role) throws URISyntaxException{
     RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role);
 
-    request.encode(System.out, new Indenter());
+    if(log.isDebugEnabled()){
+      request.encode(System.out, new Indenter());
+    }
     
     return policyDecisionPoint.evaluateRequest(request);
   }

@@ -20,8 +20,6 @@ import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.User.InValidAttributeException;
-import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.usermanagement.UserManager;
@@ -66,8 +64,8 @@ public class UserAuthenticationFilterTest {
     String auth = "Basic "+new String(Base64.encode("test:test".getBytes()));
     expect(req.getHeader("authorization")).andReturn(auth); 
     
-    expect(req.getRequestURI()).andReturn("/api/v1/user/test"); 
-    expectLastCall().times(3);
+    expect(req.getRequestURI()).andReturn("/api/v1/user/test");
+    expectLastCall().times(2);
     
     expect(req.getMethod()).andReturn("GET");
     expectLastCall().times(3);
@@ -77,6 +75,9 @@ public class UserAuthenticationFilterTest {
     expect(req.getSession(true)).andReturn(null);
     
     expect(req.getCookies()).andReturn(null);
+    
+    req.setAttribute("subjectUsername", "test@localhost");
+    req.setAttribute("resourceUsername", "test@localhost");
     
     chain.doFilter(req, resp);
     
@@ -88,8 +89,9 @@ public class UserAuthenticationFilterTest {
   
   @Test
   public void testAuthenticateWithCookie() throws IOException, ServletException{
-    Cookie cookie = new Cookie("fiteagle_user_cookie", "weargq32e1dwq");
-    filter.saveCookie("test", cookie);  
+    Cookie cookie = new Cookie("fiteagle_user_cookie", "ZGJjYTM3YzYtY2U3My00YzJmLWI5YTYtZWM1MzYyYTg1ZDFhLXVzZXJuYW1lOm1uaWtvbGF1c0Bsb2NhbGhvc3Q=");
+
+    filter.saveCookie("mnikolaus@localhost", cookie);  
     
     expect(req.getMethod()).andReturn("GET");
     expectLastCall().times(3);
@@ -98,12 +100,15 @@ public class UserAuthenticationFilterTest {
     
     expect(req.getCookies()).andReturn(new Cookie[]{cookie});
     
-    expect(req.getRequestURI()).andReturn("/api/v1/user/test");
+    expect(req.getRequestURI()).andReturn("/api/v1/user/mnikolaus");
     expectLastCall().times(2);
     
     expect(req.getParameter("setCookie")).andReturn(null);
     expect(req.getSession(false)).andReturn(null);
     expect(req.getSession(true)).andReturn(null);
+    
+    req.setAttribute("subjectUsername", "mnikolaus@localhost");
+    req.setAttribute("resourceUsername", "mnikolaus@localhost");
     
     chain.doFilter(req, resp);
     

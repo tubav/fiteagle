@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 
-import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.api.PolicyEnforcementPointBoundary;
 import org.fiteagle.interactors.authorization.PolicyEnforcementPoint;
 
@@ -36,28 +35,18 @@ public class UserAuthorizationFilter implements Filter {
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) resp;
     
-    String auth = request.getHeader("authorization");
-    String[] credentials = decode(auth);
-    String subjectUsername;
-    if(credentials != null && credentials[0] != null){
-      subjectUsername = addDomain(credentials[0]);
-    }
-    else{
-      subjectUsername = "";
-    }
-    
-    String resourceUsername = addDomain(getUsername(request));
-    
+    String subjectUsername = (String) request.getAttribute(UserAuthenticationFilter.SUBJECT_USERNAME_ATTRIBUTE);
+    String resourceUsername = (String) request.getAttribute(UserAuthenticationFilter.RESOURCE_USERNAME_ATTRIBUTE);
     String action = request.getMethod(); 
-//    try {
-//      if(!policyEnforcementPoint.isRequestAuthorized(subjectUsername, resourceUsername, action, "user")){
-//        response.sendError(Response.Status.FORBIDDEN.getStatusCode());
-//        return; 
-//      }
-//    } catch (URISyntaxException e) {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
+    try {
+      if(!policyEnforcementPoint.isRequestAuthorized(subjectUsername, resourceUsername, action, "user")){
+        response.sendError(Response.Status.FORBIDDEN.getStatusCode());
+        return; 
+      }
+    } catch (URISyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     
     chain.doFilter(request, response);
   }
@@ -73,28 +62,6 @@ public class UserAuthorizationFilter implements Filter {
     }
     return new String(decoded).split(":", 2);
   }
-  
-  private String getUsername(HttpServletRequest request) {
-    String path = request.getRequestURI();    
-    String[] splitted = path.split("/");
-    for (int i = 0; i < splitted.length - 1; i++) {
-      if (splitted[i].equals("user")) {
-        return splitted[i+1];
-      }
-    }
-    return null;
-  } 
-  
-  private String addDomain(String username) {
-
-    InterfaceConfiguration configuration = null;
-    if (!username.contains("@")) {
-      configuration = InterfaceConfiguration.getInstance();
-      username = username + "@" + configuration.getDomain();
-    }
-    return username;
-  }
-  
   
   @Override
   public void init(FilterConfig arg0) throws ServletException {

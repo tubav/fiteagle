@@ -78,7 +78,9 @@ public class PolicyDecisionPoint {
   public boolean evaluateRequest(RequestCtx request) {
     ResponseCtx response = pdp.evaluate(request);
     
-    response.encode(System.out, new Indenter());
+    if(log.isDebugEnabled()){
+      response.encode(System.out, new Indenter());
+    }
     
     Result result = (Result) response.getResults().toArray()[0];
     if(result.getDecision() == Result.DECISION_PERMIT){

@@ -28,8 +28,6 @@ import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.User.InValidAttributeException;
-import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
@@ -242,7 +240,6 @@ public class UserPresenter{
   @DELETE
   @Path("{username}/cookie")
   public Response deleteCookie(@PathParam("username") String username){
-	
     UserAuthenticationFilter.getInstance().deleteCookie(username);
     return Response.status(200).build();
   }
@@ -253,7 +250,5 @@ public class UserPresenter{
       super(new ResponseBuilderImpl().status(status).entity(message).build()); 
     }   
   }   
-  
-  
   
 }

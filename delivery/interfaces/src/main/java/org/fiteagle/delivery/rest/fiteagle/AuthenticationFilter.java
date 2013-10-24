@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 
+import net.iharder.Base64;
+
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.interactors.api.UserManagerBoundary;
 import org.fiteagle.interactors.usermanagement.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.jersey.core.util.Base64;
 
 public abstract class AuthenticationFilter implements Filter {
   
@@ -95,7 +95,7 @@ public abstract class AuthenticationFilter implements Filter {
   protected String createRandomAuthToken(String postfix) {
     String u = UUID.randomUUID().toString();
     u+=postfix;
-    return new String(Base64.encode(u.getBytes()));
+    return new String(Base64.encodeBytes(u.getBytes()));
   }
   
   protected void saveCookie(String target, Cookie cookie) {
