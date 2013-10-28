@@ -16,6 +16,8 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.common.Sliver;
+import org.fiteagle.interactors.sfa.common.SliverManagement;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 
@@ -28,7 +30,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	
 	
 	public DescribeRequestProcessor() {
-		resourceManager = ResourceAdapterManager.getInstance();
+		resourceManager = ResourceAdapterManager.getInstance(false);
 	}
 	
 	
@@ -93,25 +95,26 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	//TODO: implement if there are one or multiple sliver urns not only one slice urn
 	  
     DescribeValue resultValue = new DescribeValue();
-    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
     Group group = GroupDBManager.getInstance().getGroup(new URN(urns.get(0)).getSubjectAtDomain());
     ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
     
     List<String> resourceIds = group.getResources();
-    List<ResourceAdapter> resources = resourceManager.getResourceAdapterInstancesById(resourceIds);
-    for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
-      ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
+    SliverManagement sliverManagement = SliverManagement.getInstance();
+    List<Sliver> bookedSlivers = sliverManagement.getSlivers(resourceIds); 
+    for (Iterator iterator = bookedSlivers.iterator(); iterator.hasNext();) {
+      Sliver bookedSliver = (Sliver) iterator.next();
+    
       GeniSlivers tmpSliver = new GeniSlivers();
-      tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(resourceAdapter).toString());
-      tmpSliver.setGeni_allocation_status((String)resourceAdapter.getProperties().get("allocation_status"));
-      tmpSliver.setGeni_operational_status((String)resourceAdapter.getProperties().get("operational_status"));
+      tmpSliver.setGeni_sliver_urn(bookedSliver.getId());
+      tmpSliver.setGeni_allocation_status(bookedSliver.getAllocationState().toString());
+      tmpSliver.setGeni_operational_status(bookedSliver.getOperationalState().toString());
       //TODO: expires????!!!
       //TODO: geni_error (optional)
       slivers.add(tmpSliver);
     }
     resultValue.setGeni_slivers(slivers);
     ManifestRspecTranslator translator = new ManifestRspecTranslator();
-    RSpecContents manifestRSpec = translator.getManifestRSpec(resources);
+    RSpecContents manifestRSpec = translator.getManifestRSpec(bookedSlivers);
     String geni_rspec = translator.getRSpecString(manifestRSpec);
     if(this.optionsService.isCompressed()){
       resultValue.setGeni_rspec(this.compress(geni_rspec));

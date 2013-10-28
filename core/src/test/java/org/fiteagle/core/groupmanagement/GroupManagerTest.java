@@ -12,7 +12,7 @@ import org.junit.Test;
 public class GroupManagerTest {
   GroupDBManager gm;
   Group group ;
-  ResourceAdapter ra;
+  String ra;
 private GroupPersistable gp;
   @Before
   public void setUp() throws Exception {
@@ -21,7 +21,7 @@ private GroupPersistable gp;
     gm.setGroupDatabase(gp);
     group = new Group("testGroupId", "testOwnerID");
     gm.addGroup(group);
-    ra = EasyMock.createMock(ResourceAdapter.class);
+    ra ="dummy";
     EasyMock.expect(gp.get("testGroupId")).andReturn(group);
     EasyMock.expectLastCall().anyTimes();
     gp.add(EasyMock.anyObject(Group.class));
@@ -30,9 +30,7 @@ private GroupPersistable gp;
     EasyMock.expectLastCall().anyTimes();
     gp.delete(EasyMock.anyObject(String.class));
     EasyMock.expectLastCall().anyTimes();
-    EasyMock.expect(ra.getId()).andReturn("dummyRA");
-    EasyMock.expectLastCall().times(2);
-    EasyMock.replay(ra);
+   
     EasyMock.replay(gp);
   }
   @After
@@ -63,7 +61,7 @@ private GroupPersistable gp;
 	  g3.addResource(ra);
 	  gm.updateGroup(g3); 
 	  Group g4 = gm.getGroup(group.getGroupId());
-	  Assert.assertTrue(g4.contains(ra.getId()));
+	  Assert.assertTrue(g4.contains(ra));
   }
   
   

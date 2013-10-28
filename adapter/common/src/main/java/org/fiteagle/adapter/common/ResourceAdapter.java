@@ -1,6 +1,5 @@
 package org.fiteagle.adapter.common;
 
-import java.rmi.server.ObjID;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

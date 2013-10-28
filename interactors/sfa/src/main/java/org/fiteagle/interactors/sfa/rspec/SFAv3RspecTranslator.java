@@ -170,8 +170,8 @@ public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 				break;
 			}
 		}
-		resource = ResourceAdapterManager.getInstance()
-				.getResourceAdapterInstance(id);
+		resource = ResourceAdapterManager.getInstance(false)
+				.getResourceAdapterById(id);
 		return resource;
 	}
 

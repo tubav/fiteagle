@@ -30,14 +30,14 @@ public class SFARequestProcessorFactory {
 		switch(method){
 		case ALLOCATE:
 		  AllocateRequestProcessor allocateRequestProcessor = new AllocateRequestProcessor();
-		  allocateRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  allocateRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance(false));
 		  allocateRequestProcessor.setGroupDBManager(GroupDBManager.getInstance());
 		  result = (E) allocateRequestProcessor;
 		  
 			break;
 		case DELETE:
 			DeleteRequestProcessor delProc = new DeleteRequestProcessor();
-			delProc.setResourceManager(ResourceAdapterManager.getInstance());
+			delProc.setResourceManager(ResourceAdapterManager.getInstance(false));
 			delProc.setGroupDBManager(GroupDBManager.getInstance());
 		  result = (E) delProc;
 			break;
@@ -52,7 +52,7 @@ public class SFARequestProcessorFactory {
 			break;
 		case PROVISION:
 		  ProvisionRequestProcessor provisionRequestProcessor =  new ProvisionRequestProcessor();
-		  provisionRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+		  provisionRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance(false));
 		  provisionRequestProcessor.setGroupDBManager(GroupDBManager.getInstance());
 		  result = (E) provisionRequestProcessor;
 			break;

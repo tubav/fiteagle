@@ -27,6 +27,8 @@ import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.GeniUser;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.common.Sliver;
+import org.fiteagle.interactors.sfa.common.SliverManagement;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 import org.fiteagle.interactors.sfa.util.DateUtil;
@@ -44,9 +46,9 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 	private ArrayList<GeniSlivers> slivers;
 
 	private List<ResourceAdapter> resources;
+	private List<Sliver> bookedSlivers;
 
 	private GroupDBManager groupDBManager;
-
 
 	public ResourceAdapterManager getResourceManager() {
 		return resourceManager;
@@ -58,7 +60,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	public void setGroupDBManager(GroupDBManager groupDBManager) {
 		this.groupDBManager = groupDBManager;
-		
+
 	}
 
 	public ProvisionResult processRequest(List<String> urns,
@@ -112,6 +114,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			provisionSlice(urnList.get(0));
 		} else {
 			try {
+				bookedSlivers = new LinkedList<>();
 				for (URN urn : urnList) {
 
 					provsionSliver(urn);
@@ -121,21 +124,24 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 				code = GENI_CodeEnum.BADARGS;
 			}
 		}
-
-		resultValue.setGeni_slivers(slivers);
-		ManifestRspecTranslator translator = new ManifestRspecTranslator();
-		RSpecContents manifestRSpec = translator.getManifestRSpec(resources);
-		String geni_rspec = translator.getRSpecString(manifestRSpec);
-		resultValue.setGeni_rspec(geni_rspec);
+		if (code.equals(GENI_CodeEnum.SUCCESS)) {
+			resultValue.setGeni_slivers(slivers);
+			ManifestRspecTranslator translator = new ManifestRspecTranslator();
+			RSpecContents manifestRSpec = translator
+					.getManifestRSpec(bookedSlivers);
+			String geni_rspec = translator.getRSpecString(manifestRSpec);
+			resultValue.setGeni_rspec(geni_rspec);
+		}
 	}
 
 	private void provsionSliver(URN urn) {
 		if (urn.getType().equals("sliver")) {
-			ResourceAdapter ra = resourceManager.getResourceAdapterInstance(urn
-					.getSubject());
-			resources.add(ra);
-			provsionResourceAdapter(ra);
-			GeniSlivers sliver = buildSliver(ra);
+			SliverManagement sliverManager = SliverManagement.getInstance();
+			Sliver bookedSliver = sliverManager.getSliver(urn);
+			bookedSlivers.add(bookedSliver);
+
+			provsionBookedSliver(bookedSliver);
+			GeniSlivers sliver = buildSliver(bookedSliver);
 			slivers.add(sliver);
 
 		} else {
@@ -148,8 +154,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		Group group = null;
 
 		try {
-			group = groupDBManager.getGroup(
-					sliceURN.getSubjectAtDomain());
+			group = groupDBManager.getGroup(sliceURN.getSubjectAtDomain());
 		} catch (CouldNotFindGroup e) {
 
 			code = GENI_CodeEnum.SEARCHFAILED;
@@ -157,12 +162,15 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		}
 
 		List<String> resourceIds = group.getResources();
-		resources = resourceManager
-				.getResourceAdapterInstancesById(resourceIds);
-		for (ResourceAdapter resourceAdapter: resources) {
-			
-			provsionResourceAdapter(resourceAdapter);
-			GeniSlivers sliver = buildSliver(resourceAdapter);
+		SliverManagement sliverManager = SliverManagement.getInstance();
+		bookedSlivers = sliverManager.getSlivers(resourceIds);
+		// resources = resourceManager
+		// .getResourceAdapterInstancesById(resourceIds);
+		//
+		for (Sliver bookedsliver : bookedSlivers) {
+
+			provsionBookedSliver(bookedsliver);
+			GeniSlivers sliver = buildSliver(bookedsliver);
 
 			if (sliver != null)
 				slivers.add(sliver);
@@ -170,42 +178,29 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
-	private void provsionResourceAdapter(ResourceAdapter resourceAdapter) {
+	private void provsionBookedSliver(Sliver sliver) {
 
-		if (resourceAdapter.getStatus().equals(ResourceAdapterStatus.Reserved)) {
+		if (sliver.getAllocationState().equals(
+				GENISliverAllocationState.geni_allocated)) {
 			AdapterConfiguration config = buildAdapterConfig(provisionOptions);
-			resourceAdapter.configure(config);
-			HashMap<String, Object> props = resourceAdapter.getProperties();
-			props.put("operational_status",
-					GENISliverOperationalState.geni_configuring.toString());
-
-			resourceAdapter.setExpirationTime(getExpirationDate(provisionOptions));
-			resourceManager.renewExpirationTime(resourceAdapter.getId(),
-					resourceAdapter.getExpirationTime());
-
-			props.put("operational_status",
-					GENISliverOperationalState.geni_ready.toString());
-			props.put("allocation_status",
-					GENISliverAllocationState.geni_provisioned.toString());
-			resourceAdapter.setProperties(props);
+			sliver.getResource().configure(config);
+			sliver.setOperationalState(GENISliverOperationalState.geni_ready);
+			sliver.setExpirationDate(getExpirationDate(provisionOptions));
+			sliver.setAllocationState(GENISliverAllocationState.geni_provisioned);
 		}
 
 	}
 
-	private GeniSlivers buildSliver(ResourceAdapter resourceAdapter) {
-		HashMap<String, Object> props = resourceAdapter.getProperties();
-		
-
+	private GeniSlivers buildSliver(Sliver sliver) {
 
 		GeniSlivers tmpSliver = new GeniSlivers();
-		tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(
-				resourceAdapter).toString());
-		tmpSliver.setGeni_allocation_status((String) resourceAdapter
-				.getProperties().get("allocation_status"));
-		tmpSliver.setGeni_operational_status((String) resourceAdapter
-				.getProperties().get("operational_status"));
-		tmpSliver.setGeni_expires(DateUtil.getFormatedDate(resourceAdapter
-				.getExpirationTime()));
+		tmpSliver.setGeni_sliver_urn(sliver.getId());
+		tmpSliver.setGeni_allocation_status(sliver.getAllocationState()
+				.toString());
+		tmpSliver.setGeni_operational_status(sliver.getOperationalState()
+				.toString());
+		tmpSliver.setGeni_expires(DateUtil.getFormatedDate(sliver
+				.getExpirationDate()));
 
 		return tmpSliver;
 	}
@@ -267,5 +262,4 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
-	
 }

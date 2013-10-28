@@ -3,6 +3,7 @@ package org.fiteagle.interactors.sfa.common;
 import java.util.Date;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.util.URN;
 
 public class Sliver {
@@ -12,12 +13,14 @@ public class Sliver {
 	private ResourceAdapter resource;
 	private GENISliverAllocationState allocationState;
 	private GENISliverOperationalState operationalState;
+	private Group group;
 	
 	
-	public Sliver(URN sliverURN) {
+	public Sliver(URN sliverURN, Group group) {
 		this.sliverURN = sliverURN;
 		this.allocationState = GENISliverAllocationState.geni_allocated;
 		this.operationalState = GENISliverOperationalState.geni_pending_allocation;
+		this.group = group;
 	}
 	public URN getSliverURN() {
 		return sliverURN;
@@ -46,6 +49,12 @@ public class Sliver {
 	}
 	public void setOperationalState(GENISliverOperationalState operationalState) {
 		this.operationalState = operationalState;
+	}
+	public String getId() {
+		return sliverURN.toString();
+	}
+	public Group getGroup() {
+		return group;
 	}
 	
 	

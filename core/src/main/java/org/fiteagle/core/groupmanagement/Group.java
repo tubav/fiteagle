@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.fiteagle.adapter.common.ResourceAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,14 +83,14 @@ public class Group implements Serializable {
       
     authorizedUsers.add(user);
   }
-  public void addResource(ResourceAdapter resource) {
+  public void addResource(String bookedId) {
     if(this.resources == null)
       this.resources = new ArrayList<String>();
-    this.resources.add(resource.getId());
+    this.resources.add(bookedId);
   }
   
-  public boolean contains(String resourceAdapterId){
-    return resources.contains(resourceAdapterId);
+  public boolean contains(String bookedId){
+    return resources.contains(bookedId);
   }
   
   

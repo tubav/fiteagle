@@ -69,9 +69,9 @@ public class ProvisionRequestProcessorTest {
 		adapter.setStatus(ResourceAdapterStatus.Reserved);
 		List<ResourceAdapter> resourceAdapters = new LinkedList<>();
 		resourceAdapters.add(adapter);
-		EasyMock.expect(resourceAdapterManager.getResourceAdapterInstancesById((List<String>) EasyMock.anyObject())).andReturn(resourceAdapters);
-		EasyMock.expectLastCall().anyTimes();
-		resourceAdapterManager.renewExpirationTime(EasyMock.anyObject(String.class), EasyMock.anyObject(Date.class));
+//		EasyMock.expect(resourceAdapterManager.getResourceAdapterInstancesById((List<String>) EasyMock.anyObject())).andReturn(resourceAdapters);
+//		EasyMock.expectLastCall().anyTimes();
+//		resourceAdapterManager.renewExpirationTime(EasyMock.anyObject(String.class), EasyMock.anyObject(Date.class));
 		EasyMock.replay(resourceAdapterManager);
 		
 		groupDBManager = EasyMock.createMock(GroupDBManager.class);

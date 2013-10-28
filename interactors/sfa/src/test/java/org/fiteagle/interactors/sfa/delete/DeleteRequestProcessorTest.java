@@ -78,11 +78,7 @@ public class DeleteRequestProcessorTest {
 	public void testProcessRequestOnNotExistingSliver() {
 		List<String> urns = new LinkedList<>();
 		setUpCredentialMock();
-		resourceAdapterManager.deleteResource((String) EasyMock.anyObject());
-		EasyMock.expectLastCall().andThrow(new ResourceNotFound());
-	
-		EasyMock.replay(resourceAdapterManager);
-
+		
 		urns.add(sliverURN.toString());
 		DeleteResult result = deleteProc.processRequest(urns, listCredentials, deleteOptions);
 		Assert.assertEquals(12, result.getCode().getGeni_code());
@@ -101,9 +97,7 @@ public class DeleteRequestProcessorTest {
 		List<String> urns = new LinkedList<>();
 		urns.add(sliverURN.toString());
 		setUpCredentialMock();
-		resourceAdapterManager.deleteResource((String)EasyMock.anyObject());
-		EasyMock.expectLastCall();
-		EasyMock.replay(resourceAdapterManager);
+		
 	}
 	
 	

@@ -1,10 +1,7 @@
 package org.fiteagle.interactors.sfa.rspec.manifest;
 
 import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -13,35 +10,30 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.fiteagle.adapter.common.Named;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
-import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
+import org.fiteagle.interactors.sfa.common.Sliver;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
-import org.fiteagle.interactors.sfa.rspec.ext.Method;
-import org.fiteagle.interactors.sfa.rspec.ext.Parameter;
-import org.fiteagle.interactors.sfa.rspec.ext.Property;
-import org.fiteagle.interactors.sfa.rspec.ext.Resource;
 
 public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 
-	public RSpecContents getManifestRSpec(List<ResourceAdapter> resourceAdapters) {
-		RSpecContents manifestRspec = getRSpecFromAdapters(resourceAdapters);
+	public RSpecContents getManifestRSpec(List<Sliver> slivers) {
+		RSpecContents manifestRspec = getRSpecFromSlivers(slivers);
 		manifestRspec.setType(RspecTypeContents.MANIFEST);
 		return manifestRspec;
 	}
 
-	public RSpecContents getRSpecFromAdapters(
-			List<ResourceAdapter> resourceAdapters) {
+	public RSpecContents getRSpecFromSlivers(
+			List<Sliver> slivers) {
 		RSpecContents manifestRspec = new RSpecContents();
 
 		List<Object> rspecContentElements = manifestRspec
 				.getAnyOrNodeOrLink();
 
-		for (ResourceAdapter resourceAdapter : resourceAdapters) {
+		for (Sliver sliver : slivers) {
 			Object resource;
-			
+			ResourceAdapter resourceAdapter = sliver.getResource();
 			if (resourceAdapter instanceof OpenstackResourceAdapter)
 				resource = new SFAv3RspecTranslator().translateToOpenstackResource(resourceAdapter);
 			else if (resourceAdapter instanceof SSHAccessable)

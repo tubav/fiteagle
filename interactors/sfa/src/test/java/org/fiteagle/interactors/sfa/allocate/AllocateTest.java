@@ -64,7 +64,7 @@ public class AllocateTest {
 	private void buildMockObjects() {
 		node = EasyMock.createMock(RSpecContents.class);
 		resourceAdapterManager = EasyMock.createMock(ResourceAdapterManager.class);
-		resourceAdapterManager.addResourceAdapterInstance((ResourceAdapter) EasyMock.anyObject());
+		resourceAdapterManager.addResourceAdapter((ResourceAdapter) EasyMock.anyObject());
 		EasyMock.expectLastCall();
 		ResourceAdapter adapter = new StopwatchAdapter();
 		adapter.setExclusive(true);
@@ -74,14 +74,12 @@ public class AllocateTest {
 		adapter.setExpirationTime(allocationExpirationTime);
 		List<ResourceAdapter> resourceAdapters = new LinkedList<>();
 		resourceAdapters.add(adapter);
-		EasyMock.expect(resourceAdapterManager.getResourceAdapterInstancesById((List<String>) EasyMock.anyObject())).andReturn(resourceAdapters);
+	//	EasyMock.expect(resourceAdapterManager.getResourceAdapterInstancesById((List<String>) EasyMock.anyObject())).andReturn(resourceAdapters);
 		EasyMock.expectLastCall().anyTimes();
 //
-		EasyMock.expect(resourceAdapterManager.getResourceAdapterInstance("componentID")).andReturn(resourceAdapters.get(0));
+		EasyMock.expect(resourceAdapterManager.getResourceAdapterById("componentID")).andReturn(resourceAdapters.get(0));
 		EasyMock.expectLastCall().anyTimes();
-//		
-		resourceAdapterManager.setExpires(EasyMock.anyObject(String.class), EasyMock.anyObject(Date.class));
-		EasyMock.expectLastCall().anyTimes();
+		//resourceAdapterManager.setExpires(EasyMock.anyObject(String.class), EasyMock.anyObject(Date.class));
 //	
 //		
 //		

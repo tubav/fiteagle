@@ -84,6 +84,11 @@ public class URN {
 		}
 		return false;
 	}
+	
+	@Override
+	public int hashCode(){
+		return this.toString().hashCode();
+	}
 
 	public class URNParsingException extends RuntimeException {
 

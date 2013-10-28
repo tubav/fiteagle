@@ -1,6 +1,8 @@
 package org.fiteagle.interactors.sfa.common;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.fiteagle.core.ResourceAdapterManager;
@@ -24,7 +26,12 @@ public class SliverManagement {
 	
 
 	public Sliver getSliver(URN sliverURN) {
-		return sliverDB.get(sliverURN);
+		
+		Sliver returnSliver = sliverDB.get(sliverURN);
+		if(returnSliver == null){
+			throw new SliverNotFound();
+		}
+		return returnSliver;
 	}
 
 	public void addSliver(Sliver sliver1) {
@@ -74,6 +81,23 @@ public class SliverManagement {
 
 	public void setResourceManager(ResourceAdapterManager resourceManager) {
 		this.resourceManager = resourceManager;
+	}
+
+	public List<Sliver> getSlivers(List<String> resourceIds) {
+		List<Sliver> slivers = new LinkedList<>();
+		for(String resourceId: resourceIds){
+			slivers.add(getSliver(new URN(resourceId)));
+		}
+		return slivers;
+	}
+	
+	public class SliverNotFound extends RuntimeException{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4379207521713588274L;
+		
 	}
 
 }

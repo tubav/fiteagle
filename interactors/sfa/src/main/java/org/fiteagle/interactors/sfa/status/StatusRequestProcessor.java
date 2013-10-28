@@ -18,6 +18,8 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.common.Sliver;
+import org.fiteagle.interactors.sfa.common.SliverManagement;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 import org.fiteagle.interactors.sfa.util.DateUtil;
 
@@ -74,7 +76,7 @@ private String output = "";
   private StatusValue getResultStatusValue(List<String> urns) {
 
     SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance();
+    ResourceAdapterManager resourceManager = ResourceAdapterManager.getInstance(false);
     List<URN> urnList = buildURNS(urns);
     if(urnList == null){
     	return new StatusValue();
@@ -92,14 +94,16 @@ private String output = "";
     		}
     		List<String> groupResources = g.getResources();
     		slivers = new ArrayList<GeniSlivers>();
-    		for(String resourceID: groupResources){
-    			ResourceAdapter ra = resourceManager.getResourceAdapterInstance(resourceID);
+    		SliverManagement sliverManagement = SliverManagement.getInstance();
+    		List<Sliver> bookedSlivers = sliverManagement.getSlivers(groupResources);
+    		for(Sliver bookedSliver: bookedSlivers){
+    		
     			  GeniSlivers tmpSliver = new GeniSlivers();
-    		      tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(ra).toString());
-    		      tmpSliver.setGeni_allocation_status((String)ra.getProperties().get("allocation_status"));//TODO: set right status information over translator(implement this in translator)
-    		      tmpSliver.setGeni_operational_status((String)ra.getProperties().get("operational_status"));
+    		      tmpSliver.setGeni_sliver_urn(bookedSliver.getId());
+    		      tmpSliver.setGeni_allocation_status(bookedSliver.getAllocationState().toString());//TODO: set right status information over translator(implement this in translator)
+    		      tmpSliver.setGeni_operational_status(bookedSliver.getOperationalState().toString());
     		      tmpSliver
-					.setGeni_expires(DateUtil.getFormatedDate(ra.getExpirationTime()));
+					.setGeni_expires(DateUtil.getFormatedDate(bookedSliver.getExpirationDate()));
     		      slivers.add(tmpSliver);
     			
     		}

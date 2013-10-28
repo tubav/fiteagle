@@ -33,82 +33,91 @@ public class ResourceAdapterManager {
 private static ResourceAdapterManager manager=null;
 
 
-  private ResourceAdapterDatabase adapterInstancesDatabase;
+  //private ResourceAdapterDatabase adapterInstancesDatabase;
   private ResourceAdapterDatabase adapterTypesDatabase;
   private ScheduledExecutorService executor;
   private HashMap<String, ScheduledFuture<?>> expirationMap;
+  private static boolean initialized;
+
 private URLClassLoader sysloader;
   private ResourceAdapterManager() {
-    if (manager!=null) return;
-    sysloader = (URLClassLoader) this.getClass().getClassLoader();
-    adapterInstancesDatabase = new InMemoryResourceAdapterDatabase();
     adapterTypesDatabase = new InMemoryResourceAdapterDatabase();
-    executor = Executors.newScheduledThreadPool(2);
-    expirationMap = new HashMap<>();
-    List<Class> allClassesInPackage=null;
-    
-    try {
-    	
-    	File directory = new File(directoryName);
-		allClassesInPackage = findClassesInDirectory(directory, packageName);
-	} catch (ClassNotFoundException | IOException e) {
-		throw new RuntimeException();
-	} catch (NoSuchMethodException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (SecurityException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IllegalAccessException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IllegalArgumentException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (InvocationTargetException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-    
-    if(allClassesInPackage!=null){
-    	for (int i = 0; i < allClassesInPackage.size(); i++) {
-    		
-    		try {
-    			Class adapterClass = sysloader.loadClass(allClassesInPackage.get(i).getName());
-				if(ResourceAdapter.class.isAssignableFrom(adapterClass) && !(adapterClass.equals(ResourceAdapter.class))){
-					
-					java.lang.reflect.Method method =adapterClass.getDeclaredMethod("getJavaInstances", null);
-					List<ResourceAdapter> resourceAdapters = (List<ResourceAdapter>) method.invoke(null, null);
-					adapterInstancesDatabase.addResourceAdapters(resourceAdapters);
-//					if(resourceAdapter.isExclusive())
-//						adapterInstancesDatabase.addResourceAdapters(resourceAdapters);
-				}
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException();//TODO: give more information in exception
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-    }
-    manager=this;
   }
   
-  public static ResourceAdapterManager getInstance(){
+  public void init(){
+	  if(initialized)
+		  return;
+	  
+	  sysloader = (URLClassLoader) this.getClass().getClassLoader();
+	    List<Class> allClassesInPackage=null;
+	    
+	    try {
+	    	
+	    	File directory = new File(directoryName);
+			allClassesInPackage = findClassesInDirectory(directory, packageName);
+		} catch (ClassNotFoundException | IOException e) {
+			throw new RuntimeException();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    if(allClassesInPackage!=null){
+	    	for (int i = 0; i < allClassesInPackage.size(); i++) {
+	    		
+	    		try {
+	    			Class adapterClass = sysloader.loadClass(allClassesInPackage.get(i).getName());
+					if(ResourceAdapter.class.isAssignableFrom(adapterClass) && !(adapterClass.equals(ResourceAdapter.class))){
+						
+						java.lang.reflect.Method method =adapterClass.getDeclaredMethod("getJavaInstances", null);
+						List<ResourceAdapter> resourceAdapters = (List<ResourceAdapter>) method.invoke(null, null);
+						adapterTypesDatabase.addResourceAdapters(resourceAdapters);
+//						if(resourceAdapter.isExclusive())
+//							adapterInstancesDatabase.addResourceAdapters(resourceAdapters);
+					}
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException();//TODO: give more information in exception
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+	    }
+	    initialized = true;
+  }
+  
+  public static ResourceAdapterManager getInstance(boolean init){
     if (manager!=null) return manager;
-    return new ResourceAdapterManager();
+    
+    manager = new ResourceAdapterManager();
+    if(init){
+    	manager.init();
+    }
+   return manager;
   }
   
   public List<ResourceAdapter> getResourceAdapters() {
@@ -121,26 +130,24 @@ private URLClassLoader sysloader;
     adapterTypesDatabase.addResourceAdapter(resourceAdapter);
   }
   
-  public void addResourceAdapterInstance(ResourceAdapter resourceAdapter) {
-    adapterInstancesDatabase.addResourceAdapter(resourceAdapter);
-  }
-  
-  public List<ResourceAdapter> getResourceAdapterInstances() {
-    return adapterInstancesDatabase.getResourceAdapters();
-    
-  }
-  
-
-  public ResourceAdapter getResourceAdapterInstance(String instanceId){
-    return adapterInstancesDatabase.getResourceAdapter(instanceId);
-  }
-  
+//  public void addResourceAdapterInstance(ResourceAdapter resourceAdapter) {
+//    adapterInstancesDatabase.addResourceAdapter(resourceAdapter);
+//  }
+//  
+//  public List<ResourceAdapter> getResourceAdapterInstances() {
+//    return adapterInstancesDatabase.getResourceAdapters();
+//    
+//  }
+//  
+//
+//  public ResourceAdapter getResourceAdapterInstance(String instanceId){
+//    return adapterInstancesDatabase.getResourceAdapter(instanceId);
+//  }
+//  
   
  
 
-  public void deleteResource(String resourceAdapterId) {
-	  removeAdapterFromGroup(resourceAdapterId);
-  }
+ 
   
 
 	private  List<Class> findClassesInDirectory(File directory, String packageName)
@@ -176,39 +183,39 @@ private URLClassLoader sysloader;
 		return classes;
 	}
 
-	public List<ResourceAdapter> getResourceAdapterInstancesById(
-			List<String> resourceIds) {
-		List<ResourceAdapter> resources = new LinkedList<>();
-		for(String resourceId:resourceIds){
-			resources.add(adapterInstancesDatabase.getResourceAdapter(resourceId));
-		}
-		return resources;
-	}
+//	public List<ResourceAdapter> getResourceAdapterInstancesById(
+//			List<String> resourceIds) {
+//		List<ResourceAdapter> resources = new LinkedList<>();
+//		for(String resourceId:resourceIds){
+//			resources.add(adapterInstancesDatabase.getResourceAdapter(resourceId));
+//		}
+//		return resources;
+//	}
 
-	public void setExpires(String resourceId, Date allocationExpirationTime) {
-		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(resourceId), allocationExpirationTime.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-		expirationMap.put(resourceId,scheduler);
-	}
-  
-	private class ExpirationCallback implements Runnable {
-
-		private String resourceId;
-		private String groupId;
-		public ExpirationCallback(String resourceId){
-			this.resourceId = resourceId;
-			
-		}
-		@Override
-		public void run() {
-			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
-			removeAdapterFromGroup(resourceId);
-		
-			expiredAdapter.setStatus(ResourceAdapterStatus.Available);
-			
-			
-		}
-		
-	}
+//	public void setExpires(String resourceId, Date allocationExpirationTime) {
+//		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(resourceId), allocationExpirationTime.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+//		expirationMap.put(resourceId,scheduler);
+//	}
+//  
+//	private class ExpirationCallback implements Runnable {
+//
+//		private String resourceId;
+//		private String groupId;
+//		public ExpirationCallback(String resourceId){
+//			this.resourceId = resourceId;
+//			
+//		}
+//		@Override
+//		public void run() {
+//			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
+//			removeAdapterFromGroup(resourceId);
+//		
+//			expiredAdapter.setStatus(ResourceAdapterStatus.Available);
+//			
+//			
+//		}
+//		
+//	}
 
 	public void removeAdapterFromGroup(String resourceId) {
 		GroupDBManager.getInstance().deleteResourceFromGroup(resourceId);
@@ -216,13 +223,13 @@ private URLClassLoader sysloader;
 		
 	}
 
-	public void renewExpirationTime(String resourceId, Date expirationTime) {
-	
-		ScheduledFuture<?> existentTimer = expirationMap.get(resourceId);
-		existentTimer.cancel(false);
-		setExpires(resourceId, expirationTime);
-		
-	}
+//	public void renewExpirationTime(String resourceId, Date expirationTime) {
+//	
+//		ScheduledFuture<?> existentTimer = expirationMap.get(resourceId);
+//		existentTimer.cancel(false);
+//		setExpires(resourceId, expirationTime);
+//		
+//	}
 	
 	private void addURLToSystemClassLoader(URL url) { 
 		 
@@ -247,13 +254,54 @@ private URLClassLoader sysloader;
 		
 	}
 
-	public List<ResourceAdapter> getResourceAdapterInstancesAvailable() {
-		List<ResourceAdapter> availableAdapters = new LinkedList<>();
-		for(ResourceAdapter ra: adapterInstancesDatabase.getResourceAdapters()){
-			if(ra.isAvailable())
-				availableAdapters.add(ra);
-		}
-		return availableAdapters;
+//	public List<ResourceAdapter> getResourceAdapterInstancesAvailable() {
+//		List<ResourceAdapter> availableAdapters = new LinkedList<>();
+//		for(ResourceAdapter ra: adapterInstancesDatabase.getResourceAdapters()){
+//			if(ra.isAvailable())
+//				availableAdapters.add(ra);
+//		}
+//		return availableAdapters;
+//	}
+
+	public ResourceAdapter getResourceAdapterById(String adapterId) {
+		return adapterTypesDatabase.getResourceAdapter(adapterId);
 	}
+
+	public void deleteResourceAdapter(String adapterId) {
+		adapterTypesDatabase.deleteResourceAdapter(adapterId);
+		
+	}
+
+	public List<ResourceAdapter> getAvailableResourceAdapters() {
+		List<ResourceAdapter> adapters = adapterTypesDatabase.getResourceAdapters();
+		return filterAvaliable(adapters);
+	}
+
+	private List<ResourceAdapter> filterAvaliable(List<ResourceAdapter> adapters) {
+		List<ResourceAdapter> filteredList = new LinkedList<>();
+		for(ResourceAdapter ra: adapters){
+			if(ra.isAvailable())
+				filteredList.add(ra);
+		}
+		return filteredList;
+	}
+
+	public void releaseResource(ResourceAdapter resourceAdapter) {
+		resourceAdapter.setAvailable(true);
+	}
+	
+
+//	public void bookResource(String adapterId) {
+//		ResourceAdapter ra = getResourceAdapterById(adapterId);
+//		if(ra.isAvailable()){
+//			adapterInstancesDatabase.addResourceAdapter(ra);
+//		}else{
+//			throw new RuntimeException();
+//		}
+//		if(ra.isExclusive()){
+//			ra.setAvailable(false);
+//		}
+//		
+//	}
   
 }

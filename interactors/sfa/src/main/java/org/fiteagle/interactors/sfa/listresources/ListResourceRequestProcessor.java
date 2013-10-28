@@ -19,13 +19,12 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 	private ListResourceOptionsService optionsService;
 
 	public ListResourceRequestProcessor() {
-		resourceManager = ResourceAdapterManager.getInstance();
+		resourceManager = ResourceAdapterManager.getInstance(true);
 	}
 
 	@Override
 	public ListResourcesResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
-		resourceManager = ResourceAdapterManager.getInstance();
 
 		ListResourceOptions options = (ListResourceOptions) specificArgs[0];
 		// has to be modified to check credentials
@@ -109,10 +108,11 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 		RSpecContents advertisedRspec;
 		
 		if (optionsService.isAvailableSet()) {
-			resourceAdapters = resourceManager.getResourceAdapterInstancesAvailable();
+			resourceAdapters = resourceManager.getAvailableResourceAdapters();
+			
 		} 
 		else{
-			resourceAdapters = resourceManager.getResourceAdapterInstances();
+			resourceAdapters = resourceManager.getResourceAdapters();
 		}
 		AdvertisementRspecTranslator adTranslator = new AdvertisementRspecTranslator();
 		advertisedRspec = adTranslator.getAdvertisedRSpec(resourceAdapters);

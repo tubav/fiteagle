@@ -21,6 +21,8 @@ import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSliversOperationalStatus;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.common.Sliver;
+import org.fiteagle.interactors.sfa.common.SliverManagement;
 import org.fiteagle.interactors.sfa.performoperationalaction.Action.MethodNotFound;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 import org.slf4j.Logger;
@@ -76,29 +78,30 @@ public class PerformOperationalActionRequestProcessor extends
 
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 		ResourceAdapterManager resourceManager = ResourceAdapterManager
-				.getInstance();
+				.getInstance(false);
 		ArrayList<GeniSliversOperationalStatus> slivers = new ArrayList<GeniSliversOperationalStatus>();
 		if (urns.get(0).contains("+slice+")) {
 			Group group = GroupDBManager.getInstance().getGroup(
 					new URN(urns.get(0)).getSubjectAtDomain());
 			List<String> resourceAdapterInstanceIds = group.getResources();
-			List<ResourceAdapter> resourceAdapterInstances = resourceManager
-					.getResourceAdapterInstancesById(resourceAdapterInstanceIds);
+			SliverManagement sliverManagement = SliverManagement.getInstance();
+			
+			List<Sliver> bookedSlivers = sliverManagement.getSlivers(resourceAdapterInstanceIds);
+			
 
-			for (Iterator iterator = resourceAdapterInstances.iterator(); iterator
+			for (Iterator iterator = bookedSlivers.iterator(); iterator
 					.hasNext();) {
-				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
-						.next();
+				Sliver bookedSliver = (Sliver) iterator.next();
+				ResourceAdapter resourceAdapter = bookedSliver.getResource();
 
 				performActionOnAdapter(action, resourceAdapter);
 
 				if (isStillSuccessfull()) {
 					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
-					String urn = URN.getURNFromResourceAdapter(resourceAdapter).toString();
+					String urn = bookedSliver.getId();
 					tmpSliver.setGeni_sliver_urn(urn);
 					tmpSliver
-							.setGeni_allocation_status((String) resourceAdapter
-									.getProperties().get("allocation_status"));
+							.setGeni_allocation_status(bookedSliver.getAllocationState().toString());
 					slivers.add(tmpSliver);
 				} else {
 					break;
@@ -111,16 +114,15 @@ public class PerformOperationalActionRequestProcessor extends
 				String urn = (String) iterator.next();
 				URN u = new URN(urn);
 				String id = u.getSubject();
-
-				ResourceAdapter resourceAdapter = resourceManager
-						.getResourceAdapterInstance(id);
+				SliverManagement sliverManagement = SliverManagement.getInstance();
+				Sliver bookedSliver = sliverManagement.getSliver(u);
+				ResourceAdapter resourceAdapter = bookedSliver.getResource();
 				performActionOnAdapter(action, resourceAdapter);
 				if (isStillSuccessfull()) {
 					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
 					tmpSliver.setGeni_sliver_urn(urn);
 					tmpSliver
-							.setGeni_allocation_status((String) resourceAdapter
-									.getProperties().get("allocation_status"));
+							.setGeni_allocation_status(bookedSliver.getAllocationState().toString());
 					slivers.add(tmpSliver);
 				} else {
 					break;
