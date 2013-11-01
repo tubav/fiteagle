@@ -1,6 +1,7 @@
-package ltg.commons;
+package org.fiteagle.clients.frcp;
 
 import org.apache.xmlbeans.XmlException;
+import org.fiteagle.clients.frcp.FRCPXMPPClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

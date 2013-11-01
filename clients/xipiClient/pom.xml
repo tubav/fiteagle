@@ -4,12 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>clients</artifactId>
-		<groupId>org.fiteagle.clients</groupId>
+		<groupId>org.fiteagle</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	
 	<name>FITeagle :: Clients :: XIPIClient</name>
-	<groupId>org.fiteagle.clients</groupId>
 	<artifactId>xipiClient</artifactId>
 	
 	<packaging>jar</packaging>

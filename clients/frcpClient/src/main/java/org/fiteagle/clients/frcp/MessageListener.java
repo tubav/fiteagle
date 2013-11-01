@@ -1,4 +1,4 @@
-package ltg.commons;
+package org.fiteagle.clients.frcp;
 
 import org.jivesoftware.smack.packet.Message;
 

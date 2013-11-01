@@ -1,4 +1,4 @@
-package ltg.commons;
+package org.fiteagle.clients.frcp;
 
 import javax.xml.namespace.QName;
 
