@@ -33,20 +33,28 @@ import org.slf4j.LoggerFactory;
 public class User implements Serializable{
 
   private static final long serialVersionUID = -8580256972066486588L;
-  static Logger log = LoggerFactory.getLogger(User.class);
+  private static Logger log = LoggerFactory.getLogger(User.class);
+  
+  public enum Role {
+    ADMIN, USER
+  }
   
   @Id
   @Column(updatable = false)
   private String username;
+  
   private String firstName;
   private String lastName;
   private String email;
   private String affiliation;
+  private Role role;
+  
   @Temporal(TemporalType.TIMESTAMP)
   @Column(updatable = false)
   private Date created;
   @Temporal(TemporalType.TIMESTAMP)
   private Date lastModified;
+  
   @JsonIgnore
   private String passwordHash;
   @JsonIgnore
@@ -70,6 +78,7 @@ public class User implements Serializable{
     this.lastName = lastName;
     this.email = email;
     this.affiliation = affiliation;
+    this.role = Role.USER;
     byte[] salt = generatePasswordSalt();
     this.passwordSalt = Base64.encodeBytes(salt);        
     this.passwordHash = generatePasswordHash(salt, password);
@@ -82,7 +91,13 @@ public class User implements Serializable{
   }
   
   public static User createDefaultUser(String username) {
-    return new User(username, "default", "default", "default", "default", "default", new ArrayList<UserPublicKey>());
+    return new User(username, "default", "default", "default", "default", "default", null);
+  }
+  
+  public static User createAdminUser(String username, String password) throws NotEnoughAttributesException, InValidAttributeException{
+    User admin = new User(username, "default", "default", "default", "default", password, null);
+    admin.setRole(Role.ADMIN);
+    return admin;
   }
   
   private void setOwners(List<UserPublicKey> publicKeys){
@@ -108,7 +123,7 @@ public class User implements Serializable{
     }
     if(affiliation == null){
       this.affiliation = "default";
-    }   
+    }  
     if(passwordHash == null){
       throw new NotEnoughAttributesException("no password given or password too short");
     }   
@@ -290,7 +305,7 @@ public class User implements Serializable{
 
   public void setUsername(String username) {
     if(username == null || !USERNAME_PATTERN.matcher(username).matches()){
-      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
+      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\" and \"-\" is allowed and the username has to be from 3 to 200 characters long");
     }
     this.username = username;
   }
@@ -316,6 +331,16 @@ public class User implements Serializable{
 
   public String getAffiliation() {
     return affiliation;
+  }
+
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    if(role != null){
+      this.role = role;
+    }
   }
 
   public Date getCreated() {

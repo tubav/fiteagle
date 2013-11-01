@@ -26,6 +26,7 @@ import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User.InValidAttributeException;
 import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.User.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class UserDBManager {
 		InMemory, Persistent
 	}
 
-	private static final String DEFAULT_DATABASE_TYPE = databaseType.Persistent.name();
+	private static final databaseType DEFAULT_DATABASE_TYPE = databaseType.Persistent;
 	private static JPAUserDB database;
 
 	private static UserDBManager dbManager = null;
@@ -55,16 +56,48 @@ public class UserDBManager {
 	  keyManager = KeyManagement.getInstance();
 	  
 		if (preferences.get("databaseType") == null) {
-			preferences.put("databaseType", DEFAULT_DATABASE_TYPE);
+			preferences.put("databaseType", DEFAULT_DATABASE_TYPE.name());
 		}
 		if (preferences.get("databaseType").equals(databaseType.Persistent.name())) {
 		  database = JPAUserDB.getDerbyInstance();
 		} else {
 			database = JPAUserDB.getInMemoryInstance();
 		}
+		String skip = System.getProperty("org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser");
+    if((skip == null || !skip.equals("true")) && !databaseContainsAdminUser()){
+      createFirstAdminUser();
+    }
+	}
+	
+	private void createFirstAdminUser(){
+	  log.info("Creating First Admin User");
+	  User admin;
+    try{
+      admin = User.createAdminUser("admin", "admin");
+    } catch(InValidAttributeException | NotEnoughAttributesException e){
+      log.error(e.getMessage());
+      return;
+    }
+    
+    try{
+      add(admin);
+    }
+    catch(Exception e){
+      log.error(e.getMessage());
+    }
 	}
 
-	public void add(User u) throws DuplicateUsernameException,
+	private boolean databaseContainsAdminUser(){
+	  List<User> users = database.getAllUsers();
+	  for(User u : users){
+	    if(u.getRole().equals(Role.ADMIN)){
+	      return true;
+	    }
+	  }
+	  return false;
+	}
+	
+  public void add(User u) throws DuplicateUsernameException,
 			DuplicateEmailException, DatabaseException,
 			User.NotEnoughAttributesException, User.InValidAttributeException,
 			DuplicatePublicKeyException {
@@ -92,6 +125,10 @@ public class UserDBManager {
 		database.update(username, firstName, lastName, email, affiliation, password, publicKeys);
 	}
 
+	public void setRole(String username, Role role){
+	  database.setRole(addDomain(username), role);
+	}
+	
 	public void addKey(String username, UserPublicKey key)
 			throws UserNotFoundException, DatabaseException,
 			User.InValidAttributeException, DuplicatePublicKeyException {
@@ -150,8 +187,7 @@ public class UserDBManager {
 			UserNotFoundException, DatabaseException {
 		username = addDomain(username);
 		User User = get(username);
-		return verifyPassword(password, User.getPasswordHash(),
-				User.getPasswordSalt());
+		return verifyPassword(password, User.getPasswordHash(), User.getPasswordSalt());
 	}
 
 	private String createUserCertificate(String username, PublicKey publicKey)
@@ -183,16 +219,13 @@ public class UserDBManager {
 	  return createUserCertificate(username, passphrase, keyManager.generateKeyPair());
 	}
 	
-	public String createUserCertificateForPublicKey(String username,
-			String description) throws Exception, PublicKeyNotFoundException {
+	public String createUserCertificateForPublicKey(String username, String description) throws Exception, PublicKeyNotFoundException {
 		username = addDomain(username);
-		PublicKey publicKey = get(username).getPublicKey(description)
-				.getPublicKey();
+		PublicKey publicKey = get(username).getPublicKey(description).getPublicKey();
 		return createUserCertificate(username, publicKey);
 	}
 
 	private String addDomain(String username) {
-
 		InterfaceConfiguration configuration = null;
 		if (!username.contains("@")) {
 			configuration = InterfaceConfiguration.getInstance();

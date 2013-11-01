@@ -12,6 +12,7 @@ import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.User.Role;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 
 public interface UserManagerBoundary {
@@ -25,6 +26,8 @@ public interface UserManagerBoundary {
   
   public abstract void update(String username, String firstName, String lastName, String email, String affiliation, String password, List<UserPublicKey> publicKeys) throws UserNotFoundException, DuplicateEmailException, DatabaseException, User.NotEnoughAttributesException,
       User.InValidAttributeException, DuplicatePublicKeyException;
+  
+  public abstract void setRole(String username, Role role);
   
   public abstract void addKey(String username, UserPublicKey key) throws UserNotFoundException, DatabaseException,
       User.InValidAttributeException, DuplicatePublicKeyException;

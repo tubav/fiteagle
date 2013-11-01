@@ -22,13 +22,9 @@ public class UserDBManagerTest {
   
   User testUser;  
   
-  KeyPair keyPair;
   
   @Before
   public void setUp() throws Exception {
-    String currentPath = System.getProperty("user.dir");
-    keyPair = KeyManagement.getInstance().loadKeyPairFromFile(currentPath+"/src/test/resources/testPublicKey.key", currentPath+"/src/test/resources/testPrivateKey.key");
-    
     userDBManager = UserDBManager.getInstance();
     testUser = new User("test1@localhost", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<UserPublicKey>());
     try{
@@ -61,11 +57,15 @@ public class UserDBManagerTest {
   
   @Test
   public void testCreateUserCertAndPrivateKey() throws Exception{
+    String currentPath = System.getProperty("user.dir");
+    KeyPair keyPair = KeyManagement.getInstance().loadKeyPairFromFile(currentPath+"/src/test/resources/testPublicKey.key", currentPath+"/src/test/resources/testPrivateKey.key");
     Assert.assertTrue(userDBManager.createUserCertificate(testUser.getUsername(), "my passphrase", keyPair).contains("ENCRYPTED"));
   }  
   
   @Test
   public void testCreateUserCertAndPrivateKeyWithoutPasshphrase() throws Exception{
+    String currentPath = System.getProperty("user.dir");
+    KeyPair keyPair = KeyManagement.getInstance().loadKeyPairFromFile(currentPath+"/src/test/resources/testPublicKey.key", currentPath+"/src/test/resources/testPrivateKey.key");
     Assert.assertFalse(userDBManager.createUserCertificate(testUser.getUsername(), "", keyPair).contains("ENCRYPTED"));
   }  
   
