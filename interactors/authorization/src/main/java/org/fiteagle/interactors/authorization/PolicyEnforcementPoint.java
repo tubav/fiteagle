@@ -45,8 +45,8 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
   private static PolicyDecisionPoint policyDecisionPoint = PolicyDecisionPoint.getInstance();
   
   @Override
-  public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated) {
-    RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role, isAuthenticated);
+  public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated, Boolean requiresAdminRights) {
+    RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role, isAuthenticated, requiresAdminRights);
 
     if(log.isDebugEnabled()){
       request.encode(System.out, new Indenter());
@@ -55,14 +55,14 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
     return policyDecisionPoint.evaluateRequest(request);
   }
 
-  private RequestCtx createRequest(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated) {
+  private RequestCtx createRequest(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated, Boolean requiresAdminRights) {
     RequestCtx request = null;
     try {
       request = new RequestCtx(
           setSubject(subjectUsername, role),
           setResource(resourceUsername),
           setAction(action),
-          setEnvironment(isAuthenticated));
+          setEnvironment(isAuthenticated, requiresAdminRights));
     } catch (URISyntaxException e) {
       log.error(e.getMessage());
     }
@@ -97,11 +97,12 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
     return actionSet;
   }
   
-  private Set<Attribute> setEnvironment(Boolean isAuthenticated) throws URISyntaxException {
+  private Set<Attribute> setEnvironment(Boolean isAuthenticated, Boolean requiresAdminRights) throws URISyntaxException {
     HashSet<Attribute> environmentSet = new HashSet<Attribute>();
 
     environmentSet.add(new Attribute(new URI("isAuthenticated"), null, null, BooleanAttribute.getInstance(isAuthenticated)));
-    
+    environmentSet.add(new Attribute(new URI("requiresAdminRights"), null, null, BooleanAttribute.getInstance(requiresAdminRights)));
+
     return environmentSet;
   }
   

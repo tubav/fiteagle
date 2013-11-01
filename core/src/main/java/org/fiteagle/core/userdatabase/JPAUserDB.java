@@ -7,9 +7,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.userdatabase.User.Role;
 
 public class JPAUserDB{
   
@@ -90,8 +92,6 @@ public class JPAUserDB{
         throw new UserNotFoundException();
       }
       return user;
-    }catch(Exception e){
-      throw e;
     }finally{
       em.close();
     }
@@ -132,6 +132,22 @@ public class JPAUserDB{
     }
   }
 
+  public void setRole(String username, Role role) {
+    EntityManager em = getEntityManager();
+    try{
+      User user = em.find(User.class, username);
+      if(user == null){
+        throw new UserNotFoundException();
+      }
+      em.getTransaction().begin();
+      user.setRole(role);
+      em.getTransaction().commit();
+    }finally{
+      em.close();
+    }
+  }
+
+  
   public void addKey(String username, UserPublicKey publicKey){
     EntityManager em = getEntityManager();
     try{
@@ -162,8 +178,6 @@ public class JPAUserDB{
       em.getTransaction().begin();
       user.deletePublicKey(description);
       em.getTransaction().commit();
-    }catch(Exception e){
-      throw e;
     }finally{
       em.close();
     }
@@ -184,6 +198,17 @@ public class JPAUserDB{
         throw new DuplicatePublicKeyException();
       }
       throw e;
+    }finally{
+      em.close();
+    }
+  }
+  
+  public List<User> getAllUsers(){
+    EntityManager em = getEntityManager();
+    try{
+      Query query = em.createQuery("SELECT u FROM User u");
+      List<User> resultList = (List<User>) query.getResultList();
+      return resultList;
     }finally{
       em.close();
     }

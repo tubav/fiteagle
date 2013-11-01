@@ -127,7 +127,7 @@
 				
 				<executions>
 					<execution>
-						<id>start-jetty</id>
+						<id>start_jetty_for_integration_tests</id>
 						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>run</goal>
@@ -136,6 +136,12 @@
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
 							<skip>${testsAreNotExecuted}</skip>
+							<systemProperties>
+							  <systemProperty>
+							    <key>org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser</key>
+							    <value>true</value>
+							  </systemProperty>
+						  </systemProperties>
 						</configuration>
 					</execution>
 					<execution>

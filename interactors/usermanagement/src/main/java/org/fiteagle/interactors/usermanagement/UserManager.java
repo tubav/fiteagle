@@ -12,6 +12,7 @@ import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.User.Role;
 import org.fiteagle.core.userdatabase.UserDBManager;
 import org.fiteagle.core.userdatabase.UserPublicKey;
 import org.fiteagle.interactors.api.UserManagerBoundary;
@@ -107,6 +108,11 @@ public class UserManager implements UserManagerBoundary{
   public void renameKey(String username, String description, String newDescription) throws UserNotFoundException,
       DatabaseException, DuplicatePublicKeyException, User.InValidAttributeException, PublicKeyNotFoundException {
     manager.renameKey(username, description, newDescription);    
+  }
+
+  @Override
+  public void setRole(String username, Role role) {
+    manager.setRole(username, role);    
   }
   
 }

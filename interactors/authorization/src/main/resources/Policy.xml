@@ -16,7 +16,7 @@
       </Condition>
     </Rule>    
     
-    <Rule RuleId="GET/POST/DELETE_is_permitted_if_subject=resource_and_user_is_authenticated" Effect="Permit">
+    <Rule RuleId="GET/POST/DELETE_is_permitted_if_subject=resource_and_user_is_authenticated_and_action_does_not_require_admin_rights" Effect="Permit">
       <Target/>
       <Condition>
         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
@@ -35,15 +35,22 @@
 	          </Apply>
 	          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
 	            <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
-	                                        AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>
+	                                         AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>
 	          </Apply>
           </Apply>
           <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
               <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
-                                          AttributeId="isAuthenticated"/>
+                                              AttributeId="isAuthenticated"/>
             </Apply>
             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+          </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                              AttributeId="requiresAdminRights"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">false</AttributeValue>
           </Apply>
         </Apply>
       </Condition>
@@ -66,12 +73,12 @@
 	            <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
 	                                        AttributeId="role"/>
 	          </Apply>
-	          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
+	          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ADMIN</AttributeValue>
 	        </Apply>
 	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
               <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
-                                          AttributeId="isAuthenticated"/>
+                                              AttributeId="isAuthenticated"/>
             </Apply>
             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
           </Apply>

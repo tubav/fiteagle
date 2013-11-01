@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 
+import org.fiteagle.core.userdatabase.User.Role;
 import org.fiteagle.interactors.api.PolicyEnforcementPointBoundary;
 import org.fiteagle.interactors.authorization.PolicyEnforcementPoint;
+import org.fiteagle.interactors.usermanagement.UserManager;
 
 public class UserAuthorizationFilter implements Filter {
 
@@ -36,9 +38,14 @@ public class UserAuthorizationFilter implements Filter {
     String subjectUsername = (String) request.getAttribute(UserAuthenticationFilter.SUBJECT_USERNAME_ATTRIBUTE);
     String resourceUsername = (String) request.getAttribute(UserAuthenticationFilter.RESOURCE_USERNAME_ATTRIBUTE);
     String action = (String) request.getAttribute(UserAuthenticationFilter.ACTION_ATTRIBUTE);
+    Role role = Role.USER;
+    if(subjectUsername != null){
+      role = UserManager.getInstance().get(subjectUsername).getRole();
+    }
     Boolean isAuthenticated = (Boolean) request.getAttribute(UserAuthenticationFilter.IS_AUTHENTICATED_ATTRIBUTE);
+    Boolean requiresAdminRights = requiresAdminRights(request);
     
-    if(!policyEnforcementPoint.isRequestAuthorized(subjectUsername, resourceUsername, action, "user", isAuthenticated)){
+    if(!policyEnforcementPoint.isRequestAuthorized(subjectUsername, resourceUsername, action, role.name(), isAuthenticated, requiresAdminRights)){
       if(isAuthenticated){
         response.sendError(Response.Status.FORBIDDEN.getStatusCode());
       }
@@ -49,6 +56,13 @@ public class UserAuthorizationFilter implements Filter {
     }
     
     chain.doFilter(request, response);
+  }
+
+  private Boolean requiresAdminRights(HttpServletRequest request) {
+    if(request.getRequestURI().endsWith("/role/ADMIN")){
+      return true;
+    }
+    return false;
   }
 
   @Override

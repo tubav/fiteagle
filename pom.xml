@@ -197,6 +197,11 @@
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.14</version>
+				<configuration>
+          <systemPropertyVariables>
+            <org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser>true</org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser>
+          </systemPropertyVariables>
+        </configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -255,6 +260,9 @@
 					<configuration>
 						<argLine>-XX:-UseSplitVerifier ${argLine}</argLine>
 						<argLine>-Djava.security.egd=file:/dev/./urandom</argLine>
+						<systemPropertyVariables>
+						  <org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser>true</org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser>
+						</systemPropertyVariables>
 					</configuration>
 				</plugin>
 				<plugin>
