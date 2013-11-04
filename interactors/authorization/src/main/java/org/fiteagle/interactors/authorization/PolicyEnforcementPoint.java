@@ -9,7 +9,6 @@ import org.fiteagle.interactors.api.PolicyEnforcementPointBoundary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.xacml.Indenter;
 import com.sun.xacml.attr.BooleanAttribute;
 import com.sun.xacml.attr.StringAttribute;
 import com.sun.xacml.ctx.Attribute;
@@ -47,11 +46,6 @@ public class PolicyEnforcementPoint implements PolicyEnforcementPointBoundary {
   @Override
   public boolean isRequestAuthorized(String subjectUsername, String resourceUsername, String action, String role, Boolean isAuthenticated, Boolean requiresAdminRights) {
     RequestCtx request = createRequest(subjectUsername, resourceUsername, action , role, isAuthenticated, requiresAdminRights);
-
-    if(log.isDebugEnabled()){
-      request.encode(System.out, new Indenter());
-    }
-    
     return policyDecisionPoint.evaluateRequest(request);
   }
 
