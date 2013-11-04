@@ -17,37 +17,66 @@
 			<id>fiteagle-repo</id>
 			<url>http://fiteagle.org/maven</url>
 		</repository>
-	 <repository>
-    <id>opencast-public</id>
-    <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
-  </repository>
+		<repository>
+			<id>opencast-public</id>
+			<url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+		</repository>
 
 	</repositories>
 
-  <dependencies>
-<dependency>
-    <groupId>net.mytestbed.schema.omf.x60</groupId>
-    <artifactId>protocol</artifactId>
-    <version>0.1</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/lib/frcptypes.jar</systemPath>
-</dependency>
+	<dependencies>
+		<dependency>
+			<groupId>net.mytestbed.schema.omf.x60</groupId>
+			<artifactId>protocol</artifactId>
+			<version>0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/frcptypes.jar</systemPath>
+		</dependency>
 
-  	<dependency>
-  		<groupId>org.igniterealtime.smack</groupId>
-  		<artifactId>smack</artifactId>
-  		<version>3.3.1</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.igniterealtime.smack</groupId>
-  		<artifactId>smackx</artifactId>
-  		<version>3.3.1</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.apache.xmlbeans</groupId>
-  		<artifactId>xmlbeans</artifactId>
-  		<version>2.6.0</version>
-  	</dependency>
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smack</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.igniterealtime.smack</groupId>
+			<artifactId>smackx</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.6.0</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-xmpp</artifactId>
+			<version>5.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-all</artifactId>
+			<version>5.8.0</version>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>org.fiteagle.clients.frcp.FRCPXMPPCLI</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

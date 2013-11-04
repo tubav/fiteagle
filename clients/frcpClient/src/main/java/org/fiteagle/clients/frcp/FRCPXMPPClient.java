@@ -35,20 +35,6 @@ public class FRCPXMPPClient {
 	private Node pubsubNode;
 	private XMPPConnection connection;
 
-	public static void main(final String[] args) throws XMPPException {
-		final FRCPXMPPClient client = new FRCPXMPPClient("test",
-				"fuseco.fokus.fraunhofer.de", "test");
-		client.connect();
-		while (true) {
-			try {
-				System.out.println(".");
-				Thread.sleep(5000);
-			} catch (final InterruptedException e) {
-				client.disconnect();
-			}
-		}
-	}
-
 	public FRCPXMPPClient(final String username, final String hostname,
 			final String password) {
 		this.username = username;
