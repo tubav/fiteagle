@@ -55,6 +55,12 @@ public class UserDBManager {
 	private UserDBManager() {
 	  keyManager = KeyManagement.getInstance();
 	  
+	  Boolean inTestingMode = Boolean.valueOf(System.getProperty("org.fiteagle.core.userdatabase.UserDBManager.testing"));
+	  if(inTestingMode){
+	    database = JPAUserDB.getInMemoryInstance();
+	    return;
+	  }
+	  
 		if (preferences.get("databaseType") == null) {
 			preferences.put("databaseType", DEFAULT_DATABASE_TYPE.name());
 		}
@@ -63,8 +69,7 @@ public class UserDBManager {
 		} else {
 			database = JPAUserDB.getInMemoryInstance();
 		}
-		String skip = System.getProperty("org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser");
-    if((skip == null || !skip.equals("true")) && !databaseContainsAdminUser()){
+    if(!databaseContainsAdminUser()){
       createFirstAdminUser();
     }
 	}

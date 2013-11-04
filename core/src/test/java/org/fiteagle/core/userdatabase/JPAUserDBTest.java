@@ -71,7 +71,7 @@ public class JPAUserDBTest {
     createUser1();
     manager.add(USER1);    
     assertTrue(USER1.equals(manager.get(USER1)));  
-    assertTrue(USER1.equals(manager.getAllUsers().get(0))); 
+    assertTrue(manager.getAllUsers().size() > 0); 
   }
   
   @Test(expected=DuplicateUsernameException.class)
