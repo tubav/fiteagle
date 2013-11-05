@@ -18,16 +18,14 @@ import javax.net.ssl.X509ExtendedTrustManager;
 
 import org.fiteagle.core.aaa.AuthenticationHandler;
 import org.fiteagle.core.aaa.x509.X509Util;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User;
-import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.NotEnoughAttributesException;
+import org.fiteagle.core.userdatabase.User.NotEnoughAttributesException;
 import org.fiteagle.core.userdatabase.UserPublicKey;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
-import org.ibex.nestedvm.UsermodeConstants;
+import org.fiteagle.interactors.usermanagement.UserManager;
 import org.mortbay.log.Log;
 
 public class FiteagleTrustmanager extends X509ExtendedTrustManager {
-
 
   private AuthenticationHandler authenticationHandler;
   public FiteagleTrustmanager(){
@@ -85,14 +83,14 @@ public class FiteagleTrustmanager extends X509ExtendedTrustManager {
     
   }
 
-  private void addClientIfNotExists(X509Certificate x509Certificate) throws CertificateParsingException, NotEnoughAttributesException, IOException {
-		UserDBManager usermanager = UserDBManager.getInstance();
+  private void addClientIfNotExists(X509Certificate x509Certificate) throws CertificateParsingException, User.NotEnoughAttributesException, IOException {
+    UserManager usermanager = UserManager.getInstance();
 		String username = X509Util.getUserNameFromX509Certificate(x509Certificate);
 		if(username.contains("@")){
 			try{
-				User user = usermanager.get(username);
+				usermanager.get(username);
 			}catch(UserNotFoundException e){
-				User newUser = User.createUser(username);
+				User newUser = User.createDefaultUser(username);
 				newUser.addPublicKey(new UserPublicKey(x509Certificate.getPublicKey(), "Certificate PublicKey"));
 				usermanager.add(newUser);
 			}

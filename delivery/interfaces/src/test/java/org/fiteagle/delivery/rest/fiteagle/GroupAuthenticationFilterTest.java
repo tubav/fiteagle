@@ -6,6 +6,7 @@ import static org.easymock.EasyMock.verify;
 import static org.easymock.EasyMock.expectLastCall;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,9 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.SQLiteGroupDatabase.CouldNotCreateGroup;
 import org.fiteagle.core.userdatabase.User;
 import org.fiteagle.core.userdatabase.UserDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.fiteagle.core.userdatabase.UserPublicKey;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,14 +37,16 @@ public class GroupAuthenticationFilterTest {
      req = createMock(HttpServletRequest.class);
      filter = new GroupAuthenticationFilter();
      resp = createMock(HttpServletResponse.class);
-    
-    
      chain = createMock(FilterChain.class);
-     GroupDBManager.getInstance().addGroup(new Group("testGroup", "test"));
+     
      try{
-       User testUser = UserDBManager.getInstance().get("test");
+       GroupDBManager.getInstance().addGroup(new Group("testGroup", "test"));
+     }catch(CouldNotCreateGroup c){}
+     
+     try{
+       UserDBManager.getInstance().get("test");
      }catch(UserNotFoundException r){
-       UserDBManager.getInstance().add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test"));
+       UserDBManager.getInstance().add(new User("test", "test", "test", "test@test.de", "testAffiliation", "test", new ArrayList<UserPublicKey>()));
      }
      
   }

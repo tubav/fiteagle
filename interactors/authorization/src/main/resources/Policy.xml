@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xacml-context="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+ xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+  PolicyId="FiteaglePolicy" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides">
+    <Target/>
+     
+    <Rule RuleId="PUT_is_always_permitted" Effect="Permit">
+      <Target/>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+	        </Apply>
+	        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PUT</AttributeValue>
+        </Apply>
+      </Condition>
+    </Rule>    
+    
+    <Rule RuleId="GET/POST/DELETE_is_permitted_if_subject=resource_and_user_is_authenticated_and_action_does_not_require_admin_rights" Effect="Permit">
+      <Target/>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+	          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+		        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+	            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+		          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">POST</AttributeValue> 
+		          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DELETE</AttributeValue>                                 
+		        </Apply>
+	        </Apply>
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+	          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	            <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+	                                        AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"/>
+	          </Apply>
+	          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	            <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+	                                         AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>
+	          </Apply>
+          </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                              AttributeId="isAuthenticated"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+          </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                              AttributeId="requiresAdminRights"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">false</AttributeValue>
+          </Apply>
+        </Apply>
+      </Condition>
+    </Rule>
+    
+    <Rule RuleId="GET/POST/DELETE_is_permitted_for_admins_and_admin_is_authenticated" Effect="Permit">
+      <Target/>
+      <Condition>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+	          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+	          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+	            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+	            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">POST</AttributeValue> 
+	            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DELETE</AttributeValue>                                 
+	          </Apply>
+	        </Apply>
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+	          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+	            <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+	                                        AttributeId="role"/>
+	          </Apply>
+	          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ADMIN</AttributeValue>
+	        </Apply>
+	        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#boolean"
+                                              AttributeId="isAuthenticated"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+          </Apply>
+        </Apply>
+      </Condition>
+    </Rule>
+</Policy>

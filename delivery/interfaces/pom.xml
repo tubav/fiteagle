@@ -22,6 +22,44 @@
 			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
 		</repository>
 	</repositories>
+	<profiles>
+	 <profile>
+	   <id>skipTests1</id>
+	   <activation>
+	     <property>
+	       <name>maven.test.skip</name>
+	       <value>true</value>
+	     </property>
+	   </activation>
+	   <properties>
+	     <testsAreNotExecuted>true</testsAreNotExecuted>
+	   </properties>
+	 </profile>
+	 <profile>
+     <id>skipTests2</id>
+     <activation>
+       <property>
+         <name>skipTests</name>
+         <value>true</value>
+       </property>
+     </activation>
+     <properties>
+       <testsAreNotExecuted>true</testsAreNotExecuted>
+     </properties>
+   </profile>
+	<profile>
+     <id>skipTests3</id>
+     <activation>
+       <property>
+         <name>skipITs</name>
+         <value>true</value>
+       </property>
+     </activation>
+     <properties>
+       <testsAreNotExecuted>true</testsAreNotExecuted>
+     </properties>
+   </profile>
+  </profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -82,10 +120,14 @@
 							<wantClientAuth>true</wantClientAuth>
 						</connector>
 					</connectors>
+					<webAppConfig>
+            <parentLoaderPriority>true</parentLoaderPriority>
+          </webAppConfig>
 				</configuration>
+				
 				<executions>
 					<execution>
-						<id>start-jetty</id>
+						<id>start_jetty_for_integration_tests</id>
 						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>run</goal>
@@ -93,6 +135,7 @@
 						<configuration>
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
+							<skip>${testsAreNotExecuted}</skip>
 						</configuration>
 					</execution>
 					<execution>
@@ -130,7 +173,8 @@
                     <goal>exec</goal>
                 </goals>
                 <configuration>
-                    <executable>./../../src/test/bin/testAcceptance.sh</executable>
+                  <skip>${testsAreNotExecuted}</skip>
+                  <executable>./../../src/test/bin/testAcceptance.sh</executable>
                 </configuration>
             </execution>
         </executions>
@@ -148,6 +192,11 @@
 			<artifactId>usermanagement</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+      <groupId>org.fiteagle.interactors</groupId>
+      <artifactId>authorization</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
 		<dependency>
 			<groupId>org.fiteagle.interactors</groupId>
 			<artifactId>groupmanagement</artifactId>
@@ -195,12 +244,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
-
-
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
+    </dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-guice</artifactId>

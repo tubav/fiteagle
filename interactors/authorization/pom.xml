@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <name>FITeagle :: Interactors :: Authorization</name>  
+  <artifactId>authorization</artifactId>
+  <groupId>org.fiteagle.interactors</groupId>
+  <packaging>jar</packaging>
+  
+  <parent>
+    <groupId>org.fiteagle</groupId>
+    <artifactId>interactors</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+  
+  <repositories>
+    <repository>
+      <id>fiteagle-repo</id>
+      <url>http://fiteagle.org/maven</url>
+    </repository>
+    
+   <repository>
+        <id>thirdparty-releases</id>
+        <name>JBoss Thirdparty Releases</name>
+        <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+      </repository>
+  </repositories> 
+  
+  <dependencies>   
+   
+    <dependency>
+      <groupId>org.fiteagle.interactors</groupId>
+      <artifactId>api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+   
+    <dependency>
+      <groupId>org.fiteagle</groupId>
+      <artifactId>core</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>   
+    
+    <dependency>
+      <groupId>sun-xacml</groupId>
+      <artifactId>sun-xacml</artifactId>
+      <version>2.0</version>
+    </dependency>
+    
+  </dependencies>
+</project>
