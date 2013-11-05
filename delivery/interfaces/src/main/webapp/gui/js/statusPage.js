@@ -3,7 +3,7 @@ define([],
  * @lends StatusPage
  */ 
 function(){
-	
+	console.log("statusPage.js is called!!!!!!!!!!!!!!");
 	Status = {};
 	rowId = "";
 	Status.init = function(){

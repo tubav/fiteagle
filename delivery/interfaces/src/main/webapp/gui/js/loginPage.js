@@ -2,7 +2,7 @@ define(['require','validation','registration','utils','messages','history','ajax
 
 function(require,Validation,Registration,Utils,Messages){
 	
-	//console.log("loginPage.js is loaded");
+	console.log("loginPage.js is loaded");
 	
 	 /** 
      * The Login class contains functions required for initialization of the forms and elements located on the login page.
@@ -23,7 +23,7 @@ function(require,Validation,Registration,Utils,Messages){
 	  * @return {Boolean} true if the password check was successful and false otherwise.
       */ 
 	checkPassword = function(){
-		//log("checking password");
+		log("checking password");
 		return Utils.checkInputField(
 								"#password",
 								"#loginErrors",
@@ -160,6 +160,7 @@ function(require,Validation,Registration,Utils,Messages){
 		initOnWindowResizeEvent();
 		initHistory();
 		onFITeagleLogoClicked();
+		UnifiLogin.initUnifiLogin();
         Status.init();
 	};
 	
@@ -200,6 +201,7 @@ function(require,Validation,Registration,Utils,Messages){
 	  */
 	initSignInBtn = function(){	
 		$("#signIn").on('click',function(){
+//			alert("init sign in is called!!");
 			 //console.log("SignIn button clicked !");
 			 Utils.clearErrorMessagesFrom("#loginErrors");
 			 Login.loginUser();

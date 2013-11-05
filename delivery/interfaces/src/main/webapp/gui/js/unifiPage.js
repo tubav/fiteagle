@@ -1,40 +1,25 @@
 define(['require','utils','profile','publicKeys', 'certificates','server','index'],
 /**
- * @lends MainPage
+ * @lends UnifiPage
  */ 
 function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	
-	console.log("mainPage.js is loaded");
+	console.log("unifiPage.js is loaded");
 	 /** 
 	 * The FITeagle main page class contains functions required for initialization of the 
 	 * main page forms and elements located on the page.
      * @class
      * @constructor
-     * @return Main Object
+     * @return Unifi Object
      */
-	Main = {};
+	Unifi = {};
 	
-	/**
-	* Checks if any hashtag is stored before. In case the tag is found the function triggers the tab opening according to this tag.
-	* @private
-	* @memberOf Main#
-	*/
-	checkForStoredHashTags = function(){
-		var tag = Utils.getStoredHashTag();
-		if(tag && tag.length > 0){
-			openTab(tag); // trying to open a tab for the tag
-		}else{
-			window.location.hash = "#manage";
-			openTab('#manage');
-		}
-	};
-		
 	/**
 	* Collapses sections identified by "#yourSliceList" and "#availableSlicesList" selectors
 	* @param {Boolean} boolean value that triggers collapse function. 
 	* True value collapses the container, false otherwise opens it.
 	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	collapseAsideSections = function(bool){
 		var sliceList = $("#yourSliceList");
@@ -56,7 +41,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Creates and appends to the body confirmation modal to be shown before signing out. 
 	* The user is signed out only after confirming his decision.
     * @private
-    * @memberOf Main#
+    * @memberOf Unifi#
 	* @return {Object} sign out modal object
 	*/
 	createSignOutModal = function(){
@@ -72,7 +57,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* clicking on an undefined link. The function has to be removed before implementing a functionality for the links
 	* inside the aside section.
 	* @private
-    * @memberOf Main#
+    * @memberOf Unifi#
 	*/
 	disableAsideLinks = function(){
 		$('#aside').find('a').each(function(){
@@ -86,7 +71,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Initializes change of the icon sign for all of the headers with the class with  the ".collapseHeader" selector after clicking on it.
 	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initCollapseHeaders = function(){
 		$('.collapseHeader').on('click',function(){
@@ -102,7 +87,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Icon chevron right from the font awesome icons is shown if the section is collapsed and icon chevron right is section is opened.
  	* @param {Object} icon_object is a container object to change the icon sign after the section is opened or collapsed.
 	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initCollapseSignFor = function(icon_object){
 		var selector = icon_object.closest('div').attr('data-target');
@@ -120,7 +105,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Initializes change of the icon sign for all of the elements with the class with  the ".collapseSign" selector.
 	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initCollapseSigns = function(){
 		var icons = $('.collapseSign');
@@ -134,7 +119,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
 	* Hides small screen navigation toolbar.
     * @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initForLargeScreens = function(){
 		collapseAsideSections(false);	
@@ -145,7 +130,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Defines the behaviour for the small size devises. Collapses Aside sections for better representation on the narrow window screen.
 	* Unhides small screen navigation toolbar.
     * @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initForSmallScreens = function(){
 		collapseAsideSections(true);	
@@ -156,7 +141,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Defines the behaviour for clicking on "back" or "next" browser buttons aka browser history.
 	* The function opens the appropriate form views.
 	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initHashtagChange = function(){
 		$(window).unbind();
@@ -170,9 +155,9 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Triggers functions for main Page initialization such as: screen adjustments by resizing, initialization of user panel, profile form,
 	* public keys form, manage certificates form, and showing of the last opened tab.
     * @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
-	initMainPage = function(){
+	initUnifiPage = function(){
 		$('#fiteagle').addClass('mainWindow'); // class in order to distinguish between main and login pages
 		performScreenAdjustments();	
 		initUserInfoPanel();		
@@ -188,7 +173,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* The scrolling lasts one second and has an offset of navigation menu height.
 	* @param selector - container selector to scroll to
  	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	initScrollToForm = function(selector){
 		var scrollTo = $(selector);
@@ -204,18 +189,19 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
       * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
 	  * @private
-	  * @memberOf Main#
+	  * @memberOf Unifi#
      */ 
 	initSignOutBtn = function(){
-		$("#signOut").on('click',function(e){
+		$("#unifiSignOut").on('click',function(e){
 			e.preventDefault();
 			//console.log("signOut clicked");	
 			var modal = createSignOutModal();
 			modal.modal('show');
 			$('#signOutOkBtn').on('click',function(){
 				var isCookieDeleted = Server.invalidateCookie();
+//				alert("unifi sign out will be called!");
 				modal.modal('hide');
-				if(isCookieDeleted) Main.signOut();
+				if(isCookieDeleted) Unifi.signOut();
 			});
 		});
 	};
@@ -226,12 +212,12 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	  * Scrolls to the appropriate fields to the top after they are selected from the menu.
 	  * Triggers sign out button initialization.
 	  * @private
-	  * @memberOf Main#
+	  * @memberOf Unifi#
       */ 
 	initUserInfoPanel = function(){		
 		var navLinks = $("#userInfoDropdown a");
 		navLinks.off();
-		navLinks.not('#signOut').on('click',function(e){
+		navLinks.not('#unifiSignOut').on('click',function(e){
 			e.preventDefault();
 			var t = $(this);
 			var linkID  = t.attr("id");
@@ -251,24 +237,25 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Loads HTML for the FITeagle main page dynamically and triggers the page initialization after the loading is successfully completed.
 	* @public
-	* @name Main#load
+	* @name Unifi#load
 	* @function
 	**/
-	Main.load = function(){
+	Unifi.load = function(){
 		//console.log("loading main Page...");
-		var url = "main.html";
+//		alert("loading unifi logged in Page...");
+		var url = "unifi.html";
 		$("#navigation").load(url + " #toolbar",
 			function(){
 				$("#main").load(url + " #mainArea",
 					function(){								
-						initMainPage(); 
+						initUnifiPage(); 
 					});
 			}
 		);
 	};
 	
 	/**
-	* Opens the appropriate tab from the user info dropdown menu on the main page according to the
+	* Opens the appropriate tab from the user info dropdown menu on the Unifi page according to the
 	* hash tag entered in the browser's url field. The function searches within a "user info dropdown" menu
 	* for a link with the reference showing to the specified container.
 	* If no tab is found for a hash tag then "manage profile" tab is opened per default.
@@ -276,7 +263,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @param {String} hash - tag to opening a form for.
 	* @example openTab('#keys') tries to open a tab identified by a "#keys" selector
 	* @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	openTab = function(hash){
 		if(hash != null){
@@ -294,7 +281,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* Triggers functions for adjusting the site view for better representing depending on the current screen size such as:
 	* collapsing of the opened sections for small screen devices and opening for a large ones and other related tasks.
     * @private
-	* @memberOf Main#
+	* @memberOf Unifi#
 	*/
 	performScreenAdjustments = function(){
 		Utils.unhideBody();
@@ -310,16 +297,14 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	/**
 	* Signs out the current user. Resets its data in the session storage and loads the login page.  
 	* @public
-	* @name Main#signOut
+	* @name Unifi#signOut
 	* @function
 	**/
-	Main.signOut = function(){
-		Utils.resetUser();
-		history.pushState('', "page ", "/"); // change url hash to "home"
-		require('loginPage').load();
+	Unifi.signOut = function(){
+		Login.load();
 	};
 	
-	return Main;
+	return Unifi;
 	
 });
 
