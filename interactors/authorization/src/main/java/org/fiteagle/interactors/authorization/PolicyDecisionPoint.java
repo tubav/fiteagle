@@ -13,7 +13,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.xacml.Indenter;
 import com.sun.xacml.PDP;
 import com.sun.xacml.PDPConfig;
 import com.sun.xacml.ctx.RequestCtx;
@@ -77,11 +76,6 @@ public class PolicyDecisionPoint {
   
   public boolean evaluateRequest(RequestCtx request) {
     ResponseCtx response = pdp.evaluate(request);
-    
-    if(log.isDebugEnabled()){
-      response.encode(System.out, new Indenter());
-    }
-    
     Result result = (Result) response.getResults().toArray()[0];
     if(result.getDecision() == Result.DECISION_PERMIT){
       return true;

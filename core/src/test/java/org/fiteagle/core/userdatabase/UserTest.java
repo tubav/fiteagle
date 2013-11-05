@@ -1,5 +1,6 @@
 package org.fiteagle.core.userdatabase;
 
+import org.fiteagle.core.userdatabase.User.Role;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,6 +15,12 @@ public class UserTest {
   public void testCreateDefaultUser(){
     User user = User.createDefaultUser("test1");
     Assert.assertEquals("default", user.getAffiliation());
+  }
+  
+  @Test
+  public void testCreateAdminUser(){
+    User user = User.createAdminUser("admin", "admin");
+    Assert.assertEquals(Role.ADMIN, user.getRole());
   }
   
   @Test(expected=User.InValidAttributeException.class)

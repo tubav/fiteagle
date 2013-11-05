@@ -14,7 +14,9 @@ import org.fiteagle.core.userdatabase.JPAUserDB.DuplicatePublicKeyException;
 import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
 import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.fiteagle.core.userdatabase.User.PublicKeyNotFoundException;
+import org.fiteagle.core.userdatabase.User.Role;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -68,7 +70,8 @@ public class JPAUserDBTest {
   public void testGet(){   
     createUser1();
     manager.add(USER1);    
-    assertTrue(USER1.equals(manager.get(USER1)));    
+    assertTrue(USER1.equals(manager.get(USER1)));  
+    assertTrue(manager.getAllUsers().size() > 0); 
   }
   
   @Test(expected=DuplicateUsernameException.class)
@@ -118,6 +121,14 @@ public class JPAUserDBTest {
   @Test(expected=UserNotFoundException.class)
   public void testUpdateFails() {
     manager.update("test1", null, null, null, null, null, null);
+  }
+  
+  @Test
+  public void testSetRole(){
+    createUser1();
+    manager.add(USER1);
+    manager.setRole(USER1.getUsername(), Role.ADMIN);
+    Assert.assertEquals(Role.ADMIN, manager.get(USER1).getRole());
   }
   
   @Test

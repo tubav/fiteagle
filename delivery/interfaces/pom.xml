@@ -136,12 +136,6 @@
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
 							<skip>${testsAreNotExecuted}</skip>
-							<systemProperties>
-							  <systemProperty>
-							    <key>org.fiteagle.core.userdatabase.UserDBManager.skipCreateFirstAdminUser</key>
-							    <value>true</value>
-							  </systemProperty>
-						  </systemProperties>
 						</configuration>
 					</execution>
 					<execution>

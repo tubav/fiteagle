@@ -31,6 +31,10 @@ public class JPAUserDB{
     PERSISTENCE_TYPE = persistenceUnitName;
   }
   
+  static{
+    System.setProperty("derby.system.home", getDatabasePath());
+  }
+  
   public static JPAUserDB getInMemoryInstance(){
     if(inMemoryInstance == null){
       inMemoryInstance = new JPAUserDB(PERSISTENCE_UNIT_NAME_INMEMORY);
@@ -40,7 +44,6 @@ public class JPAUserDB{
   
   public static JPAUserDB getDerbyInstance(){
     if(derbyInstance == null){
-      System.setProperty("derby.system.home", getDatabasePath());
       derbyInstance = new JPAUserDB(PERSISTENCE_UNIT_NAME_DERBY);
     }
     return derbyInstance;
