@@ -76,22 +76,31 @@ function(require, Validation, Registration, Utils, Messages) {
 	 */
 	initStudentSignInBtn = function() {
 		$("#studentSignIn").on('click', function() {
-//			alert("student sign in is clicked!");
 			// console.log("SignIn button clicked !");
 			Utils.clearErrorMessagesFrom("#loginErrors");
-			Unifi.load();
-			// Login.loginUser();
+			if($("#studentUsername").val() == "admin"){
+				console.log("admin is logging in");
+				Login.loginUser();
+				Unifi.loadAdminPage();
+				return;
+			}
+			if($("#studentUsername").val() == "tbowner"){
+				console.log("testbed owner is logging in");
+				Unifi.loadTestbedOwnerPage();
+				return;
+			}
+			console.log("normal user is logging in");
+			Unifi.loadUserPage();
 		});
 	};
 
-	initAdminSignInBtn = function() {
-		$("#adminSignIn").on('click', function() {
-//			alert("admin sign in is clicked!");
-			// console.log("SignIn button clicked !");
-			Utils.clearErrorMessagesFrom("#loginErrors");
-			Unifi.load();
-		});
-	};
+//	initAdminSignInBtn = function() {
+//		$("#adminSignIn").on('click', function() {
+//			// console.log("SignIn button clicked !");
+//			Utils.clearErrorMessagesFrom("#loginErrors");
+//			Unifi.load();
+//		});
+//	};
 
 	/**
 	 * Checks if there is a user that has been already logged into the system.
@@ -102,14 +111,14 @@ function(require, Validation, Registration, Utils, Messages) {
 	 * @name Login#isUserLoggedIn
 	 * @function
 	 */
-	Login.isUserLoggedIn = function() {
-		var user = Utils.getCurrentUser();
-		// console.log('Current User: ' + Utils.userToString());
-		if (!user) {
-			return false;
-		}
-		return true;
-	};
+//	Login.isUserLoggedIn = function() {
+//		var user = Utils.getCurrentUser();
+//		// console.log('Current User: ' + Utils.userToString());
+//		if (!user) {
+//			return false;
+//		}
+//		return true;
+//	};
 
 	/**
 	 * Loads the HTML for the loading page into the DOM and triggers the loading
@@ -126,7 +135,7 @@ function(require, Validation, Registration, Utils, Messages) {
 		$("#navigation").load(url + " #toolbar", function() {
 			$("#main").load(url + " #mainArea", function() {
 				UnifiLogin.initLoginPage();
-			})
+			});
 		});
 	};
 
@@ -172,7 +181,7 @@ function(require, Validation, Registration, Utils, Messages) {
 	UnifiLogin.initUnifiLogin = function() {
 //		alert("unifi login init unifi page is calledis called!");
 		initStudentSignInBtn();
-		initAdminSignInBtn();
+//		initAdminSignInBtn();
 	};
 
 	return UnifiLogin;

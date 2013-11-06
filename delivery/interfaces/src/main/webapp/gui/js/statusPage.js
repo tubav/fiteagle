@@ -41,7 +41,7 @@ function(){
 		sortStatusLines(data);
 		
 		for(var k in data){
-			console.log(data[k].id);
+//			console.log(data[k].id);
 			$('#statusTable > tbody').append(buildRow(data[k]));
 		}
 	}

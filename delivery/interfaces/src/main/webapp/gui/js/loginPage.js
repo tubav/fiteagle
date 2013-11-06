@@ -23,7 +23,7 @@ function(require,Validation,Registration,Utils,Messages){
 	  * @return {Boolean} true if the password check was successful and false otherwise.
       */ 
 	checkPassword = function(){
-		log("checking password");
+		console.log("checking password");
 		return Utils.checkInputField(
 								"#password",
 								"#loginErrors",
@@ -44,9 +44,9 @@ function(require,Validation,Registration,Utils,Messages){
 	  * @return {Boolean} true if the username check was successful and false otherwise.
       */ 
 	checkUsername = function(){
-		//log("checking email");	
+		console.log("checking username");	
 		return Utils.checkInputField(
-								"#username",
+								"#studentUsername",
 								"#loginErrors",
 								Validation._isUsername,
 								Messages.emptyUsername,
@@ -255,14 +255,15 @@ function(require,Validation,Registration,Utils,Messages){
       */ 
 	Login.loginUser = function(){
 		Utils.clearErrorMessagesFrom("#loginErrors");
-		if(checkUsername() & checkPassword()){
-			//console.log("email and password are correct");
-			var rememberMe = $("#rememberMeCheckbox").is(":checked");
-			var username = $('#username').val();
-			var pswd = $('#password').val();
-			var errorMessage = Server.loginUser(username,pswd,rememberMe);
+//		if(checkUsername() & checkPassword()){
+//			console.log("username and password are correct");
+		
+//			var rememberMe = $("#rememberMeCheckbox").is(":checked");
+			var username = $('#studentUsername').val();
+			var pswd = $('#studentPassword').val();
+			var errorMessage = Server.loginUser(username,pswd,false);
 			if(errorMessage)Utils.addErrorMessageTo("#loginErrors",errorMessage);	
-		}
+//		}
 	};
 		
 	/**

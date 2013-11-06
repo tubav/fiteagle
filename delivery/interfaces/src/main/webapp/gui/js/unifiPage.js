@@ -240,9 +240,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @name Unifi#load
 	* @function
 	**/
-	Unifi.load = function(){
-		//console.log("loading main Page...");
-//		alert("loading unifi logged in Page...");
+	Unifi.loadUserPage = function(){
+		console.log("loading main Page for user");
 		var url = "unifi.html";
 		$("#navigation").load(url + " #toolbar",
 			function(){
@@ -252,6 +251,44 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 					});
 			}
 		);
+	};
+	
+	
+	Unifi.loadAdminPage = function(){
+		console.log("loading main Page for admin");
+		var url = "unifi.html";
+		$("#navigation").load(url + " #toolbar",
+			function(){
+				$("#main").load(url + " #mainArea",
+					function(){								
+						initUnifiPage(); 
+					});
+			}
+		);
+	};
+	
+	Unifi.loadTestbedOwnerPage = function(){
+		console.log("loading main Page for tbOwner");
+		var url = "unifi.html";
+		$("#navigation").load(url + " #toolbar",
+			function(){
+				$("#main").load(url + " #mainArea",
+					function(){								
+						initUnifiPage(); 
+					});
+			}
+		);
+	};
+	
+	
+	Unifi.hideCourseDetails = function(){
+		console.log("hiding courses content");
+		Utils.hideElement("#courseDetails");
+	};
+	
+	Unifi.showCourseDetails = function(){
+		console.log("hiding courses content");
+		Utils.unhideElement("#courseDetails");
 	};
 	
 	/**

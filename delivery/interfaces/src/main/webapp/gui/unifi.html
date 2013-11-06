@@ -64,22 +64,52 @@
 						<div id="yourSlicesContainer" class="offset1 span10">
 							<div data-toggle="collapse" data-target="#yourSliceList">
 								<h4 class="collapseHeader">
-									<i class="icon-puzzle-piece icon-large"></i>Your Courses<i
-										class="collapseSign"></i>
+									<i class="icon-puzzle-piece icon-large"></i>Your Courses<i class="collapseSign"></i>
 								</h4>
 							</div>
 							<div id="yourSliceList" class="collapse in">
-								<a href="#" class="btn btn-inverse" onclick="return false;"><i
-									class="icon-cogs"></i>Manage Courses</a>
+								<a href="#" class="btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage Courses</a>
 								<ul>
-									<li><a href="#testbeds">Test course 1</a></li>
-									<li><a href="#">Test course 2</a></li>
-									<li><a href="#">Test course 3</a></li>
+									<li><a href="#" onClick="Unifi.showCourseDetails()">Test course 1</a></li>
+									<li><a href="#course2">Test course 2</a></li>
+									<li><a href="#course3">Test course 3</a></li>
 								</ul>
 							</div>
 						</div>
 					</div>
 					<hr />
+					<hr />
+        </div>
+        <div id="desktop" class="span9 tab-content">
+	        <div id="courseDetails" class="tab-content">
+	          <div id="CourseTestbeds" class="offset1 span10">
+	            <div data-toggle="collapse" data-target="#yourSliceList">
+	              <h4 class="collapseHeader">
+	                <i class="icon-puzzle-piece icon-large"></i>Test Course 1<i
+	                  class="collapseSign"></i>
+	              </h4>
+	            </div>
+	
+	            <div id="courseDescription" class="collapse in">
+	              <ul>
+	                <li>This course is real fun. Just join!</li>
+	              </ul>
+	            </div>
+	
+	            <div id="testbeds" class="collapse in">
+	              <a href="#" class="btn btn-inverse" onclick="return false;"><i
+	                class="icon-cogs"></i>Add Testbed</a>
+	              <ul>
+	                <li><a href="#">Testbed 1</a></li>
+	                <li><a href="#">Testbed 2</a></li>
+	                <li><a href="#">Testbed 3</a></li>
+	              </ul>
+	            </div>
+	          </div>
+	        </div>
+	        
+        </div>
+	        
 <!-- 					<div id="availableSlices" class="row-fluid"> -->
 <!-- 						<div id="avSlicesContainer" class="offset1 span10"> -->
 <!-- 							<div data-toggle="collapse" data-target="#availableSlicesList"> -->
@@ -117,9 +147,8 @@
 <!-- 							</div> -->
 <!-- 						</div> -->
 <!-- 					</div> -->
-					<hr />
-				</div>
-				<!-- 			<div id="desktop" class="span9 tab-content"> -->
+					
+				
 				<!-- 				<div id="manage" class="row-fluid tab-pane"> -->
 				<!-- 					<div class="span12"> -->
 				<!-- 						<div class="collapseHeader" data-toggle='collapse' data-target='#manageProfileContainer'> -->
@@ -308,41 +337,9 @@
 				<!-- 							</div> -->
 				<!-- 						</div> -->
 				<!-- 					</div> -->
-				<!-- 				</div> -->
-				<!-- 			</div>	 -->
-
-
 				<!-- 				<div id="courseDetails" class="row-fluid"> -->
-				<div id="courseDetails" class="tab-content">
-					<div id="CourseTestbeds" class="offset1 span10">
-						<div data-toggle="collapse" data-target="#yourSliceList">
-							<h4 class="collapseHeader">
-								<i class="icon-puzzle-piece icon-large"></i>Test Course 1<i
-									class="collapseSign"></i>
-							</h4>
-						</div>
-
-						<div id="courseDescription" class="collapse in">
-							<ul>
-								<li>This course is real fun. Just join!</li>
-							</ul>
-						</div>
-
-						<div id="testbeds" class="collapse in">
-							<a href="#" class="btn btn-inverse" onclick="return false;"><i
-								class="icon-cogs"></i>Add Testbed</a>
-							<ul>
-								<li><a href="#">Testbed 1</a></li>
-								<li><a href="#">Testbed 2</a></li>
-								<li><a href="#">Testbed 3</a></li>
-							</ul>
-						</div>
-					</div>
-
 				</div>
-
-
-
-			</div>
+				</div>
+        </div>
 			<div id="footer" class="row-fluid"></div>
 </body>
