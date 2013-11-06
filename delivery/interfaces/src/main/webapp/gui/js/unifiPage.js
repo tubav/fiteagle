@@ -160,12 +160,13 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	initUnifiPage = function(){
 		$('#fiteagle').addClass('mainWindow'); // class in order to distinguish between main and login pages
 		performScreenAdjustments();	
-		initUserInfoPanel();		
-		Profile.initForm();
-		PublicKeys.initForm();
-		Certificates.initForm();
-		checkForStoredHashTags();
-		disableAsideLinks();
+//		initUserInfoPanel();		
+//		Profile.initForm();
+//		PublicKeys.initForm();
+//		Certificates.initForm();
+//		checkForStoredHashTags();
+//		disableAsideLinks();
+		
 	};
 	
 	/**
@@ -242,54 +243,55 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	**/
 	Unifi.loadUserPage = function(){
 		console.log("loading main Page for user");
+		
 		var url = "unifi.html";
 		$("#navigation").load(url + " #toolbar",
 			function(){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage(); 
+						Utils.unhideElement("#userDetails");
 					});
 			}
 		);
+		
 	};
 	
 	
 	Unifi.loadAdminPage = function(){
 		console.log("loading main Page for admin");
+		
 		var url = "unifi.html";
 		$("#navigation").load(url + " #toolbar",
 			function(){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage(); 
+						Utils.unhideElement("#testbedDetails");
 					});
 			}
 		);
+		
 	};
 	
 	Unifi.loadTestbedOwnerPage = function(){
 		console.log("loading main Page for tbOwner");
+		
 		var url = "unifi.html";
 		$("#navigation").load(url + " #toolbar",
 			function(){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage(); 
+						Utils.unhideElement("#testbedDetails");
+						Utils.unhideElement("#courseDetails");
 					});
 			}
 		);
+		
 	};
 	
 	
-	Unifi.hideCourseDetails = function(){
-		console.log("hiding courses content");
-		Utils.hideElement("#courseDetails");
-	};
-	
-	Unifi.showCourseDetails = function(){
-		console.log("hiding courses content");
-		Utils.unhideElement("#courseDetails");
-	};
 	
 	/**
 	* Opens the appropriate tab from the user info dropdown menu on the Unifi page according to the

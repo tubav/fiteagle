@@ -130,7 +130,7 @@ function(){
 	* @function
 	*/
 	Utils.hideBody = function(){
-		this.hideElement("#fiteagle")
+		this.hideElement("#fiteagle");
 	};
 	
 	/**
@@ -192,7 +192,7 @@ function(){
 	Utils.thisUserToBeRemembered = function(){
 		toBeRemembered = true;
 		sessionStorage.remember = toBeRemembered;
-	}
+	};
 	
 	
 	/**
@@ -207,7 +207,7 @@ function(){
 		if(sessionStorage.remember) 
 			result = JSON.parse(sessionStorage.remember);
 		return result;
-	}
+	};
 	
 	/**
 	* Gets a current user profile representation from a session storage in JSON format.
@@ -490,7 +490,7 @@ function(){
 			.attr('aria-labelledby','progressBarLabel')
 			.attr('aria-hidden','true');		
 		return modal;
-	}
+	};
 	
 	/**
 	* Shows a modal specified by a selector. 

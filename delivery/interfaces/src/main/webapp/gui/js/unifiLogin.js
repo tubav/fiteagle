@@ -93,6 +93,7 @@ function(require, Validation, Registration, Utils, Messages) {
 			Unifi.loadUserPage();
 		});
 	};
+	
 
 //	initAdminSignInBtn = function() {
 //		$("#adminSignIn").on('click', function() {
