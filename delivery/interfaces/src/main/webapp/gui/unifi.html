@@ -61,22 +61,45 @@
 				<div id="aside" class="span3">
 					<div class="row-fluid"></div>
 					<div id="yourCourses" class="row-fluid">
-						<div id="yourCoursesContainer" class="offset1 span10">
+						<div id="yourCoursesContainer" class="container offset1 span10">
 							<div data-toggle="collapse" data-target="#yourCoursesList">
 								<h4 class="collapseHeader">
 									<i class="icon-puzzle-piece icon-large"></i>Your Courses<i class="collapseSign"></i>
 								</h4>
 							</div>
 							<div id="yourCoursesList" class="collapse in">
-								<a href="#" class="btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage Courses</a>
 								<ul>
-									<li><a href="#userDetails" onClick="Utils.unhideElement('#userDetails')">Test course 1</a></li>
-									<li><a href="#course2">Test course 2</a></li>
-									<li><a href="#course3">Test course 3</a></li>
+									<li><a href="#userDetails" onClick="Unifi.loadUserPage()">Test course 1</a></li>
+									<li><a href="#userDetails" onClick="Unifi.loadUserPage()">Test course 2</a></li>
+									<li><a href="#userDetails" onClick="Unifi.loadUserPage()">Test course 3</a></li>
 								</ul>
 							</div>
 						</div>
+						<div>  
+						  <a href="#" class="managebutton btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage</a>
+						</div>
 					</div>
+					
+					<div id="yourTestbeds" class="row-fluid">
+            <div id="yourTestbedsContainer" class="container offset1 span10">
+              <div data-toggle="collapse" data-target="#yourTestbedsList">
+                <h4 class="collapseHeader">
+                  <i class="icon-puzzle-piece icon-large"></i>Your Testbeds<i class="collapseSign"></i>
+                </h4>
+              </div>
+              <div id="yourTestbedsList" class="collapse in">
+                <ul>
+                  <li><a href="#userDetails" onClick="Unifi.loadTestbedOwnerPage()">Testbed 1</a></li>
+                  <li><a href="#userDetails" onClick="Unifi.loadTestbedOwnerPage()">Testbed 2</a></li>
+                  <li><a href="#userDetails" onClick="Unifi.loadTestbedOwnerPage()">Testbed 3</a></li>
+                </ul>
+              </div>
+            </div>
+            <div>  
+              <a href="#" class="managebutton btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage</a>
+            </div>
+          </div>
+          
 					<hr />
 					<hr />
         </div>

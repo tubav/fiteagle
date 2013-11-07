@@ -200,6 +200,12 @@ input.search-query{height:24px !important;}
 
 .btn{margin-top: 10px ! important}
 
+.managebutton{
+	margin-top: 5px ! important;
+	margin-right: 0px ! important;
+	margin-left: 20px ! important;
+}
+
 .invalid{
 	border: 1px solid red !important;
 }
@@ -241,7 +247,14 @@ input.search-query{height:24px !important;}
 .centered-pills a { float:left; }
 
 
-.collapseHeader i.collapseSign{float:right; padding-top:1px;}
+.collapseHeader i.collapseSign{
+	float:right;
+  padding-top:1px;
+}
+
+.container{
+	  width: 250px !important;
+}
 
 .btnAdd
 {
