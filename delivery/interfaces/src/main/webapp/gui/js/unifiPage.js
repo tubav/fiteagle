@@ -249,8 +249,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			function(){
 				$("#main").load(url + " #mainArea",
 					function(){								
-						initUnifiPage(); 
-						Utils.unhideElement("#userDetails");
+						initUnifiPage();
+						$("#desktop").empty().load(url + " #userDetails");
 					});
 			}
 		);
@@ -267,7 +267,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage(); 
-						Utils.unhideElement("#testbedDetails");
+						$("#desktop").empty().load(url + " #testbedDetails");
 					});
 			}
 		);
@@ -283,8 +283,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage(); 
-						Utils.unhideElement("#testbedDetails");
-						Utils.unhideElement("#courseDetails");
+						$("#desktop").empty().load(url + " #testbedDetails, #courseDetails");
 					});
 			}
 		);

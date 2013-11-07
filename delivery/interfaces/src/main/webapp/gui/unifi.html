@@ -60,17 +60,17 @@
 			<div id="mainWindow">
 				<div id="aside" class="span3">
 					<div class="row-fluid"></div>
-					<div id="yourSlices" class="row-fluid">
-						<div id="yourSlicesContainer" class="offset1 span10">
-							<div data-toggle="collapse" data-target="#yourSliceList">
+					<div id="yourCourses" class="row-fluid">
+						<div id="yourCoursesContainer" class="offset1 span10">
+							<div data-toggle="collapse" data-target="#yourCoursesList">
 								<h4 class="collapseHeader">
 									<i class="icon-puzzle-piece icon-large"></i>Your Courses<i class="collapseSign"></i>
 								</h4>
 							</div>
-							<div id="yourSliceList" class="collapse in">
+							<div id="yourCoursesList" class="collapse in">
 								<a href="#" class="btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage Courses</a>
 								<ul>
-									<li><a href="#" onClick="Unifi.showCourseDetails()">Test course 1</a></li>
+									<li><a href="#userDetails" onClick="Utils.unhideElement('#userDetails')">Test course 1</a></li>
 									<li><a href="#course2">Test course 2</a></li>
 									<li><a href="#course3">Test course 3</a></li>
 								</ul>
@@ -82,7 +82,7 @@
         </div>
         <div id="desktop" class="span9 tab-content">
         
-	        <div id="courseDetails" class="tab-content hidden">
+	        <div id="courseDetails" class="tab-content">
 	          <div id="CourseTestbeds" class="offset1 span10">
 	              <h4 class="collapseHeader">
 	                Test Course 1
@@ -100,7 +100,7 @@
 	          </div>
 	        </div>
 	        
-	         <div id="testbedDetails" class="tab-content hidden">
+	         <div id="testbedDetails" class="tab-content">
 	          <div id="testbeds" class="offset1 span10">
 	              <h4 class="collapseHeader">
 	                Edit Your Testbed here
@@ -125,7 +125,7 @@
 	          </div>
 	        </div>
 	        
-	        <div id="userDetails" class="tab-content hidden">
+	        <div id="userDetails" class="tab-content">
 	         <div id="coursesAvailable" class="offset1 span10">
 	             <h4 class="collapseHeader">
 	               Courses available to sign up
