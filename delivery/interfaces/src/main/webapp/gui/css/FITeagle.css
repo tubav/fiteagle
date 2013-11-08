@@ -147,7 +147,7 @@ input.search-query{height:24px !important;}
 #fancyLoginList > ul > li{margin-top:10px; list-style:none;}
 #fancyLogins  li:first{margin-top:0}
 #aside{border-right: 1px solid #d1d1d1;}
-#desktop{margin-left:0px !important}		
+#desktop{margin-left:20px !important}		
 #logoImg{ margin-top:15px}
 #loginErrorField{margin-bottom: 20px;}
 
@@ -200,10 +200,16 @@ input.search-query{height:24px !important;}
 
 .btn{margin-top: 10px ! important}
 
-.managebutton{
-	margin-top: 5px ! important;
+.button{
+	margin-top: 0px ! important;
 	margin-right: 0px ! important;
 	margin-left: 5px ! important;
+	margin-bottom: 5px ! important;
+}
+
+.edit{
+	font-size: 12px;
+	margin-left: 5px;
 }
 
 .invalid{
@@ -250,6 +256,10 @@ input.search-query{height:24px !important;}
 .collapseHeader i.collapseSign{
 	float:right;
   padding-top:1px;
+}
+
+.black{
+	color:#373737;
 }
 
 .container{

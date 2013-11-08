@@ -250,11 +250,22 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage();
-						$("#desktop").empty().load(url + " #userDetails");
+						$("#aside").empty().load(url + " #userCourses");
+						$("#desktop").empty();
 					});
 			}
 		);
 		
+	};
+	
+	Unifi.loadUserCourse = function(){
+		var url = "unifi.html";
+		$("#desktop").empty().load(url + " #userCourse");
+	};
+	
+	Unifi.loadUserAddCourse = function(){
+		var url = "unifi.html";
+		$("#desktop").empty().load(url + " #addCourse");
 	};
 	
 	
@@ -283,14 +294,17 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				$("#main").load(url + " #mainArea",
 					function(){								
 						initUnifiPage(); 
-						$("#desktop").empty().load(url + " #testbedDetails, #courseDetails");
+						$("#desktop").empty();
+						$("#aside").empty().load(url + " #courses");
 					});
 			}
 		);
-		
 	};
 	
-	
+	Unifi.loadCourse = function(){
+		var url = "unifi.html";
+		$("#desktop").empty().load(url + " #course");
+	};
 	
 	/**
 	* Opens the appropriate tab from the user info dropdown menu on the Unifi page according to the
