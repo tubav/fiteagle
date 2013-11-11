@@ -97,18 +97,18 @@ function(require, Validation, Registration, Utils, Messages) {
 	 * @memberOf Login#
 	 * @see Login.loginUser
 	 */
-	initStudentSignInBtn = function() {
-		$("#studentSignIn").on('click', function() {
+	initSignInBtn = function() {
+		$("#unifiSignIn").on('click', function() {
 			// console.log("SignIn button clicked !");
 			Utils.clearErrorMessagesFrom("#loginErrors");
-			if($("#studentUsername").val() == "admin"){
+			if($("#username").val() == "admin"){
 				console.log("admin is logging in");
 				Login.loginUser();
 //				UnifiLogin.initUnifiPage();
 				Unifi.loadAdminPage();
 				return;
 			}
-			if($("#studentUsername").val() == "tbowner"){
+			if($("#username").val() == "tbowner"){
 				console.log("testbed owner is logging in");
 //				UnifiLogin.initUnifiPage();
 				Unifi.loadTestbedOwnerPage();
@@ -125,14 +125,6 @@ function(require, Validation, Registration, Utils, Messages) {
 		});
 	};
 	
-
-//	initAdminSignInBtn = function() {
-//		$("#adminSignIn").on('click', function() {
-//			// console.log("SignIn button clicked !");
-//			Utils.clearErrorMessagesFrom("#loginErrors");
-//			Unifi.load();
-//		});
-//	};
 
 	/**
 	 * Checks if there is a user that has been already logged into the system.
@@ -213,7 +205,7 @@ function(require, Validation, Registration, Utils, Messages) {
 
 	UnifiLogin.initUnifiLogin = function() {
 //		alert("unifi login init unifi page is calledis called!");
-		initStudentSignInBtn();
+		initSignInBtn();
 //		initAdminSignInBtn();
 	};
 
