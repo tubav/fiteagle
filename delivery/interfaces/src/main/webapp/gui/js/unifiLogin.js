@@ -119,6 +119,9 @@ function(require, Validation, Registration, Utils, Messages) {
 			
 			Unifi.loadUserPage();
 //			Unifi.loadTestbedOwnerPage();
+//			Login.loginUser();
+//			Unifi.loadAdminPage();
+
 		});
 	};
 	

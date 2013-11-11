@@ -46,6 +46,9 @@ table {
 	font-weight:bold;
 }
 
+table td{
+	height: 37px;
+}
 
 .alert{margin-bottom:10px !important}
 
@@ -102,6 +105,9 @@ ul li a:hover, ul li a:focus{text-decoration: none;}
 
 hr{ border-top: 1px solid #D1D1D1}
 h4{margin-bottom:5px !important}
+h3{
+	line-height: normal !important;
+}
 
 i[class^=icon-]{padding-right:5px;}
 
@@ -129,7 +135,9 @@ i[class^=icon-]{padding-right:5px;}
 
 input.search-query{height:24px !important;}
 
-#aside{height:100%}
+#aside{
+	height:100%;
+}
 
 #publicKeyControls a i {position: relative; top:6px}
 
@@ -161,7 +169,8 @@ input.search-query{height:24px !important;}
 #aside{border-right: 1px solid #d1d1d1;}
 #desktop{
 	margin-left:20px !important;
-}		
+}
+
 #logoImg{ margin-top:15px}
 #loginErrorField{margin-bottom: 20px;}
 
@@ -224,6 +233,10 @@ input.search-query{height:24px !important;}
 .edit{
 	font-size: 12px;
 	margin-left: 5px;
+}
+
+.black{
+  color: #373737;
 }
 
 .invalid{
