@@ -17,22 +17,45 @@ function(require, Validation, Registration, Utils, Messages) {
 	UnifiLogin = {};
 
 	UnifiLogin.initUnifiPage = function() {
-//		alert("unifi login INIT UNIFI PAGE is calledis called!");
-		// $('#fiteagle').removeClass('mainWindow');
-		// toggleNavigationBtn();
-		// redirectToUrl();
-		// Utils.unhideBody();
-		// initOnWindowResizeEvent();
-		// initRegisterLink();
-		// initLoginForm();
-		// initSignInBtn();
-		// Registration.initRegistrationForm();
-		// initOnWindowResizeEvent();
-		// initHistory();
-		// onFITeagleLogoClicked();
-		// Status.init();
+		 $('#fiteagle').removeClass('mainWindow');
+		 toggleNavigationBtn();
+		 redirectToUrl();
+		 Utils.unhideBody();
+		 initOnWindowResizeEvent();
+//		 initRegisterLink();
+//		 initLoginForm();
+//		 initSignInBtn();
+//		 Registration.initRegistrationForm();
+		 initOnWindowResizeEvent();
+//		 initHistory();
+		 onFITeagleLogoClicked();
+		 Status.init();
 	};
 
+	/**
+	* Initiates history functionality for the login page navigation menu by initializing History API. It stores 
+	* the previous clicked navigation tab in the browser tab so it can be reached by clicking
+	* on "back" and "next" buttons.
+	* @private
+	* @memberOf Login#
+	*/
+	initHistory = function(){
+		$('#navigation ul li a').on('click',function(e){
+			e.preventDefault();
+			var t = $(this);
+			var href = t.attr('href');
+			if(href == "#home"){href = "";}
+			history.pushState(href, "page "+href, "/"+href);
+			(href == '')?
+				$('[href$=#home]').tab('show')
+					:
+				$('[href$='+href+']').tab('show');
+		});
+		$(window).on(' hashchange', function(event) {
+			redirectToUrl();
+		});
+	};
+	
 	/**
 	 * Initiates on window resize event that toggles navigation button
 	 * visibility, re-initiates tooltips for the login and registration form
@@ -81,16 +104,21 @@ function(require, Validation, Registration, Utils, Messages) {
 			if($("#studentUsername").val() == "admin"){
 				console.log("admin is logging in");
 				Login.loginUser();
+//				UnifiLogin.initUnifiPage();
 				Unifi.loadAdminPage();
 				return;
 			}
 			if($("#studentUsername").val() == "tbowner"){
 				console.log("testbed owner is logging in");
+//				UnifiLogin.initUnifiPage();
 				Unifi.loadTestbedOwnerPage();
 				return;
 			}
 			console.log("normal user is logging in");
+//			UnifiLogin.initUnifiPage();
+			
 			Unifi.loadUserPage();
+//			Unifi.loadTestbedOwnerPage();
 		});
 	};
 	
@@ -151,6 +179,7 @@ function(require, Validation, Registration, Utils, Messages) {
 	 * @memberOf Login#
 	 */
 	redirectToUrl = function() {
+		console.log("redirecting..");
 		var href = window.location.hash;
 		if (href == null || href == '') {
 			$('#navigation [href$=#home]').tab('show');

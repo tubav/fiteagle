@@ -160,12 +160,13 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	initUnifiPage = function(){
 		$('#fiteagle').addClass('mainWindow'); // class in order to distinguish between main and login pages
 		performScreenAdjustments();	
-//		initUserInfoPanel();		
-//		Profile.initForm();
-//		PublicKeys.initForm();
-//		Certificates.initForm();
-//		checkForStoredHashTags();
-//		disableAsideLinks();
+		initHashChanges();
+		initUserInfoPanel();		
+		Profile.initForm();
+		PublicKeys.initForm();
+		Certificates.initForm();
+		checkForStoredHashTags();
+		disableAsideLinks();
 		
 	};
 	
@@ -244,41 +245,30 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	Unifi.loadUserPage = function(){
 		console.log("loading main Page for user");
 		
-		var url = "unifi.html";
-		$("#navigation").load(url + " #toolbar",
+		var unifiURL = "unifi.html";
+		var userURL = "user.html";
+
+		$("#navigation").load(unifiURL + " #toolbar",
 			function(){
-				$("#main").load(url + " #mainArea",
+				$("#main").load(userURL + " #main",
 					function(){								
 						initUnifiPage();
-						$("#aside").empty().load(url + " #userCourses");
-						$("#desktop").empty();
 					});
 			}
 		);
-		
 	};
-	
-	Unifi.loadUserCourse = function(){
-		var url = "unifi.html";
-		$("#desktop").empty().load(url + " #userCourse");
-	};
-	
-	Unifi.loadUserAddCourse = function(){
-		var url = "unifi.html";
-		$("#desktop").empty().load(url + " #addCourse");
-	};
-	
 	
 	Unifi.loadAdminPage = function(){
 		console.log("loading main Page for admin");
 		
-		var url = "unifi.html";
-		$("#navigation").load(url + " #toolbar",
+		var unifiURL = "unifi.html";
+		var adminURL = "admin.html";
+		
+		$("#navigation").load(unifiURL + " #toolbar",
 			function(){
-				$("#main").load(url + " #mainArea",
+				$("#main").load(adminURL + " #main",
 					function(){								
 						initUnifiPage(); 
-						$("#desktop").empty().load(url + " #testbedDetails");
 					});
 			}
 		);
@@ -288,22 +278,17 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	Unifi.loadTestbedOwnerPage = function(){
 		console.log("loading main Page for tbOwner");
 		
-		var url = "unifi.html";
-		$("#navigation").load(url + " #toolbar",
+		var unifiURL = "unifi.html";
+		var tbownerURL = "tbowner.html";
+		
+		$("#navigation").load(unifiURL + " #toolbar",
 			function(){
-				$("#main").load(url + " #mainArea",
+				$("#main").load(tbownerURL + " #main",
 					function(){								
 						initUnifiPage(); 
-						$("#desktop").empty();
-						$("#aside").empty().load(url + " #courses");
 					});
 			}
 		);
-	};
-	
-	Unifi.loadCourse = function(){
-		var url = "unifi.html";
-		$("#desktop").empty().load(url + " #course");
 	};
 	
 	/**
@@ -322,11 +307,31 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var lis = $("#userInfoDropdown li");
 			lis.removeClass("active");
 			var a = $('#userInfoDropdown [href$='+hash+']');
+			console.log(a);
 			(a.length)?
 				a.tab('show') // if found show the tab
 					:
 				$('[href$=#manage]').tab('show'); // if not found show manage profile tab
 		}
+	};
+	
+	initHashChanges = function(){
+		$('#navigation ul li a').on('click',function(e){
+			e.preventDefault();
+			var t = $(this);
+			var href = t.attr('href');
+			if(href == "#home"){href = "";}
+			history.pushState(href, "page "+href, "/"+href);
+			(href == '')?
+				$('[href$=#home]').tab('show')
+					:
+				$('[href$='+href+']').tab('show');
+		});
+		$(window).on(' hashchange', function(event) {
+			var state = window.location.hash;
+			console.log("changing to :"+state);
+			openTab(state);
+		});
 	};
 	
 	/**
