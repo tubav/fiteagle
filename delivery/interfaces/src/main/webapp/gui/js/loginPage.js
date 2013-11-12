@@ -134,27 +134,8 @@ function(require, Validation, Registration, Utils, Messages) {
 	 */
 	initSignInBtn = function() {
 		$("#login").on('click', function() {
-			// console.log("login button clicked !");
 			Utils.clearErrorMessagesFrom("#loginErrors");
-			
-			if($("#username").val() == "admin"){
-				console.log("admin is logging in");
-//				Unifi.loadAdminPage();
-				Login.loginUser();
-				return;
-			}
-			if($("#username").val() == "tbowner"){
-				console.log("testbed owner is logging in");
-//				Unifi.loadTestbedOwnerPage();
-				Login.loginUser();
-				return;
-			}
-			console.log("normal user is logging in");
 			Login.loginUser();
-//			Unifi.loadUserPage();
-//			Unifi.loadTestbedOwnerPage();
-//			Unifi.loadAdminPage();
-
 		});
 	};
 	
@@ -209,7 +190,7 @@ function(require, Validation, Registration, Utils, Messages) {
 	  * @see Login#initLoginPage function
      */  
 	Login.load = function(){
-		console.log("loading Login Page...");
+//		console.log("loading Login Page...");
 		var url = "login.html";
 		$("#navigation").load(url + " #navs",function(){
 			$("#main").load(url + " #loginPages",
@@ -231,8 +212,8 @@ function(require, Validation, Registration, Utils, Messages) {
 		Utils.changeFocusOnEnterClick("#username","#password");
 //		Utils.addOnEnterClickEvent("#password","#signIn");
 		$('#username').focus();
-		$('#rememberMeCheckbox').prettyCheckable({color:'yellow'});
-		initLoginFormHints();
+		$('#rememberMeCheckbox').prettyCheckable({color:'gray'});
+//		initLoginFormHints();
 	};
 	
 	/**

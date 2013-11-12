@@ -60,28 +60,12 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @return {Object} sign out modal object
 	*/
 	createSignOutModal = function(){
-		var modalBody = $('<div>').addClass('centered').append('<h5>'+Messages.signOutConfirm+'</h5>')
+		var modalBody = $('<div>').addClass('centered').append('<h5>'+Messages.signOutConfirm+'</h5>');
 		var signOutModal = Utils.createConfirmModal('signOutModal','signOutOkBtn','YES','NO',modalBody);
 		$('body').append(signOutModal);
 		return signOutModal;
-	}
-	
-	
-	/**
-	* Disables all links within the aside section in order to prevent quitting from the main page by
-	* clicking on an undefined link. The function has to be removed before implementing a functionality for the links
-	* inside the aside section.
-	* @private
-    * @memberOf Main#
-	*/
-	disableAsideLinks = function(){
-		$('#aside').find('a').each(function(){
-			$(this).on('click',function(e){
-				e.preventDefault();
-				return false;
-			})
-		});
 	};
+	
 		
 	/**
 	* Initializes change of the icon sign for all of the headers with the class with  the ".collapseHeader" selector after clicking on it.
@@ -180,7 +164,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		PublicKeys.initForm();
 		Certificates.initForm();
 		checkForStoredHashTags();
-		disableAsideLinks();
 	};
 	
 	/**
@@ -197,7 +180,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				$('html, body').animate({
 					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
 				}, 1000);
-			},100)
+			},100);
 		}	
 	};
 	
@@ -255,20 +238,39 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @function
 	**/
 	Main.load = function(){
-		console.log("loading main Page in admin view...");
 		var url = "main.html";
 		
-		$("#navigation").load(url + " #toolbar",
-			function(){
-				$("#main").load(url + " #mainArea",
-					function(){			
-						$("#aside").load(url + " #adminAside");
-						$("#desktop").load(url + " #manage, #keys, #certificate, #testbed, #course");
-						
-						initMainPage(); 
-					});
-			}
-		);
+		switch(Utils.getCurrentUser().role){
+		case "ADMIN":
+			$("#navigation").load(url + " #toolbar",
+					function(){
+						$("#main").load("admin.html" + " #mainArea",
+							function(){	
+								initMainPage(); 
+							});
+					}
+				);
+			break;
+		case "TBOWNER":
+			$("#navigation").load(url + " #toolbar",
+					function(){
+						$("#main").load("tbowner.html" + " #mainArea",
+							function(){	
+								initMainPage(); 
+							});
+					}
+				);
+			break;
+		default:
+			$("#navigation").load(url + " #toolbar",
+					function(){
+						$("#main").load("user.html" + " #mainArea",
+							function(){	
+								initMainPage(); 
+							});
+					}
+				);
+		}
 	};
 	
 	/**
@@ -301,7 +303,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @memberOf Main#
 	*/
 	performScreenAdjustments = function(){
-		Utils.unhideBody();
 		initCollapseHeaders();
 		if(Utils.isSmallScreen()){
 			initForSmallScreens();

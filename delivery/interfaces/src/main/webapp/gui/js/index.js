@@ -8,7 +8,7 @@ requirejs.config({
   }
 });
 
-define(['jquery','bootstrap','loginPage','mainPage','statusPage', 'utils', 'unifiPage', 'history', 'ajaxify','fileSaver'], 
+define(['jquery','bootstrap','loginPage','mainPage','statusPage', 'utils', 'history', 'ajaxify','fileSaver'], 
 
 function($,Bootstrap,LoginPage,MainPage,StatusPage,Utils, UnifiPage, UnifiLogin){
 	
@@ -31,7 +31,6 @@ function($,Bootstrap,LoginPage,MainPage,StatusPage,Utils, UnifiPage, UnifiLogin)
 			LoginPage.load();
 		}
 	}
-	
 	// new Event listener for end of the window resizing. Called : "resizeEnd"	
 	 $(window).resize(function() {
         if(this.resizeTO) clearTimeout(this.resizeTO);
@@ -39,6 +38,7 @@ function($,Bootstrap,LoginPage,MainPage,StatusPage,Utils, UnifiPage, UnifiLogin)
             $(this).trigger('resizeEnd');
         }, 200);
     });
+
 });	
 	
 

@@ -29,7 +29,6 @@ function(require,Utils){
 	* @function
 	*/
 	Server.loginUser = function(username,password,rememberMe){		
-		console.log("Sending login information to the server...");
 		var msg;
 		var signInBtn = $('#login');
 		setCookie = "";
@@ -50,7 +49,6 @@ function(require,Utils){
                 "Basic " + btoa(username + ":" + password)); // TODO Base64 support
 			},
 			success: function(user,status,xhr){		
-				console.log("success!");
 				Utils.setCurrentUser(user);
 				require('mainPage').load();
 			},

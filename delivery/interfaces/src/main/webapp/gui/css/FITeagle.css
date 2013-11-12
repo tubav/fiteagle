@@ -19,6 +19,7 @@ label {margin-top:3px;}
 #rememberMeCheckboxLabel{
 	position:relative;
 	top:-10px;
+	font-size: 14px !important;
 	}
 
 #deleteUserProfileModal .modal-body{padding:20px 0 20px 0}
@@ -44,6 +45,7 @@ p{text-align:justify}
 
 table {
 	font-weight:bold;
+	font-size: 14px;
 }
 
 table td{
@@ -95,7 +97,6 @@ table td{
 
 #navs .btn-navbar{margin-right:4%; margin-bottom:20px}
 
-#mainArea ul{list-style-type:square;}
 
 ul li a{color: #585858}
 ul li a:hover, ul li a:focus{text-decoration: none;}
