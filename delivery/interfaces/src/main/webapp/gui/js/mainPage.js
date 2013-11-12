@@ -255,12 +255,16 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @function
 	**/
 	Main.load = function(){
-		//console.log("loading main Page...");
+		console.log("loading main Page in admin view...");
 		var url = "main.html";
+		
 		$("#navigation").load(url + " #toolbar",
 			function(){
 				$("#main").load(url + " #mainArea",
-					function(){								
+					function(){			
+						$("#aside").load(url + " #adminAside");
+						$("#desktop").load(url + " #manage, #keys, #certificate, #testbed, #course");
+						
 						initMainPage(); 
 					});
 			}

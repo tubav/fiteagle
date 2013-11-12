@@ -49,60 +49,108 @@
 
 <!------------------- MAIN SECTION ------------------------------------>	
 	<div id="main" >
-	<div id="mainArea" class="tab-content row-fluid">
-		<div id="mainWindow">
-			<div id="aside" class="span3">
-				<div class="row-fluid">
+		<div id="mainArea" class="tab-content row-fluid">
+			<div id="mainWindow">
+        <div id="aside" class="span3">
+			   </div>
+         <div id="desktop" class="span9 tab-content">
+			   </div>
+		  </div>
+	</div>
+<!-- 			<div id="aside" class="span3"> -->
+<!-- 				<div class="row-fluid"> -->
 
-				</div>
-				<div id="yourSlices" class="row-fluid">
-					<div id="yourSlicesContainer" class="offset1 span10">
-						<div data-toggle="collapse" data-target="#yourSliceList">
-							<h4 class="collapseHeader"><i class="icon-puzzle-piece icon-large"></i>Your Slices<i class="collapseSign"></i></h4>
-						</div>					
-						<div id="yourSliceList" class="collapse in">
-							<a href="#" class="btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage Slices</a>
-							<ul>
-								<li><a href="#">Testslice 1</a></li>
-								<li><a href="#">Testslice 2</a></li>
-								<li><a href="#">Testslice 3</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<hr/>				
-				<div id="availableSlices" class="row-fluid">
-					<div id="avSlicesContainer" class="offset1 span10">
-						<div data-toggle="collapse" data-target="#availableSlicesList">
-							<h4 class="collapseHeader"><i class="icon-beaker icon-large"></i>Available Testbeds<i class="collapseSign"></i></h4>
-						</div>
-						<div id="availableSlicesList" class="collapse in">
-							<ul>
-								<li data-toggle="collapse" data-target="#AV">AV</li>
-									<ul id="AV" class="collapse in">
-										<li><a href="#"><i class="icon-wrench"></i>Hardware</a></li>
-										<li><a href="#"><i class="icon-sitemap"></i> Databases</a></li>
-										<li><a href="#"><i class="icon-desktop"></i> Monitoring</a></li>
-										<li><a href="#"><i class="icon-leaf"></i> Software</a></li>
-									</ul>
-								<li data-toggle="collapse" data-target="#FraunhoferFOCUS"> Fraunhofer FOCUS</li>
-									<ul id="FraunhoferFOCUS" class="collapse">
-										<li><a href="#"><i class="icon-wrench"></i>Hardware</a></li>
-										<li><a href="#"><i class="icon-sitemap"></i> Databases</a></li>
-										<li><a href="#"><i class="icon-desktop"></i> Monitoring</a></li>
-										<li><a href="#"><i class="icon-leaf"></i> Software</a></li>
-									</ul>
-								<li>NITOS</li>
-								<li>GENI</li>
-								<li>PlanetLab Europe</li>
-							</ul>
+<!-- 				</div> -->
+<!-- 				<div id="yourSlices" class="row-fluid"> -->
+<!-- 					<div id="yourSlicesContainer" class="offset1 span10"> -->
+<!-- 						<div data-toggle="collapse" data-target="#yourSliceList"> -->
+<!-- 							<h4 class="collapseHeader"><i class="icon-puzzle-piece icon-large"></i>Your Slices<i class="collapseSign"></i></h4> -->
+<!-- 						</div>					 -->
+<!-- 						<div id="yourSliceList" class="collapse in"> -->
+<!-- 							<a href="#" class="btn btn-inverse" onclick="return false;"><i class="icon-cogs"></i>Manage Slices</a> -->
+<!-- 							<ul> -->
+<!-- 								<li><a href="#">Testslice 1</a></li> -->
+<!-- 								<li><a href="#">Testslice 2</a></li> -->
+<!-- 								<li><a href="#">Testslice 3</a></li> -->
+<!-- 							</ul> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 				<hr/>				 -->
+<!-- 				<div id="availableSlices" class="row-fluid"> -->
+<!-- 					<div id="avSlicesContainer" class="offset1 span10"> -->
+<!-- 						<div data-toggle="collapse" data-target="#availableSlicesList"> -->
+<!-- 							<h4 class="collapseHeader"><i class="icon-beaker icon-large"></i>Available Testbeds<i class="collapseSign"></i></h4> -->
+<!-- 						</div> -->
+<!-- 						<div id="availableSlicesList" class="collapse in"> -->
+<!-- 							<ul> -->
+<!-- 								<li data-toggle="collapse" data-target="#AV">AV</li> -->
+<!-- 									<ul id="AV" class="collapse in"> -->
+<!-- 										<li><a href="#"><i class="icon-wrench"></i>Hardware</a></li> -->
+<!-- 										<li><a href="#"><i class="icon-sitemap"></i> Databases</a></li> -->
+<!-- 										<li><a href="#"><i class="icon-desktop"></i> Monitoring</a></li> -->
+<!-- 										<li><a href="#"><i class="icon-leaf"></i> Software</a></li> -->
+<!-- 									</ul> -->
+<!-- 								<li data-toggle="collapse" data-target="#FraunhoferFOCUS"> Fraunhofer FOCUS</li> -->
+<!-- 									<ul id="FraunhoferFOCUS" class="collapse"> -->
+<!-- 										<li><a href="#"><i class="icon-wrench"></i>Hardware</a></li> -->
+<!-- 										<li><a href="#"><i class="icon-sitemap"></i> Databases</a></li> -->
+<!-- 										<li><a href="#"><i class="icon-desktop"></i> Monitoring</a></li> -->
+<!-- 										<li><a href="#"><i class="icon-leaf"></i> Software</a></li> -->
+<!-- 									</ul> -->
+<!-- 								<li>NITOS</li> -->
+<!-- 								<li>GENI</li> -->
+<!-- 								<li>PlanetLab Europe</li> -->
+<!-- 							</ul> -->
 						
-						</div>
-					</div>
-				</div>
-				<hr />			
-			</div>
-			<div id="desktop" class="span9 tab-content">
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 				<hr />			 -->
+<!-- 			</div> -->
+
+<!--        <div id="adminAside" class="span3"> -->
+      <div id="adminAside"> 
+        <div id="courses" class="row-fluid">
+          <div id="coursesContainer" class="container offset1 span10">
+            <div data-toggle="collapse" data-target="#coursesList">
+              <h4 class="collapseHeader">
+                <i class="icon-group icon-large"></i>Courses
+              </h4>
+            </div>
+            <div id="coursesList" class="collapse in">
+              <ul class="icons-ul">
+                <li><i class="icon-li icon-caret-right"></i><a href="#course" data-toggle="tab">Test course 1</a></li>
+                <li><i class="icon-li icon-caret-right"></i><a href="#course" data-toggle="tab">Test course 2</a></li>
+                <li><i class="icon-li icon-caret-right"></i><a href="#course" data-toggle="tab">Test course 3</a></li>
+                <li><i class="icon-li icon-plus"></i><a href="#createCourse" data-toggle="tab">Create</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div id="testbeds" class="row-fluid">
+          <div id="testbedContainer" class="container offset1 span10">
+            <div data-toggle="collapse" data-target="#testbedList">
+              <h4 class="collapseHeader">
+                <i class="icon-sitemap icon-large"></i>Testbeds
+              </h4>
+            </div>
+            <div id="testbedList" class="collapse in">
+              <ul class="icons-ul">
+                <li><i class="icon-li icon-caret-right"></i><a href="#testbed" data-toggle="tab">Testbed1</a></li>
+                <li><i class="icon-li icon-caret-right"></i><a href="#testbed" data-toggle="tab">Testbed2</a></li>
+                <li><i class="icon-li icon-plus"></i><a href="#CreateTestbed" data-toggle="tab">Create</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <hr />
+      </div>
+
+
+<!-- 			<div id="desktop" class="span9 tab-content"> -->
 				<div id="manage" class="row-fluid tab-pane">
 					<div class="span12">
 						<div class="collapseHeader" data-toggle='collapse' data-target='#manageProfileContainer'>
@@ -292,8 +340,165 @@
 						</div>
 					</div>
 				</div>
+				
+				<div id="course" class="row-fluid tab-pane">
+          <div id="courseTitle">
+              <h3>
+                Test Course<a href="#" class="edit" onclick="return false;">Edit</a>
+              </h3>
+          </div>
+          <div id="courseDescription">
+            <h4>
+              A course for testing purposes<a href="#" class="edit" onclick="return false;">Edit</a>
+            </h4>
+          </div>
+          <hr/>
+          <div class="collapseHeader" data-toggle='collapse' data-target='#usersInCourse'>
+            <h4 class="collapseHeader"><i class="collapseSign"></i><a href="#" onclick="return false;">Users</a></h4>
+          </div>
+          <div id="usersInCourse" class="row-fluid collapse out">
+            <table>
+             <tr>
+               <td>
+                 User1
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Details</a>
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+               </td>
+             </tr>
+              <tr>
+               <td>
+                 User2
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Details</a>
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+               </td>
+             </tr>
+              <tr>
+               <td>
+                 User3
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Details</a>
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+               </td>
+             </tr>
+           </table>
+          </div>
+          <hr/>
+          <div class="collapseHeader" data-toggle='collapse' data-target='#testbedsInCourse'>
+            <h4 class="collapseHeader"><i class="collapseSign"></i><a href="#" class="black" onclick="return false;">Testbeds</a></h4>
+          </div>
+          <div id="testbedsInCourse" class="row-fluid collapse out">
+            <table>
+             <tr>
+               <td>
+                 Testbed1
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Details</a>
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+               </td>
+             </tr>
+              <tr>
+               <td>
+                 Another Testbed
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Details</a>
+               </td>
+               <td>
+                 <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+               </td>
+             </tr>
+             <tr>
+               <td>
+                 <a href="#" class="black" onclick="return false;">Add Testbed</a>
+               </td>
+             </tr>
+           </table>
+          </div>
+        </div>
+      
+        <div id="testbed" class="row-fluid tab-pane">
+          <div id="testbedTitle">
+            <h3>
+              Testbed Example<a href="#" class="edit" onclick="return false;">Edit</a>
+            </h3>
+          </div>
+          <div id="testbedDescription">
+            <h4>
+              A testbed for testing purposes<a href="#" class="edit" onclick="return false;">Edit</a>
+            </h4>
+          </div>
+          <hr/>
+          <div id="resources">
+            <table>
+              <tr>
+                <td>
+                  Resource1
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Allocate</a>
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Provision</a>
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+                </td>
+              </tr>
+               <tr>
+                <td>
+                  Resource number 2
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Allocate</a>
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Provision</a>
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+                </td>
+              </tr>
+               <tr>
+                <td>
+                  Another Resource with a longer name
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Allocate</a>
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Provision</a>
+                </td>
+                <td>
+                  <a href="#" class="button btn btn-inverse" onclick="return false;">Delete</a>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+				
 			</div>	
-	</div>
+			
+		  
+<!-- 		  <div id="adminDesktop" class="span9 tab-content"> -->
+		  
+		  
+<!-- 		</div> -->
+			
+			
 	<div id="footer" class="row-fluid">
 	</div>
 </body>

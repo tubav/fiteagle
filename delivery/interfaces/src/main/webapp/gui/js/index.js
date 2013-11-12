@@ -8,11 +8,11 @@ requirejs.config({
   }
 });
 
-define(['jquery','bootstrap','loginPage','mainPage','statusPage', 'utils', 'unifiPage', 'unifiLogin', 'history', 'ajaxify','fileSaver'], 
+define(['jquery','bootstrap','loginPage','mainPage','statusPage', 'utils', 'unifiPage', 'history', 'ajaxify','fileSaver'], 
 
 function($,Bootstrap,LoginPage,MainPage,StatusPage,Utils, UnifiPage, UnifiLogin){
 	
-	console.log("index.js is called!!!!!!!!!!!!!!!!!!!!!!!!1");
+	console.log("index.js is called");
 					
 	$.ajaxSetup({cache:false});	
 

@@ -307,7 +307,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var lis = $("#userInfoDropdown li");
 			lis.removeClass("active");
 			var a = $('#userInfoDropdown [href$='+hash+']');
-			console.log(a);
 			(a.length)?
 				a.tab('show') // if found show the tab
 					:

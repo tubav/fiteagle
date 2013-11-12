@@ -31,7 +31,7 @@ function(require,Utils){
 	Server.loginUser = function(username,password,rememberMe){		
 		console.log("Sending login information to the server...");
 		var msg;
-		var signInBtn = $('#signIn');
+		var signInBtn = $('#login');
 		setCookie = "";
 		if(rememberMe){
 			setCookie="setCookie=true";
