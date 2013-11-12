@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import net.iharder.Base64;
@@ -52,7 +53,6 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	private String floatingIp = null;
 
-
 	private static boolean offlineTestMode = false;
 
 	public OpenstackVMAdapter() {
@@ -66,51 +66,55 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	private void configureUtils() {
 		Preferences preferences = Preferences.userNodeForPackage(getClass());
-		
-		if(preferences.get("floating_ip_pool_name",null)!=null)
-			Utils.FLOATINGIP_POOL_NAME=preferences.get("floating_ip_pool_name",null);
-		if(preferences.get("keystone_auth_URL",null)!=null)
-			Utils.KEYSTONE_AUTH_URL=preferences.get("keystone_auth_URL",null);
-		if(preferences.get("keystone_endpoint",null)!=null)
-			Utils.KEYSTONE_ENDPOINT=preferences.get("keystone_endpoint",null);	
-		if(preferences.get("keystone_password",null)!=null)	
-			Utils.KEYSTONE_PASSWORD=preferences.get("keystone_password",null);
-		if(preferences.get("keystone_username",null)!=null)
-			Utils.KEYSTONE_USERNAME=preferences.get("keystone_username",null);
-		if(preferences.get("net_endpoint",null)!=null)
-			Utils.NET_ENDPOINT=preferences.get("net_endpoint",null);
-		if(preferences.get("net_name",null)!=null)
-			Utils.NET_NAME=preferences.get("net_name",null);
-		if(preferences.get("nova_endpoint",null)!=null)
-			Utils.NOVA_ENDPOINT=preferences.get("nova_endpoint",null);
-		if(preferences.get("tenant_name",null)!=null)
-			Utils.TENANT_NAME=preferences.get("tenant_name",null);
-			
-			
-			
-		
+
+		if (preferences.get("floating_ip_pool_name", null) != null)
+			Utils.FLOATINGIP_POOL_NAME = preferences.get(
+					"floating_ip_pool_name", null);
+		if (preferences.get("keystone_auth_URL", null) != null)
+			Utils.KEYSTONE_AUTH_URL = preferences
+					.get("keystone_auth_URL", null);
+		if (preferences.get("keystone_endpoint", null) != null)
+			Utils.KEYSTONE_ENDPOINT = preferences
+					.get("keystone_endpoint", null);
+		if (preferences.get("keystone_password", null) != null)
+			Utils.KEYSTONE_PASSWORD = preferences
+					.get("keystone_password", null);
+		if (preferences.get("keystone_username", null) != null)
+			Utils.KEYSTONE_USERNAME = preferences
+					.get("keystone_username", null);
+		if (preferences.get("net_endpoint", null) != null)
+			Utils.NET_ENDPOINT = preferences.get("net_endpoint", null);
+		if (preferences.get("net_name", null) != null)
+			Utils.NET_NAME = preferences.get("net_name", null);
+		if (preferences.get("nova_endpoint", null) != null)
+			Utils.NOVA_ENDPOINT = preferences.get("nova_endpoint", null);
+		if (preferences.get("tenant_name", null) != null)
+			Utils.TENANT_NAME = preferences.get("tenant_name", null);
+
 	}
 
 	@Override
 	public void start() {
-		//this is not needed anymore, because on create we need to create the machine and on configure get fl ip and return it 
-//		System.out
-//				.println("start on openstack adapter is called, ssh key deployment is taking place"); 
+		// this is not needed anymore, because on create we need to create the
+		// machine and on configure get fl ip and return it
+		// System.out
+		// .println("start on openstack adapter is called, ssh key deployment is taking place");
 	}
 
 	@Override
 	public void stop() {
-//		this is not needed anymore, because on delete the resource will be deleted!!
-//		System.out
-//				.println("stop on openstack adapter is called, virtual mashine be deleted");
+		// this is not needed anymore, because on delete the resource will be
+		// deleted!!
+		// System.out
+		// .println("stop on openstack adapter is called, virtual mashine be deleted");
 		this.getClient().deleteKeyPair(this.getKeyPairName());
 		this.getClient().deleteServer(this.getServer().getId());
 	}
 
 	@Override
 	public void create() {
-//		System.out
-//				.println("CREATE WITHOUT PARAMETER ON OPENSTACKVM ADAPTER IS CALLED, THIS SHOULD NOT HAPPEN");
+		// System.out
+		// .println("CREATE WITHOUT PARAMETER ON OPENSTACKVM ADAPTER IS CALLED, THIS SHOULD NOT HAPPEN");
 	}
 
 	@Override
@@ -140,15 +144,15 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		this.server = this.getClient().getServerDetails(server.getId());
 		this.getClient().allocateFloatingIpForServer(server.getId(),
 				floatingIp.getIp());
-//		this.sshDeployAdapter = new SSHDeployAdapter(getFloatingIp(), port,
-//				username, null, sshKey, Utils.ROOT_SSH_PRIVATE_KEY,
-//				Utils.ROOT_SSH_PUBLIC_KEY);
-//		sshDeployAdapter.configure(configuration);
+		// this.sshDeployAdapter = new SSHDeployAdapter(getFloatingIp(), port,
+		// username, null, sshKey, Utils.ROOT_SSH_PRIVATE_KEY,
+		// Utils.ROOT_SSH_PUBLIC_KEY);
+		// sshDeployAdapter.configure(configuration);
 	}
 
 	public static List<ResourceAdapter> getJavaInstances() {
 		List<ResourceAdapter> resultList = new ArrayList<ResourceAdapter>();
-		
+
 		if (!utilsConfigured) {
 			new OpenstackVMAdapter();
 		}
@@ -245,10 +249,11 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		// SimpleDateFormat format = new
 		// SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-//		 imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED,
-//		 format.format(image.getCreated()));
-		if(image.getCreated()!=null)
-			imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED, getLongValueAsStringOfCalendar((image.getCreated())));
+		// imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED,
+		// format.format(image.getCreated()));
+		if (image.getCreated() != null)
+			imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED,
+					getLongValueAsStringOfCalendar((image.getCreated())));
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_MINRAM, image
 				.getMinRam().toString());
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_OSEXTIMG_SIZE, image
@@ -257,8 +262,9 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 				.getProgress().toString());
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_STATUS,
 				image.getStatus());
-		if(image.getUpdated()!=null)
-			imageProperties.put(OpenstackResourceAdapter.IMAGE_UPDATED,getLongValueAsStringOfCalendar(image.getUpdated()));
+		if (image.getUpdated() != null)
+			imageProperties.put(OpenstackResourceAdapter.IMAGE_UPDATED,
+					getLongValueAsStringOfCalendar(image.getUpdated()));
 
 		return imageProperties;
 	}
@@ -303,13 +309,21 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		return resultList;
 
 	}
-	
-//	@Override
+
+	// @Override
 	public OpenstackResourceAdapter create(String imageId, String flavorId,
 			String vmName, String keyPairName, X509Certificate cert) {
 
+		if (vmName == null || vmName.compareTo("") == 0) {
+			vmName = generateRandomString();
+		}
+		
+		if(keyPairName==null || keyPairName.compareTo("")==0){
+			keyPairName=generateRandomString();
+		}
+
 		PublicKey pubKey = cert.getPublicKey();
-		String pbKeyString=null;
+		String pbKeyString = null;
 		try {
 			pbKeyString = getPubKeyString(pubKey);
 		} catch (IOException e) {
@@ -317,7 +331,6 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 			e.printStackTrace();
 		}
 		OpenstackVMAdapter openstackVM = new OpenstackVMAdapter();
-		
 
 		this.getClient().addKeyPair(keyPairName, pbKeyString);
 		Server createdServer = this.getClient().createServer(imageId, flavorId,
@@ -329,8 +342,11 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		openstackVM.setServer(createdServer);
 		return openstackVM;
 	}
-	
-	
+
+	private String generateRandomString() {
+		return UUID.randomUUID().toString();
+	}
+
 	private String getPubKeyString(PublicKey pubKey) throws IOException {
 		String publicKeyEncoded;
 		if (pubKey.getAlgorithm().equals("RSA")) {
@@ -486,8 +502,8 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		this.keyPairName = keyPairName;
 	}
 
-	private String getLongValueAsStringOfCalendar(Calendar calendar){
+	private String getLongValueAsStringOfCalendar(Calendar calendar) {
 		return String.valueOf(calendar.getTimeInMillis());
 	}
-	
+
 }
