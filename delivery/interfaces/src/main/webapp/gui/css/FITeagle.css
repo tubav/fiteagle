@@ -222,13 +222,11 @@ input.search-query{height:24px !important;}
 
 #rememberMe{ margin-top:10px}
 
-.btn{margin-top: 10px ! important}
-
-.button{
-	margin-top: 0px ! important;
-	margin-right: 0px ! important;
-	margin-left: 5px ! important;
-	margin-bottom: 5px ! important;
+.margin3{
+	margin-top: 3px ! important;
+	margin-right: 3px ! important;
+	margin-left: 3px ! important;
+	margin-bottom: 3px ! important;
 }
 
 .edit{

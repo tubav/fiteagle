@@ -212,24 +212,49 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	  * @memberOf Main#
       */ 
 	initUserInfoPanel = function(){		
-		var navLinks = $("#userInfoDropdown a");
+		var navLinks = $(".navigationLink a");
+		
 		navLinks.off();
 		navLinks.not('#signOut').on('click',function(e){
 			e.preventDefault();
 			var t = $(this);
 			var linkID  = t.attr("id");
 			var linkHref = t.attr('href');
-			var lis = $("#userInfoDropdown li");
+			var lis = $(".navigationLink li");
 			lis.removeClass("active");	
+			//TODO: for non-collapse headers
 			initScrollToForm(linkHref+' h4.collapseHeader');
 			var hash = linkHref.toLowerCase();
 			history.pushState(linkHref, "page "+linkHref, "/"+hash);
 			$('[href$='+linkHref+']').tab('show');			
 		});
+		
 		Utils.updateUserInfoPanel();
 		initSignOutBtn();
 		initHashtagChange();
 	};
+	
+	
+	
+//	initUserInfoPanel = function(){		
+//		var navLinks = $("#userInfoDropdown a");
+//		navLinks.off();
+//		navLinks.not('#signOut').on('click',function(e){
+//			e.preventDefault();
+//			var t = $(this);
+//			var linkID  = t.attr("id");
+//			var linkHref = t.attr('href');
+//			var lis = $("#userInfoDropdown li");
+//			lis.removeClass("active");	
+//			initScrollToForm(linkHref+' h4.collapseHeader');
+//			var hash = linkHref.toLowerCase();
+//			history.pushState(linkHref, "page "+linkHref, "/"+hash);
+//			$('[href$='+linkHref+']').tab('show');			
+//		});
+//		Utils.updateUserInfoPanel();
+//		initSignOutBtn();
+//		initHashtagChange();
+//	};
 	
 	/**
 	* Loads HTML for the FITeagle main page dynamically and triggers the page initialization after the loading is successfully completed.
@@ -286,9 +311,9 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	*/
 	openTab = function(hash){
 		if(hash != null){
-			var lis = $("#userInfoDropdown li");
+			var lis = $(".navigationLink li");
 			lis.removeClass("active");
-			var a = $('#userInfoDropdown [href$='+hash+']');
+			var a = $('.navigationLink [href$='+hash+']');
 			(a.length)?
 				a.tab('show') // if found show the tab
 					:
