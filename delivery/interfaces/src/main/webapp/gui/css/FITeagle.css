@@ -90,6 +90,10 @@ table td{
 	color: #373737;
 }
 
+#toolbar button{
+	margin-top: 10px;
+}
+
 #navs ul li{display:table;
     margin:0px auto 0px auto;}
 
