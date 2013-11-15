@@ -202,44 +202,6 @@ public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 
 		openstackResource.setFlavors(flavors);
 
-		// fiteagleSFAResource.getMethod().addAll(
-		// this.getResourceAdapterRspecMethods(resourceAdapter));
-		//
-		// fiteagleSFAResource.setName(resourceAdapter.getType());
-		//
-		// HashMap<String, Object> resourceAdapterProperties = resourceAdapter
-		// .getProperties();
-		//
-		// if (resourceAdapterProperties != null) {
-		//
-		// Set<String> propKeys = resourceAdapterProperties.keySet();
-		//
-		// for (Iterator<String> iterator = propKeys.iterator(); iterator
-		// .hasNext();) {
-		// Property tmpProperty = new Property();
-		// String key = iterator.next();
-		// tmpProperty.setName(key);
-		// // The resource adaptor properties must have a string
-		// // representation.
-		// tmpProperty.setValue(resourceAdapterProperties.get(key)
-		// .toString());
-		// fiteagleSFAResource.getProperty().add(tmpProperty);
-		// }
-		//
-		// }
-		//
-		// Property typeProperty = new Property();
-		// typeProperty.setName("type");
-		// // idProperty.setType("string");
-		// typeProperty.setValue(resourceAdapter.getType());
-		// fiteagleSFAResource.getProperty().add(typeProperty);
-		//
-		// Property idProperty = new Property();
-		// idProperty.setName("id");
-		// // idProperty.setType("string");
-		// idProperty.setValue(resourceAdapter.getId());
-		// fiteagleSFAResource.getProperty().add(idProperty);
-
 		return new org.fiteagle.interactors.sfa.rspec.ext.openstack.ObjectFactory()
 				.createOpenstackResource(openstackResource);
 	}
@@ -315,22 +277,11 @@ public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 		try {
 			xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
 		} catch (DatatypeConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return xmlGregCal;
 	}
 
-//	private XMLGregorianCalendar convertStringToGregCalendar(String string)
-//			throws ParseException, DatatypeConfigurationException {
-//
-//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-//		Date date = format.parse(string);
-//		GregorianCalendar gc = (GregorianCalendar) GregorianCalendar
-//				.getInstance();
-//		gc.setTime(date);
-//		return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-//	}
 
 	public Object translateToOpenstackResource(ResourceAdapter resourceAdapter) {
 		OpenstackResourceAdapter openstackresourceAdapter = (OpenstackResourceAdapter) resourceAdapter;
@@ -342,10 +293,7 @@ public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 		Flavors flavors = getFlavorsFromOpenstackAdapter(openstackresourceAdapter);
 		Vm vm = getVMFromOpenstackAdapter(openstackresourceAdapter);
 
-		// resource.setImage(image);
-		// resource.setFlavors(flavors);
 		resource.setVm(vm);
-		// new ObjectFactory().createNode(node);
 		return new org.fiteagle.interactors.sfa.rspec.ext.openstack.ObjectFactory().createOpenstackResource(resource);
 	}
 

@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 import net.iharder.Base64;
@@ -30,12 +31,6 @@ import org.fiteagle.adapter.openstackvmadapter.client.model.Server;
 import com.woorea.openstack.nova.model.Flavor;
 import com.woorea.openstack.nova.model.Flavors;
 import com.woorea.openstack.nova.model.FloatingIp;
-//import org.fiteagle.adapter.openstackvmadapter.client.OfflineTestClient;
-//import org.fiteagle.adapter.openstackvmadapter.client.OpenstackClient;
-//import org.fiteagle.adapter.openstackvmadapter.client.Utils;
-//import org.fiteagle.adapter.openstackvmadapter.client.model.Image;
-//import org.fiteagle.adapter.openstackvmadapter.client.model.Images;
-//import org.fiteagle.adapter.openstackvmadapter.client.model.Server;
 
 public class OpenstackVMAdapter extends ResourceAdapter implements
 		OpenstackResourceAdapter {
@@ -47,11 +42,13 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 	private OpenstackClient client;
 	private Image image;
 	private List<Flavor> flavorsList;
-	private Server server;
+	private Server server=new Server();
 	private String keyPairName;
+	private String vmName;
+	private String imageId;
+	private String flavorId;
 
 	private String floatingIp = null;
-
 
 	private static boolean offlineTestMode = false;
 
@@ -66,63 +63,74 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	private void configureUtils() {
 		Preferences preferences = Preferences.userNodeForPackage(getClass());
-		
-		if(preferences.get("floating_ip_pool_name",null)!=null)
-			Utils.FLOATINGIP_POOL_NAME=preferences.get("floating_ip_pool_name",null);
-		if(preferences.get("keystone_auth_URL",null)!=null)
-			Utils.KEYSTONE_AUTH_URL=preferences.get("keystone_auth_URL",null);
-		if(preferences.get("keystone_endpoint",null)!=null)
-			Utils.KEYSTONE_ENDPOINT=preferences.get("keystone_endpoint",null);	
-		if(preferences.get("keystone_password",null)!=null)	
-			Utils.KEYSTONE_PASSWORD=preferences.get("keystone_password",null);
-		if(preferences.get("keystone_username",null)!=null)
-			Utils.KEYSTONE_USERNAME=preferences.get("keystone_username",null);
-		if(preferences.get("net_endpoint",null)!=null)
-			Utils.NET_ENDPOINT=preferences.get("net_endpoint",null);
-		if(preferences.get("net_name",null)!=null)
-			Utils.NET_NAME=preferences.get("net_name",null);
-		if(preferences.get("nova_endpoint",null)!=null)
-			Utils.NOVA_ENDPOINT=preferences.get("nova_endpoint",null);
-		if(preferences.get("tenant_name",null)!=null)
-			Utils.TENANT_NAME=preferences.get("tenant_name",null);
-			
-			
-			
-		
+
+		if (preferences.get("floating_ip_pool_name", null) != null)
+			Utils.FLOATINGIP_POOL_NAME = preferences.get(
+					"floating_ip_pool_name", null);
+		if (preferences.get("keystone_auth_URL", null) != null)
+			Utils.KEYSTONE_AUTH_URL = preferences
+					.get("keystone_auth_URL", null);
+		if (preferences.get("keystone_endpoint", null) != null)
+			Utils.KEYSTONE_ENDPOINT = preferences
+					.get("keystone_endpoint", null);
+		if (preferences.get("keystone_password", null) != null)
+			Utils.KEYSTONE_PASSWORD = preferences
+					.get("keystone_password", null);
+		if (preferences.get("keystone_username", null) != null)
+			Utils.KEYSTONE_USERNAME = preferences
+					.get("keystone_username", null);
+		if (preferences.get("net_endpoint", null) != null)
+			Utils.NET_ENDPOINT = preferences.get("net_endpoint", null);
+		if (preferences.get("net_name", null) != null)
+			Utils.NET_NAME = preferences.get("net_name", null);
+		if (preferences.get("nova_endpoint", null) != null)
+			Utils.NOVA_ENDPOINT = preferences.get("nova_endpoint", null);
+		if (preferences.get("tenant_name", null) != null)
+			Utils.TENANT_NAME = preferences.get("tenant_name", null);
+
 	}
 
 	@Override
 	public void start() {
-		//this is not needed anymore, because on create we need to create the machine and on configure get fl ip and return it 
-//		System.out
-//				.println("start on openstack adapter is called, ssh key deployment is taking place"); 
 	}
 
 	@Override
 	public void stop() {
-//		this is not needed anymore, because on delete the resource will be deleted!!
-//		System.out
-//				.println("stop on openstack adapter is called, virtual mashine be deleted");
 		this.getClient().deleteKeyPair(this.getKeyPairName());
 		this.getClient().deleteServer(this.getServer().getId());
 	}
 
 	@Override
 	public void create() {
-//		System.out
-//				.println("CREATE WITHOUT PARAMETER ON OPENSTACKVM ADAPTER IS CALLED, THIS SHOULD NOT HAPPEN");
 	}
 
 	@Override
 	public void configure(AdapterConfiguration configuration) {
 
+		String sshPubKey = configuration.getUsers().get(0).getSshPublicKeys().get(0);
+		this.getClient().addKeyPair(keyPairName, sshPubKey);
+		
+		System.out.println("creating key pair: "+this.getKeyPairName());
+		
+		Server createdServer = this.getClient().createServer(this.imageId, this.flavorId,
+				this.vmName, this.keyPairName);
+		
+		System.out.println("creating server(vm) with image id: "+this.imageId);
+		
+		this.setServer(createdServer);
+		
 		System.out
 				.println("configure on openstack adapter is called configuring the ip ");
 		FloatingIp floatingIp = this.getClient().addFloatingIp();
+		
+		System.out.println("adding a floating ip..");
+		
 		this.setFloatingIp(floatingIp.getIp());
 		this.server = this.getClient().getServerDetails(server.getId());
 		this.getClient().allocateFloatingIpForServer(server.getId(),
 				floatingIp.getIp());
+		
+		System.out.println("allocating floating ip for server "+server.getId());
 	}
 
 	@Override
@@ -131,24 +139,9 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		this.getClient().deleteServer(this.getServer().getId());
 	}
 
-	public void configure(AdapterConfiguration configuration, String publicKey) {
-
-		System.out
-				.println("configure on openstack adapter is called configuring the ip ");
-		FloatingIp floatingIp = this.getClient().addFloatingIp();
-		this.setFloatingIp(floatingIp.getIp());
-		this.server = this.getClient().getServerDetails(server.getId());
-		this.getClient().allocateFloatingIpForServer(server.getId(),
-				floatingIp.getIp());
-//		this.sshDeployAdapter = new SSHDeployAdapter(getFloatingIp(), port,
-//				username, null, sshKey, Utils.ROOT_SSH_PRIVATE_KEY,
-//				Utils.ROOT_SSH_PUBLIC_KEY);
-//		sshDeployAdapter.configure(configuration);
-	}
-
 	public static List<ResourceAdapter> getJavaInstances() {
 		List<ResourceAdapter> resultList = new ArrayList<ResourceAdapter>();
-		
+
 		if (!utilsConfigured) {
 			new OpenstackVMAdapter();
 		}
@@ -241,14 +234,9 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_MINDISK, image
 				.getMinDisk().toString());
 
-		// TODO: parse and set the dates for the response
-		// SimpleDateFormat format = new
-		// SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
-//		 imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED,
-//		 format.format(image.getCreated()));
-		if(image.getCreated()!=null)
-			imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED, getLongValueAsStringOfCalendar((image.getCreated())));
+		if (image.getCreated() != null)
+			imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED,
+					getLongValueAsStringOfCalendar((image.getCreated())));
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_MINRAM, image
 				.getMinRam().toString());
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_OSEXTIMG_SIZE, image
@@ -257,8 +245,9 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 				.getProgress().toString());
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_STATUS,
 				image.getStatus());
-		if(image.getUpdated()!=null)
-			imageProperties.put(OpenstackResourceAdapter.IMAGE_UPDATED,getLongValueAsStringOfCalendar(image.getUpdated()));
+		if (image.getUpdated() != null)
+			imageProperties.put(OpenstackResourceAdapter.IMAGE_UPDATED,
+					getLongValueAsStringOfCalendar(image.getUpdated()));
 
 		return imageProperties;
 	}
@@ -303,34 +292,34 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		return resultList;
 
 	}
-	
-//	@Override
+
+	 @Override
 	public OpenstackResourceAdapter create(String imageId, String flavorId,
-			String vmName, String keyPairName, X509Certificate cert) {
+			String vmName, String keyPairName) {
 
-		PublicKey pubKey = cert.getPublicKey();
-		String pbKeyString=null;
-		try {
-			pbKeyString = getPubKeyString(pubKey);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (vmName == null || vmName.compareTo("") == 0) {
+			vmName = generateRandomString();
 		}
-		OpenstackVMAdapter openstackVM = new OpenstackVMAdapter();
 		
+		if(keyPairName==null || keyPairName.compareTo("")==0){
+			keyPairName=generateRandomString();
+		}
 
-		this.getClient().addKeyPair(keyPairName, pbKeyString);
-		Server createdServer = this.getClient().createServer(imageId, flavorId,
-				vmName, keyPairName);
+		OpenstackVMAdapter openstackVM = new OpenstackVMAdapter();
 
+		openstackVM.setVmName(vmName);
+		openstackVM.setImageId(imageId);
+		openstackVM.setFlavorId(flavorId);
 		openstackVM.setKeyPairName(keyPairName);
 		openstackVM.setImage(this.image);
 		openstackVM.setFlavorsList(this.flavorsList);
-		openstackVM.setServer(createdServer);
 		return openstackVM;
 	}
-	
-	
+
+	private String generateRandomString() {
+		return UUID.randomUUID().toString();
+	}
+
 	private String getPubKeyString(PublicKey pubKey) throws IOException {
 		String publicKeyEncoded;
 		if (pubKey.getAlgorithm().equals("RSA")) {
@@ -486,8 +475,32 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		this.keyPairName = keyPairName;
 	}
 
-	private String getLongValueAsStringOfCalendar(Calendar calendar){
+	private String getLongValueAsStringOfCalendar(Calendar calendar) {
 		return String.valueOf(calendar.getTimeInMillis());
 	}
-	
+
+	public String getVmName() {
+		return vmName;
+	}
+
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
+	}
+
+	public String getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(String flavorId) {
+		this.flavorId = flavorId;
+	}
+
 }
