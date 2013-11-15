@@ -58,6 +58,7 @@ public class RestUserManagerIT {
   public void testPost() {
     UpdateUser1();
     GetUser1Updated();
+    DeleteUser1();
   }
   
   @Test
@@ -92,7 +93,7 @@ public class RestUserManagerIT {
   }
 
   @Test
-  public void testAuthorizationFailure() {
+  public void testAuthenticationFailure() {
     given().auth().preemptive().basic("mnikolaus", "wrongpassword").and()
       .expect().statusCode(401).when().get("mnikolaus");
   }
@@ -109,16 +110,16 @@ public class RestUserManagerIT {
   @Test
   public void testCookieAuthentication() {
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus?setCookie=true");
-    String cookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
+    String cookieValue = response.getCookie(UserAuthenticationFilter.COOKIE_NAME);
     
-    given().cookie(UserAuthenticationFilter.getCookieName(), cookieValue).and()
+    given().cookie(UserAuthenticationFilter.COOKIE_NAME, cookieValue).and()
       .expect().statusCode(200).when().delete("mnikolaus");
   }
   
   @Test
   public void testLogout(){
     Response response = given().auth().preemptive().basic("mnikolaus", "mitja").when().get("mnikolaus?setCookie=true");
-    String authCookieValue = response.getCookie(UserAuthenticationFilter.getCookieName());
+    String authCookieValue = response.getCookie(UserAuthenticationFilter.COOKIE_NAME);
     String sessionCookieValue = response.getCookie("JSESSIONID");
 
     deleteCookiesOfUser1(sessionCookieValue);
@@ -163,7 +164,7 @@ public class RestUserManagerIT {
   
   private void user1ShouldBeDeleted() {
     given().auth().preemptive().basic("mnikolaus", "mitja").and()
-      .expect().statusCode(404).when().get("mnikolaus");
+      .expect().statusCode(401).when().get("mnikolaus");
   }
 
   private void deletePubKey() throws UnsupportedEncodingException {
@@ -189,7 +190,7 @@ public class RestUserManagerIT {
   }
   
   private void user1CookieAuthenticationShouldFail(String authCookieValue, String sessionCookieValue) {
-    given().cookie(UserAuthenticationFilter.getCookieName(), authCookieValue).and()
+    given().cookie(UserAuthenticationFilter.COOKIE_NAME, authCookieValue).and()
       .expect().statusCode(401).when().get("mnikolaus");
     given().cookie("JSESSIONID", sessionCookieValue).and()
       .expect().statusCode(401).when().get("mnikolaus");

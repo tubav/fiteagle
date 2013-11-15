@@ -1,28 +1,30 @@
 package org.fiteagle.core.userdatabase;
 
 import java.io.IOException;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import junit.framework.Assert;
 
-import org.fiteagle.core.userdatabase.UserPersistable.DatabaseException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateEmailException;
-import org.fiteagle.core.userdatabase.UserPersistable.DuplicateUsernameException;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
+import org.eclipse.persistence.exceptions.DatabaseException;
+import org.fiteagle.core.aaa.KeyManagement;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateEmailException;
+import org.fiteagle.core.userdatabase.JPAUserDB.DuplicateUsernameException;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class UserDBManagerTest {
   
-  UserDBManager userDBManager ;
+  UserDBManager userDBManager = UserDBManager.getInstance();
   
   User testUser;  
   
   @Before
   public void setUp() throws Exception {
-    userDBManager = UserDBManager.getInstance();
-    testUser = new User("test1@localhost", "test", "testName", "test@test.org", "testAffiliation", "password");
+    testUser = new User("test1", "test", "testName", "test@test.org", "testAffiliation", "password", new ArrayList<UserPublicKey>());
     try{
       userDBManager.add(testUser);
     } catch(DuplicateUsernameException | DuplicateEmailException e){  
@@ -31,16 +33,6 @@ public class UserDBManagerTest {
     }
   }
     
-  @Test
-  public void testCreateUser() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException { 
-    Assert.assertEquals("test1@localhost", testUser.getUsername());
-    Assert.assertEquals("test", testUser.getFirstName());    
-    Assert.assertEquals("testName", testUser.getLastName());
-    Assert.assertEquals("test@test.org", testUser.getEmail());
-    Assert.assertNotNull(testUser.getPasswordHash());
-    Assert.assertNotNull(testUser.getPasswordSalt());
-  }  
- 
   @Test
   public void testVerifyPassword() throws DuplicateUsernameException, NoSuchAlgorithmException, DatabaseException, IOException{    
     Assert.assertTrue(userDBManager.verifyPassword("password",testUser.getPasswordHash(),testUser.getPasswordSalt()));    
@@ -53,12 +45,16 @@ public class UserDBManagerTest {
   
   @Test
   public void testCreateUserCertAndPrivateKey() throws Exception{
-    Assert.assertTrue(userDBManager.createUserPrivateKeyAndCertAsString(testUser.getUsername(), "my passphrase").contains("ENCRYPTED"));
+    String currentPath = System.getProperty("user.dir");
+    KeyPair keyPair = KeyManagement.getInstance().loadKeyPairFromFile(currentPath+"/src/test/resources/testPublicKey.key", currentPath+"/src/test/resources/testPrivateKey.key");
+    Assert.assertTrue(userDBManager.createUserCertificate(testUser.getUsername(), "my passphrase", keyPair).contains("ENCRYPTED"));
   }  
   
   @Test
   public void testCreateUserCertAndPrivateKeyWithoutPasshphrase() throws Exception{
-    Assert.assertFalse(userDBManager.createUserPrivateKeyAndCertAsString(testUser.getUsername(), "").contains("ENCRYPTED"));
+    String currentPath = System.getProperty("user.dir");
+    KeyPair keyPair = KeyManagement.getInstance().loadKeyPairFromFile(currentPath+"/src/test/resources/testPublicKey.key", currentPath+"/src/test/resources/testPrivateKey.key");
+    Assert.assertFalse(userDBManager.createUserCertificate(testUser.getUsername(), "", keyPair).contains("ENCRYPTED"));
   }  
   
   @Test
@@ -72,4 +68,5 @@ public class UserDBManagerTest {
   public void deleteTestUser(){
     userDBManager.delete(testUser);
   }
+  
 }

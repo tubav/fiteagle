@@ -1,6 +1,7 @@
 package org.fiteagle.delivery.rest.fiteagle;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,15 +13,24 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import net.iharder.Base64;
+
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.fiteagle.core.config.InterfaceConfiguration;
+import org.fiteagle.core.userdatabase.JPAUserDB.UserNotFoundException;
+import org.fiteagle.interactors.usermanagement.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class UserAuthenticationFilter extends AuthenticationFilter{
 
-  private final static String COOKIE_NAME = "fiteagle_user_cookie";
+  public final static String COOKIE_NAME = "fiteagle_user_cookie";
+  protected final static String SUBJECT_USERNAME_ATTRIBUTE = "subjectUsername";
+  protected final static String RESOURCE_USERNAME_ATTRIBUTE = "resourceUsername";
+  protected final static String ACTION_ATTRIBUTE = "action";
+  protected final static String IS_AUTHENTICATED_ATTRIBUTE = "isAuthenticated";
   
-  @SuppressWarnings("unused")
   private Logger log = LoggerFactory.getLogger(getClass());
   
   private static UserAuthenticationFilter filter = null;
@@ -42,49 +52,32 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
       return;   
     }
     
-    String method = request.getMethod(); 
-    if(method.equals("PUT")){
-      chain.doFilter(req, resp);
-      return;
-    }
+    request.setAttribute(ACTION_ATTRIBUTE, request.getMethod());
+    request.setAttribute(RESOURCE_USERNAME_ATTRIBUTE, getTarget(request));
     
-    String username = getTarget(request);
-    if(username == null){
-      response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());      
-      return;
+    if(authenticateWithSession(request) || authenticateWithCookie(request) || authenticateWithUsernamePassword(request, response)){
+      request.setAttribute(IS_AUTHENTICATED_ATTRIBUTE, true);
+      addCookieOnLogin(request, response);
+      createSession(request);  
     }
-    
-    if(!authenticateWithSession(request) && !authenticateWithCookie(request) && !authenticateWithUsernamePassword(request, response)){
-      return;
+    else{
+      request.setAttribute(IS_AUTHENTICATED_ATTRIBUTE, false);
     }
-    
-    addCookieOnLogin(request, response);
-    createSession(request);    
-    chain.doFilter(req, resp);
+      
+    chain.doFilter(request, response);
     deleteSessionAndCookieOnLogout(request, response);
   }
-
+  
   private void createSession(HttpServletRequest request) {
     HttpSession session = request.getSession(true);
     if(session != null){
-      String username =  getTarget(request);
-      username = addDomain(username);
-      session.setAttribute("username",username);
+      session.setAttribute("username", request.getAttribute(SUBJECT_USERNAME_ATTRIBUTE));
     }
   }
 
-  private String addDomain(String username) {
-
-		InterfaceConfiguration configuration = null;
-		if (!username.contains("@")) {
-			configuration = InterfaceConfiguration.getInstance();
-			username = username + "@" + configuration.getDomain();
-		}
-		return username;
-	}
   private void addCookieOnLogin(HttpServletRequest request, HttpServletResponse response) {    
     boolean setCookie = Boolean.parseBoolean(request.getParameter("setCookie"));
-    if(request.getMethod().equals("GET") && setCookie == true && getAuthCookieFromRequest(request) == null){      
+    if(setCookie == true && getAuthCookieFromRequest(request) == null){      
       response.addCookie(createNewCookie(getTarget(request)));      
     }
   }
@@ -119,24 +112,61 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     if(session == null){
       return false;
     }
-    if(!isUserAuthorizedForTarget(session.getAttribute("username").toString(), addDomain(getTarget(request)))) {
-      return false;
-    }    
+    String subjectUsername = session.getAttribute("username").toString();
+    request.setAttribute(SUBJECT_USERNAME_ATTRIBUTE, subjectUsername);
     return true;
   }
 
   private boolean authenticateWithCookie(HttpServletRequest request){
-    String username = getTarget(request);
     Cookie authCookieFromRequest = getAuthCookieFromRequest(request);
-    Cookie cookieFromStorage = (username == null)? null : cookies.get(username);
+    if(authCookieFromRequest == null){
+      return false;
+    }
     
-    if(authCookieFromRequest == null || cookieFromStorage == null){
+    String subjectUsername = getUsernameFromCookie(authCookieFromRequest);
+    
+    Cookie cookieFromStorage = (subjectUsername == null)? null : cookies.get(subjectUsername);
+    if(cookieFromStorage == null || !authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
       return false;
     }    
-    if(!authCookieFromRequest.getValue().equals(cookieFromStorage.getValue())){
-      return false;
-    }    
+    
+    request.setAttribute(SUBJECT_USERNAME_ATTRIBUTE, subjectUsername);
     return true;
+  }
+  
+  private boolean authenticateWithUsernamePassword(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    String auth = request.getHeader("authorization");
+    String[] credentials = decode(auth);
+    if (credentials == null || credentials.length != 2) {
+      return false;
+    }
+    String subjectUsername = addDomain(credentials[0]);
+    
+    try {
+      if (!UserManager.getInstance().verifyCredentials(subjectUsername, credentials[1])) {
+        return false;
+      }
+    } catch (NoSuchAlgorithmException | IOException | DatabaseException e) {
+      log.error(e.getMessage());
+      return false;
+    } catch (UserNotFoundException e) {
+      return false;
+    }
+    
+    request.setAttribute(SUBJECT_USERNAME_ATTRIBUTE, subjectUsername);
+    return true;
+  }
+  
+  private String getUsernameFromCookie(Cookie cookie){
+    String s;
+    try {
+      s = new String(Base64.decode(cookie.getValue()));
+    } catch (IOException e) {
+      log.error(e.getMessage());
+      return null;
+    }
+    String[] splitted = s.split("-username:");
+    return splitted[1];
   }
 
   private Cookie getAuthCookieFromRequest(HttpServletRequest request) {
@@ -174,23 +204,27 @@ public class UserAuthenticationFilter extends AuthenticationFilter{
     return cookie;
   } 
   
-  public static String getCookieName(){
-    return COOKIE_NAME;
+  protected void deleteCookie(String username){
+    cookies.remove(addDomain(username));
   }
-
+  
   @Override
-  String getTarget(HttpServletRequest request) {
+  protected String getTarget(HttpServletRequest request) {
     String path = request.getRequestURI();
-    return getTargetNameFromURI(path, "user");
+    String target = getTargetNameFromURI(path, "user");
+    if(target == null){
+      return "";
+    }
+    return addDomain(target);
   } 
 
-  @Override
-  boolean isUserAuthorizedForTarget(String user, String target) {
-    return user.equals(target);
-  }
-
-  protected void deleteCookie(String username){
-    cookies.remove(username);
+  private String addDomain(String username) {
+    InterfaceConfiguration configuration = null;
+    if (!username.contains("@")) {
+      configuration = InterfaceConfiguration.getInstance();
+      username = username + "@" + configuration.getDomain();
+    }
+    return username;
   }
   
 }

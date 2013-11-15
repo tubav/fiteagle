@@ -7,7 +7,7 @@ require curl
 
 ${_dir}/runDelUser.sh > /dev/null
 
-expect="404"
+expect="401"
 result=$(${_dir}/runDelUser.sh)
 asssert "testDelUser" "$expect" "$result"
 

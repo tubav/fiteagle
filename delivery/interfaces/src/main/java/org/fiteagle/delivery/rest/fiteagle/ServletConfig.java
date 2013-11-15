@@ -12,7 +12,6 @@ import org.fiteagle.interactors.groupmanagement.GroupManager;
 import org.fiteagle.interactors.monitoring.MonitoringManager;
 import org.fiteagle.interactors.usermanagement.UserManager;
 
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
@@ -31,8 +30,9 @@ public class ServletConfig extends GuiceServletContextListener {
          protected void configureServlets() {            
             
             bind(UserPresenter.class).in(Scopes.SINGLETON);
-            bind(UserManagerBoundary.class).to(UserManager.class).in(Scopes.SINGLETON);
+            bind(UserManagerBoundary.class).toInstance(UserManager.getInstance());
             filter("/api/v1/user/*").through(UserAuthenticationFilter.getInstance());
+            filter("/api/v1/user/*").through(UserAuthorizationFilter.getInstance());
             
             bind(ResourceDefinitionPresenter.class).in(Scopes.SINGLETON);
 

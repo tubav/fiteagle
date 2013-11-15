@@ -4,7 +4,6 @@
 
 	<name>FITeagle :: Clients</name>
     <artifactId>clients</artifactId>
-	<groupId>org.fiteagle.clients</groupId>
     <packaging>pom</packaging>
 	
 	<parent>
@@ -15,6 +14,7 @@
 
 	<modules>
 		<module>xipiClient</module>
+		<module>frcpClient</module>
 	</modules>
 
    <repositories>

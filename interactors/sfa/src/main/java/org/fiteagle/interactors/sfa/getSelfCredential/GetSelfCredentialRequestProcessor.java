@@ -5,7 +5,6 @@ import java.security.cert.X509Certificate;
 import org.fiteagle.core.aaa.KeyStoreManagement;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
-import org.fiteagle.core.userdatabase.UserPersistable.UserNotFoundException;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
