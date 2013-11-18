@@ -176,50 +176,48 @@ input.search-query{height:24px !important;}
 	margin-left:20px !important;
 }
 
-#logoImg{ margin-top:15px}
+#logoImg{
+	margin-top:15px;
+	margin-bottom: 10px;
+}
 #loginErrorField{margin-bottom: 20px;}
 
-#project_title{
-	color: #fff;
-	font-size: 34px;
-	font-weight: normal;
-	text-shadow: #111 0px 0px 10px;
-	margin-bottom:0;
-}
-
 #project_tagline {
-	margin-top: 0px;
+	margin-bottom: 16px;
+	margin-left: 190px;
 	color: #f09030;
-	font-size: 16px ;
+	font-size: 22px ;
 	font-weight: 300;
-	background: none;
-	text-shadow: #111 0px 0px 10px;
+	bottom: 0;
+	position: absolute;
 }
 
 #navigation{
 	min-height: 50px;
 	width: 100%;
 	border-top: 1px solid black;
-	background: #f09030;
-	background: -moz-linear-gradient(top, #f09030, #d07010);
-	background: -webkit-linear-gradient(top, #f09030, #d07010);
-	background: -ms-linear-gradient(top, #f09030, #d07010);
-	background: -o-linear-gradient(top, #f09030, #d07010);
-	background: linear-gradient(top, #f09030, #d07010);
+	background: -moz-linear-gradient(top, #252525, #252525);
+	background: -webkit-linear-gradient(top, #252525, #252525);
+	background: -ms-linear-gradient(top, #252525, #252525);
+	background: -o-linear-gradient(top, #252525, #252525);
+	background: linear-gradient(top, #252525, #252525);
 }
 #navigation{border-bottom: 1px solid black;}
 #navs{	margin-top:10px;}
 #navs ul{ margin-bottom: 0px;}
 #navs ul li{ margin-right:15px}
-#navs .nav-pills>li>a{ color:#2E2E2E}
-#navs .nav-pills>.active>a { color:white;background-color: #212121;}
+#navs .nav-pills>li>a{ color:white}
+#navs .nav-pills>.active>a { color:#212121;background-color:white ;}
+#navs .nav-pills>li>a:hover { color:#212121;background-color: #FFFFFF;}
+
 #header{
-	background: #212121;
-	background: -moz-linear-gradient(top, #373737, #212121);
-	background: -webkit-linear-gradient(top, #373737, #212121);
-	background: -ms-linear-gradient(top, #373737, #212121);
-	background: -o-linear-gradient(top, #373737, #212121);
-	background: linear-gradient(top, #373737, #212121);
+	background: #e2e2e2;
+	position: relative;
+/* 	background: -moz-linear-gradient(top, #373737, #212121); */
+/* 	background: -webkit-linear-gradient(top, #373737, #212121); */
+/* 	background: -ms-linear-gradient(top, #373737, #212121); */
+/* 	background: -o-linear-gradient(top, #373737, #212121); */
+/* 	background: linear-gradient(top, #373737, #212121); */
 }
 
 
@@ -309,6 +307,10 @@ input.search-query{height:24px !important;}
 		
 }
 
+#logoTxt{
+	margin-left: 0px !important;
+}
+
 /* Portrait tablet to landscape and desktop */
 @media (min-width: 768px) and (max-width: 979px) {
 	#logoImg{ 
@@ -316,6 +318,7 @@ input.search-query{height:24px !important;}
 	}
 	#logoTxt{
 		padding-left:10px;
+		margin-left: 0px !important;
 	}	
 	#project_title{
 		font-size: 26px;
@@ -385,6 +388,7 @@ input.search-query{height:24px !important;}
 		padding-left: 90px;
 		margin-top: -85px;
 		width: 95%;
+		margin-left: 0px !important;
 	}		
 	#project_title{
 		font-size: 25px;
