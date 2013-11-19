@@ -9,6 +9,18 @@ body{
 	line-height: 1.5 !important;
 }
 
+#page{
+	margin-left: auto;
+	margin-right: auto;
+	background: white;
+	max-width: 1000px;
+	min-height: 100%;
+}
+
+#fiteagleBody{
+	background: #e2e2e2;
+}
+
 label,h1,h2,h3,h4,h5,h6{ cursor: default}
 
 label {margin-top:3px;}
@@ -183,8 +195,9 @@ input.search-query{height:24px !important;}
 }
 
 #logoImg{
-	margin-top:15px;
-	margin-bottom: 10px;
+	height: 110px;
+/* 	margin-top:15px; */
+/* 	margin-bottom: 10px; */
 }
 #loginErrorField{margin-bottom: 20px;}
 
@@ -194,16 +207,22 @@ input.search-query{height:24px !important;}
   position: absolute;
 }
 
+#unifiLogo{
+	height: 90px;
+  bottom: 10px;
+  position: absolute;
+}
+
 #navigation{
 	min-height: 50px;
 	width: 100%;
 /* 	border-top: 1px solid black; */
 /*   border-bottom: 1px solid black; */
-	background: -moz-linear-gradient(top, #252525, #252525);
-	background: -webkit-linear-gradient(top, #252525, #252525);
-	background: -ms-linear-gradient(top, #252525, #252525);
-	background: -o-linear-gradient(top, #252525, #252525);
-	background: linear-gradient(top, #252525, #252525);
+	background: -moz-linear-gradient(top, #252525, #0a0a0a);
+	background: -webkit-linear-gradient(top, #252525, #0a0a0a);
+	background: -ms-linear-gradient(top, #252525, #0a0a0a);
+	background: -o-linear-gradient(top, #252525, #0a0a0a);
+	background: linear-gradient(top, #252525, #0a0a0a);
 }
 /* #navs{	margin-top:10px;} */
 /* #navs ul{ margin-bottom: 0px;} */
