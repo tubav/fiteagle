@@ -29,29 +29,28 @@ function(){
 	
 	/**
 	* Checks if the given text is a valid username
-	* The username must be between 5 and 15 characters, dot and underscore are allowed, the first letter should be number or character.
+	* Username pattern: only letters, numbers, "@", ".", "_", and "-" is allowed and the username has to be from 3 to 200 characters long
 	* @param {String} username - to be checked
 	* @public
 	* @name Validation#_isEmpty
 	* @function
 	**/
 	Validation._isUsername = function(username){
-		var usernameRegex = /[a-zA-Z0-9][a-zA-Z0-9_.@]/;
+		var usernameRegex = /^[\w-@.]{3,200}$/;
 		return (usernameRegex.test(username));
 	};
 	
 
 	/**
 	* Checks if the given text is a human name or surname.
-	* Acceptable names include compound names with a hyphen or a space in them.
+	* Acceptable names have between 2 and 200 characters
 	* @param {String} name - string name to be checked
 	* @public
 	* @name Validation#_isName
 	* @function
 	**/
 	Validation._isName = function(name){
-		var nameRegex = /^[a-zA-Z]+((\s|\-)[a-zA-Z]+)?$/;
-		return (nameRegex.test(name));
+		return ((name.length >= 2) & (name.length < 200));
 	};
 
 	/**
@@ -70,28 +69,25 @@ function(){
 
 	/**
 	* Checks if the given password is strong enough.
-	* Password must be between 4 and 8 digits long and include at least one numeric digit.
+	* Password must be between 3 and 200 digits long.
 	* @param {String} pwd - password string to be validated
 	* @public
 	* @name Validation#_isPassword
 	* @function
 	**/
 	Validation._isPassword = function(pwd){		
-		var strongPwd = /^(?=.*\d).{4,8}$/;
-		return (strongPwd.test(pwd));
+		return ((pwd.length >= 3) & (pwd.length < 200));
 	};
 	
 	/**
 	* Checks if the given affiliation has a valid syntax.
-	* The affiliation should be between 2 and 20 digits, underscore, hyphen, apostrophe and dots are allowed. First letter can be only character.
 	* @param {String} affiliation - affiliation value to be validated
 	* @public
 	* @name Validation#_isAffiliation
 	* @function
 	**/
 	Validation._isAffiliation = function(affiliation){
-		var affReg =  /^[a-zA-Z]+([a-zA-Z0-9\s_'-.]{2,20})$/;
-		return (affReg.test(affiliation));
+		return ((affiliation.length >= 2) & (affiliation.length < 200));
 	};
 	
 	
@@ -128,15 +124,14 @@ function(){
 	
 	/**
 	* Checks if the given password phrase is strong enough.
-	* Password must be at least 4 characters, no more than 8 characters, and must include at least one lower case letter, and one numeric digit.
+	* Password must be at least 3 characters.
 	* @param {String} phrase - password phrase to be validated
 	* @public
 	* @name Validation#_isPassphrase
 	* @function
 	**/
 	Validation._isPassphrase = function(phrase){
-		var strongPwd = /^(?=.*\d)(?=.*[a-z]).{4,8}$/;
-		return (strongPwd.test(phrase));
+		return ((phrase.length >= 3) & (phrase.length < 200));
 	};
 	
 	/**

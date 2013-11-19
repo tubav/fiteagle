@@ -104,7 +104,6 @@ function(require, Validation, Registration, Utils, Messages) {
 	initOnWindowResizeEvent = function() {
 		$(window).resize(function() {
 			toggleNavigationBtn();
-			initLoginFormHints();
 			Registration.initRegistrationFormHints();
 		});
 	};
@@ -216,19 +215,6 @@ function(require, Validation, Registration, Utils, Messages) {
 //		initLoginFormHints();
 	};
 	
-	/**
-     * Initiates the login form hints. The hints are bootstrap tooltips with "top" position triggered on "focus".
-	  * @private
-	  * @memberOf Login#
-     * @see http://twitter.github.io/bootstrap/javascript.html#tooltips
-	  */
-	initLoginFormHints = function(){
-		var position ="top";
-		//(Utils.isSmallScreen()) ? position = "top" : position = "right";			
-		Utils.initTooltipFor("#username",Messages.usernameHint,position,"focus");
-		Utils.initTooltipFor("#password",Messages.passwordHint,position,"focus");
-	};
-	
 
 	/**
 	 * The function analyses the hash tag from the url and opens the appropriate
@@ -269,9 +255,8 @@ function(require, Validation, Registration, Utils, Messages) {
 	};
 
 	Login.initLogin = function() {
-//		alert("unifi login init unifi page is calledis called!");
+//		alert("unifi login init unifi page is called!");
 		initSignInBtn();
-//		initAdminSignInBtn();
 	};
 
 	return Login;

@@ -14,25 +14,22 @@ define([],function(){
 	* Hint message for entering a valid username.
 	* @public
 	* @name Messages#usernameHint
-	* @example "The username must be between 5 and 15 characters, dot and underscore are allowed, the first letter should be a number or a character"
 	*/
-	Messages.usernameHint = "The username must be between 5 and 15 characters, dot and underscore are allowed, the first letter should be a number or a character";
+	Messages.usernameHint = "The Username may only consist of letters, numbers,  \"@\", \".\", \"_\", and \"-\" and it has to be from 3 to 200 characters long";
 	
 	/**
 	* Hint message for entering a valid user's first name.
 	* @public
 	* @name Messages#firstNameHint
-	* @example "Acceptable first names include compound names with a hyphen or a space in them."
 	*/
-	Messages.firstNameHint = "Acceptable first names include compound names with a hyphen or a space in them.";
+	Messages.firstNameHint = "Names can be from 2 to 200 characters";
 	
 	/**
 	* Hint message for entering a valid user's last name.
 	* @public
 	* @name Messages#lastNameHint
-	* @example "Acceptable last names include compound names with a hyphen or a space in them."
 	*/
-	Messages.lastNameHint ="Acceptable last names include compound names with a hyphen or a space in them.";
+	Messages.lastNameHint = "Names can be from 2 to 200 characters";
 	
 	/**
 	* Hint message for entering a valid user's email.
@@ -40,7 +37,7 @@ define([],function(){
 	* @name Messages#emailHint
 	* @example "Please enter a valid email address."
 	*/
-	Messages.emailHint = "Please enter a valid email address.";
+	Messages.emailHint = "Please enter a valid email address";
 	
 	/**
 	* Hint message for entering a valid user's affiliation.
@@ -48,7 +45,7 @@ define([],function(){
 	* @name Messages#affiliationHint
 	* @example "The affiliation should be between 2 and 20 digits, underscore, hyphen, apostrophe and dots are allowed. First letter can be only a character."
 	*/
-	Messages.affiliationHint = "The affiliation should be between 2 and 20 digits, underscore, hyphen, apostrophe and dots are allowed. First letter can be only a character.";
+	Messages.affiliationHint = "Affiliations can be from 2 to 200 characters";
 	
 	/**
 	* Hint message for entering a valid user's password.
@@ -56,7 +53,7 @@ define([],function(){
 	* @name Messages#passwordHint
 	* @example "Password must be between 4 and 8 digits long and include at least one numeric digit."
 	*/
-	Messages.passwordHint = "Password must be between 4 and 8 digits long and include at least one numeric digit.";
+	Messages.passwordHint = "Passwords can be from 3 to 200 characters";
 	
 	/**
 	* Hint message for entering a valid user's password confirmation.

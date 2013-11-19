@@ -74,7 +74,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	*/
 	initCollapseHeaders = function(){
 		$('.collapseHeader').on('click',function(){
-			var icon = $(this).find('.collapseSign');
+			var icon = $("#mainArea").find('.collapseSign');
 			window.setTimeout(function(){
 				initCollapseSignFor(icon);
 			},100);
@@ -163,8 +163,35 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		Profile.initForm();
 		PublicKeys.initForm();
 		Certificates.initForm();
+		removeUnusedElements();
 		checkForStoredHashTags();
 	};
+	
+	removeUnusedElements = function(){
+		switch(Utils.getCurrentUser().role){
+		case "ADMIN":
+			$("#usercourse").remove();
+			$("#addcourse").remove();
+			$("#userAside").remove();
+			$("#tbownerAside").remove();
+			break;
+		case "TBOWNER":
+			$("#usercourse").remove();
+			$("#addcourse").remove();
+			$("#createtestbed").remove();
+			$("#userAside").remove();
+			$("#adminAside").remove();
+			break;
+		default:
+			$("#course").remove();
+			$("#testbed").remove();
+			$("#createtestbed").remove();
+			$("#createcourse").remove();
+			$("#adminAside").remove();
+			$("#tbownerAside").remove();
+		}
+	};
+	
 	
 	/**
 	* Initializes scrolling for small screen devices to the container specified by a selector. 
@@ -192,7 +219,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	initSignOutBtn = function(){
 		$("#signOut").on('click',function(e){
 			e.preventDefault();
-			//console.log("signOut clicked");	
 			var modal = createSignOutModal();
 			modal.modal('show');
 			$('#signOutOkBtn').on('click',function(){
@@ -218,7 +244,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		navLinks.not('#signOut').on('click',function(e){
 			e.preventDefault();
 			var t = $(this);
-			var linkID  = t.attr("id");
 			var linkHref = t.attr('href');
 			var lis = $(".navigationLink li");
 			lis.removeClass("active");	
@@ -235,27 +260,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	};
 	
 	
-	
-//	initUserInfoPanel = function(){		
-//		var navLinks = $("#userInfoDropdown a");
-//		navLinks.off();
-//		navLinks.not('#signOut').on('click',function(e){
-//			e.preventDefault();
-//			var t = $(this);
-//			var linkID  = t.attr("id");
-//			var linkHref = t.attr('href');
-//			var lis = $("#userInfoDropdown li");
-//			lis.removeClass("active");	
-//			initScrollToForm(linkHref+' h4.collapseHeader');
-//			var hash = linkHref.toLowerCase();
-//			history.pushState(linkHref, "page "+linkHref, "/"+hash);
-//			$('[href$='+linkHref+']').tab('show');			
-//		});
-//		Utils.updateUserInfoPanel();
-//		initSignOutBtn();
-//		initHashtagChange();
-//	};
-	
 	/**
 	* Loads HTML for the FITeagle main page dynamically and triggers the page initialization after the loading is successfully completed.
 	* @public
@@ -265,37 +269,14 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	Main.load = function(){
 		var url = "main.html";
 		
-		switch(Utils.getCurrentUser().role){
-		case "ADMIN":
-			$("#navigation").load(url + " #toolbar",
+		$("#navigation").load(url + " #toolbar",
+			function(){
+				$("#main").load(url + " #mainArea",
 					function(){
-						$("#main").load("admin.html" + " #mainArea",
-							function(){	
-								initMainPage(); 
-							});
-					}
-				);
-			break;
-		case "TBOWNER":
-			$("#navigation").load(url + " #toolbar",
-					function(){
-						$("#main").load("tbowner.html" + " #mainArea",
-							function(){	
-								initMainPage(); 
-							});
-					}
-				);
-			break;
-		default:
-			$("#navigation").load(url + " #toolbar",
-					function(){
-						$("#main").load("user.html" + " #mainArea",
-							function(){	
-								initMainPage(); 
-							});
-					}
-				);
-		}
+						initMainPage();
+					});
+			}
+		);
 	};
 	
 	/**
