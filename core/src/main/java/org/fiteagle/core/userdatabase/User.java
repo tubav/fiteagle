@@ -36,7 +36,7 @@ public class User implements Serializable{
   private static Logger log = LoggerFactory.getLogger(User.class);
   
   public enum Role {
-    ADMIN, USER
+    ADMIN, USER, TBOWNER
   }
   
   @Id
@@ -99,6 +99,13 @@ public class User implements Serializable{
     admin.setRole(Role.ADMIN);
     return admin;
   }
+  
+  public static User createTBOWNERUser(String username, String password) throws NotEnoughAttributesException, InValidAttributeException{
+    User tbowner = new User(username, "default", "default", "tbowner@university.org", "default", password, null);
+    tbowner.setRole(Role.TBOWNER);
+    return tbowner;
+  }
+  
   
   private void setOwners(List<UserPublicKey> publicKeys){
     if(publicKeys != null){

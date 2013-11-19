@@ -69,8 +69,11 @@ public class UserDBManager {
 		} else {
 			database = JPAUserDB.getInMemoryInstance();
 		}
-    if(!databaseContainsAdminUser()){
+    if(!databaseContainsUserOfRole(Role.ADMIN)){
       createFirstAdminUser();
+    }
+    if(!databaseContainsUserOfRole(Role.TBOWNER)){
+      createFirstTBOWNERUser();
     }
 	}
 	
@@ -83,7 +86,6 @@ public class UserDBManager {
       log.error(e.getMessage());
       return;
     }
-    
     try{
       add(admin);
     }
@@ -92,10 +94,27 @@ public class UserDBManager {
     }
 	}
 
-	private boolean databaseContainsAdminUser(){
+	private void createFirstTBOWNERUser(){
+    log.info("Creating First TBOWNER User");
+    User tbowner;
+    try{
+      tbowner = User.createTBOWNERUser("tbowner", "tbowner");
+    } catch(InValidAttributeException | NotEnoughAttributesException e){
+      log.error(e.getMessage());
+      return;
+    }
+    try{
+      add(tbowner);
+    }
+    catch(Exception e){
+      log.error(e.getMessage());
+    }
+  }
+	
+	private boolean databaseContainsUserOfRole(Role role){
 	  List<User> users = database.getAllUsers();
 	  for(User u : users){
-	    if(u.getRole().equals(Role.ADMIN)){
+	    if(u.getRole().equals(role)){
 	      return true;
 	    }
 	  }

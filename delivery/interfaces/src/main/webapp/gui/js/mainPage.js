@@ -73,8 +73,9 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @memberOf Main#
 	*/
 	initCollapseHeaders = function(){
-		$('.collapseHeader').on('click',function(){
-			var icon = $("#mainArea").find('.collapseSign');
+		$('.collapseHeader').click(function(event){
+			var header = event.currentTarget;
+			var icon = $(header).find('i');
 			window.setTimeout(function(){
 				initCollapseSignFor(icon);
 			},100);
@@ -174,6 +175,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#addcourse").remove();
 			$("#userAside").remove();
 			$("#tbownerAside").remove();
+			$("#openepcqosuser").remove();
 			break;
 		case "TBOWNER":
 			$("#usercourse").remove();
@@ -181,6 +183,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#createtestbed").remove();
 			$("#userAside").remove();
 			$("#adminAside").remove();
+			$("#openepcqosuser").remove();
 			break;
 		default:
 			$("#course").remove();
@@ -189,6 +192,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#createcourse").remove();
 			$("#adminAside").remove();
 			$("#tbownerAside").remove();
+			$("#openepcqos").remove();
+			$("#fusecoplayground").remove();
 		}
 	};
 	
