@@ -186,29 +186,10 @@ input.search-query{height:24px !important;}
 }
 #loginErrorField{margin-bottom: 20px;}
 
-#project_tagline {
-	margin-bottom: 16px;
-	margin-left: 190px;
-	color: #f09030;
-	font-size: 22px ;
-	font-weight: 300;
-	bottom: 24px;
-	position: absolute;
-}
-
-#fiteagle_tagline {
-  margin-bottom: 20px;
-  margin-left: 190px;
-  color: #f09030;
-  font-size: 22px ;
-  font-weight: 300;
-  bottom: 0;
-  position: absolute;
-}
-
 #fiteagleLogo{
-	width: 22px;
-	height: 22px;
+	height: 75px;
+	bottom: 20px;
+  position: absolute;
 }
 
 #navigation{
