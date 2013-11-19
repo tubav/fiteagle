@@ -52,7 +52,7 @@ function(require, Validation, Registration, Utils, Messages) {
 	* @memberOf Login#
 	*/
 	initHistory = function(){
-		$('#navigation ul li a').not("#aboutUnifiTab").on('click',function(e){
+		$('#navigation ul li a').not("#aboutUnifiTab").not("#aboutFiteagleTab").on('click',function(e){
 			e.preventDefault();
 			var t = $(this);
 			var href = t.attr('href');
