@@ -191,21 +191,14 @@ function(require, Validation, Registration, Utils, Messages) {
 	Login.load = function(){
 //	console.log("loading Login Page...");
 	var url = "login.html";
-	$("#fiteagle").load(url + " #fiteagleBody",function(){
-			Login.initLoginPage();
+	$("#navigation").load(url + " #navs",function(){
+		$("#main").load(url + " #loginPages",
+				function(){
+					Login.initLoginPage();
+		});
 	});	
 };	
 	
-//	Login.load = function(){
-////		console.log("loading Login Page...");
-//		var url = "login.html";
-//		$("#navigation").load(url + " #navs",function(){
-//			$("#main").load(url + " #loginPages",
-//					function(){
-//						Login.initLoginPage();
-//			});
-//		});	
-//	};	
 
 	/**
      * Initiates the login form. It Defines the focus change for enter click events for the login form fields.

@@ -9,7 +9,7 @@ body{
 	line-height: 1.5 !important;
 }
 
-#page{
+#fiteagleBody{
 	margin-left: auto;
 	margin-right: auto;
 	background: white;
@@ -17,7 +17,7 @@ body{
 	min-height: 100%;
 }
 
-#fiteagleBody{
+#page{
 	background: #e2e2e2;
 }
 
@@ -297,9 +297,9 @@ input.search-query{height:24px !important;}
 #aside .search-query{margin-top:10px;}
 #aside{margin:0px;}
 
-#page {
-	background-color: white;
-}
+/* #page { */
+/* 	background-color: white; */
+/* } */
 
 #search i {margin-left:4px}
 

@@ -300,10 +300,13 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var lis = $(".navigationLink li");
 			lis.removeClass("active");
 			var a = $('.navigationLink [href$='+hash+']');
-			(a.length)?
-				a.tab('show') // if found show the tab
-					:
+			if(a.length != 0){
+				a.tab('show'); // if found show the tab
+				Utils.storeHashTag(hash);
+			}
+			else{
 				$('[href$=#manage]').tab('show'); // if not found show manage profile tab
+			}
 		}
 	};
 	
@@ -314,6 +317,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @memberOf Main#
 	*/
 	performScreenAdjustments = function(){
+		Utils.unhideBody();
 		initCollapseHeaders();
 		if(Utils.isSmallScreen()){
 			initForSmallScreens();
