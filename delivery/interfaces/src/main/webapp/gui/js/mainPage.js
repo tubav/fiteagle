@@ -250,13 +250,11 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			e.preventDefault();
 			var t = $(this);
 			var linkHref = t.attr('href');
-			var lis = $(".navigationLink li");
-			lis.removeClass("active");	
 			//TODO: for non-collapse headers
 			initScrollToForm(linkHref+' h4.collapseHeader');
 			var hash = linkHref.toLowerCase();
 			history.pushState(linkHref, "page "+linkHref, "/"+hash);
-			$('[href$='+linkHref+']').tab('show');			
+			openTab(hash);
 		});
 		
 		Utils.updateUserInfoPanel();

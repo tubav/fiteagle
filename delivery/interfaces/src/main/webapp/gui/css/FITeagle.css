@@ -12,14 +12,18 @@ body{
 #fiteagleBody{
 	margin-left: auto;
 	margin-right: auto;
+	padding-bottom: 2%;
 	background: white;
 	max-width: 1000px;
-	min-height: 100%;
 }
-
 
 #page{
 	background: #e2e2e2;
+  min-height: 100%;
+}
+
+#marginTop{
+	height: 2%;
 }
 
 label,h1,h2,h3,h4,h5,h6{ cursor: default}
@@ -106,7 +110,6 @@ table td{
 #navs ul li{display:table;
     margin:0px auto 0px auto;}
 
-#navs ul li a{ text-align: center; padding-left:25%; padding-right:25%}
 
 #navs .btn-navbar{margin-right:4%; margin-bottom:20px}
 
@@ -153,6 +156,10 @@ input.search-query{height:24px !important;}
 
 #aside{
 	height:100%;
+}
+
+#unifiMap{
+	width: 100%;
 }
 
 #publicKeyControls a i {position: relative; top:6px}
@@ -215,7 +222,6 @@ input.search-query{height:24px !important;}
 }
 
 #navigation{
-	min-height: 50px;
 	width: 100%;
 /* 	border-top: 1px solid black; */
 /*   border-bottom: 1px solid black; */
@@ -233,10 +239,11 @@ input.search-query{height:24px !important;}
 }
 
 #navs .navbutton>li>a{
-	color:white;
-	height: 50px;
+	color: white;
+	height: 40px;
 	display: table-cell;
   vertical-align: middle;
+  width: 14%;
 }
 #navs .navbutton>.active>a {
   font-weight: bold;
