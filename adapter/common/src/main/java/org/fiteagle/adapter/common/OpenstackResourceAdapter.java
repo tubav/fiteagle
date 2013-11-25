@@ -68,8 +68,11 @@ public interface OpenstackResourceAdapter {
 	
 //	OpenstackResourceAdapter create(String imageId, String flavorId, String vmName, X509Certificate x509Certificate);
 //	public OpenstackResourceAdapter create(String imageId, String flavorId, String vmName, String keyPairName, X509Certificate cert);
+//	public OpenstackResourceAdapter create(String imageId, String flavorId,
+//			String vmName, String keyPairName, X509Certificate cert);
+	
 	public OpenstackResourceAdapter create(String imageId, String flavorId,
-			String vmName, String keyPairName, X509Certificate cert);
+			String vmName, String keyPairName);
 	
 
 	HashMap<String, String> getVMProperties();
