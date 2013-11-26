@@ -1,7 +1,10 @@
 language: java
 jdk:
   - oraclejdk7
-script: mvn install
+before_install:
+  - wget http://www.apache.org/dist/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz
+  - tar -zxvf apache-maven-3.0.5-bin.tar.gz
+script: apache-maven-3.0.5/bin/mvn install 
 notifications:
   email:
     - alexander.willner@tu-berlin.de
