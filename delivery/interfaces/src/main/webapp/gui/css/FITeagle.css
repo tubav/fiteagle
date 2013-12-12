@@ -113,6 +113,10 @@ table td{
 
 #navs .btn-navbar{margin-right:4%; margin-bottom:20px}
 
+#courseName{
+	font-weight: bold;
+	margin-top: 15px;
+}
 
 ul li a{color: #585858}
 ul li a:hover, ul li a:focus{text-decoration: none;}
@@ -303,7 +307,6 @@ input.search-query{height:24px !important;}
 }
 
 #aside .search-query{margin-top:10px;}
-#aside{margin:0px;}
 
 /* #page { */
 /* 	background-color: white; */

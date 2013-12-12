@@ -3,9 +3,16 @@
 <!------------------- NAVIGATION TOOLBAR ------------------------------>	
 	<div id="navigation" class="row-fluid">
 		<div id="toolbar" class="row-fluid">
-			<a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse">
-				<i class="icon-reorder"></i>
-			</a>
+<!-- 			<a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse"> -->
+<!-- 				<i class="icon-reorder"></i> -->
+<!-- 			</a> -->
+			<div class="span3">
+		   <div id="courseName" class="offset1">
+        OpenEPC QoS
+       </div>
+			</div>
+		
+			 
 			<div id="userInfoPanel" class="dropdown pull-right">
 				<span class="dropdown-toggle" data-toggle="dropdown">
 					<i class="icon-user icon-2x"></i>
@@ -18,17 +25,6 @@
 					<li><a id="downloadCertificateMenu" href="#certificate" ><i class="icon-cloud-download"></i>Download certificate</a></li>
 					<li><a id="signOut" href="#"><i class="icon-signout"></i>Sign Out</a></li>
 				</ul>
-			</div>
-			
-			<div class="nav-collapse collapse">
-<!-- 				<div id="search" class="margin3pc"> -->
-<!-- 					<form class="form-search"> -->
-<!-- 						<div class="input-append span4"> -->
-<!-- 								<input type="text" class="search-query top10" placeholder="Search"> -->
-<!-- 								<button type="submit" class="btn btn-inverse"><i class="icon-search"></i></button> -->
-<!-- 						</div> -->
-<!-- 					</form> -->
-<!-- 				</div> -->
 			</div>
 		</div> 
 
@@ -138,36 +134,45 @@
         <hr />
         <hr />
       </div>
-      
-      <div id="userAside">
-        <div id="courses" class="row-fluid">
-          <div id="coursesContainer" class="offset1">
-            <div data-toggle="collapse" data-target="#coursesList">
-              <h4 class="collapseHeader">
-                <i class="icon-group icon-large"></i>Your Courses
-              </h4>
-            </div>
-	            <div id="courseList" class="navigationLink collapse in">
-	              <ul class="icons-ul">
-	                <li><i class="icon-li icon-caret-right"></i><a
-	                  href="#usercourse" >OpenMTC Intro</a></li>
-	                <li><i class="icon-li icon-caret-right"></i><a
-	                  href="#openepcqosuser" >OpenEPC QoS</a></li>
-	                <li><i class="icon-li icon-caret-right"></i><a
-	                  href="#usercourse" >OpenIMS Development</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#usercourse" >Federation Tools</a></li>
-	                <li><i class="icon-li icon-plus"></i><a
-	                  href="#addcourse"   >Add</a></li>
-	              </ul>
-	            </div>
-          </div>
-        </div>
-        <hr />
-        <hr />
-      </div>
-      
-	    </div>
+
+				<div id="userAside">
+					<div id="testbeds" class="row-fluid">
+						<div id="testbedsContainer" class="offset1">
+							<div>
+								<h4>
+									<i class="icon-sitemap icon-large"></i>Testbeds
+								</h4>
+							</div>
+							<div id="testbedList" class="navigationLink">
+								<ul class="icons-ul">
+									<li><a href="#" onclick="return false"
+										data-toggle="collapse" data-target="#fusecoResources"><i
+											class="icon-li icon-caret-right"></i>FUSECO Playground</a>
+										<ul id="fusecoResources" class="row-fluid collapse out">
+											<li>Attenuator</li>
+											<li>EPC_Virtual</li>
+											<li>EPC_Mobile_Client</li>
+										</ul></li>
+
+									<li><a href="#" onclick="return false"
+										data-toggle="collapse" data-target="#Resources2"> <i
+											class="icon-li icon-caret-right"></i>Another Testbed
+									</a>
+										<ul id="Resources2" class="row-fluid collapse out">
+											<li>Attenuator</li>
+											<li>EPC_Virtual</li>
+											<li>EPC_Mobile_Client</li>
+										</ul></li>
+
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<hr />
+				</div>
+
+			</div>
 	    <div id="desktop" class="span9 tab-content">
 	      <div id="manage" class="row-fluid tab-pane">
 	        <div class="span12">
