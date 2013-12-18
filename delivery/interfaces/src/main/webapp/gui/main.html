@@ -1,139 +1,141 @@
 <body>
 
-<!------------------- NAVIGATION TOOLBAR ------------------------------>	
-	<div id="navigation" class="row-fluid">
-		<div id="toolbar" class="row-fluid">
-<!-- 			<a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse"> -->
-<!-- 				<i class="icon-reorder"></i> -->
-<!-- 			</a> -->
-			<div class="span3">
-		   <div id="courseName" class="offset1">
-        OpenEPC QoS
+<!------------------- NAVIGATION TOOLBAR ------------------------------>  
+  <div id="navigation" class="row-fluid">
+    <div id="toolbar" class="row-fluid">
+<!--      <a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse"> -->
+<!--        <i class="icon-reorder"></i> -->
+<!--      </a> -->
+      <div class="span3">
+       <div id="courseName" class="offset1">
+        <ul class="navigationLink icons-ul">
+         <li><a href="#resources">OpenEPC QoS</a></li>
+        </ul>
        </div>
-			</div>
-		
-			 
-			<div id="userInfoPanel" class="dropdown pull-right">
-				<span class="dropdown-toggle" data-toggle="dropdown">
-					<i class="icon-user icon-2x"></i>
-					<span id="userName"></span>
-					<i class="icon-sort-down"></i>
-				</span>
-				<ul id="userInfoDropdown" class="dropdown-menu navigationLink">
-					<li><a id="manageProfileMenu" href="#manage" ><i class="icon-wrench"></i>Edit profile</a></li>
-					<li><a id="managePublicKeysMenu" href="#keys" ><i class="icon-key"></i>Manage public keys</a></li>
-					<li><a id="downloadCertificateMenu" href="#certificate" ><i class="icon-cloud-download"></i>Download certificate</a></li>
-					<li><a id="signOut" href="#"><i class="icon-signout"></i>Sign Out</a></li>
-				</ul>
-			</div>
-		</div> 
+      </div>
+    
+       
+      <div id="userInfoPanel" class="dropdown pull-right">
+        <span class="dropdown-toggle" data-toggle="dropdown">
+          <i class="icon-user icon-2x"></i>
+          <span id="userName"></span>
+          <i class="icon-sort-down"></i>
+        </span>
+        <ul id="userInfoDropdown" class="dropdown-menu navigationLink">
+          <li><a id="manageProfileMenu" href="#manage" ><i class="icon-wrench"></i>Edit profile</a></li>
+          <li><a id="managePublicKeysMenu" href="#keys" ><i class="icon-key"></i>Manage public keys</a></li>
+          <li><a id="downloadCertificateMenu" href="#certificate" ><i class="icon-cloud-download"></i>Download certificate</a></li>
+          <li><a id="signOut" href="#"><i class="icon-signout"></i>Sign Out</a></li>
+        </ul>
+      </div>
+    </div> 
 
-	</div>
-	
+  </div>
+  
 <!--_________________END NAVIGATION TOOLBAR__________________________-->
 
-<!------------------- MAIN SECTION ----------------------------------	 -->
+<!------------------- MAIN SECTION ----------------------------------  -->
 
-	<div id="mainArea" class="tab-content row-fluid">
-	  <div id="mainWindow">
-	    <div id="aside" class="span3">
-	      <div id="adminAside">
-	        <div id="courses" class="row-fluid">
-	          <div id="coursesContainer" class="offset1">
-	            <div data-toggle="collapse" data-target="#coursesList">
-	              <h4 class="collapseHeader">
-	                <i class="icon-group icon-large"></i>Courses
-	              </h4>
-	            </div>
-	            <div id="courseList" class="navigationLink collapse in">
-	              <ul class="icons-ul">
-	                <li><i class="icon-li icon-caret-right"></i><a
-                    href="#course" >OpenMTC Intro</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#openepcqos" >OpenEPC QoS</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#course" >OpenIMS Development</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#course" >Federation Tools</a></li>
-	                <li><i class="icon-li icon-plus"></i><a
-	                  href="#createcourse"   >Create</a></li>
-	              </ul>
-	            </div>
-	          </div>
-	        </div>
-	
-	        <div id="testbeds" class="row-fluid">
-	          <div id="testbedContainer" class="offset1">
-	            <div data-toggle="collapse" data-target="#testbedList">
-	              <h4 class="collapseHeader">
-	                <i class="icon-sitemap icon-large"></i>Testbeds
-	              </h4>
-	            </div>
-	            <div id="testbedList" class="navigationLink collapse in">
-	              <ul class="icons-ul">
-	                <li><i class="icon-li icon-caret-right"></i><a
-	                  href="#fusecoplayground">FUSECO Playground</a></li>
-	                <li><i class="icon-li icon-caret-right"></i><a
-	                  href="#testbed">Chula Testbed</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#testbed">UCT Testbed</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#testbed">fcfm Testbed</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#testbed">SET Testbed</a></li>
-	                <li><i class="icon-li icon-plus"></i><a
-	                  href="#createtestbed" >Create</a></li>
-	              </ul>
-	            </div>
-	          </div>
-	        </div>
-	        <hr />
-	        <hr />
-	      </div>
-	      
-	      <div id="tbownerAside">
-        <div id="courses" class="row-fluid">
-          <div id="coursesContainer" class="offset1">
-            <div data-toggle="collapse" data-target="#coursesList">
-              <h4 class="collapseHeader">
-                <i class="icon-group icon-large"></i>Courses
-              </h4>
-            </div>
-	            <div id="courseList" class="navigationLink collapse in">
-	              <ul class="icons-ul">
-	                <li><i class="icon-li icon-caret-right"></i><a
-                    href="#course" >OpenMTC Intro</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#openepcqos" >OpenEPC QoS</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#course" >OpenIMS Development</a></li>
-                  <li><i class="icon-li icon-caret-right"></i><a
-                    href="#course" >Federation Tools</a></li>
-	                <li><i class="icon-li icon-plus"></i><a
-	                  href="#createcourse"   >Create</a></li>
-	              </ul>
-	            </div>
-          </div>
-        </div>
+  <div id="mainArea" class="tab-content row-fluid">
+    <div id="mainWindow">
+			<div id="aside" class="span3">
+				<div id="adminAside">
+					<div id="courses" class="row-fluid">
+						<div id="coursesContainer" class="offset1">
+							<div data-toggle="collapse" data-target="#coursesList">
+								<h4 class="collapseHeader">
+									<i class="icon-group icon-large"></i>Courses
+								</h4>
+							</div>
+							<div id="courseList" class="navigationLink collapse in">
+								<ul class="icons-ul">
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#course">OpenMTC Intro</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#openepcqos">OpenEPC QoS</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#course">OpenIMS Development</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#course">Federation Tools</a></li>
+									<li><i class="icon-li icon-plus"></i><a
+										href="#createcourse">Create</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
 
-        <div id="testbeds" class="row-fluid">
-          <div id="testbedContainer" class="offset1">
-            <div data-toggle="collapse" data-target="#testbedList">
-              <h4 class="collapseHeader">
-                <i class="icon-sitemap icon-large"></i>Testbeds
-              </h4>
-            </div>
-            <div id="testbedList" class="navigationLink collapse in">
-              <ul class="icons-ul">
-                <li><i class="icon-li icon-caret-right"></i><a
-                    href="#fusecoplayground">FUSECO Playground</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <hr />
-      </div>
+					<div id="testbeds" class="row-fluid">
+						<div id="testbedContainer" class="offset1">
+							<div data-toggle="collapse" data-target="#testbedList">
+								<h4 class="collapseHeader">
+									<i class="icon-sitemap icon-large"></i>Testbeds
+								</h4>
+							</div>
+							<div id="testbedList" class="navigationLink collapse in">
+								<ul class="icons-ul">
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#fusecoplayground">FUSECO Playground</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#testbed">Chula Testbed</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#testbed">UCT Testbed</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#testbed">fcfm Testbed</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#testbed">SET Testbed</a></li>
+									<li><i class="icon-li icon-plus"></i><a
+										href="#createtestbed">Create</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<hr />
+				</div>
+
+				<div id="tbownerAside">
+					<div id="courses" class="row-fluid">
+						<div id="coursesContainer" class="offset1">
+							<div data-toggle="collapse" data-target="#coursesList">
+								<h4 class="collapseHeader">
+									<i class="icon-group icon-large"></i>Courses
+								</h4>
+							</div>
+							<div id="courseList" class="navigationLink collapse in">
+								<ul class="icons-ul">
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#course">OpenMTC Intro</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#openepcqos">OpenEPC QoS</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#course">OpenIMS Development</a></li>
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#course">Federation Tools</a></li>
+									<li><i class="icon-li icon-plus"></i><a
+										href="#createcourse">Create</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div id="testbeds" class="row-fluid">
+						<div id="testbedContainer" class="offset1">
+							<div data-toggle="collapse" data-target="#testbedList">
+								<h4 class="collapseHeader">
+									<i class="icon-sitemap icon-large"></i>Testbeds
+								</h4>
+							</div>
+							<div id="testbedList" class="navigationLink collapse in">
+								<ul class="icons-ul">
+									<li><i class="icon-li icon-caret-right"></i><a
+										href="#fusecoplayground">FUSECO Playground</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<hr />
+				</div>
 
 				<div id="userAside">
 					<div id="testbeds" class="row-fluid">
@@ -145,24 +147,32 @@
 							</div>
 							<div id="testbedList" class="navigationLink">
 								<ul class="icons-ul">
-									<li><a href="#" onclick="return false"
-										data-toggle="collapse" data-target="#fusecoResources"><i
-											class="icon-li icon-caret-right"></i>FUSECO Playground</a>
+									<li>
+										<div class="collapseHeader" data-toggle='collapse'
+											data-target='#fusecoResources'>
+											<a class="collapseHeader" href="#"><i
+												class="collapseSign icon-caret-right"></i>FUSECO Playground</a>
+										</div>
+
 										<ul id="fusecoResources" class="row-fluid collapse out">
 											<li>Attenuator</li>
 											<li>EPC_Virtual</li>
 											<li>EPC_Mobile_Client</li>
-										</ul></li>
+										</ul>
+									</li>
 
-									<li><a href="#" onclick="return false"
-										data-toggle="collapse" data-target="#Resources2"> <i
-											class="icon-li icon-caret-right"></i>Another Testbed
-									</a>
+									<li>
+										<div class="collapseHeader" data-toggle='collapse'
+											data-target='#Resources2'>
+											<a class="collapseHeader" href="#"><i
+												class="collapseSign icon-caret-right"></i>Another Testbed </a>
+										</div>
 										<ul id="Resources2" class="row-fluid collapse out">
 											<li>Attenuator</li>
 											<li>EPC_Virtual</li>
 											<li>EPC_Mobile_Client</li>
-										</ul></li>
+										</ul>
+									</li>
 
 								</ul>
 							</div>
@@ -173,707 +183,783 @@
 				</div>
 
 			</div>
-	    <div id="desktop" class="span9 tab-content">
-	      <div id="manage" class="row-fluid tab-pane">
-	        <div class="span12">
-	          <div>
-	            <h3>
-	              Edit User Profile	                
-	            </h3>
-	          </div>
-	          <hr />
-	          <div id="manageProfileContainer" class="row-fluid">
-	            <div class="top20 padding3pc">
-	              <div id="userProfileErrors" class="row-fluid"></div>
-	              <div class="row-fluid">
-	                <label class="span2" for="inputUsername">Username</label> <input
-	                  class="span8" type="text" id="inputUsername" disabled>
-	              </div>
-	              <div class="row-fluid">
-	                <label class="span2" for="inputFirstName">First Name</label> <input
-	                  class="span8" type="text" id="inputFirstName">
-	              </div>
-	              <div class="row-fluid">
-	                <label class="span2" for="inputLastName">Last Name</label> <input
-	                  class="span8" type="text" id="inputLastName">
-	              </div>
-	              <div class="row-fluid">
-	                <label class="span2" for="inputAffiliation">Affiliation</label>
-	                <input class="span8" type="text" id="inputAffiliation">
-	              </div>
-	              <div class="row-fluid">
-	                <label class="span2" for="inputEmail">Email</label> <input
-	                  class="span8" type="email" id="inputEmail">
-	              </div>
-	              <div class="row-fluid">
-	                <button id="saveProfileInfo" class="btn btn-inverse disabled span2 nomargin">
-	                <i class="icon-save"></i>Save
-	                </button>
-	                <div class="span5 centered">
-	                  <button id="deleteUserBtn" class="btn btn-danger">
-	                    <i class="icon-minus-sign"> &nbsp;Delete User </i>
-	                  </button>
-	                </div>
-	              </div>
-	                
-	              
-	              <i id="saveProfileLoadingSign"
-	                class="icon-spin icon-spinner icon-2x hidden"></i>
-	            </div>
-	          </div>
-	          <div id="deleteUserProfileModal" class="modal hide fade"
-	            tabindex="-1" role="dialog" data-keyboard="false"
-	            data-backdrop="static" aria-labelledby="myModalLabel"
-	            aria-hidden="true">
-	            <div class="modal-header">
-	              <button type="button" class="close" data-dismiss="modal"
-	                aria-hidden="true">
-	                <i class="icon-remove"></i>
-	              </button>
-	              <h3 id="myModalLabel">Delete User Profile</h3>
-	            </div>
-	            <div class="modal-body ">
-	              <p class="centered">Are you sure that you want to delete your
-	                user profile ?</p>
-	            </div>
-	            <div class="modal-footer">
-	              <div class="row-fluid centered">
-	                <button id='deleteUserProfileBtn'
-	                  class="btn btn-danger btn-large">Yes</button>
-	                <button class="btn btn-success btn-large left40"
-	                  data-dismiss="modal" aria-hidden="true">No</button>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	      <div id="keys" class="row-fluid tab-pane">
-	        <div class="span12">
-	          <div>
-	            <h3>
-	              Manage Public Keys
-	            </h3>
-	          </div>
-	          <hr />
-	          <div id="managePublicKeysContainer" class="row-fluid">
-	            <div class="padding3pc">
-	              <div>
-	                <h5>
-	                  <i class="icon-list-ul"></i>Existing User Keys
-	                </h5>
-	              </div>
-	              <hr />
-	              <div id="existingUserKeysContainer" class="margin3pc">
-	                <div id="existingUserKeyErrors" class="row-fluid"></div>
-	                <div class="row-fluid top20">
-	                  <div class="span12">
-	                    <div id="publicKeysList"></div>
-	                  </div>
-	                </div>
-	              </div>
-	              <div class="top20">
-	                <h5>
-	                  <i class="icon-indent-right"></i>Upload New User Keys
-	                </h5>
-	              </div>
-	              <hr />
-	              <div id="uploadNewUserKeysContainer" class="margin3pc">
-	                <div id="newUserKeyErrors" class="row-fluid"></div>
-	                <div class="row-fluid">
-	                  <label class="span2" for="inputKeyDescription"><b>Key
-	                      Description*</b></label>
-	                  <div class="span8">
-	                    <input class="span12" type="text" id="inputKeyDescription"
-	                      required>
-	                  </div>
-	                </div>
-	                <div id="currentFileContainer" class="row-fluid top20">
-	                  <div class="row-fluid top20">
-	                    <label class="span2" for='publicKeyFromFile'><b>Key
-	                        Value</b></label>
-	                    <div id="publicKeyFromFile" class="span8">
-	                      <textarea class="span12" rows=6 disabled style="resize: none"></textarea>
-	                    </div>
-	                    <div class="span2">
-	                      <button id="uploadNewPublicKey" class="btn btn-inverse span5">
-	                        <i class="icon-circle-arrow-up icon-large nopadding"></i>
-	                      </button>
-	                      <i id="uploadingSign"
-	                        class="icon-spin icon-spinner icon-2x hidden"></i>
-	                    </div>
-	                  </div>
-	                </div>
-	                <div class="row-fluid top20">
-	                  <div id="currentFileInfo" class="row-fluid">
-	                    <span id="currentFileName"
-	                      class="alert alert-info span3 centered">No file
-	                      selected</span>
-	                  </div>
-	                  <div class="row-fluid">
-	                    <button id="selectFromFile" class="span3 btn btn-inverse">
-	                      <i class="icon-file-text"></i> Select from File
-	                    </button>
-	                  </div>
-	                  <div id="selectFromFileInput" class="hidden">
-	                    <input type="file" class="hidden"></input>
-	                  </div>
-	                </div>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	      <div id="certificate" class="row-fluid tab-pane">
-	        <div class="span12">
-	          <div>
-	            <h3>
-	              Download Certificates
-	            </h3>
-	          </div>
-	          <hr />
-	          <div id="downloadCertificateContainer" class="row-fluid">
-	            <div id="genFromExKey" class="padding3pc">
-	              <div>
-	                <h5>
-	                  <i class="icon-file-text"></i>Certificate From Existing Key
-	                </h5>
-	              </div>
-	              <hr />
-	              <div id="cerfificateFromKeyContainer" class="margin3pc">
-	                <div id="selectKeyForGeneration" class="row-fluid"></div>
-	                <div class="row-fluid">
-	                  <button id="genPubKey" class="btn btn-inverse span2 nomargin">
-	                    <i class="icon-circle-arrow-down"></i>Generate
-	                  </button>
-	                  <i id="genPubKeySign"
-	                    class="icon-spin icon-spinner icon-2x hidden"></i>
-	                </div>
-	                <div id="generatedCertificate" class="row-fluid top20"></div>
-	              </div>
-	            </div>
-	            <div id="genNewKeypairWithCertificate"
-	              class="top20 padding3pc">
-	              <div>
-	                <h5>
-	                  <i class="icon-paste"></i>New Keypair with Certificate
-	                </h5>
-	              </div>
-	              <hr />
-	              <div id="cerfificateWithKeyContainer" class="margin3pc">
-	                <div id="newKeypairAndCertificateErrors" class="row-fluid"></div>
-	                <div id="passphraseForGeneration" class="row-fluid">
-	                  <label class="span2" for="inputPassphrase">Pass-phrase</label>
-	                  <div class="span8">
-	                    <input class="span12" id="inputPassphrase" type="password"
-	                      required>
-	                  </div>
-	                </div>
-	                <div class="row-fluid">
-	                  <button id="genKeyAndCertificate"
-	                    class="btn btn-inverse span2 nomargin ">
-	                    <i class="icon-circle-arrow-down"></i>Generate
-	                  </button>
-	                  <i id="genKeyAndCertificateSign"
-	                    class="icon-spin icon-spinner icon-2x hidden"></i>
-	                </div>
-	                <div id="generatedKeyAndCertificate" class="row-fluid top20"></div>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	
-	     <div id="openepcqos" class="row-fluid tab-pane">
-          <div id="courseTitle">
-            <h3>
-              OpenEPC QoS<a href="#" class="edit" onclick="return false;">Edit</a>
-            </h3>
-          </div>
-          <div id="courseDescription">
-            <h4>
-              Welcome to the OpenEPC QoS course!<a href="#" class="edit"
-                onclick="return false;">Edit</a>
-            </h4>
-          </div>
-          <hr />
-          <div class="collapseHeader" data-toggle='collapse'
-            data-target='#usersOpenepcqos'>
-            <h4 class="collapseHeader">
-              <a href="#" onclick="return false;">Users</a><i
-                class="collapseSign"></i>
-            </h4>
-          </div>
-          <div id="usersOpenepcqos" class="row-fluid collapse out">
-            <table>
-              <tr>
-                <td>Max Mustermann</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Details</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-              <tr>
-                <td>Mitja Nikolaus</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Details</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-              <tr>
-                <td>Alexander Willner</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Details</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-              <tr>
-                <td><a href="#" class="black" onclick="return false;">Add
-                    User</a></td>
-              </tr>
-            </table>
-          </div>
-          <hr />
-          <div class="collapseHeader" data-toggle='collapse'
-            data-target='#testbedsOpenepcqos'>
-            <h4 class="collapseHeader">
-              <a href="#" class="black" onclick="return false;">Testbeds</a>
-              <i class="collapseSign"></i>
-            </h4>
-          </div>
-          <div id="testbedsOpenepcqos" class="row-fluid collapse out">
-            <table>
-              <tr>
-                <td>FUSECO Playground</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Details</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-              <tr>
-                <td><a href="#" class="black" onclick="return false;">Add
-                    Testbed</a></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-  
-	
-	
-	      <div id="course" class="row-fluid tab-pane">
-	        <div id="courseTitle">
-	          <h3>
-	            Test Course<a href="#" class="edit" onclick="return false;">Edit</a>
-	          </h3>
-	        </div>
-	        <div id="courseDescription">
-	          <h4>
-	            A course for testing purposes<a href="#" class="edit"
-	              onclick="return false;">Edit</a>
-	          </h4>
-	        </div>
-	        <hr />
-	        <div class="collapseHeader" data-toggle='collapse'
-	          data-target='#usersInCourse'>
-	          <h4 class="collapseHeader">
-	            <a href="#" onclick="return false;">Users</a><i
-	              class="collapseSign"></i>
-	          </h4>
-	        </div>
-	        <div id="usersInCourse" class="row-fluid collapse out">
-	          <table>
-	            <tr>
-	              <td>User1</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Details</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td>User2</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Details</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td>User3</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Details</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td><a href="#" class="black" onclick="return false;">Add
-	                  User</a></td>
-	            </tr>
-	          </table>
-	        </div>
-	        <hr />
-	        <div class="collapseHeader" data-toggle='collapse'
-	          data-target='#testbedsInCourse'>
-	          <h4 class="collapseHeader">
-	            <a href="#" class="black" onclick="return false;">Testbeds</a>
-	            <i class="collapseSign"></i>
-	          </h4>
-	        </div>
-	        <div id="testbedsInCourse" class="row-fluid collapse out">
-	          <table>
-	            <tr>
-	              <td>Testbed1</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Details</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td>Another Testbed</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Details</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td><a href="#" class="black" onclick="return false;">Add
-	                  Testbed</a></td>
-	            </tr>
-	          </table>
-	        </div>
-	      </div>
-	
-	      <div id="testbed" class="row-fluid tab-pane">
-	        <div id="testbedTitle">
-	          <h3>
-	            Testbed Example<a href="#" class="edit" onclick="return false;">Edit</a>
-	          </h3>
-	        </div>
-	        <div id="testbedDescription">
-	          <h4>
-	            A testbed for testing purposes<a href="#" class="edit"
-	              onclick="return false;">Edit</a>
-	          </h4>
-	        </div>
-	        <hr />
-	        <div id="resources">
-	          <table>
-	            <tr>
-	              <td>Resource1</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Allocate</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Provision</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td>Resource number 2</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Allocate</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Provision</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	            <tr>
-	              <td>Another Resource with a longer name</td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Allocate</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Provision</a></td>
-	              <td><a href="#" class="margin3 btn btn-inverse"
-	                onclick="return false;">Delete</a></td>
-	            </tr>
-	          </table>
-	        </div>
-	      </div>
-	      
-	      
-	      <div id="fusecoplayground" class="row-fluid tab-pane">
-          <div id="testbedTitle">
-            <h3>
-              FUSECO Playground<a href="#" class="edit" onclick="return false;">Edit</a>
-            </h3>
-          </div>
-          <div id="testbedDescription">
-            <h4>
-              The independent testbed for FUture SEamless COmmunication<a href="#" class="edit"
-                onclick="return false;">Edit</a>
-            </h4>
-          </div>
-          <hr />
-          <div id="resources">
-            <table>
-              <tr>
-                <td>Attenuator</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Allocate</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Provision</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-              <tr>
-                <td>EPC_Virtual</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Allocate</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Provision</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-              <tr>
-                <td>EPC_Mobile_Client</td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Allocate</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Provision</a></td>
-                <td><a href="#" class="margin3 btn btn-inverse"
-                  onclick="return false;">Delete</a></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-  
-	      
-	
-	      <div id="createtestbed" class="row-fluid tab-pane">
-	        <div id="createTestbedTitle">
-	          <h3>
-	            Create Testbed
-	          </h3>
-	        </div>
-	        <div id="createTestbedDescription">
-	          <h4>
-	            Set up connection to a new testbed
-	          </h4>
-	        </div>
-	        <hr />
-	        <div>
-	          <div class="row-fluid">
-	            <label class="span2" for="testbedAM">Name</label> <input
-	              class="span8" type="text" id="testbedAM" placeholder="Chose any name for the testbed">
-	          </div>
-	          <div class="row-fluid">
-	            <label class="span2" for="testbedSM">Description</label> <input
-	              class="span8" type="text" id="testbedSM" placeholder="Write some description e.g. where the testbed might be used for">
-	          </div>
-	          <br/>
-	          <div class="row-fluid">
-	            <label class="span2" for="testbedAM">Aggregate Manager</label> <input
-	              class="span8" type="text" id="testbedAM" placeholder="URL of the Aggregate Manager">
-	          </div>
-	          <div class="row-fluid">
-	            <label class="span2" for="testbedSM">Slice Manager</label> <input
-	              class="span8" type="text" id="testbedSM" placeholder="URL of the Slice Manager">
-	          </div>
-	        </div>
-	      </div>
-	      
-	      <div id="createcourse" class="row-fluid tab-pane">
-	        <div id="createTestbedTitle">
-	          <h3>
-	            Create Course
-	          </h3>
-	        </div>
-	        <div id="createTestbedDescription">
-	          <h4>
-	            Create a new course where users can join
-	          </h4>
-	        </div>
-	        <hr />
-	        <div>
-	           <div class="row-fluid">
-	            <label class="span2" for="testbedAM">Name</label> <input
-	              class="span8" type="text" id="testbedAM" placeholder="Chose any name for your course">
-	          </div>
-	          <div class="row-fluid">
-	            <label class="span2" for="testbedSM">Description</label> <input
-	              class="span8" type="text" id="testbedSM" placeholder="Write some description e.g. what the aims of the course are">
-	          </div>
-	
-	          <div style="height: 200px">
-	            <label class="span2" for="tbdropdown">Testbeds</label>
-	            <div id="tbdropdown" class="span8 nomargin">
-	              <div class="dropdown">
-	                <button class="nomargin btn dropdown-toggle sr-only" type="button"
-	                  id="dropdownMenu1" data-toggle="dropdown">
-	                  Available Testbeds <span class="caret"></span>
-	                </button>
-	                <ul class="dropdown-menu">
-	                  <li ><a  tabindex="-1"
-	                    href="#" onclick="return false;">Testbed 1</a></li>
-	                  <li ><a  tabindex="-1"
-	                    href="#" onclick="return false;">Testbed 2</a></li>
-	                  <li ><a  tabindex="-1"
-	                    href="#" onclick="return false;">Testbed 3</a></li>
-	                  <li ><a  tabindex="-1"
-	                    href="#" onclick="return false;">Testbed 4</a></li>
-	                </ul>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	      
-	      
-	      <div id="openepcqosuser" class="row-fluid tab-pane">
-        <div id="courseTitle">
-          <h3>OpenEPC QoS</h3>
-        </div>
-        <div id="courseDescription">
-          <h4>Welcome to the OpenEPC QoS course!</h4>
-        </div>
-        <hr />
-        <div class="collapseHeader" data-toggle='collapse'
-          data-target='#testbed1Details_openepcqosuser'>
-          <h4 class="collapseHeader">
-            <a href="#" onclick="return false;">FUSECO Playground</a><i class="collapseSign"></i>
-          </h4>
-        </div>
-        <div id="testbed1Details_openepcqosuser" class="row-fluid collapse out">
-          <table>
-            <tr>
-              <td>Attenuator</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-            <tr>
-              <td>EPC_Virtual</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-            <tr>
-              <td>EPC_Mobile_Client</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-	      
-	      
-	      <div id="usercourse" class="row-fluid tab-pane">
-        <div id="courseTitle">
-          <h3>Test Course</h3>
-        </div>
-        <div id="courseDescription">
-          <h4>A course for testing purposes</h4>
-        </div>
-        <hr />
-        <div class="collapseHeader" data-toggle='collapse'
-          data-target='#testbed1Details'>
-          <h4 class="collapseHeader">
-            <a href="#" onclick="return false;">Testbed
-              1</a><i class="collapseSign"></i>
-          </h4>
-        </div>
-        <div id="testbed1Details" class="row-fluid collapse out">
-          <table>
-            <tr>
-              <td>Resource1</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-            <tr>
-              <td>Resource number 2</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-            <tr>
-              <td>another Resource with a longer name</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-          </table>
-        </div>
-        <div class="collapseHeader" data-toggle='collapse'
-          data-target='#testbed2Details'>
-          <h4 class="collapseHeader">
-            <a href="#" onclick="return false;">Testbed
-              2</a><i class="collapseSign"></i>
-          </h4>
-        </div>
-        <div id="testbed2Details" class="row-fluid collapse out">
-          <table>
-            <tr>
-              <td>Resource1</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-            <tr>
-              <td>Resource number 2</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-            <tr>
-              <td>another Resource with a longer name</td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Allocate</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Provision</a></td>
-              <td><a href="#" class="margin3 btn btn-inverse"
-                onclick="return false;">Delete</a></td>
-            </tr>
-          </table>
-        </div>
-      </div>
+			<div id="desktop" class="span9 tab-content">
 
-      <div id="addcourse" class="row-fluid tab-pane">
-        <div id="coursesAvailable">
-          <h3>Courses Available</h3>
-        </div>
-        <div id="addCourseDescription">
-          <h4>Chose a course you want to sign up for</h4>
-        </div>
-        <hr>
-        <div id="addCourseCourses">
-          <h4>
-            <a href="#" onclick="return false;" class="black"><i
-              class="icon-group"></i>Course 4</a>
-          </h4>
-          <h4>
-            <a href="#" onclick="return false;" class="black"><i
-              class="icon-group"></i>Course 5</a>
-          </h4>
-        </div>
-      </div>
-	
-	    </div>
-	  </div>
-	</div>
+				<div id="resources" class="row-fluid tab-pane">
 
-		  
-			
-			
+					<div class="window _jsPlumb_endpoint_anchor_" id="resource1">
+						Attenuator<br> <br> 
+<!-- 						<a class="editLink" href="#">edit</a> -->
+					</div>
+					
+					<div class="window _jsPlumb_endpoint_anchor_" id="resource2">
+            EPC_Virtual<br> <br> 
+<!--             <a class="editLink" href="#">edit</a> -->
+          </div>
+					
+					<div class="window _jsPlumb_endpoint_anchor_" id="resource3">
+            EPC_Mobile_Client<br> <br> <a class="editLink" href="#">edit</a>
+          </div>
+
+					<!--           <div id="drag-drop-demo" class="demo drag-drop-demo"> -->
+
+					<!--             <div class="window ui-draggable _jsPlumb_endpoint_anchor_" -->
+					<!--               id="dragDropWindow1"> -->
+					<!--               one<br> <br> <a href="#" class="cmdLink hide" -->
+					<!--                 rel="dragDropWindow1">toggle connections</a><br> <a -->
+					<!--                 href="#" class="cmdLink drag" rel="dragDropWindow1">disable -->
+					<!--                 dragging</a><br> <a href="#" class="cmdLink detach" -->
+					<!--                 rel="dragDropWindow1">detach all</a> -->
+					<!--             </div> -->
+					<!--             <div class="window ui-draggable _jsPlumb_endpoint_anchor_" -->
+					<!--               id="dragDropWindow2"> -->
+					<!--               two<br> <br> <a href="#" class="cmdLink hide" -->
+					<!--                 rel="dragDropWindow2">toggle connections</a><br> <a -->
+					<!--                 href="#" class="cmdLink drag" rel="dragDropWindow2">disable -->
+					<!--                 dragging</a><br> <a href="#" class="cmdLink detach" -->
+					<!--                 rel="dragDropWindow2">detach all</a> -->
+					<!--             </div> -->
+					<!--             <div id="list"></div> -->
+					<!--             <div -->
+					<!--               class="_jsPlumb_endpoint  _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" -->
+					<!--               style="position: relative; height: 22px; width: 22px; left: 121.6875px; top: 158px;"> -->
+					<!--               <svg style="position: absolute; left: 0px; top: 0px" width="22" -->
+					<!--                 height="22" pointer-events="all" position="absolute" -->
+					<!--                 version="1.1" xmlns="http://www.w3.org/1999/xhtml"> -->
+					<!--               <circle cx="11" cy="11" r="11" version="1.1" -->
+					<!--                   xmlns="http://www.w3.org/1999/xhtml" style="" fill="#316b31" -->
+					<!--                   stroke="none"></circle></svg> -->
+					<!--             </div> -->
+					<!--             <div -->
+					<!--               class="_jsPlumb_endpoint  _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" -->
+					<!--               style="position: relative; height: 21px; width: 25px; left: 167.6875px; top: 84.1px;"> -->
+					<!--               <svg style="position: absolute; left: 0px; top: 0px" width="25" -->
+					<!--                 height="21" pointer-events="all" position="absolute" -->
+					<!--                 version="1.1" xmlns="http://www.w3.org/1999/xhtml"> -->
+					<!--               <rect width="25" height="21" version="1.1" -->
+					<!--                   xmlns="http://www.w3.org/1999/xhtml" style="" fill="#00f" -->
+					<!--                   stroke="none"></rect></svg> -->
+					<!--             </div> -->
+					<!--             <div -->
+					<!--               class="_jsPlumb_endpoint  _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" -->
+					<!--               style="position: relative; height: 21px; width: 25px; left: 707.03125px; top: 230.5px;"> -->
+					<!--               <svg style="position: absolute; left: 0px; top: 0px" width="25" -->
+					<!--                 height="21" pointer-events="all" position="absolute" -->
+					<!--                 version="1.1" xmlns="http://www.w3.org/1999/xhtml"> -->
+					<!--               <rect width="25" height="21" version="1.1" -->
+					<!--                   xmlns="http://www.w3.org/1999/xhtml" style="" fill="#00f" -->
+					<!--                   stroke="none"></rect></svg> -->
+					<!--             </div> -->
+					<!--             <div -->
+					<!--               class="_jsPlumb_endpoint  _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" -->
+					<!--               style="position: relative; height: 22px; width: 22px; left: 756.03125px; top: 183.5px;"> -->
+					<!--               <svg style="position: absolute; left: 0px; top: 0px" width="22" -->
+					<!--                 height="22" pointer-events="all" position="absolute" -->
+					<!--                 version="1.1" xmlns="http://www.w3.org/1999/xhtml"> -->
+					<!--               <circle cx="11" cy="11" r="11" version="1.1" -->
+					<!--                   xmlns="http://www.w3.org/1999/xhtml" style="" fill="#316b31" -->
+					<!--                   stroke="none"></circle></svg> -->
+					<!--             </div> -->
+					<!--           </div> -->
+				</div>
+
+
+				<div id="manage" class="row-fluid tab-pane">
+					<div class="span12">
+						<div>
+							<h3>Edit User Profile</h3>
+						</div>
+						<hr />
+						<div id="manageProfileContainer" class="row-fluid">
+							<div class="top20 padding3pc">
+								<div id="userProfileErrors" class="row-fluid"></div>
+								<div class="row-fluid">
+									<label class="span2" for="inputUsername">Username</label> <input
+										class="span8" type="text" id="inputUsername" disabled>
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputFirstName">First Name</label> <input
+										class="span8" type="text" id="inputFirstName">
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputLastName">Last Name</label> <input
+										class="span8" type="text" id="inputLastName">
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputAffiliation">Affiliation</label>
+									<input class="span8" type="text" id="inputAffiliation">
+								</div>
+								<div class="row-fluid">
+									<label class="span2" for="inputEmail">Email</label> <input
+										class="span8" type="email" id="inputEmail">
+								</div>
+								<div class="row-fluid">
+									<button id="saveProfileInfo"
+										class="btn btn-inverse disabled span2 nomargin">
+										<i class="icon-save"></i>Save
+									</button>
+									<div class="span5 centered">
+										<button id="deleteUserBtn" class="btn btn-danger">
+											<i class="icon-minus-sign"> &nbsp;Delete User </i>
+										</button>
+									</div>
+								</div>
+
+
+								<i id="saveProfileLoadingSign"
+									class="icon-spin icon-spinner icon-2x hidden"></i>
+							</div>
+						</div>
+						<div id="deleteUserProfileModal" class="modal hide fade"
+							tabindex="-1" role="dialog" data-keyboard="false"
+							data-backdrop="static" aria-labelledby="myModalLabel"
+							aria-hidden="true">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">
+									<i class="icon-remove"></i>
+								</button>
+								<h3 id="myModalLabel">Delete User Profile</h3>
+							</div>
+							<div class="modal-body ">
+								<p class="centered">Are you sure that you want to delete
+									your user profile ?</p>
+							</div>
+							<div class="modal-footer">
+								<div class="row-fluid centered">
+									<button id='deleteUserProfileBtn'
+										class="btn btn-danger btn-large">Yes</button>
+									<button class="btn btn-success btn-large left40"
+										data-dismiss="modal" aria-hidden="true">No</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="keys" class="row-fluid tab-pane">
+					<div class="span12">
+						<div>
+							<h3>Manage Public Keys</h3>
+						</div>
+						<hr />
+						<div id="managePublicKeysContainer" class="row-fluid">
+							<div class="padding3pc">
+								<div>
+									<h5>
+										<i class="icon-list-ul"></i>Existing User Keys
+									</h5>
+								</div>
+								<hr />
+								<div id="existingUserKeysContainer" class="margin3pc">
+									<div id="existingUserKeyErrors" class="row-fluid"></div>
+									<div class="row-fluid top20">
+										<div class="span12">
+											<div id="publicKeysList"></div>
+										</div>
+									</div>
+								</div>
+								<div class="top20">
+									<h5>
+										<i class="icon-indent-right"></i>Upload New User Keys
+									</h5>
+								</div>
+								<hr />
+								<div id="uploadNewUserKeysContainer" class="margin3pc">
+									<div id="newUserKeyErrors" class="row-fluid"></div>
+									<div class="row-fluid">
+										<label class="span2" for="inputKeyDescription"><b>Key
+												Description*</b></label>
+										<div class="span8">
+											<input class="span12" type="text" id="inputKeyDescription"
+												required>
+										</div>
+									</div>
+									<div id="currentFileContainer" class="row-fluid top20">
+										<div class="row-fluid top20">
+											<label class="span2" for='publicKeyFromFile'><b>Key
+													Value</b></label>
+											<div id="publicKeyFromFile" class="span8">
+												<textarea class="span12" rows=6 disabled
+													style="resize: none"></textarea>
+											</div>
+											<div class="span2">
+												<button id="uploadNewPublicKey"
+													class="btn btn-inverse span5">
+													<i class="icon-circle-arrow-up icon-large nopadding"></i>
+												</button>
+												<i id="uploadingSign"
+													class="icon-spin icon-spinner icon-2x hidden"></i>
+											</div>
+										</div>
+									</div>
+									<div class="row-fluid top20">
+										<div id="currentFileInfo" class="row-fluid">
+											<span id="currentFileName"
+												class="alert alert-info span3 centered">No file
+												selected</span>
+										</div>
+										<div class="row-fluid">
+											<button id="selectFromFile" class="span3 btn btn-inverse">
+												<i class="icon-file-text"></i> Select from File
+											</button>
+										</div>
+										<div id="selectFromFileInput" class="hidden">
+											<input type="file" class="hidden"></input>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="certificate" class="row-fluid tab-pane">
+					<div class="span12">
+						<div>
+							<h3>Download Certificates</h3>
+						</div>
+						<hr />
+						<div id="downloadCertificateContainer" class="row-fluid">
+							<div id="genFromExKey" class="padding3pc">
+								<div>
+									<h5>
+										<i class="icon-file-text"></i>Certificate From Existing Key
+									</h5>
+								</div>
+								<hr />
+								<div id="cerfificateFromKeyContainer" class="margin3pc">
+									<div id="selectKeyForGeneration" class="row-fluid"></div>
+									<div class="row-fluid">
+										<button id="genPubKey" class="btn btn-inverse span2 nomargin">
+											<i class="icon-circle-arrow-down"></i>Generate
+										</button>
+										<i id="genPubKeySign"
+											class="icon-spin icon-spinner icon-2x hidden"></i>
+									</div>
+									<div id="generatedCertificate" class="row-fluid top20"></div>
+								</div>
+							</div>
+							<div id="genNewKeypairWithCertificate" class="top20 padding3pc">
+								<div>
+									<h5>
+										<i class="icon-paste"></i>New Keypair with Certificate
+									</h5>
+								</div>
+								<hr />
+								<div id="cerfificateWithKeyContainer" class="margin3pc">
+									<div id="newKeypairAndCertificateErrors" class="row-fluid"></div>
+									<div id="passphraseForGeneration" class="row-fluid">
+										<label class="span2" for="inputPassphrase">Pass-phrase</label>
+										<div class="span8">
+											<input class="span12" id="inputPassphrase" type="password"
+												required>
+										</div>
+									</div>
+									<div class="row-fluid">
+										<button id="genKeyAndCertificate"
+											class="btn btn-inverse span2 nomargin ">
+											<i class="icon-circle-arrow-down"></i>Generate
+										</button>
+										<i id="genKeyAndCertificateSign"
+											class="icon-spin icon-spinner icon-2x hidden"></i>
+									</div>
+									<div id="generatedKeyAndCertificate" class="row-fluid top20"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="openepcqos" class="row-fluid tab-pane">
+					<div id="courseTitle">
+						<h3>
+							OpenEPC QoS<a href="#" class="edit" onclick="return false;">Edit</a>
+						</h3>
+					</div>
+					<div id="courseDescription">
+						<h4>
+							Welcome to the OpenEPC QoS course!<a href="#" class="edit"
+								onclick="return false;">Edit</a>
+						</h4>
+					</div>
+					<hr />
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#usersOpenepcqos'>
+						<h4 class="collapseHeader">
+							<a href="#" onclick="return false;">Users</a><i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="usersOpenepcqos" class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>Max Mustermann</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Mitja Nikolaus</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Alexander Willner</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td><a href="#" class="black" onclick="return false;">Add
+										User</a></td>
+							</tr>
+						</table>
+					</div>
+					<hr />
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#testbedsOpenepcqos'>
+						<h4 class="collapseHeader">
+							<a href="#" class="black" onclick="return false;">Testbeds</a> <i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="testbedsOpenepcqos" class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>FUSECO Playground</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td><a href="#" class="black" onclick="return false;">Add
+										Testbed</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+
+
+				<div id="course" class="row-fluid tab-pane">
+					<div id="courseTitle">
+						<h3>
+							Test Course<a href="#" class="edit" onclick="return false;">Edit</a>
+						</h3>
+					</div>
+					<div id="courseDescription">
+						<h4>
+							A course for testing purposes<a href="#" class="edit"
+								onclick="return false;">Edit</a>
+						</h4>
+					</div>
+					<hr />
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#usersInCourse'>
+						<h4 class="collapseHeader">
+							<a href="#" onclick="return false;">Users</a><i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="usersInCourse" class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>User1</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>User2</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>User3</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td><a href="#" class="black" onclick="return false;">Add
+										User</a></td>
+							</tr>
+						</table>
+					</div>
+					<hr />
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#testbedsInCourse'>
+						<h4 class="collapseHeader">
+							<a href="#" class="black" onclick="return false;">Testbeds</a> <i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="testbedsInCourse" class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>Testbed1</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Another Testbed</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Details</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td><a href="#" class="black" onclick="return false;">Add
+										Testbed</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div id="testbed" class="row-fluid tab-pane">
+					<div id="testbedTitle">
+						<h3>
+							Testbed Example<a href="#" class="edit" onclick="return false;">Edit</a>
+						</h3>
+					</div>
+					<div id="testbedDescription">
+						<h4>
+							A testbed for testing purposes<a href="#" class="edit"
+								onclick="return false;">Edit</a>
+						</h4>
+					</div>
+					<hr />
+					<div id="tbresources">
+						<table>
+							<tr>
+								<td>Resource1</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Resource number 2</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Another Resource with a longer name</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+
+				<div id="fusecoplayground" class="row-fluid tab-pane">
+					<div id="testbedTitle">
+						<h3>
+							FUSECO Playground<a href="#" class="edit" onclick="return false;">Edit</a>
+						</h3>
+					</div>
+					<div id="testbedDescription">
+						<h4>
+							The independent testbed for FUture SEamless COmmunication<a
+								href="#" class="edit" onclick="return false;">Edit</a>
+						</h4>
+					</div>
+					<hr />
+					<div id="tbresources">
+						<table>
+							<tr>
+								<td>Attenuator</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>EPC_Virtual</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>EPC_Mobile_Client</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+
+
+				<div id="createtestbed" class="row-fluid tab-pane">
+					<div id="createTestbedTitle">
+						<h3>Create Testbed</h3>
+					</div>
+					<div id="createTestbedDescription">
+						<h4>Set up connection to a new testbed</h4>
+					</div>
+					<hr />
+					<div>
+						<div class="row-fluid">
+							<label class="span2" for="testbedAM">Name</label> <input
+								class="span8" type="text" id="testbedAM"
+								placeholder="Chose any name for the testbed">
+						</div>
+						<div class="row-fluid">
+							<label class="span2" for="testbedSM">Description</label> <input
+								class="span8" type="text" id="testbedSM"
+								placeholder="Write some description e.g. where the testbed might be used for">
+						</div>
+						<br />
+						<div class="row-fluid">
+							<label class="span2" for="testbedAM">Aggregate Manager</label> <input
+								class="span8" type="text" id="testbedAM"
+								placeholder="URL of the Aggregate Manager">
+						</div>
+						<div class="row-fluid">
+							<label class="span2" for="testbedSM">Slice Manager</label> <input
+								class="span8" type="text" id="testbedSM"
+								placeholder="URL of the Slice Manager">
+						</div>
+					</div>
+				</div>
+
+				<div id="createcourse" class="row-fluid tab-pane">
+					<div id="createTestbedTitle">
+						<h3>Create Course</h3>
+					</div>
+					<div id="createTestbedDescription">
+						<h4>Create a new course where users can join</h4>
+					</div>
+					<hr />
+					<div>
+						<div class="row-fluid">
+							<label class="span2" for="testbedAM">Name</label> <input
+								class="span8" type="text" id="testbedAM"
+								placeholder="Chose any name for your course">
+						</div>
+						<div class="row-fluid">
+							<label class="span2" for="testbedSM">Description</label> <input
+								class="span8" type="text" id="testbedSM"
+								placeholder="Write some description e.g. what the aims of the course are">
+						</div>
+
+						<div style="height: 200px">
+							<label class="span2" for="tbdropdown">Testbeds</label>
+							<div id="tbdropdown" class="span8 nomargin">
+								<div class="dropdown">
+									<button class="nomargin btn dropdown-toggle sr-only"
+										type="button" id="dropdownMenu1" data-toggle="dropdown">
+										Available Testbeds <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu">
+										<li><a tabindex="-1" href="#" onclick="return false;">Testbed
+												1</a></li>
+										<li><a tabindex="-1" href="#" onclick="return false;">Testbed
+												2</a></li>
+										<li><a tabindex="-1" href="#" onclick="return false;">Testbed
+												3</a></li>
+										<li><a tabindex="-1" href="#" onclick="return false;">Testbed
+												4</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div id="openepcqosuser" class="row-fluid tab-pane">
+					<div id="courseTitle">
+						<h3>OpenEPC QoS</h3>
+					</div>
+					<div id="courseDescription">
+						<h4>Welcome to the OpenEPC QoS course!</h4>
+					</div>
+					<hr />
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#testbed1Details_openepcqosuser'>
+						<h4 class="collapseHeader">
+							<a href="#" onclick="return false;">FUSECO Playground</a><i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="testbed1Details_openepcqosuser"
+						class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>Attenuator</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>EPC_Virtual</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>EPC_Mobile_Client</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+
+				<div id="usercourse" class="row-fluid tab-pane">
+					<div id="courseTitle">
+						<h3>Test Course</h3>
+					</div>
+					<div id="courseDescription">
+						<h4>A course for testing purposes</h4>
+					</div>
+					<hr />
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#testbed1Details'>
+						<h4 class="collapseHeader">
+							<a href="#" onclick="return false;">Testbed 1</a><i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="testbed1Details" class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>Resource1</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Resource number 2</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>another Resource with a longer name</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+						</table>
+					</div>
+					<div class="collapseHeader" data-toggle='collapse'
+						data-target='#testbed2Details'>
+						<h4 class="collapseHeader">
+							<a href="#" onclick="return false;">Testbed 2</a><i
+								class="collapseSign"></i>
+						</h4>
+					</div>
+					<div id="testbed2Details" class="row-fluid collapse out">
+						<table>
+							<tr>
+								<td>Resource1</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>Resource number 2</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+							<tr>
+								<td>another Resource with a longer name</td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Allocate</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Provision</a></td>
+								<td><a href="#" class="margin3 btn btn-inverse"
+									onclick="return false;">Delete</a></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div id="addcourse" class="row-fluid tab-pane">
+					<div id="coursesAvailable">
+						<h3>Courses Available</h3>
+					</div>
+					<div id="addCourseDescription">
+						<h4>Chose a course you want to sign up for</h4>
+					</div>
+					<hr>
+					<div id="addCourseCourses">
+						<h4>
+							<a href="#" onclick="return false;" class="black"><i
+								class="icon-group"></i>Course 4</a>
+						</h4>
+						<h4>
+							<a href="#" onclick="return false;" class="black"><i
+								class="icon-group"></i>Course 5</a>
+						</h4>
+					</div>
+				</div>
+
+			</div>
+		</div>
+  </div>
+
+      
+      
+      
 </body>

@@ -4,7 +4,7 @@ define(['require','utils','profile','publicKeys', 'certificates','server','index
  */ 
 function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	
-	console.log("mainPage.js is loaded");
+//	console.log("mainPage.js is loaded");
 	 /** 
 	 * The FITeagle main page class contains functions required for initialization of the 
 	 * main page forms and elements located on the page.
@@ -24,33 +24,11 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		if(tag && tag.length > 0){
 			openTab(tag); // trying to open a tab for the tag
 		}else{
-			window.location.hash = "#manage";
-			openTab('#manage');
+			window.location.hash = "#resources";
+			openTab('#resources');
 		}
 	};
 		
-	/**
-	* Collapses sections identified by "#yourSliceList" and "#availableSlicesList" selectors
-	* @param {Boolean} boolean value that triggers collapse function. 
-	* True value collapses the container, false otherwise opens it.
-	* @private
-	* @memberOf Main#
-	*/
-	collapseAsideSections = function(bool){
-		var sliceList = $("#yourSliceList");
-		var availableSlices  = $('#availableSlicesList');
-		if(bool){
-			sliceList.removeClass('in');
-			availableSlices.removeClass('in');
-		}else{
-			if(!sliceList.hasClass('in')){
-					sliceList.addClass('in');
-			}
-			if(!availableSlices.hasClass('in')){
-					availableSlices.addClass('in');
-			}	
-		}
-	};
 	
 	/**
 	* Creates and appends to the body confirmation modal to be shown before signing out. 
@@ -77,7 +55,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var header = event.currentTarget;
 			var icon = $(header).find('i');
 			window.setTimeout(function(){
-				initCollapseSignFor(icon);
+				switchCollapseSignFor(icon);
 			},100);
 		});
 	};
@@ -89,32 +67,19 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @private
 	* @memberOf Main#
 	*/
-	initCollapseSignFor = function(icon_object){
+	switchCollapseSignFor = function(icon_object){
 		var selector = icon_object.closest('div').attr('data-target');
 		var isOpen  = $(selector).hasClass('in');
 			//console.log("selector" + selector + " is open " + isOpen);
 			if(isOpen){
 				icon_object.attr('class','');
-				icon_object.addClass('collapseSign icon-chevron-down');
+				icon_object.addClass('collapseSign icon-caret-down');
 			}else{
 				icon_object.attr('class','');
-				icon_object.addClass('collapseSign icon-chevron-right');
+				icon_object.addClass('collapseSign icon-caret-right');
 		}
 	};
 	
-	/**
-	* Initializes change of the icon sign for all of the elements with the class with  the ".collapseSign" selector.
-	* @private
-	* @memberOf Main#
-	*/
-	initCollapseSigns = function(){
-		var icons = $('.collapseSign');
-		icons.each(function(){
-			var t = $(this);
-			initCollapseSignFor(t);
-		});		
-	};
-		
 	/**
 	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
 	* Hides small screen navigation toolbar.
@@ -122,7 +87,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @memberOf Main#
 	*/
 	initForLargeScreens = function(){
-		collapseAsideSections(false);	
+		//collapseAsideSections(false);	
 		Utils.hideElement('#toolbar .btn-navbar');
 	};
 	
@@ -133,7 +98,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @memberOf Main#
 	*/
 	initForSmallScreens = function(){
-		collapseAsideSections(true);	
+		//collapseAsideSections(true);	
 		Utils.unhideElement('#toolbar .btn-navbar');		
 	};
 	
@@ -166,6 +131,10 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		Certificates.initForm();
 		removeUnusedElements();
 		checkForStoredHashTags();
+		
+		require(["jsPlumb"], function(jsPlumb) {
+		    //TODO
+		});
 	};
 	
 	removeUnusedElements = function(){
@@ -198,23 +167,23 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	};
 	
 	
-	/**
-	* Initializes scrolling for small screen devices to the container specified by a selector. 
-	* The scrolling lasts one second and has an offset of navigation menu height.
-	* @param selector - container selector to scroll to
- 	* @private
-	* @memberOf Main#
-	*/
-	initScrollToForm = function(selector){
-		var scrollTo = $(selector);
-		if(Utils.isSmallScreen()){
-			setTimeout(function(){
-				$('html, body').animate({
-					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
-				}, 1000);
-			},100);
-		}	
-	};
+//	/**
+//	* Initializes scrolling for small screen devices to the container specified by a selector. 
+//	* The scrolling lasts one second and has an offset of navigation menu height.
+//	* @param selector - container selector to scroll to
+// 	* @private
+//	* @memberOf Main#
+//	*/
+//	initScrollToForm = function(selector){
+//		var scrollTo = $(selector);
+//		if(Utils.isSmallScreen()){
+//			setTimeout(function(){
+//				$('html, body').animate({
+//					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
+//				}, 1000);
+//			},100);
+//		}	
+//	};
 	
 	/**
       * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
@@ -251,7 +220,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var t = $(this);
 			var linkHref = t.attr('href');
 			//TODO: for non-collapse headers
-			initScrollToForm(linkHref+' h4.collapseHeader');
+			//initScrollToForm(linkHref+' h4.collapseHeader');
 			var hash = linkHref.toLowerCase();
 			history.pushState(linkHref, "page "+linkHref, "/"+hash);
 			openTab(hash);
@@ -303,7 +272,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				Utils.storeHashTag(hash);
 			}
 			else{
-				$('[href$=#manage]').tab('show'); // if not found show manage profile tab
+				$('[href$=#resources]').tab('show'); // if not found show resources tab
 			}
 		}
 	};
@@ -322,7 +291,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		}else{
 			initForLargeScreens();
 		}
-		initCollapseSigns();
 	};
 
 	/**

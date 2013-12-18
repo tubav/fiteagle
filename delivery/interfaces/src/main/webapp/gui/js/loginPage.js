@@ -3,7 +3,7 @@ define([ 'require', 'validation', 'registration', 'utils', 'messages',
 
 function(require, Validation, Registration, Utils, Messages) {
 
-	console.log("loginPage.js is loaded");
+//	console.log("loginPage.js is loaded");
 
 	/**
 	 * The Login class contains functions required for initialization of the

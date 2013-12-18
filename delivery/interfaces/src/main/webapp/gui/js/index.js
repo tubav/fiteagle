@@ -12,7 +12,7 @@ define(['jquery','bootstrap','loginPage','mainPage','statusPage', 'utils', 'hist
 
 function($,Bootstrap,LoginPage,MainPage,StatusPage,Utils, UnifiPage, UnifiLogin){
 	
-	console.log("index.js is called");
+//	console.log("index.js is called");
 					
 	$.ajaxSetup({cache:false});	
 
