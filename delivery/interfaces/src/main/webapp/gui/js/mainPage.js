@@ -142,16 +142,16 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		case "ADMIN":
 			$("#usercourse").remove();
 			$("#addcourse").remove();
-			$("#userAside").remove();
-			$("#tbownerAside").remove();
+//			$("#userAside").remove();
+//			$("#tbownerAside").remove();
 			$("#openepcqosuser").remove();
 			break;
 		case "TBOWNER":
 			$("#usercourse").remove();
 			$("#addcourse").remove();
 			$("#createtestbed").remove();
-			$("#userAside").remove();
-			$("#adminAside").remove();
+//			$("#userAside").remove();
+//			$("#adminAside").remove();
 			$("#openepcqosuser").remove();
 			break;
 		default:
@@ -159,8 +159,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#testbed").remove();
 			$("#createtestbed").remove();
 			$("#createcourse").remove();
-			$("#adminAside").remove();
-			$("#tbownerAside").remove();
+//			$("#adminAside").remove();
+//			$("#tbownerAside").remove();
 			$("#openepcqos").remove();
 			$("#fusecoplayground").remove();
 		}

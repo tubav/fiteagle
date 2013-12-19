@@ -545,10 +545,9 @@ input.search-query{height:24px !important;}
     border-radius:0.5em;        
     color:black;
     padding:0.5em;
-    width:80px; 
-    height:80px;
+    min-width:80px; 
+    min-height:80px;
     font-size: 14px;
-    word-wrap:break-word;
     position: absolute;
 /*     padding-top:5px; */
     -webkit-transition: -webkit-box-shadow 0.15s ease-in;
@@ -566,21 +565,9 @@ input.search-query{height:24px !important;}
     filter:alpha(opacity=90);
 }
 
-#resource1 {
+#resources .newWindow {
 	top:5%;
-	left:3%;
-}
-#resource2 {
-  top:5%;
-  left:18%;
-}
-#resource3 {
-  top:5%;
-  left:33%;
-}
-
-#resources .editLink {
-	font-size:0.8em;
+  left:5%;
 }
 
 #resources a, a:visited {
@@ -592,10 +579,36 @@ input.search-query{height:24px !important;}
 	font-size:0.8em;
 }
 
+#resources i {
+	padding-left: 2px;
+}
 
-/* #resources path, ._jsPlumb_endpoint { */
-/* 	cursor:pointer; */
+#resources .collapse {
+	font-size:0.8em;
+}
+
+/* #resources label{ */
+/* 	font-size:0.8em; */
 /* } */
+
+#resources input{
+	font-size:0.8em;
+	margin-bottom: 0;
+	height: 15px !important;
+}
+
+#resources path, ._jsPlumb_endpoint .dropdown{
+	cursor:pointer;
+}
+
+#courseName a{
+	color: white;
+}
+
+#courseName a:hover{
+  color: #f09030;
+}
+
 
 /* /** DRAG/DROP CLASSES **/ */
 /* .dragActive { border:2px dotted orange; } */
