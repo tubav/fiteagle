@@ -528,6 +528,11 @@ input.search-query{height:24px !important;}
 
 
 
+
+#courseName a{
+  color: white;
+}
+
 #resources{
 	position: relative;
 	height: 600px;
@@ -584,31 +589,52 @@ input.search-query{height:24px !important;}
 }
 
 #resources .collapse {
-	font-size:0.8em;
+	font-size: 12px;
 }
 
 /* #resources label{ */
 /* 	font-size:0.8em; */
 /* } */
 
-#resources input{
-	font-size:0.8em;
-	margin-bottom: 0;
-	height: 15px !important;
-}
 
 #resources path, ._jsPlumb_endpoint .dropdown{
 	cursor:pointer;
 }
 
-#courseName a{
-	color: white;
-}
 
 #courseName a:hover{
   color: #f09030;
 }
 
+
+#resources div::selection{
+	background: transparent;
+}
+
+#resources .icon-edit{
+	float: right;
+	padding-left: 15px;
+}
+
+#resources .icon-trash{
+  float: right;
+}
+
+#resources .resourceType{
+	font-weight: bold;
+}
+
+#resources .nameInput{
+	font-size: 10px;
+	margin-left: 3px;
+	width: 120px;
+}
+
+#resources .nameInputLabel{
+  font-size: 12px;
+  float: left;
+  
+}
 
 /* /** DRAG/DROP CLASSES **/ */
 /* .dragActive { border:2px dotted orange; } */

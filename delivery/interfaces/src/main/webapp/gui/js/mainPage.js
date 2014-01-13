@@ -21,7 +21,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	*/
 	checkForStoredHashTags = function(){
 		var tag = Utils.getStoredHashTag();
-		if(tag && tag.length > 0){
+		if(tag && tag.length > 1){
 			openTab(tag); // trying to open a tab for the tag
 		}else{
 			window.location.hash = "#resources";

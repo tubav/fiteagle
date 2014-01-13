@@ -126,7 +126,7 @@ function(require){
 			});
 			
 			newWindow.addClass("newWindow window _jsPlumb_endpoint_anchor_");
-			newWindow.html(type);
+			newWindow.html("<span class=resourceType>"+type+"</div>");
 			
 			var editLink = jQuery('<a/>', {
 			    href: '#',
@@ -139,7 +139,7 @@ function(require){
 			var edit = jQuery('<div/>', {
 			    id: 'edit'+idCount
 			});
-			edit.html("name: name1 <br/>"+
+			edit.html("<label class='nameInputLabel' for='nameInput"+idCount+"'>name: </label> <input id=nameInput"+idCount+" class='nameInput' type='text' name='name'> <br/>"+
 					"monitorable: <i class=icon-check></i> <br/>");
 			edit.addClass("collapse out");
 			
@@ -149,12 +149,12 @@ function(require){
 			removeLink.html("<i class=icon-trash></i>");
 			removeLink.addClass("removeLink");
 			
-			newWindow.append(editLink);
+			
 			newWindow.append(removeLink);
+			newWindow.append(editLink);
 			newWindow.append(edit);
 			newWindow.appendTo('#resources');
 			
-			var endpoints;			
 			switch(type){
 			case "Attenuator":
 				var s1 = instance.addEndpoint(type+idCount, { anchor:[1 , 0.5 , 0, 1] }, start4G);
@@ -163,7 +163,6 @@ function(require){
 				var e1 = instance.addEndpoint(type+idCount, { anchor:[0 , 0.5, 0, 1] }, end4G);
 				e1.addOverlay(["Label", {id:"label", label:"4G", location:[-1, 0.5] }]);
 				
-				endpoints = new Array(s1,e1);
 				break;
 			case "EPC_Virtual":
 				var e1 = instance.addEndpoint(type+idCount, { anchor:[0 , 0.1, 0, 1] }, endIMEI);
@@ -181,7 +180,6 @@ function(require){
 				var e5 = instance.addEndpoint(type+idCount, { anchor:[0 , 0.9, 0, 1] }, endWifi);
 				e5.addOverlay(["Label", {id:"label", label:"Wifi", location:[-1, 0.5] }]);
 				
-				endpoints = new Array(e1, e2, e3, e4, e5);
 				break;
 			case "EPC_Mobile_Client":
 				var s1 = instance.addEndpoint(type+idCount, { anchor:[1 , 0.1 , 0, 1] }, startIMEI);
@@ -199,16 +197,14 @@ function(require){
 				var s5 = instance.addEndpoint(type+idCount, { anchor:[1 , 0.9 , 0, 1] }, startWifi);
 				s5.addOverlay(["Label", {id:"label", label:"Wifi", location:[2, 0.5] }]);
 				
-				endpoints = new Array(s1, s2, s3, s4, s5);
 				break;			
 			}
 			
 			removeLink.on('click',function(event){
 				event.preventDefault();
+				instance.detachAllConnections(newWindow);
+				instance.removeAllEndpoints(newWindow);
 				newWindow.remove();
-				$.each(endpoints, function(){
-					jsPlumb.deleteEndpoint(this);
-				});
 			});
 			
 			idCount++;
