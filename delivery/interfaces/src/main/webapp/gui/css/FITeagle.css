@@ -592,10 +592,6 @@ input.search-query{height:24px !important;}
 	font-size: 12px;
 }
 
-/* #resources label{ */
-/* 	font-size:0.8em; */
-/* } */
-
 
 #resources path, ._jsPlumb_endpoint .dropdown{
 	cursor:pointer;

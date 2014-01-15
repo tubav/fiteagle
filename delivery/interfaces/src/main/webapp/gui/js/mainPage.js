@@ -22,10 +22,10 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	checkForStoredHashTags = function(){
 		var tag = Utils.getStoredHashTag();
 		if(tag && tag.length > 1){
-			openTab(tag); // trying to open a tab for the tag
+			openDesktopTab(tag); // trying to open a tab for the tag
 		}else{
 			window.location.hash = "#resources";
-			openTab('#resources');
+			openDesktopTab('#resources');
 		}
 	};
 		
@@ -112,7 +112,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		$(window).unbind();
 		$(window).on('popstate hashchange',function(){
 			var state = window.location.hash;
-			openTab(state);
+			openDesktopTab(state);
 		});
 	};
 
@@ -213,17 +213,45 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
       */ 
 	initUserInfoPanel = function(){		
 		var navLinks = $(".navigationLink a");
-		
 		navLinks.off();
 		navLinks.not('#signOut').on('click',function(e){
 			e.preventDefault();
+			$(".courseAside").addClass("hidden");
+			$("#userAside").removeClass("hidden");
+			
 			var t = $(this);
 			var linkHref = t.attr('href');
-			//TODO: for non-collapse headers
+			//TODO: for non-collapseHeaders
 			//initScrollToForm(linkHref+' h4.collapseHeader');
 			var hash = linkHref.toLowerCase();
 			history.pushState(linkHref, "page "+linkHref, "/"+hash);
-			openTab(hash);
+			openDesktopTab(hash);
+		});
+		
+		var courseLinks = $(".courseLinks a");
+		courseLinks.off();
+		courseLinks.on('click',function(e){
+			e.preventDefault();
+			var t = $(this);
+			var linkHref = t.attr('href');
+			var hash = linkHref.toLowerCase();
+			
+			var course = $(hash);
+			if(course != null){
+				course.removeClass("hidden");
+			}
+			//TODO: for different roles
+			$("#userAside").addClass("hidden");
+			
+			window.location.hash = "#resources";
+			openDesktopTab('#resources');
+		});
+		
+		$(".allCoursesLink").on('click',function(e){
+			e.preventDefault();
+			$(".courseAside").addClass("hidden");
+			
+			$("#userAside").removeClass("hidden");
 		});
 		
 		Utils.updateUserInfoPanel();
@@ -262,10 +290,11 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @private
 	* @memberOf Main#
 	*/
-	openTab = function(hash){
+	openDesktopTab = function(hash){
 		if(hash != null){
-			var lis = $(".navigationLink li");
-			lis.removeClass("active");
+			var navLinks = $(".navigationLink li");
+			navLinks.removeClass("active");
+			
 			var a = $('.navigationLink [href$='+hash+']');
 			if(a.length != 0){
 				a.tab('show'); // if found show the tab
@@ -276,6 +305,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			}
 		}
 	};
+	
 	
 	/**
 	* Triggers functions for adjusting the site view for better representing depending on the current screen size such as:

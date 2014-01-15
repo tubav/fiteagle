@@ -6,13 +6,6 @@
 <!--      <a class="btn btn-inverse btn-navbar pull-left hidden" data-toggle="collapse" data-target=".nav-collapse"> -->
 <!--        <i class="icon-reorder"></i> -->
 <!--      </a> -->
-      <div class="span3">
-       <div id="courseName" class="offset1">
-        <ul class="navigationLink icons-ul">
-         <li><a href="#resources">OpenEPC QoS</a></li>
-        </ul>
-       </div>
-      </div>
     
        
       <div id="userInfoPanel" class="dropdown pull-right">
@@ -137,47 +130,88 @@
 <!-- 					<hr /> -->
 <!-- 				</div> -->
 
-				<div id="userAside">
-					<div id="testbeds" class="row-fluid">
-						<div id="testbedsContainer" class="offset1">
-							<div>
-								<h4>
-									<i class="icon-sitemap icon-large"></i>Testbeds
-								</h4>
-							</div>
-							<div id="testbedList" class="navigationLink">
-								<ul class="icons-ul">
-									<li>
-										<div class="collapseHeader" data-toggle='collapse'
-											data-target='#fusecoResources'>
-											<a class="collapseHeader" href="#resources"><i
-												class="collapseSign icon-caret-right"></i>FUSECO Playground</a>
-										</div>
+				<div id="openepcqosaside" class="hidden courseAside">
+					<div class="offset1">
+					
+						<h4>
+							<i class="icon-group icon-large"></i>OpenEPC QoS
+						</h4>
 
-										<ul id="fusecoResources" class="row-fluid collapse out">
-											<li><a href="#resources">Attenuator</a></li>
-											<li><a href="#resources">EPC_Virtual</a></li>
-											<li><a href="#resources">EPC_Mobile_Client</a></li>
-										</ul>
-									</li>
+						<div id="testbedList">
+							<ul class="icons-ul">
+								<li>
+									<div class="collapseHeader" data-toggle='collapse'
+										data-target='#fusecoResources'>
+										<a href="#resources" onclick="return false;"><i
+											class="collapseSign icon-caret-right"></i>FUSECO Playground</a>
+									</div>
 
-									<li>
-										<div class="collapseHeader" data-toggle='collapse'
-											data-target='#Resources2'>
-											<a class="collapseHeader" href="#resources"><i
-												class="collapseSign icon-caret-right"></i>Another Testbed </a>
-										</div>
-										<ul id="Resources2" class="row-fluid collapse out">
-											<li>Attenuator</li>
-											<li>EPC_Virtual</li>
-											<li>EPC_Mobile_Client</li>
-										</ul>
-									</li>
+									<ul id="fusecoResources" class="row-fluid collapse out">
+										<li><a href="#resources">Attenuator</a></li>
+										<li><a href="#resources">EPC_Virtual</a></li>
+										<li><a href="#resources">EPC_Mobile_Client</a></li>
+									</ul>
+								</li>
 
-								</ul>
-							</div>
+								<li>
+									<div class="collapseHeader" data-toggle='collapse'
+										data-target='#Resources2'>
+										<a href="#resources" onclick="return false;"><i
+											class="collapseSign icon-caret-right"></i>Another Testbed </a>
+									</div>
+									<ul id="Resources2" class="row-fluid collapse out">
+										<li>Attenuator</li>
+										<li>EPC_Virtual</li>
+										<li>EPC_Mobile_Client</li>
+									</ul>
+								</li>
+
+							</ul>
 						</div>
 					</div>
+					<a class="allCoursesLink" href="#"> <i
+            class="icon-long-arrow-left"></i>All Courses
+          </a>
+				</div>
+
+
+				<div id="usercourseaside" class="hidden courseAside">
+          <h4>
+            <i class="icon-group icon-large"></i>Example Course
+          </h4>
+          <a class="allCoursesLink" href="#"> <i
+            class="icon-long-arrow-left"></i>All Courses
+          </a>
+        </div>
+
+
+				<div id="userAside">
+						<div class="offset1">
+							<div>
+								<h4>
+									<i class="icon-group icon-large"></i>Courses
+								</h4>
+							</div>
+							<div>
+							  <ul class="courseLinks">
+							    <li>
+						        <a href="#openepcqosaside">OpenEPC QoS</a>
+							    </li>
+							    <li>
+                    <a href="#usercourseaside">OpenMTC Intro</a>
+                  </li>
+                  <li>
+                    <a href="#usercourseaside">OpenIMS Development</a>
+                  </li>
+                   <li>
+                    <a href="#usercourseaside">Federation Tools</a>
+                  </li>
+							  </ul>
+							</div>
+							
+
+
+						</div>
 					<hr />
 					<hr />
 				</div>
