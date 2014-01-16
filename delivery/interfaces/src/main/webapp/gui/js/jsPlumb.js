@@ -2,10 +2,7 @@ define(['require','jquery-ui.min','jquery.jsPlumb-min'],
 
 function(require){
 	
-	console.log("jsPlumb.js is loaded.");
-	
 	jsPlumb.ready(function() {
-		console.log("jsPlumb.js is ready.");
 		var instance = jsPlumb.getInstance({
 			DragOptions : { cursor: 'pointer', zIndex:2000 },
 			PaintStyle : { strokeStyle:'#666' },
@@ -134,7 +131,7 @@ function(require){
 			    'data-toggle': 'collapse',
 			    'data-target': '#edit'+idCount,
 			});
-			editLink.html("<i class=icon-edit></i>");
+			editLink.html("<i class=icon-cogs></i>");
 			
 			var edit = jQuery('<div/>', {
 			    id: 'edit'+idCount

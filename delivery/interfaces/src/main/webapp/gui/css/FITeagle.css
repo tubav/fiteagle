@@ -607,7 +607,7 @@ input.search-query{height:24px !important;}
 	background: transparent;
 }
 
-#resources .icon-edit{
+#resources .icon-cogs{
 	float: right;
 	padding-left: 15px;
 }
@@ -629,7 +629,10 @@ input.search-query{height:24px !important;}
 #resources .nameInputLabel{
   font-size: 12px;
   float: left;
-  
+}
+
+#task {
+	margin-top: 10px;
 }
 
 /* /** DRAG/DROP CLASSES **/ */

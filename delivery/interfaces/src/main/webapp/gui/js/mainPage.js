@@ -24,27 +24,12 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		if(tag && tag.length > 1){
 			openDesktopTab(tag); // trying to open a tab for the tag
 		}else{
-			window.location.hash = "#resources";
-			openDesktopTab('#resources');
+			window.location.hash = "#manage";
+			openDesktopTab('#manage');
 		}
 	};
 		
 	
-	/**
-	* Creates and appends to the body confirmation modal to be shown before signing out. 
-	* The user is signed out only after confirming his decision.
-    * @private
-    * @memberOf Main#
-	* @return {Object} sign out modal object
-	*/
-	createSignOutModal = function(){
-		var modalBody = $('<div>').addClass('centered').append('<h5>'+Messages.signOutConfirm+'</h5>');
-		var signOutModal = Utils.createConfirmModal('signOutModal','signOutOkBtn','YES','NO',modalBody);
-		$('body').append(signOutModal);
-		return signOutModal;
-	};
-	
-		
 	/**
 	* Initializes change of the icon sign for all of the headers with the class with  the ".collapseHeader" selector after clicking on it.
 	* @private
@@ -70,7 +55,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	switchCollapseSignFor = function(icon_object){
 		var selector = icon_object.closest('div').attr('data-target');
 		var isOpen  = $(selector).hasClass('in');
-			//console.log("selector" + selector + " is open " + isOpen);
 			if(isOpen){
 				icon_object.attr('class','');
 				icon_object.addClass('collapseSign icon-caret-down');
@@ -78,28 +62,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				icon_object.attr('class','');
 				icon_object.addClass('collapseSign icon-caret-right');
 		}
-	};
-	
-	/**
-	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
-	* Hides small screen navigation toolbar.
-    * @private
-	* @memberOf Main#
-	*/
-	initForLargeScreens = function(){
-		//collapseAsideSections(false);	
-		Utils.hideElement('#toolbar .btn-navbar');
-	};
-	
-	/**
-	* Defines the behaviour for the small size devises. Collapses Aside sections for better representation on the narrow window screen.
-	* Unhides small screen navigation toolbar.
-    * @private
-	* @memberOf Main#
-	*/
-	initForSmallScreens = function(){
-		//collapseAsideSections(true);	
-		Utils.unhideElement('#toolbar .btn-navbar');		
 	};
 	
 	/**
@@ -142,16 +104,16 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		case "ADMIN":
 			$("#usercourse").remove();
 			$("#addcourse").remove();
-//			$("#userAside").remove();
-//			$("#tbownerAside").remove();
+			$("#userAside").remove();
+			$("#tbownerAside").remove();
 			$("#openepcqosuser").remove();
 			break;
 		case "TBOWNER":
 			$("#usercourse").remove();
 			$("#addcourse").remove();
 			$("#createtestbed").remove();
-//			$("#userAside").remove();
-//			$("#adminAside").remove();
+			$("#userAside").remove();
+			$("#adminAside").remove();
 			$("#openepcqosuser").remove();
 			break;
 		default:
@@ -159,48 +121,11 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#testbed").remove();
 			$("#createtestbed").remove();
 			$("#createcourse").remove();
-//			$("#adminAside").remove();
-//			$("#tbownerAside").remove();
+			$("#adminAside").remove();
+			$("#tbownerAside").remove();
 			$("#openepcqos").remove();
 			$("#fusecoplayground").remove();
 		}
-	};
-	
-	
-//	/**
-//	* Initializes scrolling for small screen devices to the container specified by a selector. 
-//	* The scrolling lasts one second and has an offset of navigation menu height.
-//	* @param selector - container selector to scroll to
-// 	* @private
-//	* @memberOf Main#
-//	*/
-//	initScrollToForm = function(selector){
-//		var scrollTo = $(selector);
-//		if(Utils.isSmallScreen()){
-//			setTimeout(function(){
-//				$('html, body').animate({
-//					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
-//				}, 1000);
-//			},100);
-//		}	
-//	};
-	
-	/**
-      * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
-	  * @private
-	  * @memberOf Main#
-     */ 
-	initSignOutBtn = function(){
-		$("#signOut").on('click',function(e){
-			e.preventDefault();
-			var modal = createSignOutModal();
-			modal.modal('show');
-			$('#signOutOkBtn').on('click',function(){
-				var isCookieDeleted = Server.invalidateCookie();
-				modal.modal('hide');
-				if(isCookieDeleted) Main.signOut();
-			});
-		});
 	};
 	
 	/**
@@ -240,18 +165,39 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			if(course != null){
 				course.removeClass("hidden");
 			}
-			//TODO: for different roles
-			$("#userAside").addClass("hidden");
-			
-			window.location.hash = "#resources";
-			openDesktopTab('#resources');
+			$("#homeAsides").addClass("hidden");
 		});
 		
 		$(".allCoursesLink").on('click',function(e){
 			e.preventDefault();
 			$(".courseAside").addClass("hidden");
+			$("#homeAsides").removeClass("hidden");
+		});
+		
+		var taskLinks = $(".taskLinks a");
+		taskLinks.off();
+		taskLinks.on('click',function(e){
+			e.preventDefault();
+			var t = $(this);
+			var linkHref = t.attr('href');
+			var hash = linkHref.toLowerCase();
 			
-			$("#userAside").removeClass("hidden");
+			var task = $(hash);
+			if(task != null){
+				task.removeClass("hidden");
+			}
+			$(".courseAside").addClass("hidden");
+			
+			window.location.hash = "#task";
+			openDesktopTab("#task");
+		});
+		
+		$(".allTasksLink").on('click',function(e){
+			e.preventDefault();
+			$(".taskAside").addClass("hidden");
+			
+			var courseAside = this.parentNode.id.replace("task","aside");
+			$("#"+courseAside).removeClass("hidden");
 		});
 		
 		Utils.updateUserInfoPanel();
@@ -301,7 +247,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				Utils.storeHashTag(hash);
 			}
 			else{
-				$('[href$=#resources]').tab('show'); // if not found show resources tab
+				$('[href$=#task]').tab('show'); // if not found show task tab
 			}
 		}
 	};
@@ -322,7 +268,61 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			initForLargeScreens();
 		}
 	};
-
+	
+	
+	/**
+	* Defines the behaviour for the large size devises. Opens Aside sections for better representation on the wide window screen.
+	* Hides small screen navigation toolbar.
+    * @private
+	* @memberOf Main#
+	*/
+	initForLargeScreens = function(){
+		//collapseAsideSections(false);	
+		Utils.hideElement('#toolbar .btn-navbar');
+	};
+	
+	/**
+	* Defines the behaviour for the small size devises. Collapses Aside sections for better representation on the narrow window screen.
+	* Unhides small screen navigation toolbar.
+    * @private
+	* @memberOf Main#
+	*/
+	initForSmallScreens = function(){
+		//collapseAsideSections(true);	
+		Utils.unhideElement('#toolbar .btn-navbar');		
+	};
+	
+	//	/**
+	//	* Initializes scrolling for small screen devices to the container specified by a selector. 
+	//	* The scrolling lasts one second and has an offset of navigation menu height.
+	//	* @param selector - container selector to scroll to
+	// 	* @private
+	//	* @memberOf Main#
+	//	*/
+	//	initScrollToForm = function(selector){
+	//		var scrollTo = $(selector);
+	//		if(Utils.isSmallScreen()){
+	//			setTimeout(function(){
+	//				$('html, body').animate({
+	//					 scrollTop: scrollTo.offset().top-15-$('#navigation').height()
+	//				}, 1000);
+	//			},100);
+	//		}	
+	//	};
+	
+	/**
+     * Defines the behaviour after clicking on the singOut button: Cookie invalidation on the server and singing out of the current user. 
+	  * @private
+	  * @memberOf Main#
+    */ 
+	initSignOutBtn = function(){
+		$("#signOut").on('click',function(e){
+			e.preventDefault();
+				var isCookieDeleted = Server.invalidateCookie();
+				if(isCookieDeleted) Main.signOut();
+		});
+	};
+	
 	/**
 	* Signs out the current user. Resets its data in the session storage and loads the login page.  
 	* @public
