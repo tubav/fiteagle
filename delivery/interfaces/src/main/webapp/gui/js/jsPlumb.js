@@ -131,19 +131,19 @@ function(require){
 			    'data-toggle': 'collapse',
 			    'data-target': '#edit'+idCount,
 			});
-			editLink.html("<i class=icon-cogs></i>");
+			editLink.html("<i class='fa fa-cogs'></i>");
 			
 			var edit = jQuery('<div/>', {
 			    id: 'edit'+idCount
 			});
 			edit.html("<label class='nameInputLabel' for='nameInput"+idCount+"'>name: </label> <input id=nameInput"+idCount+" class='nameInput' type='text' name='name'> <br/>"+
-					"monitorable: <i class=icon-check></i> <br/>");
+					"monitorable: <i class='fa fa-check'></i> <br/>");
 			edit.addClass("collapse out");
 			
 			var removeLink = jQuery('<a/>', {
 			    href: '#',
 			});
-			removeLink.html("<i class=icon-trash></i>");
+			removeLink.html("<i class='fa fa-trash-o'></i>");
 			removeLink.addClass("removeLink");
 			
 			

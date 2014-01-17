@@ -38,9 +38,9 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	initCollapseHeaders = function(){
 		$('.collapseHeader').click(function(event){
 			var header = event.currentTarget;
-			var icon = $(header).find('i');
+			var icon = header.previousElementSibling;
 			window.setTimeout(function(){
-				switchCollapseSignFor(icon);
+				switchCollapseSignFor($(icon));
 			},100);
 		});
 	};
@@ -53,14 +53,14 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	* @memberOf Main#
 	*/
 	switchCollapseSignFor = function(icon_object){
-		var selector = icon_object.closest('div').attr('data-target');
+		var selector = $(icon_object[0].nextElementSibling).attr("data-target");
 		var isOpen  = $(selector).hasClass('in');
 			if(isOpen){
 				icon_object.attr('class','');
-				icon_object.addClass('collapseSign icon-caret-down');
+				icon_object.addClass('collapseSign fa fa-caret-down fa-li');
 			}else{
 				icon_object.attr('class','');
-				icon_object.addClass('collapseSign icon-caret-right');
+				icon_object.addClass('collapseSign fa fa-caret-right fa-li');
 		}
 	};
 	
@@ -102,6 +102,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 	removeUnusedElements = function(){
 		switch(Utils.getCurrentUser().role){
 		case "ADMIN":
+			$("#task").remove();
 			$("#usercourse").remove();
 			$("#addcourse").remove();
 			$("#userAside").remove();
@@ -109,6 +110,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#openepcqosuser").remove();
 			break;
 		case "TBOWNER":
+			$("#task").remove();
 			$("#usercourse").remove();
 			$("#addcourse").remove();
 			$("#createtestbed").remove();
@@ -119,6 +121,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		default:
 			$("#course").remove();
 			$("#testbed").remove();
+			$("#newtask").remove();
 			$("#createtestbed").remove();
 			$("#createcourse").remove();
 			$("#adminAside").remove();

@@ -9,6 +9,10 @@ body{
 	line-height: 1.5 !important;
 }
 
+a {
+	cursor: pointer;
+}
+
 #fiteagleBody{
 	margin-left: auto;
 	margin-right: auto;
@@ -63,6 +67,8 @@ table {
 
 table td{
 	height: 37px;
+	padding-left: 5px;
+  padding-right: 5px;
 }
 
 .alert{margin-bottom:10px !important}
@@ -99,10 +105,6 @@ table td{
 	text-decoration:none;
 }
 
-.collapseHeader a{
-	color: #373737;
-}
-
 #toolbar button{
 	margin-top: 10px;
 }
@@ -118,7 +120,11 @@ table td{
 	margin-top: 15px;
 }
 
-ul li a{color: #585858}
+.btn {
+	color: white;
+}
+
+ul li a{color: #373737}
 ul li a:hover, ul li a:focus{text-decoration: none;}
 
 #managePubliKeys ul li textarea{color: black;}
@@ -130,7 +136,7 @@ h3{
 	line-height: normal !important;
 }
 
-i[class^=icon-]{padding-right:5px;}
+.fa {padding-right:5px;}
 
 .left20{margin-left: 20px}
 .left40{margin-left: 40px !important}
@@ -172,7 +178,8 @@ input.search-query{height:24px !important;}
 #toolbar{color:white;}
 #toolbar .pull-right{
 		cursor: pointer;
-		padding-right: 20px}
+		padding-right: 20px
+}
 		
 #toolbar .form-search{
 	margin:0 !important;
@@ -575,8 +582,18 @@ input.search-query{height:24px !important;}
   left:5%;
 }
 
-#resources a, a:visited {
-    color:black;
+#resources a {
+    color: #373737;
+    border-radius:0.2em;
+}
+
+#resources a:visited {
+    color: #373737;
+    border-radius:0.2em;
+}
+
+#aside a {
+    color: #373737;
     border-radius:0.2em;
 }
 
@@ -607,12 +624,12 @@ input.search-query{height:24px !important;}
 	background: transparent;
 }
 
-#resources .icon-cogs{
+#resources .fa-cogs{
 	float: right;
 	padding-left: 15px;
 }
 
-#resources .icon-trash{
+#resources .fa-trash-o{
   float: right;
 }
 
@@ -633,6 +650,11 @@ input.search-query{height:24px !important;}
 
 #task {
 	margin-top: 10px;
+}
+
+#task .pull-right{
+    cursor: pointer;
+    margin-right: 20px;
 }
 
 /* /** DRAG/DROP CLASSES **/ */
