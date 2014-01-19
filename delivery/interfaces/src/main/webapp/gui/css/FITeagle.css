@@ -71,6 +71,10 @@ table td{
   padding-right: 5px;
 }
 
+td .centered{
+ text-align:center;
+}
+
 .alert{margin-bottom:10px !important}
 
 #loginForm .modal-body{
@@ -124,7 +128,9 @@ table td{
 	color: white;
 }
 
-ul li a{color: #373737}
+ul li a{
+	color: #373737;
+}
 ul li a:hover, ul li a:focus{text-decoration: none;}
 
 #managePubliKeys ul li textarea{color: black;}
@@ -533,11 +539,8 @@ input.search-query{height:24px !important;}
 	background-image: url('../img/yahoo1.png'),         linear-gradient(top, #ffffff, #e6e6e6); /* W3C */
 }
 
-
-
-
-#courseName a{
-  color: white;
+#tbdropdown{
+	margin-left: 0;
 }
 
 #resources{
@@ -583,7 +586,6 @@ input.search-query{height:24px !important;}
 }
 
 #resources a {
-    color: #373737;
     border-radius:0.2em;
 }
 
@@ -653,6 +655,15 @@ input.search-query{height:24px !important;}
 }
 
 #task .pull-right{
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+#newtask {
+  margin-top: 10px;
+}
+
+#newtask .pull-right{
     cursor: pointer;
     margin-right: 20px;
 }

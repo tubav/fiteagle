@@ -288,7 +288,7 @@ function(){
 	Utils.initTooltipFor = function(selector,title,placement,trigger){
 		if(selector){
 			var s = $(selector);
-			s.tooltip('destroy');
+//			s.tooltip('destroy');
 			//console.log("Tooltip for " + selector + ' placement '+ placement);
 			s.tooltip({
 				'title': title,

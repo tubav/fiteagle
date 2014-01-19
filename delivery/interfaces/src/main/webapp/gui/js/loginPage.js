@@ -189,7 +189,7 @@ function(require, Validation, Registration, Utils, Messages) {
 	  * @see Login#initLoginPage function
      */  
 	Login.load = function(){
-	console.log("loading Login Page...");
+//	console.log("loading Login Page...");
 	var url = "login.html";
 	$("#navigation").load(url + " #navs",function(){
 		$("#main").load(url + " #loginPages",

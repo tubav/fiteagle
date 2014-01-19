@@ -32,80 +32,136 @@
   <div id="mainArea" class="tab-content row-fluid">
     <div id="mainWindow">
 			<div id="aside" class="span3">
-				<div id="openepcqosaside" class="hidden courseAside">
-					<div class="offset1">
-					
-						<h4>
-							<i class="fa fa-group fa-lg"></i>OpenEPC QoS
-						</h4>
 
-						<div>
-							<ul class="taskLinks">
-								<li><a href="#openepcqostask">Task 1</a></li>
-								<li><a href="#openepcqostask">Task 2</a></li>
-							</ul>
+
+				<div id="tasksAsides" class="hidden">
+
+					<div id="usertasksaside" class="courseAside">
+						<div class="offset1">
+
+							<h4>
+								<i class="fa fa-group fa-lg"></i>OpenEPC QoS
+							</h4>
+
+							<div>
+								<ul class="navigationLink">
+									<li class="taskLink"><a href="#task">Task 1</a></li>
+									<li class="taskLink"><a href="#task">Task 2</a></li>
+								</ul>
+							</div>
+
 						</div>
-
+						<a class="allCoursesLink" href="#"> <i
+							class="fa fa-long-arrow-left"></i>All Courses
+						</a>
 					</div>
-					<a class="allCoursesLink" href="#"> <i
-            class="fa fa-long-arrow-left"></i>All Courses
-          </a>
+
+					<div id="tasksaside" class="courseAside">
+						<div class="offset1">
+
+							<h4>
+								<i class="fa fa-group fa-lg"></i>OpenEPC QoS
+							</h4>
+
+							<div>
+								<ul class="fa-ul navigationLink">
+									<li class="taskLink"><a href="#task">Task 1</a></li>
+									<li class="taskLink"><a href="#task">Task 2</a></li>
+									<li class="taskLink"><a href="#task">Task 3</a></li>
+									<li class="taskLink"><i class="fa-li fa fa-plus"></i><a
+										href="#newtask">Create Task</a></li>
+								</ul>
+							</div>
+
+						</div>
+						<a class="allCoursesLink" href="#"> <i
+							class="fa fa-long-arrow-left"></i>All Courses
+						</a>
+					</div>
+
 				</div>
 
 
-				<div id="usercourseaside" class="hidden courseAside">
-					<div class="offset1">
-						<h4>
-							<i class="fa fa-group fa-lg"></i>Example Course
-						</h4>
+				<div id="taskAsides" class="hidden">
+				
+					<div id="usertaskaside" class="taskAside">
+						<div class="offset1">
+							<h4>
+								<i class="fa fa-edit fa-lg"></i>Task 1
+							</h4>
+
+							<div id="testbedList">
+								<ul class="fa-ul">
+									<li><i class="collapseSign fa fa-caret-right fa-li"></i>
+										<div class="collapseHeader" data-toggle='collapse'
+											data-target='#userFusecoResources'>
+											<a onclick="return false;">FUSECO Playground</a>
+										</div>
+
+										<ul id="userFusecoResources" class="row-fluid collapse out">
+											<li><a>Attenuator</a></li>
+											<li><a>EPC_Virtual</a></li>
+											<li><a>EPC_Mobile_Client</a></li>
+										</ul></li>
+
+									<li><i class="collapseSign fa fa-caret-right fa-li"></i>
+										<div class="collapseHeader" data-toggle='collapse'
+											data-target='#userResources2'>
+											<a onclick="return false;">UCT Testbed</a>
+										</div>
+										<ul id="userResources2" class="row-fluid collapse out">
+											<li>Attenuator</li>
+											<li>EPC_Virtual</li>
+											<li>EPC_Mobile_Client</li>
+										</ul></li>
+
+								</ul>
+							</div>
+						</div>
+						<a class="allTasksLink" href="#"> <i
+							class="fa fa-long-arrow-left"></i>All Tasks
+						</a>
 					</div>
-					<a class="allCoursesLink" href="#"> <i
-						class="fa fa-long-arrow-left"></i>All Courses
-					</a>
+
+					<div id="taskaside" class="taskAside">
+						<div class="offset1">
+							<h4>
+								<i class="fa fa-edit fa-lg"></i>Task 1
+							</h4>
+
+							<div id="testbedList">
+								<ul class="fa-ul">
+									<li><i class="collapseSign fa fa-caret-right fa-li"></i>
+										<div class="collapseHeader" data-toggle='collapse'
+											data-target='#fusecoResources'>
+											<a onclick="return false;">FUSECO Playground</a>
+										</div>
+
+										<ul id="fusecoResources" class="row-fluid collapse out">
+											<li><a>Attenuator</a></li>
+											<li><a>EPC_Virtual</a></li>
+											<li><a>EPC_Mobile_Client</a></li>
+										</ul></li>
+
+									<li><i class="collapseSign fa fa-caret-right fa-li"></i>
+										<div class="collapseHeader" data-toggle='collapse'
+											data-target='#Resources2'>
+											<a href="#task" onclick="return false;">UCT Testbed</a>
+										</div>
+										<ul id="Resources2" class="row-fluid collapse out">
+											<li>Attenuator</li>
+											<li>EPC_Virtual</li>
+											<li>EPC_Mobile_Client</li>
+										</ul></li>
+
+								</ul>
+							</div>
+						</div>
+						<a class="allTasksLink" href="#"> <i
+							class="fa fa-long-arrow-left"></i>All Tasks
+						</a>
+					</div>
 				</div>
-
-				<div id="openepcqostask" class="hidden taskAside">
-          <div class="offset1">
-            <h4>
-              <i class="fa fa-edit fa-lg"></i>Task 1
-            </h4>
-
-            <div id="testbedList">
-              <ul class="fa-ul">
-                <li><i
-                      class="collapseSign fa fa-caret-right fa-li"></i>
-                  <div class="collapseHeader" data-toggle='collapse'
-                    data-target='#fusecoResources'>
-                    <a href="#task" onclick="return false;">FUSECO Playground</a>
-                  </div>
-
-                  <ul id="fusecoResources" class="row-fluid collapse out">
-                    <li><a href="#task">Attenuator</a></li>
-                    <li><a href="#task">EPC_Virtual</a></li>
-                    <li><a href="#task">EPC_Mobile_Client</a></li>
-                  </ul>
-                </li>
-
-                <li><i
-                      class="collapseSign fa fa-caret-right fa-li"></i>
-                  <div class="collapseHeader" data-toggle='collapse'
-                    data-target='#Resources2'>
-                    <a href="#task" onclick="return false;">UCT Testbed</a>
-                  </div>
-                  <ul id="Resources2" class="row-fluid collapse out">
-                    <li>Attenuator</li>
-                    <li>EPC_Virtual</li>
-                    <li>EPC_Mobile_Client</li>
-                  </ul>
-                </li>
-
-              </ul>
-            </div>
-          </div>
-          <a class="allTasksLink" href="#"> <i
-            class="fa fa-long-arrow-left"></i>All Tasks
-          </a>
-        </div>
 
 				<div id="homeAsides">
 				
@@ -115,11 +171,11 @@
 								<i class="fa fa-group fa-lg"></i>Courses
 							</h4>
 							<div id="usercourses">
-								<ul class="courseLinks">
-									<li><a href="#openepcqosaside">OpenEPC QoS</a></li>
-									<li><a href="#usercourseaside">OpenMTC Intro</a></li>
-									<li><a href="#usercourseaside">OpenIMS Development</a></li>
-									<li><a href="#usercourseaside">Federation Tools</a></li>
+								<ul>
+									<li class="courseLink"><a href="#usercourseasidetasks">OpenEPC QoS</a></li>
+									<li class="courseLink"><a href="#usercourseasidetasks">OpenMTC Intro</a></li>
+									<li class="courseLink"><a href="#usercourseasidetasks">OpenIMS Development</a></li>
+									<li class="courseLink"><a href="#usercourseasidetasks">Federation Tools</a></li>
 								</ul>
 							</div>
 						</div>
@@ -141,7 +197,7 @@
 										<ul id="openepcqosOptions" class="row-fluid collapse out navigationLink">
 											<li><a href="#openepcqosparticipants">Participants</a></li>
 											<li><a href="#openepcqostestbeds">Testbeds</a></li>
-											<li><a href="#openepcqostasks">Tasks</a></li>
+											<li class="courseLink"><a href="#courseasidetasks">Tasks</a></li>
 											<li><a>Delete Course</a></li>
 										</ul></li>
 
@@ -171,8 +227,8 @@
 										</ul></li>
 
 									<li><i class="fa fa-plus fa-li"></i>
-										<div>
-											<a onclick="return false;">Create Course</a>
+										<div class="navigationLink">
+											<a href="#createcourse">Create Course</a>
 										</div>
 								  </li>
 
@@ -251,24 +307,32 @@
 						</button>
 					</div>
 					<hr>
-					<div id="resources">
+					<div id="resources" class="span12">
           </div>
         </div>
-        
-        <div id="newtask" class="row-fluid tab-pane">
-          <div id="newtaskhelp">Create a new task by connecting all resources and configuring them the way they are supposed to. Finally, click "Create Task".</div>
-          <div id="taskdescription" class="span9">
-            <label class="span2" for="inputDescription">Description</label> <input
-                    class="span8" type="text" id="inputDescription" placeholder="Describe the task here."></div>
-          <div id="taskCreateButton" class="span3">
-            <button class="btn btn-inverse pull-right">
-              <i class="fa fa-check"></i>Create Task
-            </button>
-          </div>
-          <hr>
-          <div id="resources">
-          </div>
-        </div>
+
+
+				<div id="newtask" class="row-fluid tab-pane">
+					<div class="span9">
+						<div id="newtaskhelp">Create a new task by
+							connecting all resources and configuring them the way they are
+							supposed to. Finally, click "Create Task".</div>
+						<div id="taskdescription">
+							<label class="span2" for="inputDescription">Description</label> <input
+								class="span10" type="text" id="inputDescription"
+								placeholder="Describe the task here.">
+						</div>
+					</div>
+					<div id="taskCreateButton" class="span3">
+						<button class="btn btn-inverse pull-right">
+							<i class="fa fa-check"></i>Create Task
+						</button>
+					</div>
+
+
+					<hr>
+					<div id="resources" class="span12"></div>
+				</div>
 
 				<div id="manage" class="row-fluid tab-pane">
 					<div class="span12">
@@ -491,6 +555,7 @@
 						    <td></td>
 						    <td>Task 1</td>
 						    <td>Task 2</td>
+						    <td>Task 3</td>
 						  </tr>
 							<tr>
 								<td>Max Mustermann</td>
@@ -498,8 +563,9 @@
 									onclick="return false;">Details</a></td>
 								<td><a href="#" class="margin3 btn btn-inverse"
 									onclick="return false;">Delete</a></td>
-								<td><i class="fa fa-check-square-o fa-lg"></i></td>
-								<td><i class="fa fa-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-check-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
 							</tr>
 							<tr>
 								<td>Mitja Nikolaus</td>
@@ -507,8 +573,9 @@
 									onclick="return false;">Details</a></td>
 								<td><a href="#" class="margin3 btn btn-inverse"
 									onclick="return false;">Delete</a></td>
-									<td></td>
-									<td></td>
+								<td class="centered"><i class="fa fa-check-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
 							</tr>
 							<tr>
 								<td>Alexander Willner</td>
@@ -516,12 +583,13 @@
 									onclick="return false;">Details</a></td>
 								<td><a href="#" class="margin3 btn btn-inverse"
 									onclick="return false;">Delete</a></td>
-									<td></td>
-									<td></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
+								<td class="centered"><i class="fa fa-square-o fa-lg"></i></td>
 							</tr>
 							<tr>
-								<td><a href="#" class="black" onclick="return false;">Add
-										Participant</a></td>
+								<td><a href="#" class="black" onclick="return false;"><i
+										class="fa fa-plus"></i>Add Participant</a></td>
 							</tr>
 						</table>
 					</div>
@@ -545,8 +613,8 @@
 									onclick="return false;">Delete</a></td>
 							</tr>
 							<tr>
-								<td><a href="#" class="black" onclick="return false;">Add
-										Testbed</a></td>
+								<td><a href="#" class="black" onclick="return false;"><i
+										class="fa fa-plus"></i>Add Testbed</a></td>
 							</tr>
 						</table>
 					</div>
@@ -764,14 +832,14 @@
 				</div>
 
 				<div id="createcourse" class="row-fluid tab-pane">
-					<div id="createTestbedTitle">
+					<div id="createCourseTitle">
 						<h3>Create Course</h3>
 					</div>
-					<div id="createTestbedDescription">
+					<div id="createCourseDescription">
 						<h4>Create a new course where users can join</h4>
 					</div>
 					<hr />
-					<div>
+					<div style="min-height: 70%">
 						<div class="row-fluid">
 							<label class="span2" for="testbedAM">Name</label> <input
 								class="span8" type="text" id="testbedAM"
@@ -783,9 +851,9 @@
 								placeholder="Write some description e.g. what the aims of the course are">
 						</div>
 
-						<div style="height: 200px">
+						<div class="row-fluid">
 							<label class="span2" for="tbdropdown">Testbeds</label>
-							<div id="tbdropdown" class="span8 nomargin">
+							<div id="tbdropdown" class="span8">
 								<div class="dropdown">
 									<button class="nomargin btn dropdown-toggle sr-only"
 										type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -803,6 +871,9 @@
 									</ul>
 								</div>
 							</div>
+						</div>
+						<div class="row-fluid">
+							<a class="btn btn-inverse">Create</a>
 						</div>
 					</div>
 				</div>

@@ -2,7 +2,11 @@ define(['require','jquery-ui.min','jquery.jsPlumb-min'],
 
 function(require){
 	
-	jsPlumb.ready(function() {
+//	jsPlumb.ready(function() {
+//	});
+	
+	initResourceButtons = function(){
+		console.log("jsplumb init.");
 		var instance = jsPlumb.getInstance({
 			DragOptions : { cursor: 'pointer', zIndex:2000 },
 			PaintStyle : { strokeStyle:'#666' },
@@ -11,12 +15,11 @@ function(require){
 			Container:"resources"
 		});		
 		
-		
 		var dropOptions = {
-			tolerance:"touch",
-			hoverClass:"dropHover",
-			activeClass:"dragActive"
-		};
+				tolerance:"touch",
+				hoverClass:"dropHover",
+				activeClass:"dragActive"
+			};
 		
 		var startIMEI = {
 			endpoint:["Dot", { radius:7 }],
@@ -113,8 +116,10 @@ function(require){
 			dropOptions:dropOptions
 		};
 		
+		
+		
 		var idCount = 0;
-		var lis = $("#fusecoResources li");
+		var lis = $("#fusecoResources li, #userFusecoResources li");
 		lis.on('click',function(event){
 			event.preventDefault();
 			var type = event.target.innerText;
@@ -207,10 +212,7 @@ function(require){
 			idCount++;
 			instance.draggable($(".window"));
 		});
-		
-		
-		instance.draggable($(".window"));
-	});
+	};
 	
 });
 

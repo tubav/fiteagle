@@ -95,7 +95,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		checkForStoredHashTags();
 		
 		require(["jsPlumb"], function(jsPlumb) {
-		    //TODO
+			initResourceButtons();
 		});
 	};
 	
@@ -107,6 +107,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#addcourse").remove();
 			$("#userAside").remove();
 			$("#tbownerAside").remove();
+			$("#usertaskaside").remove();
+			$("#usertasksaside").remove();
 			$("#openepcqosuser").remove();
 			break;
 		case "TBOWNER":
@@ -116,6 +118,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#createtestbed").remove();
 			$("#userAside").remove();
 			$("#adminAside").remove();
+			$("#usertaskaside").remove();
+			$("#usertasksaside").remove();
 			$("#openepcqosuser").remove();
 			break;
 		default:
@@ -124,6 +128,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			$("#newtask").remove();
 			$("#createtestbed").remove();
 			$("#createcourse").remove();
+			$("#taskaside").remove();
+			$("#tasksaside").remove();
 			$("#adminAside").remove();
 			$("#tbownerAside").remove();
 			$("#openepcqos").remove();
@@ -144,8 +150,8 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 		navLinks.off();
 		navLinks.not('#signOut').on('click',function(e){
 			e.preventDefault();
-			$(".courseAside").addClass("hidden");
-			$("#userAside").removeClass("hidden");
+//			$("#taskAsides").addClass("hidden");
+//			$("#homeAsides").removeClass("hidden");
 			
 			var t = $(this);
 			var linkHref = t.attr('href');
@@ -154,54 +160,49 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 			var hash = linkHref.toLowerCase();
 			history.pushState(linkHref, "page "+linkHref, "/"+hash);
 			openDesktopTab(hash);
+			
+			if($(this.parentNode).hasClass("taskLink")){
+				$("#tasksAsides").addClass("hidden");
+				$("#taskAsides").removeClass("hidden");
+			}
+			
 		});
 		
-		var courseLinks = $(".courseLinks a");
+		var courseLinks = $(".courseLink a");
 		courseLinks.off();
 		courseLinks.on('click',function(e){
 			e.preventDefault();
-			var t = $(this);
-			var linkHref = t.attr('href');
-			var hash = linkHref.toLowerCase();
-			
-			var course = $(hash);
-			if(course != null){
-				course.removeClass("hidden");
-			}
+//			var t = $(this);
+//			var linkHref = t.attr('href');
+//			var hash = linkHref.toLowerCase();
+//			
+//			var course = $(hash);
+//			if(course != null){
+//				course.removeClass("hidden");
+//			}
 			$("#homeAsides").addClass("hidden");
+			$("#tasksAsides").removeClass("hidden");
 		});
 		
 		$(".allCoursesLink").on('click',function(e){
 			e.preventDefault();
-			$(".courseAside").addClass("hidden");
+			$("#tasksAsides").addClass("hidden");
 			$("#homeAsides").removeClass("hidden");
-		});
-		
-		var taskLinks = $(".taskLinks a");
-		taskLinks.off();
-		taskLinks.on('click',function(e){
-			e.preventDefault();
-			var t = $(this);
-			var linkHref = t.attr('href');
-			var hash = linkHref.toLowerCase();
-			
-			var task = $(hash);
-			if(task != null){
-				task.removeClass("hidden");
-			}
-			$(".courseAside").addClass("hidden");
-			
-			window.location.hash = "#task";
-			openDesktopTab("#task");
 		});
 		
 		$(".allTasksLink").on('click',function(e){
 			e.preventDefault();
-			$(".taskAside").addClass("hidden");
-			
-			var courseAside = this.parentNode.id.replace("task","aside");
-			$("#"+courseAside).removeClass("hidden");
+			$("#taskAsides").addClass("hidden");
+			$("#tasksAsides").removeClass("hidden");			
+//			var courseAside = this.parentNode.id.replace("task","tasks");
+//			$("#"+courseAside).removeClass("hidden");
 		});
+		
+//		$(".createTaskLink").on('click',function(e){
+//			e.preventDefault();
+//			var task = $("#courseasidetask");
+//			task.removeClass("hidden");
+//		});
 		
 		Utils.updateUserInfoPanel();
 		initSignOutBtn();
@@ -250,7 +251,7 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 				Utils.storeHashTag(hash);
 			}
 			else{
-				$('[href$=#task]').tab('show'); // if not found show task tab
+//				$('[href$=#task]').tab('show'); // if not found show task tab
 			}
 		}
 	};
