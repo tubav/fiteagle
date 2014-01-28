@@ -89,12 +89,20 @@ public class User implements Serializable{
     setOwners(publicKeys);
     checkAttributes();
   }
-  
   public static User createDefaultUser(String username) {
-    return new User(username, "default", "default", "default", "default", "default", null);
+    return new User(username, "default", "default", createDefaultEmail(username), "default", "default", null);
   }
   
-  public static User createAdminUser(String username, String password) throws NotEnoughAttributesException, InValidAttributeException{
+  private static String createDefaultEmail(String username2) {
+	  if(!EMAIL_PATTERN.matcher(username2).matches()){
+		  return username2+"@test.org"; 
+	  }else {
+		return username2;
+	}
+	  
+}
+
+public static User createAdminUser(String username, String password) throws NotEnoughAttributesException, InValidAttributeException{
     User admin = new User(username, "default", "default", "default", "default", password, null);
     admin.setRole(Role.ADMIN);
     return admin;
