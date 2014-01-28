@@ -6,7 +6,7 @@ function(require){
 //	});
 	
 	initResourceButtons = function(){
-		console.log("jsplumb init.");
+//		console.log("jsplumb init.");
 		var instance = jsPlumb.getInstance({
 			DragOptions : { cursor: 'pointer', zIndex:2000 },
 			PaintStyle : { strokeStyle:'#666' },

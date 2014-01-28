@@ -92,7 +92,7 @@ function(require,Utils){
 	* @function
 	*/
 	Server.registerUser = function(newUser,newUsername,successFunction){	
-		console.log("Registering a new user on a server...");
+//		console.log("Registering a new user on a server...");
 		var userToJSON = JSON.stringify(newUser);
 		var message;
 		//console.log("New USER "+ userToJSON);			
@@ -103,7 +103,6 @@ function(require,Utils){
 			url: "/api/v1/user/"+newUsername,
 			data: userToJSON,
 			contentType: "application/json",
-			dataType: "json",
 			success: function(data,status){	},
 			error: function(xhl,status){
 				message = Utils.createErrorMessage(xhl.responseText);
@@ -111,7 +110,7 @@ function(require,Utils){
 			},
 			statusCode:{				
 				200: function(){
-					console.log("New user is successfully registered");		
+//					console.log("New user is successfully registered");		
 				},			
 				201: function(){
 					console.log("New user: "+ newUser.firstName +" "+newUser.lastName+ " has been successfully created.");				
@@ -159,7 +158,7 @@ function(require,Utils){
 			},
 			statusCode:{			
 				401: function(){
-					console.log("Unathorized access. To be signed out")
+					console.log("Unathorized access. To be signed out");	
 					require('mainPage').signOut();
 				}
 			},	
@@ -193,7 +192,6 @@ function(require,Utils){
 			url: "/api/v1/user/"+user.username,
 			data: data,
 			contentType: "application/json",
-			dataType: "json",
 			beforeSend: function(xhr){
 			},
 			success: function(data,status){
@@ -240,7 +238,6 @@ function(require,Utils){
 			url: "/api/v1/user/"+username+'/pubkey',
 			data: JSON.stringify(publicKey),
 			contentType: "application/json",
-			dataType: "json",
 			beforeSend: function(xhr){
 				Utils.unhideElement(uploadingSign);
 			},

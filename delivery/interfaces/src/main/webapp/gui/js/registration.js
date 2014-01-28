@@ -70,7 +70,7 @@ function(Validation, Utils, MainPage,Messages){
 								"#registrationErrors",
 								Validation._isName,
 								Messages.emptyFirstName,
-								Messages.wrongFirstName)	
+								Messages.wrongFirstName);
 		return isValidFirstName;		
 	};
 			
@@ -145,7 +145,7 @@ function(Validation, Utils, MainPage,Messages){
 								Messages.emptyPassword,
 								Messages.wrongPassword
 								);
-		console.log("PSW: " + isValidPassword);		
+//		console.log("PSW: " + isValidPassword);		
 			
 		return isValidPassword;
 							
@@ -265,13 +265,13 @@ function(Validation, Utils, MainPage,Messages){
 			
 			if(errorMessage){
 				setTimeout(function(){
-					$('#registrationErrors').append(errorMessage)
+					$('#registrationErrors').append(errorMessage);
 				},100);
 			}
 		}
 		setTimeout(function(){
 			Utils.hideElement('#registerSpinner');
-		},200)
+		},200);
 	};
 
 	/**
@@ -345,7 +345,7 @@ function(Validation, Utils, MainPage,Messages){
 	
 	Registration.clearAllErrorMessages = function(){
 		Utils.clearErrorMessagesFrom("#registrationErrors");
-	}
+	};
 	
 
 	return Registration;

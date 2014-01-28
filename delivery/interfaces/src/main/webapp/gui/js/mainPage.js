@@ -198,12 +198,6 @@ function(require,Utils,Profile,PublicKeys,Certificates,Server){
 //			$("#"+courseAside).removeClass("hidden");
 		});
 		
-//		$(".createTaskLink").on('click',function(e){
-//			e.preventDefault();
-//			var task = $("#courseasidetask");
-//			task.removeClass("hidden");
-//		});
-		
 		Utils.updateUserInfoPanel();
 		initSignOutBtn();
 		initHashtagChange();
