@@ -89,7 +89,9 @@ public static String getUserNameFromX509Certificate(X509Certificate cert) throws
       Iterator<List<?>> it = alternativeNames.iterator();
       while (it.hasNext()) {
         List<?> altName = it.next();
-        if (altName.get(0).equals(Integer.valueOf(6))) {
+        
+        String altNameString = (String)altName.get(1);
+        if (altName.get(0).equals(Integer.valueOf(6)) && altNameString.contains("+user+")) {
           urn = new URN((String) altName.get(1));
         }
       }

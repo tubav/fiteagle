@@ -130,7 +130,8 @@ public class SFAInteractor_v3 implements ISFA {
       String urn = "";
       while(iter.hasNext()){
         List<?> altName = (List<?>) iter.next();
-        if (altName.get(0).equals(Integer.valueOf(6))) {
+        String altNameString = (String) altName.get(1);
+        if (altName.get(0).equals(Integer.valueOf(6)) && altNameString.contains("+user+")) {
           urn = (String) altName.get(1);
         }
       }
