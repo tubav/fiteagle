@@ -20,7 +20,8 @@
    <module>openstackvmadapter</module>
 
     <module>dummyNode</module>
-	</modules>
+    <module>nodeAdapter</module>
+  </modules>
 
    <repositories>
     <repository>

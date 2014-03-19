@@ -206,7 +206,7 @@ public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 				.createOpenstackResource(openstackResource);
 	}
 
-	private Flavors getFlavorsFromOpenstackAdapter(
+	public Flavors getFlavorsFromOpenstackAdapter(
 			OpenstackResourceAdapter resourceAdapter) {
 
 		Flavors flavors = new Flavors();

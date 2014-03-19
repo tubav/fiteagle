@@ -1,6 +1,5 @@
-package org.fiteagle.adapter.openstackvmadapter;
+package org.fiteagle.adapter.nodeadapter;
 
-import java.awt.datatransfer.FlavorListener;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,18 +22,19 @@ import net.iharder.Base64;
 import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.openstackvmadapter.client.OfflineTestClient;
-import org.fiteagle.adapter.openstackvmadapter.client.OpenstackClient;
-import org.fiteagle.adapter.openstackvmadapter.client.Utils;
-import org.fiteagle.adapter.openstackvmadapter.client.model.Image;
-import org.fiteagle.adapter.openstackvmadapter.client.model.Images;
-import org.fiteagle.adapter.openstackvmadapter.client.model.Server;
+import org.fiteagle.adapter.common.ResourceAdapterStatus;
+import org.fiteagle.adapter.nodeadapter.client.OfflineTestClient;
+import org.fiteagle.adapter.nodeadapter.client.OpenstackClient;
+import org.fiteagle.adapter.nodeadapter.client.Utils;
+import org.fiteagle.adapter.nodeadapter.client.model.Image;
+import org.fiteagle.adapter.nodeadapter.client.model.Images;
+import org.fiteagle.adapter.nodeadapter.client.model.Server;
 
 import com.woorea.openstack.nova.model.Flavor;
 import com.woorea.openstack.nova.model.Flavors;
 import com.woorea.openstack.nova.model.FloatingIp;
 
-public class OpenstackVMAdapter extends ResourceAdapter implements
+public class OpenstackVMAdapter implements
 		OpenstackResourceAdapter {
 
 	private static boolean loaded = false;
@@ -43,7 +44,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 	private OpenstackClient client;
 	private Image image;
 	private List<Flavor> flavorsList;
-	private Server server=new Server();
+	private Server server = new Server();
 	private String keyPairName;
 	private String vmName;
 	private String imageId;
@@ -91,57 +92,55 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	}
 
-	@Override
 	public void start() {
 	}
 
-	@Override
 	public void stop() {
 		this.getClient().deleteKeyPair(this.getKeyPairName());
 		this.getClient().deleteServer(this.getServer().getId());
 	}
 
-	@Override
 	public void create() {
 	}
-
-	@Override
+	
 	public void configure(AdapterConfiguration configuration) {
 
-		String sshPubKey = configuration.getUsers().get(0).getSshPublicKeys().get(0);
+		String sshPubKey = configuration.getUsers().get(0).getSshPublicKeys()
+				.get(0);
 		this.getClient().addKeyPair(keyPairName, sshPubKey);
-		
-		System.out.println("creating key pair: "+this.getKeyPairName());
-		
-		Server createdServer = this.getClient().createServer(this.imageId, this.flavorId,
-				this.vmName, this.keyPairName);
-		
-		System.out.println("creating server(vm) with image id: "+this.imageId);
-		
+
+		System.out.println("creating key pair: " + this.getKeyPairName());
+
+		Server createdServer = this.getClient().createServer(this.imageId,
+				this.flavorId, this.vmName, this.keyPairName);
+
+		System.out
+				.println("creating server(vm) with image id: " + this.imageId);
+
 		this.setServer(createdServer);
-		
+
 		System.out
 				.println("configure on openstack adapter is called configuring the ip ");
 		FloatingIp floatingIp = this.getClient().addFloatingIp();
-		
+
 		System.out.println("adding a floating ip..");
-		
+
 		this.setFloatingIp(floatingIp.getIp());
 		this.server = this.getClient().getServerDetails(server.getId());
 		this.getClient().allocateFloatingIpForServer(server.getId(),
 				floatingIp.getIp());
-		
-		System.out.println("allocating floating ip for server "+server.getId());
+
+		System.out.println("allocating floating ip for server "
+				+ server.getId());
 	}
 
-	@Override
 	public void release() {
 		this.getClient().deleteKeyPair(this.getKeyPairName());
 		this.getClient().deleteServer(this.getServer().getId());
 	}
 
-	public static List<ResourceAdapter> getJavaInstances() {
-		List<ResourceAdapter> resultList = new ArrayList<ResourceAdapter>();
+	public static List<OpenstackResourceAdapter> getOpenstackVMAdapters() {
+		List<OpenstackResourceAdapter> resultList = new ArrayList<OpenstackResourceAdapter>();
 
 		if (!utilsConfigured) {
 			new OpenstackVMAdapter();
@@ -149,7 +148,6 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 		Flavors flavors = createClient().listFlavors();
 		List<Flavor> flavorsList = flavors.getList();
-		
 		Images images = createClient().listImages();
 		List<Image> imagesList = images.getList();
 
@@ -165,12 +163,10 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		return resultList;
 	}
 
-	@Override
 	public boolean isLoaded() {
 		return this.loaded;
 	}
 
-	@Override
 	public void setLoaded(boolean loaded) {
 		this.loaded = loaded;
 	}
@@ -295,16 +291,16 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	}
 
-	 @Override
+	@Override
 	public OpenstackResourceAdapter create(String imageId, String flavorId,
 			String vmName, String keyPairName) {
 
 		if (vmName == null || vmName.compareTo("") == 0) {
 			vmName = generateRandomString();
 		}
-		
-		if(keyPairName==null || keyPairName.compareTo("")==0){
-			keyPairName=generateRandomString();
+
+		if (keyPairName == null || keyPairName.compareTo("") == 0) {
+			keyPairName = generateRandomString();
 		}
 
 		OpenstackVMAdapter openstackVM = new OpenstackVMAdapter();
@@ -503,6 +499,89 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	public void setFlavorId(String flavorId) {
 		this.flavorId = flavorId;
+	}
+
+	// needed staff for the resource adapter capabilities
+	private HashMap<String, Object> properties = new HashMap<String, Object>();
+	private String type;// class of the implementing adapter
+	private String id;
+	private String groupId;
+	private ResourceAdapterStatus status;
+	private boolean exclusive = false;
+	private boolean available = true;
+	private Date expirationTime;
+
+	public HashMap<String, Object> getProperties() {
+		if (properties != null) {
+			return properties;
+		} else {
+			properties = new HashMap<String, Object>();
+			return properties;
+		}
+	}
+
+	public void setProperties(HashMap<String, Object> properties) {
+		this.properties = properties;
+	}
+
+	public void addProperty(String key, Object value) {
+		this.properties.put(key, value);
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+
+	public ResourceAdapterStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ResourceAdapterStatus status) {
+		this.status = status;
+	}
+
+	public boolean isExclusive() {
+		return exclusive;
+	}
+
+	public void setExclusive(boolean exclusive) {
+		this.exclusive = exclusive;
+	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	public Date getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(Date expirationTime) {
+		this.expirationTime = expirationTime;
 	}
 
 }

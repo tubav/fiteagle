@@ -206,6 +206,8 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		List<ResourceAdapter> resources = resourceManager
 				.getResourceAdapterInstancesById(resourceIds);
 		for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
+			
+			//TODO: for every resource(as node) get the slivers(openstackVMAdapter) in them and set these as slivers.
 			ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
 //			if(resourceAdapter==null) continue;
 			GeniSlivers tmpSliver = new GeniSlivers();

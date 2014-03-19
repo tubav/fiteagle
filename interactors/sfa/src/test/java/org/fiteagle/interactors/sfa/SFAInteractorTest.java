@@ -106,7 +106,7 @@ public class SFAInteractorTest {
 //		Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
 //
 //	}
-	@Ignore
+//	@Ignore
   @Test
   public void testListAvailableResources() throws IOException {
     ListResourceOptions options = createMinimalListResourceOptions("GENI",
@@ -132,7 +132,7 @@ public class SFAInteractorTest {
     String listResourcesValue = (String)listResourcesResult.getValue();
 //    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResourceHardwareType1"));
   }
-  @Ignore
+//  @Ignore
 	@Test
   public void testListResourcesWithNode() throws IOException {
     ListResourceOptions options = createMinimalListResourceOptions("GENI",
