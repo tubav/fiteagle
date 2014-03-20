@@ -72,6 +72,11 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		NodeContents node = new NodeContents();// this is the respons
 												// representing openstack as
 												// resource
+		
+		node.setComponentId(COMPONENT_ID_PREFIX + "+node+"
+				+ resourceAdapter.getId());
+		node.setComponentManagerId(COMPONENT_MANAGER_ID);
+		node.setComponentName(resourceAdapter.getId());
 
 		List<Object> sliverTypes = node.getAnyOrRelationOrLocation();// these
 																		// are

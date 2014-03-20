@@ -15,6 +15,8 @@ import com.woorea.openstack.nova.model.Flavors;
 
 public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface{
 
+	private String id="fOpenStack";
+	
 	private List<OpenstackResourceAdapter> images = null;
 
 	private List<Flavor> flavorsList = null;
@@ -96,6 +98,16 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 
 	public void setFlavorsList(List<Flavor> flavorsList) {
 		this.flavorsList = flavorsList;
+	}
+	
+	@Override
+	public String getId() {
+		return this.id;
+	}
+	
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }
