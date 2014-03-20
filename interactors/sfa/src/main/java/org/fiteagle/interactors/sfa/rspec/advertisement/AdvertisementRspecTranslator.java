@@ -78,6 +78,9 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		node.setComponentManagerId(COMPONENT_MANAGER_ID);
 		node.setComponentName(resourceAdapter.getId());
 
+		
+		
+		
 		List<Object> sliverTypes = node.getAnyOrRelationOrLocation();// these
 																		// are
 																		// the
@@ -178,7 +181,11 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 			// .createOpenstackResource(openstackResource);
 
 		}
-
+		AvailableContents available = new AvailableContents();
+		available.setNow(resourceAdapter.isAvailable());
+		//add the availability into the node
+		sliverTypes.add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory().createAvailable(available));
+		
 		return new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory()
 				.createNode(node);
 	}
