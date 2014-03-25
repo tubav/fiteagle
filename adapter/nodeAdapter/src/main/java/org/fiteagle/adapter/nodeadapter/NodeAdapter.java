@@ -2,6 +2,7 @@ package org.fiteagle.adapter.nodeadapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.NodeAdapterInterface;
@@ -15,13 +16,13 @@ import com.woorea.openstack.nova.model.Flavors;
 
 public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface{
 
-	private String id="fOpenStack";
+	private String id=this.nodeName;//TODO: find out a better name
 	
 	private List<OpenstackResourceAdapter> images = null;
 
 	private List<Flavor> flavorsList = null;
 
-	ArrayList<OpenstackResourceAdapter> vms = new ArrayList<OpenstackResourceAdapter>();
+	private List<OpenstackResourceAdapter> vms = null;
 
 	public static List<ResourceAdapter> getJavaInstances() {
 
@@ -85,6 +86,7 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 
 	
 	public List<OpenstackResourceAdapter> getImages() {
+		if(images==null) images = new ArrayList<OpenstackResourceAdapter>();
 		return images;
 	}
 
@@ -108,6 +110,27 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	@Override
+	public NodeAdapter create(String id, List<OpenstackResourceAdapter> vms) {
+		
+		NodeAdapter result = new NodeAdapter();
+		if(id==null || id.compareTo("")==0) id = UUID.randomUUID().toString();
+		result.setId(id);
+		result.setVms(vms);
+		result.setImages(this.getImages());
+		result.setFlavorsList(this.getFlavorsList());
+		return result;
+	}
+
+	public List<OpenstackResourceAdapter> getVms() {
+		if (vms==null) return new ArrayList<OpenstackResourceAdapter>();
+		return vms;
+	}
+
+	public void setVms(List<OpenstackResourceAdapter> vms) {
+		this.vms = vms;
 	}
 
 }

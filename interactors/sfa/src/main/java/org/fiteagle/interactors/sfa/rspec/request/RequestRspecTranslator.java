@@ -2,6 +2,7 @@ package org.fiteagle.interactors.sfa.rspec.request;
 
 import java.util.ArrayList;
 
+import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 
 public class RequestRspecTranslator extends SFAv3RspecTranslator {
@@ -24,6 +25,19 @@ public class RequestRspecTranslator extends SFAv3RspecTranslator {
 
 	private void addRequestRspecExtension(String extension) {
 		requestRspecExtensions.add(extension);
+	}
+
+	public NodeAdapterInterface translateRequestedNodeToNodeAdapterInterface() {
+		return null;
+
+	}
+
+	public String getNodeNameFromNodeComponentId(String string) {
+		if (string == null) return null;
+		String[] result = string.split("\\+node\\+");
+//		String[] result = string.split(COMPONENT_ID_PREFIX + "\\+node\\+");
+		return result[1];
+		
 	}
 
 }

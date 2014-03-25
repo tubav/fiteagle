@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBElement;
+
 import junit.framework.Assert;
 
+import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.interactors.sfa.allocate.AllocateResult;
@@ -33,6 +36,11 @@ import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.ext.ObjectFactory;
 import org.fiteagle.interactors.sfa.rspec.ext.Property;
 import org.fiteagle.interactors.sfa.rspec.ext.Resource;
+import org.fiteagle.interactors.sfa.rspec.request.DiskImageContents;
+import org.fiteagle.interactors.sfa.rspec.request.NodeContents;
+import org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType;
+import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.request.RequestRspecTranslator;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusResult;
 import org.junit.After;
@@ -142,7 +150,7 @@ public class SFAInteractorTest {
     
     String listResourcesValue = (String)listResourcesResult.getValue();
     Assert.assertEquals(0, listResourcesResult.getCode().getGeni_code());
- //   Assert.assertTrue(listResourcesValue.contains("node"));
+    Assert.assertTrue(listResourcesValue.contains("node"));
 //    Assert.assertTrue(listResourcesValue.contains("TestCountry"));
 //    Assert.assertTrue(listResourcesValue.contains("testSSHAccessableResource"));
 
@@ -174,15 +182,32 @@ public class SFAInteractorTest {
 //		DescribeResult describeResult = this.sfaInteractor.describe(urns, getListCredentials(), createTestDescribeOptions("GENI", "3", false));
 //		Assert.assertEquals(0, describeResult.getCode().getGeni_code());
 	}
-	@Ignore
+//	@Ignore
 	@Test
   public void testAllocate() throws IOException {
-//    ArrayList<String> urns = new ArrayList<String>();
-//    urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
-//    RSpecContents testRSpec = getTestRspec();
-//    testRSpec.setType("request");
-//    AllocateResult allocateResult = this.sfaInteractor.allocate(urns.get(0), getListCredentials(), testRSpec, null);
-//    Assert.assertEquals(0, allocateResult.getCode().getGeni_code());
+    ArrayList<String> urns = new ArrayList<String>();
+    urns.add("urn:publicid:IDN+fiteagletest+slice+testtest");
+    RSpecContents testRSpec = getTestRspec();
+    NodeContents node = new NodeContents();
+    
+    node.setComponentId("urn:publicid:IDN+localhost" + "+node+" + NodeAdapterInterface.nodeName);
+    
+    SliverType sliverType = new SliverType();
+    
+    sliverType.setName("m1.small");
+    
+    DiskImageContents diskImage = new DiskImageContents();
+    diskImage.setName("ubuntu-64-monitoring-scripts");
+    
+    sliverType.getAnyOrDiskImage().add(new org.fiteagle.interactors.sfa.rspec.request.ObjectFactory().createDiskImage(diskImage));
+
+    node.getAnyOrRelationOrLocation().add(new org.fiteagle.interactors.sfa.rspec.request.ObjectFactory().createNodeContentsSliverType(sliverType));
+    
+    testRSpec.getAnyOrNodeOrLink().add(new org.fiteagle.interactors.sfa.rspec.request.ObjectFactory().createNode(node));
+    
+    AllocateResult allocateResult = this.sfaInteractor.allocate(urns.get(0), getListCredentials(), testRSpec, null);
+    
+    Assert.assertEquals(0, allocateResult.getCode().getGeni_code());
 //    
   }
 	@Ignore
@@ -323,11 +348,12 @@ public class SFAInteractorTest {
 		return listCredentials;
 	}
 	
-//	private RSpecContents getTestRspec(){
-//	  
-//	  
-//	  RSpecContents testRSpec = new RSpecContents();
-//    List<Object> fiteagleResources = testRSpec .getAnyOrNodeOrLink();
+	private RSpecContents getTestRspec(){
+	  
+	  //TODO: continue here!!!!!!!!!!
+	  RSpecContents testRSpec = new RSpecContents();
+	  List<Object> nodes = testRSpec .getAnyOrNodeOrLink();
+	  
 //    Resource fiteagleResource1 = new Resource();
 //    List<Property> properties = fiteagleResource1.getProperty();
 //    Property idProperty= new Property();
@@ -340,7 +366,29 @@ public class SFAInteractorTest {
 //    properties.add(idProperty);
 //    properties.add(typeProperty);
 //    fiteagleResources.add(new ObjectFactory().createResource(fiteagleResource1));
-//    return testRSpec;
-//	}
+    return testRSpec;
+	}
+	
+	
+//	private org.fiteagle.interactors.sfa.rspec.request.RSpecContents getTestRspecRequest(){
+//		  
+//		  
+//		  RSpecContents testRSpec = new RSpecContents();
+//	    List<Object> fiteagleResources = testRSpec .getAnyOrNodeOrLink();
+//	    Resource fiteagleResource1 = new Resource();
+//	    List<Property> properties = fiteagleResource1.getProperty();
+//	    Property idProperty= new Property();
+//	   idProperty.setName("id");
+//	  idProperty.setValue("TestId");
+//	    Property typeProperty= new Property();
+//	    typeProperty.setName("type");
+//	    typeProperty.setValue("org.fiteagle.adapter.stopwatch.StopwatchAdapter");
+//	    
+//	    properties.add(idProperty);
+//	    properties.add(typeProperty);
+//	    fiteagleResources.add(new ObjectFactory().createResource(fiteagleResource1));
+//	    return testRSpec;
+//	    
+//		}
 
 }

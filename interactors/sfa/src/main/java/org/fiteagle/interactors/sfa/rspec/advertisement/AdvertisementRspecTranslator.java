@@ -77,7 +77,7 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 				+ resourceAdapter.getId());
 		node.setComponentManagerId(COMPONENT_MANAGER_ID);
 		node.setComponentName(resourceAdapter.getId());
-
+		
 		
 		
 		
@@ -193,7 +193,7 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 	public Object translateSSHAccesableToAdvertisementNode(
 			ResourceAdapter resourceAdapter) {
 		NodeContents node = new NodeContents();
-
+		
 		HashMap<String, Object> resourceAdapterProperties = resourceAdapter
 				.getProperties();
 
@@ -224,6 +224,22 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		HardwareTypeContents hardwareType = new HardwareTypeContents();
 		hardwareType.setName(sshAccesableResource.getHardwareType());
 		nodeContent.add(factory.createHardwareType(hardwareType));
+		
+		
+		//TODO: this is just to test
+				//if dummy...
+				//this is just to test
+				
+				if(resourceAdapter.getType()!=null && resourceAdapter.getType().compareTo("org.fiteagle.adapter.dummyNode.DummyNodeAdapter")==0){
+					
+					if(resourceAdapterProperties != null && resourceAdapterProperties.get("sliverTypeName")!=null){
+						SliverType sliverType = new SliverType();
+						sliverType.setName((String)resourceAdapter.getProperties().get("sliverTypeName"));
+						nodeContent.add(factory.createNodeContentsSliverType(sliverType));
+					}
+				}
+				//this is just to test
+		
 
 		return new ObjectFactory().createNode(node);
 	}

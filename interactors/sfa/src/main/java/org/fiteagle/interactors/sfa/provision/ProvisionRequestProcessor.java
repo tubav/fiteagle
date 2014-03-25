@@ -105,6 +105,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 				&& urnList.get(0).getType().equalsIgnoreCase("slice")) {
 			provisionSlice(urnList.get(0));
 		} else {
+			//TODO: check the provision of the individuel slivers 
 			try {
 				for (URN urn : urnList) {
 
@@ -189,6 +190,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 	private GeniSlivers buildSliver(ResourceAdapter resourceAdapter) {
 		HashMap<String, Object> props = resourceAdapter.getProperties();
 		
+		//TODO: change this!!!!
 
 
 		GeniSlivers tmpSliver = new GeniSlivers();

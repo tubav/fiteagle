@@ -60,6 +60,8 @@ public class SFAv3RspecTranslator {
 	public String getType() {
 		return this.geni_rspec_version.getType();
 	}
+	
+	
 	private List<Method> getResourceAdapterRspecMethods(
 			ResourceAdapter resourceAdapter) {
 		ArrayList<Method> result = new ArrayList<Method>();

@@ -3,11 +3,13 @@ package org.fiteagle.interactors.sfa.allocate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
@@ -32,8 +34,11 @@ import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
 import org.fiteagle.interactors.sfa.rspec.ext.Property;
 import org.fiteagle.interactors.sfa.rspec.ext.Resource;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.request.DiskImageContents;
 import org.fiteagle.interactors.sfa.rspec.request.NodeContents;
+import org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
+import org.fiteagle.interactors.sfa.rspec.request.RequestRspecTranslator;
 import org.fiteagle.interactors.sfa.util.DateUtil;
 
 public class AllocateRequestProcessor extends SFAv3RequestProcessor {
@@ -132,12 +137,53 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 							resourceManager.addResourceAdapterInstance(resource);
 						}
 						
-						
 						if (NodeContents.class.isAssignableFrom(jaxbElem
 								.getValue().getClass())) {
+							
 							NodeContents node = (NodeContents) jaxbElem
 									.getValue();
-							String id = node.getClientId();
+							
+							String nodeName = new RequestRspecTranslator().getNodeNameFromNodeComponentId(node.getComponentId());
+							
+							if(nodeName==null || nodeName.compareToIgnoreCase(NodeAdapterInterface.nodeName)==0){
+								//this is an openstack node resource
+								
+								NodeAdapterInterface openstackNodeResourceAdapter = (NodeAdapterInterface)resourceManager.getResourceAdapterInstance(NodeAdapterInterface.nodeName);
+								
+								List<OpenstackResourceAdapter> allocatedImages = new ArrayList<OpenstackResourceAdapter>(); 
+								
+								List<Object> nodeContentsList = node.getAnyOrRelationOrLocation();
+//								List<OpenstackResourceAdapter> listOfOpenstackImages = openstackNodeResourceAdapter.getImages();
+								
+								for (Iterator iterator2 = nodeContentsList.iterator(); iterator2.hasNext();) {
+//									if assignable..
+//									Object object2 = (Object) iterator2.next();
+									JAXBElement object2 = (JAXBElement) iterator2.next();
+									if(org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType.class.isAssignableFrom(object2.getValue().getClass())){
+//										add the openstack resources one by one into a list
+										
+										org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType sliverTypeTmp = (org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType)object2.getValue();
+										List<OpenstackResourceAdapter> tmpAllocatedImages = this.allocateOpenstackResourceAdaptersMatchingSliverType(sliverTypeTmp, openstackNodeResourceAdapter.getImages());
+										allocatedImages.addAll(tmpAllocatedImages);
+										
+//										getSliverId over sliver name!!
+										//TODO: get vms and add the allocatedImages
+										//TODO: set the node is from client_id in request node!
+									}
+								}
+								
+								
+								
+								
+								//it can be ok to set the id like node.client_id?
+								NodeAdapterInterface allocatedNode = openstackNodeResourceAdapter.create(null, allocatedImages);
+								ResourceAdapter result1 = (ResourceAdapter) allocatedNode;
+								resource = result1;
+								resourceManager.addResourceAdapterInstance(resource);
+								
+							}
+							
+//							String id = node.getClientId();
 //							if (node.getComponentId().contains("+")) {
 //								String[] splitted = node.getComponentId()
 //										.split("\\+");
@@ -146,13 +192,33 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 //								id = node.getComponentId();
 //							}
 							
-							resource = resourceManager
-									.getResourceAdapterInstance(id);
+							
 						}
+						
+						
+//						if (NodeContents.class.isAssignableFrom(jaxbElem
+//								.getValue().getClass())) {
+//							
+//							NodeContents node = (NodeContents) jaxbElem
+//									.getValue();
+//							String id = node.getClientId();
+////							if (node.getComponentId().contains("+")) {
+////								String[] splitted = node.getComponentId()
+////										.split("\\+");
+////								id = splitted[splitted.length - 1];
+////							} else {
+////								id = node.getComponentId();
+////							}
+//							
+//							resource = resourceManager
+//									.getResourceAdapterInstance(id);
+//						}
 						
 						if (resource != null
 								&& !(resource.isExclusive() && !resource
 										.getStatus().equals(ResourceAdapterStatus.Available))) {
+							
+							//TODO: set here for every slivertype (openstackadapter) the status etc..
 							resource.getProperties()
 									.put("operational_status",
 											GENISliverOperationalState.geni_pending_allocation
@@ -196,6 +262,69 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		return result;
 	}
 
+	private List<OpenstackResourceAdapter> allocateOpenstackResourceAdaptersMatchingSliverType(
+			SliverType sliverTypeTmp,
+			List<OpenstackResourceAdapter> images) {
+		
+		ArrayList<OpenstackResourceAdapter> result = new ArrayList<OpenstackResourceAdapter>(); 
+		
+		String flavorId = this.getFlavorIdOverFlavorName(sliverTypeTmp.getName(), images.get(0).getFlavorsProperties());
+		
+		List<Object> diskImages = sliverTypeTmp.getAnyOrDiskImage();
+		if(diskImages == null || diskImages.isEmpty())	return null;
+		
+		for (Iterator iterator = diskImages.iterator(); iterator.hasNext();) {
+			JAXBElement object = (JAXBElement) iterator.next();
+			if(org.fiteagle.interactors.sfa.rspec.request.DiskImageContents.class.isAssignableFrom(object.getValue().getClass())){
+				
+				DiskImageContents diskImgTmp = (org.fiteagle.interactors.sfa.rspec.request.DiskImageContents) object.getValue();
+				OpenstackResourceAdapter openstackResourceAdapterTmp = this.getOpenstackResourceAdapterFromImageName(diskImgTmp.getName(), images);
+				
+				if(openstackResourceAdapterTmp != null) {
+					result.add(openstackResourceAdapterTmp.create(openstackResourceAdapterTmp.getId(), flavorId, null, null));
+				}
+				
+				
+				//get flavor id over flavor name(sliver type name) to find the mathching flavor.
+				//get image id over image name(disk image name)
+			}
+			
+		}
+		return result;
+	}
+	
+	
+
+
+	private String getFlavorIdOverFlavorName(String name,
+			List<HashMap<String, String>> flavorsProperties) {
+		
+		for (Iterator iterator = flavorsProperties.iterator(); iterator
+				.hasNext();) {
+			HashMap<String, String> tmpHashMap = (HashMap<String, String>) iterator
+					.next();
+			if(tmpHashMap.get(OpenstackResourceAdapter.FLAVOR_NAME).compareToIgnoreCase(name)==0) return tmpHashMap.get(OpenstackResourceAdapter.FLAVOR_ID);
+			
+		}
+		
+		return null;
+	}
+
+	private OpenstackResourceAdapter getOpenstackResourceAdapterFromImageName(
+			String name, List<OpenstackResourceAdapter> images) {
+		
+		for (Iterator iterator = images.iterator(); iterator.hasNext();) {
+			OpenstackResourceAdapter tmpOpenstackResourceAdapter = (OpenstackResourceAdapter) iterator
+					.next();
+			
+			if(tmpOpenstackResourceAdapter.getImageProperties().get(OpenstackResourceAdapter.IMAGE_NAME).compareToIgnoreCase(name)==0) 
+				return tmpOpenstackResourceAdapter; 
+			
+		}
+		
+		return null;
+	}
+
 	private AllocateValue getValue(String urn) {
 		AllocateValue resultValue = new AllocateValue();
 		Group group = GroupDBManager.getInstance().getGroup(
@@ -207,7 +336,6 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 				.getResourceAdapterInstancesById(resourceIds);
 		for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
 			
-			//TODO: for every resource(as node) get the slivers(openstackVMAdapter) in them and set these as slivers.
 			ResourceAdapter resourceAdapter = (ResourceAdapter) iterator.next();
 //			if(resourceAdapter==null) continue;
 			GeniSlivers tmpSliver = new GeniSlivers();

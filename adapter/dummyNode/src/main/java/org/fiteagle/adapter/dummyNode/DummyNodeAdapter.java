@@ -1,5 +1,6 @@
 package org.fiteagle.adapter.dummyNode;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import org.fiteagle.adapter.common.SSHAccessable;
 public class DummyNodeAdapter extends ResourceAdapter implements SSHAccessable{
 
 	private String hardwareType = "raw-pc";
+	
+	private final static String[] ids = {"WiFi_connectivity", "lte-connectivity", "2G_connectivity", "3G_connectivity", "epc-as-a-service", "OpenEPC_client_Laptop", "OpenEPC_client_Samsung_S4", "Seamless_Handover_as_a_Service_through_MME", "Attenuator", "QoS_based_controllable_Core_Network", "OpenSDNCore", "OpenIMSCore"};
 
 	@Override
 	public void start() {
@@ -55,9 +58,26 @@ public class DummyNodeAdapter extends ResourceAdapter implements SSHAccessable{
 	
 	public static List<ResourceAdapter> getJavaInstances(){
 		List<ResourceAdapter> list = new LinkedList<>();
-		ResourceAdapter dummy = new DummyNodeAdapter();
-		dummy.setId("PC");
-		list.add(dummy);
+		
+		for (int i = 0; i < ids.length; i++) {
+			DummyNodeAdapter dummy = new DummyNodeAdapter();
+			dummy.setType("org.fiteagle.adapter.dummyNode.DummyNodeAdapter");
+			dummy.setId(ids[i]);
+			if(ids[i].compareTo("lte-connectivity")==0){
+				HashMap<String, Object> tmpProps = new HashMap<String, Object>();
+				tmpProps.put("sliverTypeName", "connectivity");
+				dummy.setProperties(tmpProps);
+				dummy.setHardwareType("lte-cell");
+			}
+			if(ids[i].compareTo("epc-as-a-service")==0){
+				HashMap<String, Object> tmpProps = new HashMap<String, Object>();
+				tmpProps.put("sliverTypeName", "epc-service");
+				dummy.setProperties(tmpProps);
+				dummy.setHardwareType("epc-installation");
+			}
+			
+			list.add(dummy);
+		}
 		return list;
 		
 	}
@@ -71,7 +91,7 @@ public class DummyNodeAdapter extends ResourceAdapter implements SSHAccessable{
 	@Override
 	public void setHardwareType(String hardwareType) {
 		// TODO Auto-generated method stub
-		
+		this.hardwareType = hardwareType;
 	}
 
 	@Override
