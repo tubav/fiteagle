@@ -106,6 +106,7 @@ public class URN {
 
 	public static URN getURNFromUser(User u) {
 		String[] split = u.getUsername().split("@");
+//		String returnString = prefix + "+" + split[1] + "+user+" + split[0];
 		String returnString = prefix + "+" + split[1] + "+user+" + split[0];
 		return new URN(returnString);
 	}

@@ -1,6 +1,7 @@
 package org.fiteagle.adapter.common;
 
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,6 +77,25 @@ public interface OpenstackResourceAdapter {
 	
 
 	HashMap<String, String> getVMProperties();
+
+	String getFlavorId();
+
+	HashMap<String, Object> getProperties();
+
+	void setStatus(ResourceAdapterStatus status);
+
+	void setExpirationTime(Date expirationTime);
+
+	Date getExpirationTime();
+
+	String getImageId();
+
+	void configure(AdapterConfiguration configuration);
+	public ResourceAdapterStatus getStatus();
+
+	void setProperties(HashMap<String, Object> properties);
+
+	void release();
 	
 	
 

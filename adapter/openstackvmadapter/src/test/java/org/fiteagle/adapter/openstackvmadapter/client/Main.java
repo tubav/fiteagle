@@ -34,12 +34,12 @@ public class Main {
 //		createServer(client);
 //		addFloatingIp(client);
 		
-////		getFloatingIpPools(client);
-//		client.addKeyPair("test", "");
-//		Server server = client.createServer(imageId, flavorId, serverName);
-////		
-//		Server serverDetails = client.getServerDetails(server.getId());
-////		Server serverDetails = client.getServerDetails("");
+//		getFloatingIpPools(client);
+		client.addKeyPair("test", "");
+		Server server = client.createServer(imageId, flavorId, serverName, keyPairName);
+//		
+		Server serverDetails = client.getServerDetails(server.getId());
+//		Server serverDetails = client.getServerDetails("");
 //		
 		FloatingIp floatingIp = client.addFloatingIp();
 //		client.allocateFloatingIpForServer("", floatingIp.getIp());

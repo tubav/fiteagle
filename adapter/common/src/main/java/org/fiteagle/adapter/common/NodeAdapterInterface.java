@@ -15,6 +15,7 @@ public interface NodeAdapterInterface {
 	List<OpenstackResourceAdapter> getVms();
 	void setVms(List<OpenstackResourceAdapter> vms);
 	NodeAdapterInterface create(String id, List<OpenstackResourceAdapter> vms);
+	public void configure(AdapterConfiguration configuration);
 	
 
 }

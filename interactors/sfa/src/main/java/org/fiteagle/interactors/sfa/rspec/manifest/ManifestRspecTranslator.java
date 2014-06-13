@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.Named;
+import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
@@ -23,6 +24,7 @@ import org.fiteagle.interactors.sfa.rspec.ext.Method;
 import org.fiteagle.interactors.sfa.rspec.ext.Parameter;
 import org.fiteagle.interactors.sfa.rspec.ext.Property;
 import org.fiteagle.interactors.sfa.rspec.ext.Resource;
+import org.fiteagle.interactors.sfa.rspec.request.NodeContents;
 
 public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 
@@ -46,16 +48,70 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 				resource = new SFAv3RspecTranslator().translateToOpenstackResource(resourceAdapter);
 			else if (resourceAdapter instanceof SSHAccessable)
 				resource = translateToNode(resourceAdapter);
+			else if (resourceAdapter instanceof NodeAdapterInterface)
+				resource = translateToOpenstackNode(resourceAdapter);
 			else
 				resource = translateToFITeagleResource(resourceAdapter);
 			rspecContentElements.add(resource);
 		}
 		return manifestRspec;
 	}
+	
+
+	private Object translateToOpenstackNode(ResourceAdapter resourceAdapter) {
+		
+		
+		NodeAdapterInterface openstackNodeResourceAdapter = (NodeAdapterInterface) resourceAdapter;
+		
+		RSpecContents manifestRspec = new RSpecContents();
+
+		List<Object> rspecContentElements = manifestRspec.getAnyOrNodeOrLink();
+		
+		
+		org.fiteagle.interactors.sfa.rspec.manifest.NodeContents node = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents();
+		List<Object> nodeContentsList = node.getAnyOrRelationOrLocation();
+		
+		List<OpenstackResourceAdapter> allocatedVms = openstackNodeResourceAdapter.getVms();
+		
+		for (Iterator iterator = allocatedVms.iterator(); iterator.hasNext();) {
+			OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter) iterator
+					.next();
+			
+			org.fiteagle.interactors.sfa.rspec.manifest.NodeContents.SliverType tmpSliverType = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents.SliverType();
+			org.fiteagle.interactors.sfa.rspec.manifest.DiskImageContents tmpDiskImage = new org.fiteagle.interactors.sfa.rspec.manifest.DiskImageContents();
+			
+			tmpDiskImage.setName(openstackResourceAdapter.getImageProperties().get(OpenstackResourceAdapter.IMAGE_NAME));
+			tmpSliverType.setName(getFlavorNameOverFlavorId(openstackResourceAdapter.getFlavorId(), openstackResourceAdapter.getFlavorsProperties()));
+			
+			tmpSliverType.getAnyOrDiskImage().add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createDiskImage(tmpDiskImage));
+			nodeContentsList.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createNodeContentsSliverType(tmpSliverType));
+			
+			//TODO: add if the ip exists into the response!!!!!!!!!!11
+			//TODO: if vmproperties are set the ip can be there!
+			
+		}
+
+		return new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createNode(node);
+	}
+
+	private String getFlavorNameOverFlavorId(String flavorId,
+			List<HashMap<String, String>> flavorsProperties) {
+		
+		for (Iterator iterator = flavorsProperties.iterator(); iterator
+				.hasNext();) {
+			HashMap<String, String> hashMap = (HashMap<String, String>) iterator
+					.next();
+			
+			if(hashMap.get(OpenstackResourceAdapter.FLAVOR_ID).compareTo(flavorId)==0) return hashMap.get(OpenstackResourceAdapter.FLAVOR_NAME); 
+			
+		}
+		
+		return null;
+	}
 
 	public Object translateToNode(ResourceAdapter resourceAdapter) {
 
-		NodeContents node = new NodeContents();
+		org.fiteagle.interactors.sfa.rspec.manifest.NodeContents node = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents();
 		HashMap<String, Object> resourceAdapterProperties = resourceAdapter
 				.getProperties();
 

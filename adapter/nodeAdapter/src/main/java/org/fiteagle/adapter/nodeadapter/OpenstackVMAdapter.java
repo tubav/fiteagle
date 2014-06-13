@@ -103,6 +103,7 @@ public class OpenstackVMAdapter implements
 	public void create() {
 	}
 	
+	@Override
 	public void configure(AdapterConfiguration configuration) {
 
 		String sshPubKey = configuration.getUsers().get(0).getSshPublicKeys()
@@ -126,6 +127,14 @@ public class OpenstackVMAdapter implements
 		System.out.println("adding a floating ip..");
 
 		this.setFloatingIp(floatingIp.getIp());
+		
+		//TODO: wait a little before associating a floating ip to the server, so that its ready. 
+		try {
+		    Thread.sleep(2000);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		
 		this.server = this.getClient().getServerDetails(server.getId());
 		this.getClient().allocateFloatingIpForServer(server.getId(),
 				floatingIp.getIp());
@@ -156,6 +165,7 @@ public class OpenstackVMAdapter implements
 			openstackVMAdapter.setExclusive(false);
 			openstackVMAdapter.setAvailable(true);
 			openstackVMAdapter.setImage(image);
+			openstackVMAdapter.getProperties().put(OpenstackResourceAdapter.IMAGE_ID, image.getId());
 			openstackVMAdapter.setFlavorsList(flavorsList);
 			resultList.add(openstackVMAdapter);
 		}
@@ -485,6 +495,7 @@ public class OpenstackVMAdapter implements
 		this.vmName = vmName;
 	}
 
+	@Override
 	public String getImageId() {
 		return imageId;
 	}
@@ -493,6 +504,7 @@ public class OpenstackVMAdapter implements
 		this.imageId = imageId;
 	}
 
+	@Override
 	public String getFlavorId() {
 		return flavorId;
 	}
@@ -511,6 +523,7 @@ public class OpenstackVMAdapter implements
 	private boolean available = true;
 	private Date expirationTime;
 
+	@Override
 	public HashMap<String, Object> getProperties() {
 		if (properties != null) {
 			return properties;
@@ -520,6 +533,7 @@ public class OpenstackVMAdapter implements
 		}
 	}
 
+	@Override
 	public void setProperties(HashMap<String, Object> properties) {
 		this.properties = properties;
 	}
@@ -556,6 +570,7 @@ public class OpenstackVMAdapter implements
 		return status;
 	}
 
+	@Override
 	public void setStatus(ResourceAdapterStatus status) {
 		this.status = status;
 	}
@@ -576,10 +591,12 @@ public class OpenstackVMAdapter implements
 		this.available = available;
 	}
 
+	@Override
 	public Date getExpirationTime() {
 		return expirationTime;
 	}
 
+	@Override
 	public void setExpirationTime(Date expirationTime) {
 		this.expirationTime = expirationTime;
 	}

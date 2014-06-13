@@ -234,6 +234,7 @@ public class UserDBManager {
 		InterfaceConfiguration configuration = null;
 		if (!username.contains("@")) {
 			configuration = InterfaceConfiguration.getInstance();
+//			username = username + "@" + configuration.getDomain();
 			username = username + "@" + configuration.getDomain();
 		}
 		return username;

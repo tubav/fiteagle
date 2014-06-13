@@ -1,13 +1,20 @@
 package org.fiteagle.adapter.nodeadapter;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
+import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.adapter.nodeadapter.client.model.Image;
 import org.fiteagle.adapter.nodeadapter.client.model.Images;
 
@@ -23,6 +30,9 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 	private List<Flavor> flavorsList = null;
 
 	private List<OpenstackResourceAdapter> vms = null;
+	
+	private ScheduledExecutorService executor;
+	  private HashMap<OpenstackResourceAdapter, ScheduledFuture<?>> expirationMap;
 
 	public static List<ResourceAdapter> getJavaInstances() {
 
@@ -62,14 +72,20 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 
 	@Override
 	public void configure(AdapterConfiguration configuration) {
-		// TODO Auto-generated method stub
+		
+		for (Iterator iterator = vms.iterator(); iterator.hasNext();) {
+			OpenstackResourceAdapter vm = (OpenstackResourceAdapter) iterator.next();
+			vm.configure(configuration);
+		}
 
 	}
 
 	@Override
 	public void release() {
-		// TODO Auto-generated method stub
-
+		for (Iterator iterator = vms.iterator(); iterator.hasNext();) {
+			OpenstackResourceAdapter vm = (OpenstackResourceAdapter) iterator.next();
+			vm.release();
+		}
 	}
 
 	@Override
@@ -131,6 +147,30 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 
 	public void setVms(List<OpenstackResourceAdapter> vms) {
 		this.vms = vms;
+	}
+	
+	public void setExpires(OpenstackResourceAdapter openstackResource, Date allocationExpirationTime) {
+		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(openstackResource), allocationExpirationTime.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+		expirationMap.put(openstackResource,scheduler);
+	}
+  
+	private class ExpirationCallback implements Runnable {
+
+		private OpenstackResourceAdapter openstackResource;
+		public ExpirationCallback(OpenstackResourceAdapter openstackResource){
+			this.openstackResource = openstackResource;
+			
+		}
+		@Override
+		public void run() {
+			
+//			for (int i = 0; i < vms.size(); i++) {
+//				if(openstackResource.getId().compareToIgnoreCase(vms.get(i).getId())==0)
+//				vms.remove(i);
+//			}
+			
+		}
+		
 	}
 
 }
