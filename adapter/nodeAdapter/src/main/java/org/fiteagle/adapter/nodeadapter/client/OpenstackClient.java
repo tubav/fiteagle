@@ -23,6 +23,7 @@ package org.fiteagle.adapter.nodeadapter.client;
  */
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -55,14 +56,16 @@ import com.woorea.openstack.nova.model.FloatingIp;
 import com.woorea.openstack.nova.model.FloatingIpDomains;
 import com.woorea.openstack.nova.model.FloatingIpPools;
 import com.woorea.openstack.nova.model.FloatingIpPools.FloatingIpPool;
+import com.woorea.openstack.nova.model.FloatingIps;
 import com.woorea.openstack.nova.model.KeyPairs;
 import com.woorea.openstack.quantum.Quantum;
 import com.woorea.openstack.quantum.model.Network;
 import com.woorea.openstack.quantum.model.Networks;
 
 /**
- * this client uses the woorea client and offers simple methods using openstack API.
- *
+ * this client uses the woorea client and offers simple methods using openstack
+ * API.
+ * 
  */
 public class OpenstackClient {
 
@@ -150,14 +153,16 @@ public class OpenstackClient {
 		return access;
 	}
 
-	public org.fiteagle.adapter.nodeadapter.client.model.Server createServer(String imageId, String flavorId, String serverName, String keyPairName) {
+	public org.fiteagle.adapter.nodeadapter.client.model.Server createServer(
+			String imageId, String flavorId, String serverName,
+			String keyPairName) {
 
 		Access access = getAccessWithTenantId();
 		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
 				tenantId));
 		novaClient.token(access.getToken().getId());
 
-//		KeyPairs keysPairs = novaClient.keyPairs().list().execute();
+		// KeyPairs keysPairs = novaClient.keyPairs().list().execute();
 
 		org.fiteagle.adapter.nodeadapter.client.model.ServerForCreate serverForCreate = new org.fiteagle.adapter.nodeadapter.client.model.ServerForCreate();
 		serverForCreate.setName(serverName);
@@ -172,18 +177,16 @@ public class OpenstackClient {
 		List<org.fiteagle.adapter.nodeadapter.client.model.ServerForCreate.Network> networkList = serverForCreate
 				.getNetworks();
 		org.fiteagle.adapter.nodeadapter.client.model.ServerForCreate.Network net_demo = new org.fiteagle.adapter.nodeadapter.client.model.ServerForCreate.Network();
-		
+
 		net_demo.setUuid(this.getNetworkId());
-		
+
 		networkList.add(net_demo);
 
 		OpenStackRequest<org.fiteagle.adapter.nodeadapter.client.model.Server> createServerRequest = new OpenStackRequest<org.fiteagle.adapter.nodeadapter.client.model.Server>(
-				novaClient,
-				HttpMethod.POST,
-				"/servers",
+				novaClient, HttpMethod.POST, "/servers",
 				Entity.json(serverForCreate),
 				org.fiteagle.adapter.nodeadapter.client.model.Server.class);
-		
+
 		org.fiteagle.adapter.nodeadapter.client.model.Server responseServer = novaClient
 				.execute(createServerRequest);
 		return responseServer;
@@ -196,10 +199,8 @@ public class OpenstackClient {
 		novaClient.token(access.getToken().getId());
 
 		OpenStackRequest<org.fiteagle.adapter.nodeadapter.client.model.Server> request = new OpenStackRequest<org.fiteagle.adapter.nodeadapter.client.model.Server>(
-				novaClient,
-				HttpMethod.GET,
-				new StringBuilder("/servers/").append(id).toString(),
-				null,
+				novaClient, HttpMethod.GET, new StringBuilder("/servers/")
+						.append(id).toString(), null,
 				org.fiteagle.adapter.nodeadapter.client.model.Server.class);
 		org.fiteagle.adapter.nodeadapter.client.model.Server serverDetail = novaClient
 				.execute(request);
@@ -212,67 +213,89 @@ public class OpenstackClient {
 		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
 				tenantId));
 		novaClient.token(access.getToken().getId());
-		
-		com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp action = new com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp(floatingIp);
-		AssociateFloatingIp associateFloatingIp = new AssociateFloatingIp(serverId, action);
-		
-		OpenStackRequest<com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp> request = new OpenStackRequest<com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp>(novaClient,
-				HttpMethod.POST,"/servers/"+serverId+"/action",
+
+		com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp action = new com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp(
+				floatingIp);
+		AssociateFloatingIp associateFloatingIp = new AssociateFloatingIp(
+				serverId, action);
+
+		OpenStackRequest<com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp> request = new OpenStackRequest<com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp>(
+				novaClient,
+				HttpMethod.POST,
+				"/servers/" + serverId + "/action",
 				associateFloatingIp.json(action),
 				com.woorea.openstack.nova.model.ServerAction.AssociateFloatingIp.class);
-		
+
 		try {
 			novaClient.execute(request);
 		} catch (Exception e) {
-			//TODO: this can throw harmless exceptions, but check the exception if it is not harmless
+			// TODO: this can throw harmless exceptions, but check the exception
+			// if it is not harmless
 			System.out.println(e);
 		}
-		
+
 	}
 
-	public FloatingIpPools getFloatingIpPools(){
+	public FloatingIpPools getFloatingIpPools() {
 		Access access = getAccessWithTenantId();
-		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(tenantId));
+		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
+				tenantId));
 		novaClient.token(access.getToken().getId());
-		
+
 		OpenStackRequest<FloatingIpPools> request = new OpenStackRequest<FloatingIpPools>(
 				novaClient, HttpMethod.GET, "/os-floating-ip-pools", null,
 				FloatingIpPools.class);
 		FloatingIpPools floatingIpPools = novaClient.execute(request);
 		return floatingIpPools;
 	}
-	
-	public FloatingIp addFloatingIp(){
-		
-		String poolName="";
-		
-		if (Utils.FLOATINGIP_POOL_NAME.compareTo("")==0) {
+
+	public FloatingIp addFloatingIp() {
+
+		String poolName = "";
+
+		if (Utils.FLOATINGIP_POOL_NAME.compareTo("") == 0) {
 			List<FloatingIpPool> poolList = this.getFloatingIpPools().getList();
-			if (poolList!=null && poolList.size()>0) {
+			if (poolList != null && poolList.size() > 0) {
 				poolName = poolList.get(0).getName();
 			} else {
-				throw new RuntimeException("there isn't any floating ip pool defined");
+				throw new RuntimeException(
+						"there isn't any floating ip pool defined");
 			}
-		}else {
+		} else {
 			poolName = Utils.FLOATINGIP_POOL_NAME;
 		}
-		
+
 		Map<String, String> body = new HashMap<String, String>();
 		body.put("pool", poolName);
 		Entity<Map<String, String>> entity = Entity.json(body);
-		
+
 		Access access = getAccessWithTenantId();
-		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(tenantId));
+		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
+				tenantId));
 		novaClient.token(access.getToken().getId());
-		
+
 		OpenStackRequest<FloatingIp> request = new OpenStackRequest<FloatingIp>(
-				novaClient, HttpMethod.POST, "os-floating-ips",entity ,
+				novaClient, HttpMethod.POST, "os-floating-ips", entity,
 				FloatingIp.class);
 		FloatingIp floatingIp = novaClient.execute(request);
 		return floatingIp;
 	}
-	
-	public void addKeyPair(String name, String publicKey){
+
+	public FloatingIps getFloatingIpsFromTenant() {
+		Access access = getAccessWithTenantId();
+		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
+				tenantId));
+		novaClient.token(access.getToken().getId());
+
+		OpenStackRequest<FloatingIps> request = new OpenStackRequest<FloatingIps>(
+				novaClient, HttpMethod.GET, "/os-floating-ips", null,
+				FloatingIps.class);
+		FloatingIps floatingIps = novaClient.execute(request);
+
+		return floatingIps;
+	}
+
+	public void addKeyPair(String name, String publicKey) {
 		Access access = getAccessWithTenantId();
 
 		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
@@ -280,10 +303,10 @@ public class OpenstackClient {
 		novaClient.token(access.getToken().getId());
 
 		novaClient.keyPairs().create(name, publicKey).execute();
-		
+
 	}
-	
-	public void deleteKeyPair(String name){
+
+	public void deleteKeyPair(String name) {
 		Access access = getAccessWithTenantId();
 
 		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
@@ -291,29 +314,27 @@ public class OpenstackClient {
 		novaClient.token(access.getToken().getId());
 
 		novaClient.keyPairs().delete(name).execute();
-		
+
 	}
-	
-	public void deleteServer(String id){
-		
+
+	public void deleteServer(String id) {
+
 		Access access = getAccessWithTenantId();
 		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
 				tenantId));
 		novaClient.token(access.getToken().getId());
 
 		OpenStackRequest<org.fiteagle.adapter.nodeadapter.client.model.Server> request = new OpenStackRequest<org.fiteagle.adapter.nodeadapter.client.model.Server>(
-				novaClient,
-				HttpMethod.DELETE,
-				new StringBuilder("/servers/").append(id).toString(),
-				null,
+				novaClient, HttpMethod.DELETE, new StringBuilder("/servers/")
+						.append(id).toString(), null,
 				org.fiteagle.adapter.nodeadapter.client.model.Server.class);
 		org.fiteagle.adapter.nodeadapter.client.model.Server serverDetail = novaClient
 				.execute(request);
-		
+
 	}
 
 	public String getNetworkId() {
-		if(this.networkId==null || this.networkId.compareTo("")==0)
+		if (this.networkId == null || this.networkId.compareTo("") == 0)
 			this.setNetworkId(getNetworkIdByName(Utils.NET_NAME));
 		return networkId;
 	}
@@ -321,21 +342,42 @@ public class OpenstackClient {
 	private String getNetworkIdByName(String networkName) {
 		Access access = getAccessWithTenantId();
 		Quantum quantum = new Quantum(Utils.NET_ENDPOINT);
-		
-		quantum.setTokenProvider(new OpenStackSimpleTokenProvider(access.getToken().getId()));
+
+		quantum.setTokenProvider(new OpenStackSimpleTokenProvider(access
+				.getToken().getId()));
 		Networks networks = quantum.networks().list().execute();
 		List<Network> networkList = networks.getList();
 		for (Iterator iterator = networkList.iterator(); iterator.hasNext();) {
 			Network network = (Network) iterator.next();
-			if(network.getName().compareToIgnoreCase(networkName)==0)
+			if (network.getName().compareToIgnoreCase(networkName) == 0)
 				return network.getId();
 		}
-		throw new RuntimeException("there isn't any network with the specified network name");
+		throw new RuntimeException(
+				"there isn't any network with the specified network name");
 	}
 
 	public void setNetworkId(String networkId) {
 		this.networkId = networkId;
 	}
-	
+
+	public FloatingIp getAFreeFloatingIpFromTenant() {
+		
+		List<FloatingIp> freeFloatingIpsInTenant = new ArrayList<FloatingIp>();
+		FloatingIps floatingIpsFromTenant = getFloatingIpsFromTenant();
+		List<FloatingIp> floatingIpList = floatingIpsFromTenant.getList();
+
+		for (Iterator iterator = floatingIpList.iterator(); iterator.hasNext();) {
+			FloatingIp floatingIp = (FloatingIp) iterator.next();
+			if (floatingIp.getInstanceId() == null) {
+				freeFloatingIpsInTenant.add(floatingIp);
+			}
+		}
+
+		if (freeFloatingIpsInTenant.size() != 0) {
+			return freeFloatingIpsInTenant.get(0);
+		}
+		return null;
+
+	}
 
 }

@@ -1,5 +1,8 @@
 package org.fiteagle.adapter.nodeadapter.client;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fiteagle.adapter.nodeadapter.OpenstackVMAdapter;
 import org.fiteagle.adapter.nodeadapter.client.OpenstackClient;
@@ -13,6 +16,7 @@ import com.woorea.openstack.nova.model.Flavors;
 import com.woorea.openstack.nova.model.FloatingIp;
 import com.woorea.openstack.nova.model.FloatingIpDomains;
 import com.woorea.openstack.nova.model.FloatingIpPools;
+import com.woorea.openstack.nova.model.FloatingIps;
 
 public class Main {
 	static String serverName = "testServer";
@@ -41,7 +45,7 @@ public class Main {
 //		Server serverDetails = client.getServerDetails(server.getId());
 ////		Server serverDetails = client.getServerDetails("");
 //		
-		FloatingIp floatingIp = client.addFloatingIp();
+//		FloatingIp floatingIp = client.addFloatingIp();
 //		client.allocateFloatingIpForServer("", floatingIp.getIp());
 //		client.allocateFloatingIpForServer(serverDetails.getId(), floatingIp.getIp());
 ////		client.allocateFloatingIpForServer(server.getId(), "");
@@ -52,6 +56,8 @@ public class Main {
 //		client.deleteKeyPair(keyPairName);
 //		String network = client.getNetworkId();
 //		System.out.println(network);
+		FloatingIp response = client.getAFreeFloatingIpFromTenant();
+		System.out.println(response);
 
 	}
 

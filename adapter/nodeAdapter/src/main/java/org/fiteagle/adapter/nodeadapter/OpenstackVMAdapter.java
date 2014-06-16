@@ -122,15 +122,21 @@ public class OpenstackVMAdapter implements
 
 		System.out
 				.println("configure on openstack adapter is called configuring the ip ");
-		FloatingIp floatingIp = this.getClient().addFloatingIp();
+		
+		FloatingIp floatingIp = this.getClient().getAFreeFloatingIpFromTenant();
+		
+		if(floatingIp == null){
+			floatingIp = this.getClient().addFloatingIp();
+		}
+		
 
 		System.out.println("adding a floating ip..");
 
 		this.setFloatingIp(floatingIp.getIp());
 		
-		//TODO: wait a little before associating a floating ip to the server, so that its ready. 
+		//wait a little before associating a floating ip to the server, so that its ready. 
 		try {
-		    Thread.sleep(2000);
+		    Thread.sleep(3000);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
