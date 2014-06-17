@@ -32,6 +32,7 @@ import org.bouncycastle.openssl.PEMWriter;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.core.config.FiteaglePreferences;
 import org.fiteagle.core.config.FiteaglePreferencesXML;
+import org.fiteagle.core.util.URN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -322,7 +323,8 @@ protected KeyStore loadKeyStore(StoreType type) throws KeyStoreException, NoSuch
     return preferences.get("resourceStore");
   }
   public void storeResourceCertificate(X509Certificate cert) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-    String alias  = X509Util.getURN(cert).getSubjectAtDomain();
+    URN urn = X509Util.getURN(cert);
+	String alias  = urn.getSubjectAtDomain();
     storeCertificate(alias, cert, StoreType.RESOURCESTORE);
   }
   
