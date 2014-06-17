@@ -91,11 +91,14 @@ public static String getUserNameFromX509Certificate(X509Certificate cert) throws
         List<?> altName = it.next();
         
         String altNameString = (String)altName.get(1);
-        if (altName.get(0).equals(Integer.valueOf(6)) && altNameString.contains("+user+")) {
+        if (altName.get(0).equals(Integer.valueOf(6)) && (altNameString.contains("+user+") || altNameString.contains("+slice+"))) {
           urn = new URN((String) altName.get(1));
         }
+        if (null == urn)
+        	throw new RuntimeException("No URN found in: " + altNameString);
       }
     }
+    
     return urn;
   }
   
