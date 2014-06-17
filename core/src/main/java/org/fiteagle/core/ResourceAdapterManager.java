@@ -238,10 +238,10 @@ private URLClassLoader sysloader;
 		}
 		@Override
 		public void run() {
-			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
-			removeAdapterFromGroup(resourceId);
-		
-			expiredAdapter.setStatus(ResourceAdapterStatus.Available);
+//			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
+//			removeAdapterFromGroup(resourceId);
+//		
+//			expiredAdapter.setStatus(ResourceAdapterStatus.Available);
 			
 			
 		}
