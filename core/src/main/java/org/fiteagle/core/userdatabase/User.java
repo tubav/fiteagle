@@ -137,7 +137,7 @@ public static User createAdminUser(String username, String password) throws NotE
     }   
     
     if(!USERNAME_PATTERN.matcher(username).matches()){
-      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
+      //throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\", and \"-\" is allowed and the username has to be from 3 to 200 characters long");
     }
     if(firstName.length() < MINIMUM_FIRST_AND_LASTNAME_LENGTH){
       throw new InValidAttributeException("firstName too short");
@@ -313,7 +313,7 @@ public static User createAdminUser(String username, String password) throws NotE
 
   public void setUsername(String username) {
     if(username == null || !USERNAME_PATTERN.matcher(username).matches()){
-      throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\" and \"-\" is allowed and the username has to be from 3 to 200 characters long");
+      //throw new InValidAttributeException("invalid username, only letters, numbers, \"@\", \".\", \"_\" and \"-\" is allowed and the username has to be from 3 to 200 characters long");
     }
     this.username = username;
   }
