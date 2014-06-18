@@ -99,7 +99,6 @@ public class User implements Serializable{
 	  }else {
 		return username2;
 	}
-	  
 }
 
 public static User createAdminUser(String username, String password) throws NotEnoughAttributesException, InValidAttributeException{
