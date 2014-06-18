@@ -19,6 +19,9 @@ import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
+import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.interactors.sfa.common.GeniSlivers;
+import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.ext.Method;
 import org.fiteagle.interactors.sfa.rspec.ext.Parameter;
@@ -43,9 +46,22 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 
 		for (ResourceAdapter resourceAdapter : resourceAdapters) {
 			Object resource;
-			
-			if (resourceAdapter instanceof OpenstackResourceAdapter)
-				resource = new SFAv3RspecTranslator().translateToOpenstackResource(resourceAdapter);
+			if (resourceAdapter instanceof OpenstackResourceAdapter){
+				OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resourceAdapter;
+				String nodeId = openstackAdapter.getParentNodeId();
+				
+				if (nodeId!=null) {
+					ArrayList<String> nodeIdAsList = new ArrayList<String>();
+					nodeIdAsList.add(nodeId);
+					List<ResourceAdapter> nodeAdapterAsList = ResourceAdapterManager.getInstance().getResourceAdapterInstancesById(nodeIdAsList);
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) nodeAdapterAsList.get(0);
+					resource = translateToOpenstackNode((ResourceAdapter)nodeAdapter);
+					
+				} else {
+					resource = new SFAv3RspecTranslator().translateToOpenstackResource(resourceAdapter);
+				}
+			}
+				
 			else if (resourceAdapter instanceof SSHAccessable)
 				resource = translateToNode(resourceAdapter);
 			else if (resourceAdapter instanceof NodeAdapterInterface)

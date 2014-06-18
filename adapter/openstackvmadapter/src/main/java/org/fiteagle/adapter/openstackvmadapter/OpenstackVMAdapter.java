@@ -505,4 +505,21 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		this.flavorId = flavorId;
 	}
 
+	@Override
+	public String getParentNodeId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setParentNodeId(String nodeId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	
+
 }

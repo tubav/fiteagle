@@ -146,6 +146,12 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 	}
 
 	public void setVms(List<OpenstackResourceAdapter> vms) {
+		
+		for (Iterator iterator = vms.iterator(); iterator.hasNext();) {
+			OpenstackResourceAdapter vm = (OpenstackResourceAdapter) iterator.next();
+			vm.setParentNodeId(this.getId());
+		}
+		
 		this.vms = vms;
 	}
 	

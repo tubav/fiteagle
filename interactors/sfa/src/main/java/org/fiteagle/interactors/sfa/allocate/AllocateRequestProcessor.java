@@ -239,6 +239,13 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 																				// needed
 																				// or
 																				// extra!!
+								
+								List<OpenstackResourceAdapter> allocatedVMs = allocatedNode.getVms();
+								for (Iterator iterator2 = allocatedVMs
+										.iterator(); iterator2.hasNext();) {
+									ResourceAdapter openstackResourceAdapter = (ResourceAdapter) iterator2.next();
+									resourceManager.addResourceAdapterInstance(openstackResourceAdapter);
+								}
 
 							}
 
@@ -448,6 +455,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 				NodeAdapterInterface nodeOpenstackResourceAdapter = (NodeAdapterInterface) resourceAdapter; 
 				List<OpenstackResourceAdapter> nodeOpenstackResourceVms = nodeOpenstackResourceAdapter.getVms();
 				
+				
 				if(nodeOpenstackResourceVms!=null && nodeOpenstackResourceVms.size()!=0){
 					for (Iterator iterator2 = nodeOpenstackResourceVms.iterator(); iterator2
 							.hasNext();) {
@@ -456,13 +464,28 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 						GeniSlivers tmpSliver1 = new GeniSlivers();
 						
 //						TODO: openstackResourceAdapter.getId() is null!!!!!!!!!!!!!!!
-						tmpSliver1.setGeni_sliver_urn(new URN("urn:publicid:IDN" + "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getImageId()).toString());
+						tmpSliver1.setGeni_sliver_urn(new URN("urn:publicid:IDN" + "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getId()).toString());
 						tmpSliver1.setGeni_allocation_status((String) openstackResourceAdapter.getProperties().get("allocation_status"));
 						tmpSliver1.setGeni_expires(DateUtil.getFormatedDate(openstackResourceAdapter
 								.getExpirationTime()));
 						slivers.add(tmpSliver1);
 					}
 				}
+				
+//				if(nodeOpenstackResourceAdapter!=null && nodeOpenstackResourceVms.size()!=0){
+//					GeniSlivers tmpSliver1 = new GeniSlivers();
+////						TODO: openstackResourceAdapter.getId() is null!!!!!!!!!!!!!!!
+//					tmpSliver1.setGeni_sliver_urn(new URN("urn:publicid:IDN" + "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +nodeOpenstackResourceAdapter.getId()).toString());
+//					tmpSliver1.setGeni_allocation_status((String) nodeOpenstackResourceAdapter.getProperties().get("allocation_status"));
+//					tmpSliver1.setGeni_expires(DateUtil.getFormatedDate(nodeOpenstackResourceAdapter
+//							.getExpirationTime()));
+//					slivers.add(tmpSliver1);
+//				}
+				
+				
+//				TODO: check this in this case a sliver is not representing only one VM. !!!!
+				
+				
 				continue;
 			}
 			// if(resourceAdapter==null) continue;

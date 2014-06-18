@@ -257,8 +257,13 @@ private URLClassLoader sysloader;
 	public void renewExpirationTime(String resourceId, Date expirationTime) {
 	
 		ScheduledFuture<?> existentTimer = expirationMap.get(resourceId);
-		existentTimer.cancel(false);
-		setExpires(resourceId, expirationTime);
+		if(existentTimer!=null){
+			existentTimer.cancel(false);
+			setExpires(resourceId, expirationTime);
+		}else {
+			//TODO: set this if resource has no timer still..
+		}
+		
 		
 	}
 	

@@ -97,6 +97,10 @@ public interface OpenstackResourceAdapter {
 
 	void release();
 	
+	String getParentNodeId();
+	void setParentNodeId(String nodeId);
+	
+	
 	
 
 }

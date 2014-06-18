@@ -130,17 +130,72 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 	}
 
 	private void provsionSliver(URN urn) {
+//		if (urn.getType().equals("sliver")) {
+//			ResourceAdapter ra = resourceManager.getResourceAdapterInstance(urn
+//					.getSubject());
+//			resources.add(ra);
+//			provsionResourceAdapter(ra);
+//			GeniSlivers sliver = buildSliver(ra);
+//			slivers.add(sliver);
+//
+//		} else {
+//			throw new BadArgumentsException();
+//		}
+		
 		if (urn.getType().equals("sliver")) {
-			ResourceAdapter ra = resourceManager.getResourceAdapterInstance(urn
-					.getSubject());
-			resources.add(ra);
-			provsionResourceAdapter(ra);
-			GeniSlivers sliver = buildSliver(ra);
-			slivers.add(sliver);
+			List<String> resourceIds = new ArrayList<String>();
+			resourceIds.add(urn.getSubject());
+			resources = resourceManager
+					.getResourceAdapterInstancesById(resourceIds);
+
+			for (ResourceAdapter resourceAdapter : resources) {
+
+				if (NodeAdapterInterface.class.isAssignableFrom(resourceAdapter
+						.getClass())) {
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) resourceAdapter;
+					provsionNodeAdapter(nodeAdapter);
+					List<GeniSlivers> sliverList = buildSliversForNodeAdapter(nodeAdapter);
+					if (sliverList != null)
+						slivers.addAll(sliverList);
+				} else if (OpenstackResourceAdapter.class.isAssignableFrom(resourceAdapter
+						.getClass())) {
+					OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resourceAdapter;
+					String nodeId = openstackAdapter.getParentNodeId();
+					
+					if (nodeId == null) {
+						provsionResourceAdapter(resourceAdapter);
+						GeniSlivers sliver = buildSliver(resourceAdapter);
+						if (sliver != null)
+							slivers.add(sliver);
+						continue;
+					}
+					
+					provsionResourceAdapter(resourceAdapter);					
+					ArrayList<String> nodeIdAsList = new ArrayList<String>();
+					nodeIdAsList.add(nodeId);
+					List<ResourceAdapter> nodeAdapterAsList = resourceManager.getResourceAdapterInstancesById(nodeIdAsList);
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) nodeAdapterAsList.get(0);
+					List<GeniSlivers> sliverList = buildSliversForNodeAdapter(nodeAdapter);
+					if (sliverList != null)
+						slivers.addAll(sliverList);
+					
+				} else {
+					provsionResourceAdapter(resourceAdapter);
+					GeniSlivers sliver = buildSliver(resourceAdapter);
+					if (sliver != null)
+						slivers.add(sliver);
+				}
+			}
 
 		} else {
 			throw new BadArgumentsException();
 		}
+		
+		
+		
+		
+		
+		
 	}
 
 	private void provisionSlice(URN sliceURN) {
@@ -193,7 +248,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			// TODO: change this add the ip and port to access the nodes maybe?!!!!
 			GeniSlivers tmpSliver = new GeniSlivers();
 			
-			tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getImageId()).toString());
+			tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getId()).toString());
 			tmpSliver.setGeni_allocation_status((String) openstackResourceAdapter
 					.getProperties().get("allocation_status"));
 			tmpSliver.setGeni_operational_status((String) openstackResourceAdapter

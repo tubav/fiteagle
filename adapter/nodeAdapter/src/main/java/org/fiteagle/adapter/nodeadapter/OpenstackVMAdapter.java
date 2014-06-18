@@ -34,7 +34,7 @@ import com.woorea.openstack.nova.model.Flavor;
 import com.woorea.openstack.nova.model.Flavors;
 import com.woorea.openstack.nova.model.FloatingIp;
 
-public class OpenstackVMAdapter implements
+public class OpenstackVMAdapter extends ResourceAdapter implements
 		OpenstackResourceAdapter {
 
 	private static boolean loaded = false;
@@ -49,6 +49,7 @@ public class OpenstackVMAdapter implements
 	private String vmName;
 	private String imageId;
 	private String flavorId;
+	private String parentNode;
 
 	private String floatingIp = null;
 
@@ -605,6 +606,20 @@ public class OpenstackVMAdapter implements
 	@Override
 	public void setExpirationTime(Date expirationTime) {
 		this.expirationTime = expirationTime;
+	}
+	
+	public static List<ResourceAdapter> getJavaInstances(){
+		return new ArrayList<ResourceAdapter>();
+	}
+
+	@Override
+	public String getParentNodeId() {
+		return this.parentNode;
+	}
+
+	@Override
+	public void setParentNodeId(String nodeId) {
+		this.parentNode=nodeId;
 	}
 
 }
