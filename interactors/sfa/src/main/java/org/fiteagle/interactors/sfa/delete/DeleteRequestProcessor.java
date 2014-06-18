@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fiteagle.adapter.common.NodeAdapterInterface;
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
@@ -111,6 +113,29 @@ public DeleteResult processRequest(List<String> urns, ListCredentials credential
         String id=u.getSubject();
     
         try{
+        	
+//        	TODO: get the node if its openstack
+        	
+        	ArrayList<String> adapterIds = new ArrayList<String>();
+        	adapterIds.add(id);
+        	List<ResourceAdapter> resAdapterAsList = resourceManager.getResourceAdapterInstancesById(adapterIds);
+        	
+        	if(OpenstackResourceAdapter.class.isAssignableFrom(resAdapterAsList.get(0)
+					.getClass())){
+        		OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resAdapterAsList.get(0);
+				String nodeId = openstackAdapter.getParentNodeId();
+				if (nodeId != null) {
+					ArrayList<String> nodeIdAsList = new ArrayList<String>();
+					nodeIdAsList.add(nodeId);
+					List<ResourceAdapter> resourceParentNodeAsList = resourceManager.getResourceAdapterInstancesById(nodeIdAsList);
+					NodeAdapterInterface resourceNode = (NodeAdapterInterface) resourceParentNodeAsList.get(0);
+					List<OpenstackResourceAdapter> vms = resourceNode.getVms();
+					vms.remove(openstackAdapter);
+					resourceNode.setVms(vms);
+				}
+        	}
+        	
+        	resAdapterAsList.get(0).release();
         	resourceManager.deleteResource(id);
         }catch(ResourceNotFound e){
         	code = GENI_CodeEnum.SEARCHFAILED;
