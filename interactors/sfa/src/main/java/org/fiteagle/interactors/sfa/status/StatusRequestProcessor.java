@@ -116,8 +116,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
 									.toString());
 							tmpSliver.setGeni_allocation_status((String) vm
 									.getProperties().get("allocation_status"));
-							tmpSliver.setGeni_operational_status((String) vm
-									.getProperties().get("operational_status"));
+							tmpSliver.setGeni_operational_status(vm.getProperties().get("operational_status").toString());
 							tmpSliver.setGeni_expires(DateUtil
 									.getFormatedDate(vm.getExpirationTime()));
 							slivers.add(tmpSliver);
