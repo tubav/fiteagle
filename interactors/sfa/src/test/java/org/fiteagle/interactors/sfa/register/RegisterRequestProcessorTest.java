@@ -15,6 +15,7 @@ import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredenti
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RegisterRequestProcessorTest {
@@ -149,6 +150,7 @@ public class RegisterRequestProcessorTest {
 						+ "</signatures>" + "</signed-credential>");
 	}
 
+	@Ignore
 	@Test
 	public void registerTest() {
 
