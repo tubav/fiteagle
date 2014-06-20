@@ -76,6 +76,7 @@ public class Group {
   public void addResource(ResourceAdapter resource) {
     if(this.resources == null)
       this.resources = new ArrayList<String>();
+    resource.setGroupId(this.getGroupId());
     this.resources.add(resource.getId());
   }
   
