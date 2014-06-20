@@ -51,7 +51,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 	private String floatingIp = null;
 
-	private static boolean offlineTestMode = true;
+	private static boolean offlineTestMode = false;
 
 	public OpenstackVMAdapter() {
 		super();

@@ -158,14 +158,11 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
 
 					ArrayList<String> adapterIds = new ArrayList<String>();
 					adapterIds.add(id);
-					List<ResourceAdapter> resAdapterAsList = resourceManager
-							.getResourceAdapterInstancesById(adapterIds);
+					List<ResourceAdapter> resAdapterAsList = resourceManager.getResourceAdapterInstancesById(adapterIds);
 
 					if (OpenstackResourceAdapter.class
-							.isAssignableFrom(resAdapterAsList.get(0)
-									.getClass())) {
-						OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resAdapterAsList
-								.get(0);
+							.isAssignableFrom(resAdapterAsList.get(0).getClass())) {
+						OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resAdapterAsList.get(0);
 						String nodeId = openstackAdapter.getParentNodeId();
 						if (nodeId != null) {
 							ArrayList<String> nodeIdAsList = new ArrayList<String>();

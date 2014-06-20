@@ -2,13 +2,17 @@ package org.fiteagle.interactors.sfa.performoperationalaction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.MethodNotSupportedException;
 
+import org.fiteagle.adapter.common.NodeAdapterInterface;
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
 import org.fiteagle.core.util.URN;
@@ -18,18 +22,20 @@ import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.GeniSliversOperationalStatus;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
 import org.fiteagle.interactors.sfa.performoperationalaction.Action.MethodNotFound;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
+import org.fiteagle.interactors.sfa.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PerformOperationalActionRequestProcessor extends
 		SFAv3RequestProcessor {
 
-	Logger log = LoggerFactory.getLogger(getClass()); 
+	Logger log = LoggerFactory.getLogger(getClass());
 	GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
 
 	public PerformOperationalActionResult processRequest(
@@ -78,6 +84,9 @@ public class PerformOperationalActionRequestProcessor extends
 		ResourceAdapterManager resourceManager = ResourceAdapterManager
 				.getInstance();
 		ArrayList<GeniSliversOperationalStatus> slivers = new ArrayList<GeniSliversOperationalStatus>();
+		
+		
+		
 		if (urns.get(0).contains("+slice+")) {
 			Group group = GroupDBManager.getInstance().getGroup(
 					new URN(urns.get(0)).getSubjectAtDomain());
@@ -93,20 +102,62 @@ public class PerformOperationalActionRequestProcessor extends
 				performActionOnAdapter(action, resourceAdapter);
 
 				if (isStillSuccessfull()) {
-					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
-					String urn = URN.getURNFromResourceAdapter(resourceAdapter).toString();
-					tmpSliver.setGeni_sliver_urn(urn);
-					tmpSliver
-							.setGeni_allocation_status((String) resourceAdapter
-									.getProperties().get("allocation_status"));
-					slivers.add(tmpSliver);
+					// TODO: if node than get the openstack adapters and set the
+					// sliver according to these!
+
+					
+					
+					if (NodeAdapterInterface.class
+							.isAssignableFrom(resourceAdapter.getClass())) {
+
+						// ArrayList<GeniSlivers> resultSlivers = new
+						// ArrayList<GeniSlivers>();
+
+						List<OpenstackResourceAdapter> vms = ((NodeAdapterInterface) resourceAdapter)
+								.getVms();
+
+						for (Iterator iterator1 = vms.iterator(); iterator
+								.hasNext();) {
+							OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter) iterator1
+									.next();
+
+							HashMap<String, Object> props = openstackResourceAdapter
+									.getProperties();
+							GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
+							tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+"+ InterfaceConfiguration.getInstance().getDomain()+ "+sliver+"+ openstackResourceAdapter.getId()).toString());
+							tmpSliver.setGeni_operational_status((String) resourceAdapter.getProperties().get("operational_status"));
+//							tmpSliver.setGeni_allocation_status((String) resourceAdapter.getProperties().get("allocation_status")); //TODO
+							// tmpSliver.setGeni_operational_status((String)
+							// openstackResourceAdapter.getProperties().get("operational_status"));
+							tmpSliver.setGeni_expires(DateUtil
+									.getFormatedDate(openstackResourceAdapter
+											.getExpirationTime()));
+							slivers.add(tmpSliver);
+						}
+					}else {
+						GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
+						String urn = URN.getURNFromResourceAdapter(resourceAdapter)
+								.toString();
+						tmpSliver.setGeni_sliver_urn(urn);
+						tmpSliver
+						.setGeni_allocation_status((String) resourceAdapter
+								.getProperties().get("allocation_status"));
+						slivers.add(tmpSliver);
+					}
+
+					
+					
 				} else {
 					break;
 				}
 
 			}
+			
+			
+			
+			
 		} else {
-
+			//the request is not a slice
 			for (Iterator iterator = urns.iterator(); iterator.hasNext();) {
 				String urn = (String) iterator.next();
 				URN u = new URN(urn);
@@ -116,11 +167,18 @@ public class PerformOperationalActionRequestProcessor extends
 						.getResourceAdapterInstance(id);
 				performActionOnAdapter(action, resourceAdapter);
 				if (isStillSuccessfull()) {
+
+					// TODO: if node get the openstack adapter and do this
+					// according to them
+
 					GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
 					tmpSliver.setGeni_sliver_urn(urn);
 					tmpSliver
 							.setGeni_allocation_status((String) resourceAdapter
 									.getProperties().get("allocation_status"));
+					
+					tmpSliver.setGeni_operational_status(resourceAdapter.getProperties().get("operational_status").toString());
+					tmpSliver.setGeni_expires(DateUtil.getFormatedDate(resourceAdapter.getExpirationTime()));
 					slivers.add(tmpSliver);
 				} else {
 					break;
@@ -139,33 +197,76 @@ public class PerformOperationalActionRequestProcessor extends
 
 	private void performActionOnAdapter(String action,
 			ResourceAdapter resourceAdapter) {
-		try {
-			if (action.equalsIgnoreCase("geni_start")) {
-				resourceAdapter.start();
-				return;
-			}
+		
+		if (NodeAdapterInterface.class.isAssignableFrom(resourceAdapter.getClass())){
+			List<OpenstackResourceAdapter> vms = ((NodeAdapterInterface) resourceAdapter).getVms();
 
-			else if (action.equalsIgnoreCase("geni_stop")) {
-
-				resourceAdapter.stop();
-				// TODO: change the state!!!
-			} else {
-				Action requestedAction = new Action(action, resourceAdapter);
-				requestedAction.doAction();
+			for (Iterator iterator1 = vms.iterator(); iterator1.hasNext();) {
+				ResourceAdapter vmAdapter = (ResourceAdapter)iterator1;
+				
+				try {
+					if (action.equalsIgnoreCase("geni_start")) {
+						vmAdapter.start();
+						vmAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_ready);
+						return;
+					}
+					
+					else if (action.equalsIgnoreCase("geni_stop")) {
+						vmAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_stopping);
+						vmAdapter.stop();
+						vmAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_notready);
+					} else {
+						Action requestedAction = new Action(action, resourceAdapter);
+						requestedAction.doAction();
+					}
+				} catch (IllegalArgumentException argumentError) {
+					log.error(argumentError.getMessage(), argumentError);
+					code = GENI_CodeEnum.BADARGS;
+				} catch (MethodNotFound methodNotFound) {
+					log.error(methodNotFound.getMessage(), methodNotFound);
+					code = GENI_CodeEnum.UNSUPPORTED;
+				} catch (InvocationTargetException e) {
+					log.error(e.getMessage(), e);
+					code = GENI_CodeEnum.SERVERERROR;
+				} catch (IllegalAccessException e) {
+					log.error(e.getMessage(), e);
+					code = GENI_CodeEnum.FORBIDDEN;
+				}
+				
 			}
-		} catch (IllegalArgumentException argumentError) {
-			log.error(argumentError.getMessage(),argumentError);
-			code = GENI_CodeEnum.BADARGS;
-		} catch (MethodNotFound methodNotFound) {
-			log.error(methodNotFound.getMessage(),methodNotFound);
-			code = GENI_CodeEnum.UNSUPPORTED;
-		} catch (InvocationTargetException e) {
-			log.error(e.getMessage(),e);
-			code = GENI_CodeEnum.SERVERERROR;
-		} catch (IllegalAccessException e) {
-			log.error(e.getMessage(),e);
-			code = GENI_CodeEnum.FORBIDDEN;
+			
+		}else {
+			try {
+				if (action.equalsIgnoreCase("geni_start")) {
+					resourceAdapter.start();
+					resourceAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_ready);
+					return;
+				}
+				
+				else if (action.equalsIgnoreCase("geni_stop")) {
+					resourceAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_stopping);
+					resourceAdapter.stop();
+					resourceAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_notready);
+				} else {
+					Action requestedAction = new Action(action, resourceAdapter);
+					requestedAction.doAction();
+				}
+			} catch (IllegalArgumentException argumentError) {
+				log.error(argumentError.getMessage(), argumentError);
+				code = GENI_CodeEnum.BADARGS;
+			} catch (MethodNotFound methodNotFound) {
+				log.error(methodNotFound.getMessage(), methodNotFound);
+				code = GENI_CodeEnum.UNSUPPORTED;
+			} catch (InvocationTargetException e) {
+				log.error(e.getMessage(), e);
+				code = GENI_CodeEnum.SERVERERROR;
+			} catch (IllegalAccessException e) {
+				log.error(e.getMessage(), e);
+				code = GENI_CodeEnum.FORBIDDEN;
+			}
 		}
+		
+		
 	}
 
 	@Override
