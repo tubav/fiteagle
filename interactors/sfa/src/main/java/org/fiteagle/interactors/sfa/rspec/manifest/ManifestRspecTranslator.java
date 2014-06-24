@@ -41,27 +41,30 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 			List<ResourceAdapter> resourceAdapters) {
 		RSpecContents manifestRspec = new RSpecContents();
 
-		List<Object> rspecContentElements = manifestRspec
-				.getAnyOrNodeOrLink();
+		List<Object> rspecContentElements = manifestRspec.getAnyOrNodeOrLink();
 
 		for (ResourceAdapter resourceAdapter : resourceAdapters) {
 			Object resource;
-			if (resourceAdapter instanceof OpenstackResourceAdapter){
+			if (resourceAdapter instanceof OpenstackResourceAdapter) {
 				OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resourceAdapter;
 				String nodeId = openstackAdapter.getParentNodeId();
-				
-				if (nodeId!=null) {
+
+				if (nodeId != null) {
 					ArrayList<String> nodeIdAsList = new ArrayList<String>();
 					nodeIdAsList.add(nodeId);
-					List<ResourceAdapter> nodeAdapterAsList = ResourceAdapterManager.getInstance().getResourceAdapterInstancesById(nodeIdAsList);
-					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) nodeAdapterAsList.get(0);
-					resource = translateToOpenstackNode((ResourceAdapter)nodeAdapter);
-					
+					List<ResourceAdapter> nodeAdapterAsList = ResourceAdapterManager
+							.getInstance().getResourceAdapterInstancesById(
+									nodeIdAsList);
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) nodeAdapterAsList
+							.get(0);
+					resource = translateToOpenstackNode((ResourceAdapter) nodeAdapter);
+
 				} else {
-					resource = new SFAv3RspecTranslator().translateToOpenstackResource(resourceAdapter);
+					resource = new SFAv3RspecTranslator()
+							.translateToOpenstackResource(resourceAdapter);
 				}
 			}
-				
+
 			else if (resourceAdapter instanceof SSHAccessable)
 				resource = translateToNode(resourceAdapter);
 			else if (resourceAdapter instanceof NodeAdapterInterface)
@@ -72,56 +75,76 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 		}
 		return manifestRspec;
 	}
-	
 
 	private Object translateToOpenstackNode(ResourceAdapter resourceAdapter) {
-		
-		
+
 		NodeAdapterInterface openstackNodeResourceAdapter = (NodeAdapterInterface) resourceAdapter;
-		
+
 		RSpecContents manifestRspec = new RSpecContents();
 
 		List<Object> rspecContentElements = manifestRspec.getAnyOrNodeOrLink();
-		
-		
+
 		org.fiteagle.interactors.sfa.rspec.manifest.NodeContents node = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents();
 		List<Object> nodeContentsList = node.getAnyOrRelationOrLocation();
-		
-		List<OpenstackResourceAdapter> allocatedVms = openstackNodeResourceAdapter.getVms();
-		
+
+		List<OpenstackResourceAdapter> allocatedVms = openstackNodeResourceAdapter
+				.getVms();
+
 		for (Iterator iterator = allocatedVms.iterator(); iterator.hasNext();) {
 			OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter) iterator
 					.next();
-			
+
 			org.fiteagle.interactors.sfa.rspec.manifest.NodeContents.SliverType tmpSliverType = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents.SliverType();
 			org.fiteagle.interactors.sfa.rspec.manifest.DiskImageContents tmpDiskImage = new org.fiteagle.interactors.sfa.rspec.manifest.DiskImageContents();
+
+			tmpDiskImage.setName(openstackResourceAdapter.getImageProperties()
+					.get(OpenstackResourceAdapter.IMAGE_NAME));
+			tmpSliverType.setName(getFlavorNameOverFlavorId(
+					openstackResourceAdapter.getFlavorId(),
+					openstackResourceAdapter.getFlavorsProperties()));
+
+			tmpSliverType
+					.getAnyOrDiskImage()
+					.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory()
+							.createDiskImage(tmpDiskImage));
+			nodeContentsList
+					.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory()
+							.createNodeContentsSliverType(tmpSliverType));
+			String floatingIp = openstackResourceAdapter.getVMProperties().get(
+					OpenstackResourceAdapter.VM_FloatingIP);
 			
-			tmpDiskImage.setName(openstackResourceAdapter.getImageProperties().get(OpenstackResourceAdapter.IMAGE_NAME));
-			tmpSliverType.setName(getFlavorNameOverFlavorId(openstackResourceAdapter.getFlavorId(), openstackResourceAdapter.getFlavorsProperties()));
-			
-			tmpSliverType.getAnyOrDiskImage().add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createDiskImage(tmpDiskImage));
-			nodeContentsList.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createNodeContentsSliverType(tmpSliverType));
-			
-			//TODO: add if the ip exists into the response!!!!!!!!!!11
-			//TODO: if vmproperties are set the ip can be there!
-			
+			if(floatingIp!=null){
+				//TODO: set these over properties/preferences.
+				ServiceContents services = new org.fiteagle.interactors.sfa.rspec.manifest.ServiceContents();
+				LoginServiceContents login = new org.fiteagle.interactors.sfa.rspec.manifest.LoginServiceContents();
+				login.setAuthentication("ssh-keys");
+				login.setUsername("ubuntu");
+				login.setHostname(floatingIp);
+				login.setPort("8081");
+				services.getAnyOrLoginOrInstall().add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createLogin(login));
+				nodeContentsList.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createServices(services));
+			}
+
 		}
 
-		return new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createNode(node);
+		return new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory()
+				.createNode(node);
 	}
 
 	private String getFlavorNameOverFlavorId(String flavorId,
 			List<HashMap<String, String>> flavorsProperties) {
-		
+
 		for (Iterator iterator = flavorsProperties.iterator(); iterator
 				.hasNext();) {
 			HashMap<String, String> hashMap = (HashMap<String, String>) iterator
 					.next();
-			
-			if(hashMap.get(OpenstackResourceAdapter.FLAVOR_ID).compareTo(flavorId)==0) return hashMap.get(OpenstackResourceAdapter.FLAVOR_NAME); 
-			
+
+			if (hashMap.get(OpenstackResourceAdapter.FLAVOR_ID).compareTo(
+					flavorId) == 0)
+				return hashMap.get(OpenstackResourceAdapter.FLAVOR_NAME);
+
 		}
-		
+
 		return null;
 	}
 
