@@ -247,7 +247,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			HashMap<String, Object> props = openstackResourceAdapter.getProperties();
 			// TODO: change this add the ip and port to access the nodes maybe?!!!!
 			GeniSlivers tmpSliver = new GeniSlivers();
-			
+			//TODO: get the floatingIp!! its not null!!
 			tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getId()).toString());
 			tmpSliver.setGeni_allocation_status((String) openstackResourceAdapter
 					.getProperties().get("allocation_status"));

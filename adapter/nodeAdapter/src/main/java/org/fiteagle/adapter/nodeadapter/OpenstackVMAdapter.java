@@ -137,7 +137,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		
 		//wait a little before associating a floating ip to the server, so that its ready. 
 		try {
-		    Thread.sleep(3000);
+		    Thread.sleep(6000);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
@@ -148,6 +148,13 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 		System.out.println("allocating floating ip for server "
 				+ server.getId());
+		//wait while associating a floating ip to the server, so that its ready.
+		try {
+		    Thread.sleep(20000);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		
 	}
 
 	public void release() {
