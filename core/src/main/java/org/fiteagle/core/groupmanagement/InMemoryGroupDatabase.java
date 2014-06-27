@@ -1,5 +1,6 @@
 package org.fiteagle.core.groupmanagement;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +16,12 @@ public class InMemoryGroupDatabase implements GroupPersistable {
   }
   
   @Override
-  public Group getGroup(String groupId) {
-    return groupMap.get(groupId);
+  public Group getGroup(String groupId) throws SQLException {
+    Group g =  groupMap.get(groupId);
+    if(g == null){
+    	throw new SQLException();
+    }
+    return g;
   }
   
   @Override
