@@ -1,5 +1,6 @@
 package org.fiteagle.interactors.sfa.allocate;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,14 +27,14 @@ import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.GeniEndTimeoption;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
-import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
-import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
 import org.fiteagle.interactors.sfa.rspec.ext.Property;
 import org.fiteagle.interactors.sfa.rspec.ext.Resource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
+import org.fiteagle.interactors.sfa.rspec.ext.openstack.VmToInstantiate;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.request.DiskImageContents;
 import org.fiteagle.interactors.sfa.rspec.request.NodeContents;
@@ -51,18 +52,19 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 			AllocateOptions allocateOptions) {
 		// TODO:get user name from credentials and correct this
 		AllocateResult result = getResult(urn, credentials, requestRspec,
-				"testUser");
+				allocateOptions);
 		return result;
 	}
 
 	private AllocateResult getResult(String urn, ListCredentials credentials,
-			RSpecContents requestRspec, String groupOwnerId) {
+			RSpecContents requestRspec, AllocateOptions options) {
 		String value = "";
 		String output = "";
 		AMCode returnCode = null;
 		AllocateValue allocateValue = new AllocateValue();
 		AllocateResult result = new AllocateResult();
 		boolean validArguments = true;
+		Date expirationDate = getExpirationDate(options);
 		URN sliceURN = null;
 		try {
 			sliceURN = new URN(urn);
@@ -281,30 +283,28 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 												GENISliverAllocationState.geni_allocated
 														.toString());
 								openstackResourceAdapter.setStatus(ResourceAdapterStatus.Reserved);
-								Date allocationExpirationTime = Calendar
-										.getInstance().getTime();
-								allocationExpirationTime
-										.setTime(allocationExpirationTime.getTime() + 10 * 1000 * 60);
-								openstackResourceAdapter.setExpirationTime(allocationExpirationTime);
+							
+								openstackResourceAdapter.setExpirationTime(expirationDate);
+								resourceManager.setExpires(openstackResourceAdapter.getId(),
+										expirationDate);
 
 							}
-
-							resource.getProperties()
-									.put("operational_status",
-											GENISliverOperationalState.geni_pending_allocation
-													.toString());
-							resource.getProperties().put(
-									"allocation_status",
-									GENISliverAllocationState.geni_allocated
-											.toString());
-							resource.setStatus(ResourceAdapterStatus.Reserved);
-							Date allocationExpirationTime = Calendar
-									.getInstance().getTime();
-							allocationExpirationTime
-									.setTime(allocationExpirationTime.getTime() + 10 * 1000 * 60);
-							resource.setExpirationTime(allocationExpirationTime);
-							resourceManager.setExpires(resource.getId(),
-									allocationExpirationTime);
+//
+//							resource.getProperties()
+//									.put("operational_status",
+//											GENISliverOperationalState.geni_pending_allocation
+//													.toString());
+//							resource.getProperties().put(
+//									"allocation_status",
+//									GENISliverAllocationState.geni_allocated
+//											.toString());
+//							resource.setStatus(ResourceAdapterStatus.Reserved);
+//							Date allocationExpirationTime = Calendar
+//									.getInstance().getTime();
+//							allocationExpirationTime
+//									.setTime(allocationExpirationTime.getTime() + 10 * 1000 * 60);
+//							resource.setExpirationTime(allocationExpirationTime);
+							
 							resourcesList.add(resource);
 						} else if (resource != null
 								&& !(resource.isExclusive() && !resource
@@ -358,6 +358,26 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		result.setValue(allocateValue);
 
 		return result;
+	}
+
+	private Date getExpirationDate(AllocateOptions options) {
+		GeniEndTimeoption endTimeOption = options.getGeni_end_time();
+		Date expirationDate = null;
+		if(endTimeOption != null){
+			String endTimeOptionValue = endTimeOption.getValue();
+			try {
+				expirationDate  = DateUtil.getDateFromString(endTimeOptionValue);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else{
+			expirationDate = new Date();
+			expirationDate.setTime(expirationDate.getTime() + (5* 60 *1000));
+			
+		}
+		return expirationDate;
 	}
 
 	private List<OpenstackResourceAdapter> allocateOpenstackResourceAdaptersMatchingSliverType(

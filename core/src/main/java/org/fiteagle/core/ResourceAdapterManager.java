@@ -225,6 +225,7 @@ private URLClassLoader sysloader;
 
 	public void setExpires(String resourceId, Date allocationExpirationTime) {
 		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(resourceId), allocationExpirationTime.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+		adapterInstancesDatabase.getResourceAdapter(resourceId).setExpirationTime(allocationExpirationTime);
 		expirationMap.put(resourceId,scheduler);
 	}
   
@@ -238,10 +239,10 @@ private URLClassLoader sysloader;
 		}
 		@Override
 		public void run() {
-//			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
+			ResourceAdapter expiredAdapter = adapterInstancesDatabase.getResourceAdapter(resourceId);
 //			removeAdapterFromGroup(resourceId);
-//		
-//			expiredAdapter.setStatus(ResourceAdapterStatus.Available);
+		
+			expiredAdapter.setStatus(ResourceAdapterStatus.Available);
 			
 			
 		}
