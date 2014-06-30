@@ -2,6 +2,7 @@ package org.fiteagle.interactors.sfa;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,26 +38,47 @@ public interface ISFA {
 	public static final String KEY_TYPE = "type";
 
 	GetVersionResult getVersion() throws IOException;
-	ListResourcesResult listResources(ListCredentials credentials, ListResourceOptions listResourceOptions) throws IOException;
 
-	List<Map<String,Object>> resolve(String o1, String o2);
+	ListResourcesResult listResources(ListCredentials credentials,
+			ListResourceOptions listResourceOptions) throws IOException;
+
+	List<Map<String, Object>> resolve(String o1, String o2);
+
 	String getSelfCredential(String certificate, String xrn, String type);
-//	String getCredential(SignedCredential credential, String xrn, String type);
+
+	// String getCredential(SignedCredential credential, String xrn, String
+	// type);
 	String getCredential(String credential, String xrn, String type);
 
-	DescribeResult describe(ArrayList<String> urns, ListCredentials credentials,
-			DescribeOptions describeOptions) throws IOException;
-  AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec,
-      AllocateOptions allocateOptions) throws IOException;
-  ProvisionResult provision(ArrayList<String> urns, ListCredentials credentials, ProvisionOptions provisionOptions)
-      throws IOException;
-  StatusResult status(ArrayList<String> urns, ListCredentials credentials, StatusOptions statusOptions)
-      throws IOException;
-  DeleteResult delete(ArrayList<String> urns, ListCredentials credentials, DeleteOptions deleteOptions)
-      throws IOException;
-  HashMap<String, Object> getCredential();
-  HashMap<String, Object> register(HashMap<String, Object> registerParameters);
-PerformOperationalActionResult performOperationalAction(ArrayList<String> urns, ListCredentials credentials, String action,	PerformOperationalActionOptions performOpActionOptions)
-		throws IOException;
+	DescribeResult describe(ArrayList<String> urns,
+			ListCredentials credentials, DescribeOptions describeOptions)
+			throws IOException;
+
+	AllocateResult allocate(String urn, ListCredentials credentials,
+			RSpecContents requestRspec, AllocateOptions allocateOptions)
+			throws IOException;
+
+	ProvisionResult provision(ArrayList<String> urns,
+			ListCredentials credentials, ProvisionOptions provisionOptions)
+			throws IOException;
+
+	StatusResult status(ArrayList<String> urns, ListCredentials credentials,
+			StatusOptions statusOptions) throws IOException;
+
+	DeleteResult delete(ArrayList<String> urns, ListCredentials credentials,
+			DeleteOptions deleteOptions) throws IOException;
+
+	HashMap<String, Object> getCredential();
+
+	HashMap<String, Object> register(HashMap<String, Object> registerParameters);
+
+	PerformOperationalActionResult performOperationalAction(
+			ArrayList<String> urns, ListCredentials credentials, String action,
+			PerformOperationalActionOptions performOpActionOptions)
+			throws IOException;
+
+	
+	HashMap<String, Object> renewSlice(HashMap<String, Object> parameters) throws IOException;
+	
 
 }

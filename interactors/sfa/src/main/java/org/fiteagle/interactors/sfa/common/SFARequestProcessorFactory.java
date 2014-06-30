@@ -12,33 +12,36 @@ import org.fiteagle.interactors.sfa.listresources.ListResourceRequestProcessor;
 import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
+import org.fiteagle.interactors.sfa.renew.RenewRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
 
 public class SFARequestProcessorFactory {
 
 	private static SFARequestProcessorFactory factory = new SFARequestProcessorFactory();
-	
-	public static SFARequestProcessorFactory getInstance(){
+
+	public static SFARequestProcessorFactory getInstance() {
 		return factory;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <E extends SFAv3RequestProcessor> E createRequestProcessor(SFAv3MethodsEnum method){
-		
+	public <E extends SFAv3RequestProcessor> E createRequestProcessor(
+			SFAv3MethodsEnum method) {
+
 		E result = null;
-		switch(method){
+		switch (method) {
 		case ALLOCATE:
-		  AllocateRequestProcessor allocateRequestProcessor = new AllocateRequestProcessor();
-		  allocateRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
-		  result = (E) allocateRequestProcessor;
-		  
+			AllocateRequestProcessor allocateRequestProcessor = new AllocateRequestProcessor();
+			allocateRequestProcessor.setResourceManager(ResourceAdapterManager
+					.getInstance());
+			result = (E) allocateRequestProcessor;
+
 			break;
 		case DELETE:
 			DeleteRequestProcessor delProc = new DeleteRequestProcessor();
 			delProc.setResourceManager(ResourceAdapterManager.getInstance());
 			delProc.setGroupDBManager(GroupDBManager.getInstance());
-		  result = (E) delProc;
+			result = (E) delProc;
 			break;
 		case DESCRIBE:
 			result = (E) new DescribeRequestProcessor();
@@ -50,11 +53,15 @@ public class SFARequestProcessorFactory {
 			result = (E) new PerformOperationalActionRequestProcessor();
 			break;
 		case PROVISION:
-		  ProvisionRequestProcessor provisionRequestProcessor =  new ProvisionRequestProcessor();
-		  provisionRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
-		  result = (E) provisionRequestProcessor;
+			ProvisionRequestProcessor provisionRequestProcessor = new ProvisionRequestProcessor();
+			provisionRequestProcessor.setResourceManager(ResourceAdapterManager
+					.getInstance());
+			result = (E) provisionRequestProcessor;
 			break;
 		case RENEW:
+			RenewRequestProcessor renewRequestProcessor = new RenewRequestProcessor(KeyStoreManagement.getInstance(), GroupDBManager.getInstance());
+			renewRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+			result = (E) renewRequestProcessor;
 			break;
 		case SHUTDOWN:
 			break;
@@ -62,23 +69,25 @@ public class SFARequestProcessorFactory {
 			result = (E) new GetSelfCredentialRequestProcessor();
 			break;
 		case STATUS:
-		  result = (E) new StatusRequestProcessor();
+			result = (E) new StatusRequestProcessor();
 			break;
 		case GET_VERSION:
 			result = (E) new GetVersionRequestProcessor();
 			break;
-		case REGISTER: 
-		RegisterRequestProcessor registerRequestProcessor = new RegisterRequestProcessor(KeyStoreManagement.getInstance(), GroupDBManager.getInstance());
-		  result = (E) registerRequestProcessor;
-		  break;
-		case RESOLVE: 
-      result = (E) new ResolveRequestProcessor();
-      break;
+		case REGISTER:
+			RegisterRequestProcessor registerRequestProcessor = new RegisterRequestProcessor(
+					KeyStoreManagement.getInstance(),
+					GroupDBManager.getInstance());
+			result = (E) registerRequestProcessor;
+			break;
+		case RESOLVE:
+			result = (E) new ResolveRequestProcessor();
+			break;
 		default:
 			break;
-			
+
 		}
-		
+
 		return result;
 	}
 }

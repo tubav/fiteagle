@@ -5,6 +5,7 @@ import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
+import org.fiteagle.interactors.sfa.renew.RenewRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
@@ -154,7 +156,6 @@ public class SFAInteractor_v3 implements ISFA {
   
   @Override
   public AllocateResult allocate(String urn, ListCredentials credentials, RSpecContents requestRspec, AllocateOptions allocateOptions) throws IOException {
-    
     SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
     AllocateRequestProcessor allocateRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.ALLOCATE);
     allocateRequestProcessor.setUserCertificate(certificate);
@@ -222,7 +223,13 @@ public class SFAInteractor_v3 implements ISFA {
     return registerRequestProcessor.register(registerParameters);
   }
 
-
+@Override
+public HashMap<String, Object> renewSlice(HashMap<String, Object> parameters) throws IOException {
+	SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+    RenewRequestProcessor renewRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.RENEW);
+    renewRequestProcessor.setUserCertificate(certificate);
+    return renewRequestProcessor.renew(parameters);
+}
 
 
 }
