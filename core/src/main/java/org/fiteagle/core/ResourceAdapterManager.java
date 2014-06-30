@@ -260,6 +260,7 @@ private URLClassLoader sysloader;
 		if(existentTimer!=null){
 			existentTimer.cancel(false);
 			setExpires(resourceId, expirationTime);
+			//TODO: set the expires date in resource adapter!
 		}else {
 			//TODO: set this if resource has no timer still..
 		}
