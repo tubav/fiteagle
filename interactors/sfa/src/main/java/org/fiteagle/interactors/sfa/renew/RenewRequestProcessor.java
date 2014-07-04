@@ -1,161 +1,246 @@
 package org.fiteagle.interactors.sfa.renew;
 
-import java.security.cert.X509Certificate;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.TimeZone;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import org.eclipse.persistence.jpa.jpql.parser.ResultVariable;
+import org.fiteagle.adapter.common.NodeAdapterInterface;
+import org.fiteagle.adapter.common.OpenstackResourceAdapter;
+import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.core.ResourceAdapterManager;
-import org.fiteagle.core.aaa.KeyStoreManagement;
+import org.fiteagle.core.ResourceAdapterManager.ResourceNotFound;
+import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.fiteagle.core.util.URN;
+import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
+import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
+import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.Credential;
-import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
-import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
-import org.fiteagle.interactors.sfa.util.CredentialFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fiteagle.interactors.sfa.delete.DeleteOptions;
+import org.fiteagle.interactors.sfa.delete.DeleteResult;
+import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
+import org.fiteagle.interactors.sfa.renewSlice.RenewSliceRequestProcessor;
+import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
+import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 
 public class RenewRequestProcessor extends SFAv3RequestProcessor {
-	Logger log = LoggerFactory.getLogger(getClass());
-	
-	private KeyStoreManagement keyStoreManagement;
-	private GroupDBManager groupDBManager;
 	
 	private ResourceAdapterManager resourceManager;
-
-
-	public RenewRequestProcessor(KeyStoreManagement keystoreInstance,
-			GroupDBManager groupDBInstance) {
-		setKeyStoreManagement(keystoreInstance);
-		setGroupDBManager(groupDBInstance);
-		
+	private GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
+	private GroupDBManager groupManager;
+	
+	public RenewRequestProcessor(ResourceAdapterManager rm, GroupDBManager gdbm) {
+		this.resourceManager = rm;
+		this.groupManager = gdbm;
 	}
 
 	@Override
 	public AMResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
-		// TODO Auto-generated method stub
 		return null;
-	}
-
-//	public String processRequest(Date dateTime, ListCredentials credentials) {
-//		System.out.println(credentials);
-//		System.out.println(dateTime);
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-	public HashMap<String, Object> renew(HashMap<String, Object> parameters) {
-		String dateTimeString = (String) parameters.get("expiration");
-		Date dateTime = getDateFromString(dateTimeString);
-		
-		String credentialsString = (String) parameters.get("credential");
-		
-		RegisterRequestProcessor registerReqProcessor = new RegisterRequestProcessor(getKeyStoreManagement(), getGroupDBManager());
-		
-		SignedCredential credentials = null;
-		try {
-			credentials = registerReqProcessor.buildCredential(credentialsString);
-		} catch (JAXBException e) {
-			log.error(e.getMessage(),e);
-		}
-		System.out.println(credentials);
-		System.out.println(dateTime);
-		
-		String sliceUrnStr = credentials.getCredential().getTargetURN();
-		
-		URN sliceUrn = new URN(sliceUrnStr);
-		
-		
-//		---------------------------------------------------------
-		X509Certificate userCert = getUserCertificate();
-		URN target = new URN(sliceUrnStr);
-		Credential credential = null;
-		try{
-			CredentialFactory.setGroupDBManager(GroupDBManager.getInstance());
-			CredentialFactory.setKeystoreManagement(KeyStoreManagement.getInstance());
-			 credential = CredentialFactory.newCredential(userCert,	target);
-		}catch(RuntimeException e){
-			return null;
-		}
-		
-//		TimeZone utc = TimeZone.getTimeZone("Etc/UTC");
-		GregorianCalendar c = new GregorianCalendar();
-		c.setTimeInMillis(dateTime.getTime());
-//		c.setTime(dateTime);
-		XMLGregorianCalendar valueGreg=null;
-		
-		try {
-			valueGreg = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-		} catch (DatatypeConfigurationException e) {
-			e.printStackTrace();
-		}
-		
-		credential.setExpires(valueGreg);
-		String signedCredential = CredentialFactory.signCredential(credential);
-
-		
-		
-		
-//		----------------------------------------------------------
-		
-		HashMap<String, Object> returnMap =  new HashMap<String, Object>();
-    	returnMap.put("code", new Integer(0));
-    	returnMap.put("value", signedCredential);
-//    	returnMap.put("value", "");
-    	returnMap.put("output", "");
-    	return returnMap;
-		
 	}
 	
-	private Date getDateFromString(String dateTimeString) {
-//		SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-		SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		rfc3339.setTimeZone(TimeZone.getTimeZone("UTC"));
-		try {
-			return  rfc3339.parse(dateTimeString);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public RenewResult processRequest(List<String> urns, String expirationTime, ListCredentials credentials, RenewOptions renewOptions) {
+		//TODO: get the slivers over urns if openstack => setExpTime
+		AMCode returnCode = getReturnCode(code);
+		RenewResult result = new RenewResult();
+		ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();
+		
+		ProvisionRequestProcessor helperRequestProcessr = new ProvisionRequestProcessor();
+		
+		List<URN> urnList = helperRequestProcessr.parseURNS(urns);
+		
+		
+		
+		if (urnList.size() == 1
+				&& urnList.get(0).getType().equalsIgnoreCase("slice")) {
+			
+			Group group = null;
+
+			try {
+				group = GroupDBManager.getInstance().getGroup(
+						urnList.get(0).getSubjectAtDomain());
+			} catch (GroupNotFound e) {
+
+				code = GENI_CodeEnum.SEARCHFAILED;
+				returnCode = getReturnCode(code);
+				result.setCode(returnCode);
+				result.setValue(slivers);
+				return result;
+			}
+
+			List<String> resourceIds = group.getResources();
+			List<ResourceAdapter> resources = resourceManager
+					.getResourceAdapterInstancesById(resourceIds);
+
+			for (ResourceAdapter resourceAdapter : resources) {
+				if (NodeAdapterInterface.class.isAssignableFrom(resourceAdapter
+						.getClass())) {
+					
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface)resourceAdapter;
+					List<OpenstackResourceAdapter> openstackResourceAdapters = nodeAdapter.getVms();
+					for (Iterator iterator = openstackResourceAdapters
+							.iterator(); iterator.hasNext();) {
+						OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter) iterator
+								.next();
+						
+						Date expirationTimeDate=new RenewSliceRequestProcessor(null, groupManager).getDateFromString(expirationTime);
+						openstackResourceAdapter.setExpirationTime(expirationTimeDate);
+						resourceManager.renewExpirationTime(openstackResourceAdapter.getId(), expirationTimeDate);
+						
+					}
+					
+				}
+				
+
+				if (NodeAdapterInterface.class.isAssignableFrom(resourceAdapter
+						.getClass())) {
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) resourceAdapter;
+					List<GeniSlivers> sliverList = helperRequestProcessr.buildSliversForNodeAdapter(nodeAdapter);
+					if (sliverList != null)
+						slivers.addAll(sliverList);
+				} else {
+					GeniSlivers sliver = helperRequestProcessr.buildSliver(resourceAdapter);
+					if (sliver != null)
+						slivers.add(sliver);
+				}
+			}
+			
+			
+//			ManifestRspecTranslator translator = new ManifestRspecTranslator();
+//			RSpecContents manifestRSpec = translator.getManifestRSpec(resources);
+//			String geni_rspec = translator.getRSpecString(manifestRSpec);
+//			resultValue.setGeni_rspec(geni_rspec);
+			
+		} else {
+			
+			//urns are sliver urns
+			//TODO: test this part!
+			
+			
+			
+			for (String urn : urns) {
+				URN u = new URN(urn);
+				String id = u.getSubject();
+				try {
+					// TODO: get the node if its openstack
+					ArrayList<String> adapterIds = new ArrayList<String>();
+					adapterIds.add(id);
+					List<ResourceAdapter> resAdapterAsList = resourceManager.getResourceAdapterInstancesById(adapterIds);
+					
+					//TODO: get from string the expi time: 
+					
+					Date expirationTimeDate=new RenewSliceRequestProcessor(null, groupManager).getDateFromString(expirationTime);
+					resAdapterAsList.get(0).setExpirationTime(expirationTimeDate);
+					resourceManager.renewExpirationTime(id, expirationTimeDate);
+					
+					
+				} catch (ResourceNotFound e) {
+					code = GENI_CodeEnum.SEARCHFAILED;
+					returnCode = getReturnCode(code);
+					result.setCode(returnCode);
+					result.setValue(slivers);
+					return result;
+				}
+				
+				
+				//--------
+				ArrayList<String> adapterIdStrings = new ArrayList<String>();
+				adapterIdStrings.add(id);
+				List<ResourceAdapter> resources = resourceManager.getResourceAdapterInstancesById(adapterIdStrings);
+				
+				ProvisionRequestProcessor helperProcessor = new ProvisionRequestProcessor();
+				
+				for (ResourceAdapter resourceAdapter : resources) {
+
+					if (NodeAdapterInterface.class.isAssignableFrom(resourceAdapter
+							.getClass())) {
+						NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) resourceAdapter;
+						List<GeniSlivers> sliverList = helperProcessor.buildSliversForNodeAdapter(nodeAdapter);
+						if (sliverList != null)
+							slivers.addAll(sliverList);
+					} else if (OpenstackResourceAdapter.class.isAssignableFrom(resourceAdapter
+							.getClass())) {
+						OpenstackResourceAdapter openstackAdapter = (OpenstackResourceAdapter) resourceAdapter;
+						String nodeId = openstackAdapter.getParentNodeId();
+						
+						if (nodeId == null) {
+							GeniSlivers sliver = helperProcessor.buildSliver(resourceAdapter);
+							if (sliver != null)
+								slivers.add(sliver);
+							continue;
+						}
+						
+						ArrayList<String> nodeIdAsList = new ArrayList<String>();
+						nodeIdAsList.add(nodeId);
+						List<ResourceAdapter> nodeAdapterAsList = resourceManager.getResourceAdapterInstancesById(nodeIdAsList);
+						NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) nodeAdapterAsList.get(0);
+						List<GeniSlivers> sliverList = helperProcessor.buildSliversForNodeAdapter(nodeAdapter);
+						if (sliverList != null)
+							slivers.addAll(sliverList);
+						
+					} else {
+						GeniSlivers sliver = helperProcessor.buildSliver(resourceAdapter);
+						if (sliver != null)
+							slivers.add(sliver);
+					}
+				}
+				//--------
+				
+				
+			}
+			
+			ArrayList<String> adapterIds = new ArrayList<String>();
+			adapterIds.add(urnList.get(0).getSubject());
+			List<ResourceAdapter> resAdapterAsList = resourceManager.getResourceAdapterInstancesById(adapterIds);//TODO: check this!!!!!!!
+			
+//			resultValue.setGeni_slivers(slivers);
+//			ManifestRspecTranslator translator = new ManifestRspecTranslator();
+//			RSpecContents manifestRSpec = translator.getManifestRSpec(resAdapterAsList); //TODO: check this!!!!!!!!!!
+//			String geni_rspec = translator.getRSpecString(manifestRSpec);
+//			resultValue.setGeni_rspec(geni_rspec);
+			
+			
 		}
-		return null;
+		
+			
+			
+			//TODO: get slivers
+			//TODO: get the rspec and send it back
+			//------
+//			getSlivers
+//			getResources
+			
+			
+			//------
+			
+			
+			
+//			GeniSlivers tmpSliver = new GeniSlivers();
+//
+//			tmpSliver.setGeni_sliver_urn(urn);
+//			tmpSliver
+//					.setGeni_allocation_status(GENISliverAllocationState.geni_unallocated
+//							.toString());
+//			// tmpSliver.setGeni_expires(geni_expires);
+//			slivers.add(tmpSliver);
+		
+		returnCode = getReturnCode(code);
+		result.setCode(returnCode);
+		result.setValue(slivers);
+		return result;
+
 	}
 
-	public void setResourceManager(ResourceAdapterManager instance) {
-		this.resourceManager = instance;
-	}
-
-
-	public KeyStoreManagement getKeyStoreManagement() {
-		return keyStoreManagement;
-	}
-
-	public void setKeyStoreManagement(KeyStoreManagement keyStoreManagement) {
-		this.keyStoreManagement = keyStoreManagement;
-	}
-
-	public GroupDBManager getGroupDBManager() {
-		return groupDBManager;
-	}
-
-	public void setGroupDBManager(GroupDBManager groupDBManager) {
-		this.groupDBManager = groupDBManager;
+	private void addSliverToSliversForResourceId(String id) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -38,7 +38,10 @@ import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
+import org.fiteagle.interactors.sfa.renew.RenewOptions;
 import org.fiteagle.interactors.sfa.renew.RenewRequestProcessor;
+import org.fiteagle.interactors.sfa.renew.RenewResult;
+import org.fiteagle.interactors.sfa.renewSlice.RenewSliceRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
@@ -226,9 +229,21 @@ public class SFAInteractor_v3 implements ISFA {
 @Override
 public HashMap<String, Object> renewSlice(HashMap<String, Object> parameters) throws IOException {
 	SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
-    RenewRequestProcessor renewRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.RENEW);
+    RenewSliceRequestProcessor renewRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.RENEW_SLICE);
     renewRequestProcessor.setUserCertificate(certificate);
     return renewRequestProcessor.renew(parameters);
+}
+
+@Override
+public RenewResult renew(ArrayList<String> urns, ListCredentials credentials, String expirationTime,
+    RenewOptions renewOptions) throws IOException {
+  
+  SFARequestProcessorFactory sfaRequestProcFactory = new SFARequestProcessorFactory();
+  RenewRequestProcessor renewRequestProcessor = sfaRequestProcFactory.createRequestProcessor(SFAv3MethodsEnum.RENEW);
+  RenewResult result = renewRequestProcessor.processRequest(urns, expirationTime, credentials, renewOptions);
+  
+  return result;
+  
 }
 
 

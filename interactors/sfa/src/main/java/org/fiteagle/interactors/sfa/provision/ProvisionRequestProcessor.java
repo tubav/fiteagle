@@ -234,7 +234,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
-	private List<GeniSlivers> buildSliversForNodeAdapter(
+	public List<GeniSlivers> buildSliversForNodeAdapter(
 			NodeAdapterInterface nodeAdapter) {
 		
 		ArrayList<GeniSlivers> resultSlivers = new ArrayList<GeniSlivers>();
@@ -251,8 +251,8 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getId()).toString());
 			tmpSliver.setGeni_allocation_status((String) openstackResourceAdapter
 					.getProperties().get("allocation_status"));
-			tmpSliver.setGeni_operational_status((String) openstackResourceAdapter
-					.getProperties().get("operational_status"));
+			tmpSliver.setGeni_operational_status(openstackResourceAdapter
+					.getProperties().get("operational_status").toString());
 			tmpSliver.setGeni_expires(DateUtil.getFormatedDate(openstackResourceAdapter
 					.getExpirationTime()));
 			resultSlivers.add(tmpSliver);
@@ -321,7 +321,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
-	private GeniSlivers buildSliver(ResourceAdapter resourceAdapter) {
+	public GeniSlivers buildSliver(ResourceAdapter resourceAdapter) {
 		HashMap<String, Object> props = resourceAdapter.getProperties();
 
 		// TODO: change this!!!!
@@ -339,7 +339,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 		return tmpSliver;
 	}
 
-	private List<URN> parseURNS(List<String> urns) {
+	public List<URN> parseURNS(List<String> urns) {
 		List<URN> urnList = new LinkedList<>();
 		try {
 

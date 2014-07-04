@@ -34,6 +34,7 @@ import org.fiteagle.interactors.sfa.describe.DescribeOptions;
 import org.fiteagle.interactors.sfa.listresources.ListResourceOptions;
 import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
+import org.fiteagle.interactors.sfa.renew.RenewOptions;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.slf4j.Logger;
@@ -175,6 +176,13 @@ public GeniAMHandler() {
     
     if (to.getClass().isAssignableFrom(PerformOperationalActionOptions.class)){
         return parsePerformOperationalActionOptions(from);
+        
+      }
+    
+    //TODO: implement parsing options for renew method!?
+    if (to.getClass().isAssignableFrom(RenewOptions.class)){
+    	return new RenewOptions();
+//        return parseRenewOptions(from);
         
       }
     

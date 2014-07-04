@@ -21,6 +21,8 @@ import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalA
 import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalActionResult;
 import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
 import org.fiteagle.interactors.sfa.provision.ProvisionResult;
+import org.fiteagle.interactors.sfa.renew.RenewOptions;
+import org.fiteagle.interactors.sfa.renew.RenewResult;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.status.StatusOptions;
 import org.fiteagle.interactors.sfa.status.StatusResult;
@@ -79,6 +81,9 @@ public interface ISFA {
 
 	
 	HashMap<String, Object> renewSlice(HashMap<String, Object> parameters) throws IOException;
+
+	RenewResult renew(ArrayList<String> urns, ListCredentials credentials, String expirationTime, RenewOptions renewOptions)
+			throws IOException;
 	
 
 }

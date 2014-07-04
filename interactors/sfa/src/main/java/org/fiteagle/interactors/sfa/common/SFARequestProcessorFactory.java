@@ -13,6 +13,7 @@ import org.fiteagle.interactors.sfa.performoperationalaction.PerformOperationalA
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.register.RegisterRequestProcessor;
 import org.fiteagle.interactors.sfa.renew.RenewRequestProcessor;
+import org.fiteagle.interactors.sfa.renewSlice.RenewSliceRequestProcessor;
 import org.fiteagle.interactors.sfa.resolve.ResolveRequestProcessor;
 import org.fiteagle.interactors.sfa.status.StatusRequestProcessor;
 
@@ -58,9 +59,14 @@ public class SFARequestProcessorFactory {
 					.getInstance());
 			result = (E) provisionRequestProcessor;
 			break;
+		case RENEW_SLICE:
+			RenewSliceRequestProcessor renewSliceRequestProcessor = new RenewSliceRequestProcessor(KeyStoreManagement.getInstance(), GroupDBManager.getInstance());
+			renewSliceRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+			result = (E) renewSliceRequestProcessor;
+			break;
 		case RENEW:
-			RenewRequestProcessor renewRequestProcessor = new RenewRequestProcessor(KeyStoreManagement.getInstance(), GroupDBManager.getInstance());
-			renewRequestProcessor.setResourceManager(ResourceAdapterManager.getInstance());
+//			RenewRequestProcessor renewRequestProcessor = new RenewSliceRequestProcessor(KeyStoreManagement.getInstance(), GroupDBManager.getInstance());
+			RenewRequestProcessor renewRequestProcessor = new RenewRequestProcessor(ResourceAdapterManager.getInstance(), GroupDBManager.getInstance());
 			result = (E) renewRequestProcessor;
 			break;
 		case SHUTDOWN:
