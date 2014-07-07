@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import net.iharder.Base64;
@@ -627,6 +631,56 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 	@Override
 	public void setParentNodeId(String nodeId) {
 		this.parentNode=nodeId;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+	
+	@Override
+	public void checkAndSetRAReady(){
+		long milis = 240000;
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("will wait for "+milis+" miliseconds for access to be prepared!");
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		//wait until VM access is ready
+		//TODO: add the thread here!
+		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(this), milis, TimeUnit.MILLISECONDS);
+		
+	}
+	
+	
+	private class ExpirationCallback implements Runnable {
+		
+		private OpenstackVMAdapter openstackVMAdapter;
+		public ExpirationCallback(OpenstackVMAdapter openstackVMAdapter){
+			this.openstackVMAdapter = openstackVMAdapter;
+		}
+		
+		@Override
+		public void run() {
+			// wait
+			openstackVMAdapter.getProperties().put("operational_status", "geni_ready");
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("!!!!!!!!!!!!!!!!!!operational status is set to geni_ready!!!!!!!!!");
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			
+			
+		}
+		
 	}
 
 }

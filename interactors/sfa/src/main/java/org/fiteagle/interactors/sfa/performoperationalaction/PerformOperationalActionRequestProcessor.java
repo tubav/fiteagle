@@ -239,7 +239,7 @@ public class PerformOperationalActionRequestProcessor extends
 			try {
 				if (action.equalsIgnoreCase("geni_start")) {
 					resourceAdapter.start();
-					resourceAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_ready);
+//					resourceAdapter.getProperties().put("operational_status", GENISliverOperationalState.geni_ready);
 					return;
 				}
 				

@@ -282,13 +282,17 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 						.getProperties();
 				props.put("operational_status",
 						GENISliverOperationalState.geni_configuring.toString());
+				
+				//start checking if VM is ready!!
+				openstackResourceAdapter.checkAndSetRAReady();
+				
 
 				openstackResourceAdapter
 						.setExpirationTime(getExpirationDate(provisionOptions));
 				// resourceManager.renewExpirationTime(open.getId(),
 				// openstackResourceAdapter.getExpirationTime());
-				props.put("operational_status",
-						GENISliverOperationalState.geni_ready.toString());
+//				props.put("operational_status",
+//						GENISliverOperationalState.geni_ready.toString());
 				props.put("allocation_status",
 						GENISliverAllocationState.geni_provisioned.toString());
 				openstackResourceAdapter.setProperties(props);
@@ -311,9 +315,17 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 					.setExpirationTime(getExpirationDate(provisionOptions));
 			resourceManager.renewExpirationTime(resourceAdapter.getId(),
 					resourceAdapter.getExpirationTime());
+			
+			//if resource adapter openstackResAdap => check..
+			
+			if (OpenstackResourceAdapter.class.isAssignableFrom(resourceAdapter
+					.getClass())) {
+				OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter)resourceAdapter;
+				openstackResourceAdapter.checkAndSetRAReady();
+			}
 
-			props.put("operational_status",
-					GENISliverOperationalState.geni_ready.toString());
+//			props.put("operational_status",
+//					GENISliverOperationalState.geni_ready.toString());
 			props.put("allocation_status",
 					GENISliverAllocationState.geni_provisioned.toString());
 			resourceAdapter.setProperties(props);

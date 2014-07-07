@@ -238,9 +238,5 @@ public class RenewRequestProcessor extends SFAv3RequestProcessor {
 
 	}
 
-	private void addSliverToSliversForResourceId(String id) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

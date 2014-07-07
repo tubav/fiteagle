@@ -100,6 +100,8 @@ public interface OpenstackResourceAdapter {
 	String getParentNodeId();
 	void setParentNodeId(String nodeId);
 	
+	public void checkAndSetRAReady();
+	
 	
 	
 

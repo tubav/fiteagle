@@ -517,6 +517,12 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		
 	}
 
+	@Override
+	public void checkAndSetRAReady() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 
