@@ -69,7 +69,6 @@ public class GetSelfCredentialRequestProcessor extends SFAv3RequestProcessor {
 	@Override
 	public AMResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

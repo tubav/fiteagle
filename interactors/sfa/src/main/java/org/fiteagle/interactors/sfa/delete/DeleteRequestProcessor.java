@@ -70,7 +70,7 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
 
 	private ArrayList<GeniSlivers> getDeleteResultValue(List<String> urns) {
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
-		// TODO: the urn is a slice urn..
+		//the urn is a slice urn..
 		String test = urns.get(0);
 		ArrayList<GeniSlivers> slivers = new ArrayList<>();
 		if (urns.get(0).contains("+slice+")) {
@@ -154,7 +154,7 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
 
 				try {
 
-					// TODO: get the node if its openstack
+					//Get the node if its openstack
 
 					ArrayList<String> adapterIds = new ArrayList<String>();
 					adapterIds.add(id);
@@ -203,7 +203,6 @@ public class DeleteRequestProcessor extends SFAv3RequestProcessor {
 	@Override
 	public AMResult processRequest(ListCredentials credentials,
 			Object... specificArgs) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

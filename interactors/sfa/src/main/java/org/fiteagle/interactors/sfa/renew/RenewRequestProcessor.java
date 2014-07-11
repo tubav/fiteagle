@@ -47,7 +47,6 @@ public class RenewRequestProcessor extends SFAv3RequestProcessor {
 	}
 	
 	public RenewResult processRequest(List<String> urns, String expirationTime, ListCredentials credentials, RenewOptions renewOptions) {
-		//TODO: get the slivers over urns if openstack => setExpTime
 		AMCode returnCode = getReturnCode(code);
 		RenewResult result = new RenewResult();
 		ArrayList<GeniSlivers> slivers = new ArrayList<GeniSlivers>();

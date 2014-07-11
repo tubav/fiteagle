@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
@@ -13,15 +15,19 @@ import org.fiteagle.core.ResourceAdapterManager;
 import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.core.groupmanagement.Group;
 import org.fiteagle.core.groupmanagement.GroupDBManager;
+import org.fiteagle.core.groupmanagement.GroupDBManager.GroupNotFound;
 import org.fiteagle.core.util.URN;
 import org.fiteagle.core.util.URN.URNParsingException;
+import org.fiteagle.interactors.sfa.allocate.AllocateRequestProcessor;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
+import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.fiteagle.interactors.sfa.rspec.manifest.ManifestRspecTranslator;
 import org.fiteagle.interactors.sfa.rspec.manifest.RSpecContents;
 import org.fiteagle.interactors.sfa.util.DateUtil;
@@ -32,6 +38,7 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 	private DescribeOptionsService optionsService;
 	private String outPutString = "";
 	private GENI_CodeEnum code = GENI_CodeEnum.SUCCESS;
+	AMCode returnCode = null;
 
 	public DescribeRequestProcessor() {
 		resourceManager = ResourceAdapterManager.getInstance();
@@ -48,7 +55,6 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 			ListCredentials credentials, DescribeOptions options) {
 		String value = "";
 		String output = "";
-		AMCode returnCode = null;
 
 		Authorization auth = new Authorization();
 
@@ -79,12 +85,12 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 		returnCode = getReturnCode(GENI_CodeEnum.SUCCESS);
 		result.setOutput(output);
 		result.setCode(returnCode);
-		result.setValue(getResultValue(urns));
+		result.setValue(getResultValue(urns, credentials));
 		return result;
 
 	}
 
-	private DescribeValue getResultValue(List<String> urns) {
+	private DescribeValue getResultValue(List<String> urns, ListCredentials credentials) {
 		
 
 		List<URN> urnList = parseURNS(urns);
@@ -97,8 +103,50 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 		if (urnList.size() == 1	&& urnList.get(0).getType().equalsIgnoreCase("slice")) {
 			ResourceAdapterManager resourceManager = ResourceAdapterManager
 					.getInstance();
-			Group group = GroupDBManager.getInstance().getGroup(
-					new URN(urns.get(0)).getSubjectAtDomain());
+			//TODO: if group does not exist => set in output the error??
+			
+			
+			
+//			Group group = GroupDBManager.getInstance().getGroup(
+//					new URN(urns.get(0)).getSubjectAtDomain());
+			
+			//credentials are valid and slice is created somewhere else, so creating the slice on demand..
+			Group group = null;
+			boolean groupFound = true;
+			try {
+				group = GroupDBManager.getInstance().getGroup(
+						new URN(urns.get(0)).getSubjectAtDomain());
+				
+			} catch (GroupNotFound e) {
+				groupFound = false;
+				
+			}
+			
+			if(!groupFound){
+//				create group according to the credentials!!
+				Credentials credential = credentials.getCredentialsList().get(0);
+				String credString = credential.getGeni_value();
+				SignedCredential cred=null;
+				try {
+					cred = new AllocateRequestProcessor().buildCredential(credString);
+				} catch (JAXBException e) {
+					e.printStackTrace();
+				}
+				URN userURN = new URN(cred.getCredential().getOwnerURN());
+				URN slcURN = urnList.get(0);
+				
+				try {
+					group = new Group(slcURN.getSubjectAtDomain(), userURN.getSubjectAtDomain());
+				} catch (Exception e) {
+					returnCode = getReturnCode(GENI_CodeEnum.SEARCHFAILED);
+					groupFound=false;
+				}
+		    	GroupDBManager groupDBManager = GroupDBManager.getInstance();
+		    	groupDBManager.addGroup(group);
+			}
+			
+			
+			
 			
 			resultValue.setGeni_urn(URN.getURNFromGroup(group).toString());
 			

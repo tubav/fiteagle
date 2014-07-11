@@ -645,15 +645,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 	@Override
 	public void checkAndSetRAReady(){
 		long milis = 240000;
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println("will wait for "+milis+" miliseconds for access to be prepared!");
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		//wait until VM access is ready
-		//TODO: add the thread here!
 		ScheduledFuture<?> scheduler = executor.schedule(new ExpirationCallback(this), milis, TimeUnit.MILLISECONDS);
 		
 	}
@@ -670,13 +662,6 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		public void run() {
 			// wait
 			openstackVMAdapter.getProperties().put("operational_status", "geni_ready");
-			System.out.println();
-			System.out.println();
-			System.out.println();
-			System.out.println("!!!!!!!!!!!!!!!!!!operational status is set to geni_ready!!!!!!!!!");
-			System.out.println();
-			System.out.println();
-			System.out.println();
 			
 			
 		}

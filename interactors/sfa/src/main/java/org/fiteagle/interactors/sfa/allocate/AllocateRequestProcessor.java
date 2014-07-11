@@ -1,5 +1,6 @@
 package org.fiteagle.interactors.sfa.allocate;
 
+import java.io.StringReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,7 +9,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
@@ -24,6 +28,7 @@ import org.fiteagle.core.util.URN.URNParsingException;
 import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
+import org.fiteagle.interactors.sfa.common.Credentials;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
 import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
@@ -31,6 +36,7 @@ import org.fiteagle.interactors.sfa.common.GeniEndTimeoption;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
+import org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses.SignedCredential;
 import org.fiteagle.interactors.sfa.rspec.ext.Property;
 import org.fiteagle.interactors.sfa.rspec.ext.Resource;
 import org.fiteagle.interactors.sfa.rspec.ext.openstack.OpenstackResource;
@@ -76,29 +82,56 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
 		// TODO CHECK OTHER ARGS
 		if (validArguments) {
-			Group group = null;
-			boolean groupFound = true;
-			try {
-				group = GroupDBManager.getInstance().getGroup(
-						sliceURN.getSubjectAtDomain());
-
-			} catch (GroupNotFound e) {
-				groupFound = false;
-				returnCode = getReturnCode(GENI_CodeEnum.SEARCHFAILED);
-
+			Authorization auth = new Authorization();
+			
+			auth.checkCredentialsList(credentials);
+			
+			if (!auth.areCredentialTypeAndVersionValid()) {
+				returnCode = auth.getReturnCode();
+				output = auth.getAuthorizationFailMessage();
+				result.setCode(returnCode);
+				result.setOutput(output);
+				return result;
 			}
-			if (groupFound) {
-				Authorization auth = new Authorization();
-
-				auth.checkCredentialsList(credentials);
-
-				if (!auth.areCredentialTypeAndVersionValid()) {
-					returnCode = auth.getReturnCode();
-					output = auth.getAuthorizationFailMessage();
-					result.setCode(returnCode);
-					result.setOutput(output);
-					return result;
+			if (auth.areCredentialTypeAndVersionValid()) {
+				
+				Group group = null;
+				boolean groupFound = true;
+				try {
+					groupFound=true;
+					group = GroupDBManager.getInstance().getGroup(
+							sliceURN.getSubjectAtDomain());
+					
+				} catch (GroupNotFound e) {
+					groupFound = false;
+					
 				}
+				
+				if(!groupFound){
+//					create group!!
+					Credentials credential = credentials.getCredentialsList().get(0);
+					String credString = credential.getGeni_value();
+					SignedCredential cred=null;
+					try {
+						cred = buildCredential(credString);
+					} catch (JAXBException e) {
+						e.printStackTrace();
+					}
+					URN userURN = new URN(cred.getCredential().getOwnerURN());
+					URN slcURN = new URN(urn);
+					
+					try {
+						group = new Group(slcURN.getSubjectAtDomain(), userURN.getSubjectAtDomain());
+					} catch (Exception e) {
+						returnCode = getReturnCode(GENI_CodeEnum.SEARCHFAILED);
+						groupFound=false;
+					}
+			    	GroupDBManager groupDBManager = GroupDBManager.getInstance();
+			    	groupDBManager.addGroup(group);
+				}
+				
+				
+				
 
 				List<Object> rspecRequestedResources = requestRspec
 						.getAnyOrNodeOrLink();
@@ -462,9 +495,6 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		List<ResourceAdapter> resources = resourceManager
 				.getResourceAdapterInstancesById(resourceIds);
 
-		// TODO: if resource adapter node adapter than copy paste the code here
-		// and set for every ndoe resource the slivers(from openstack vms )
-		
 		
 
 		for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
@@ -483,7 +513,6 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 								.next();
 						GeniSlivers tmpSliver1 = new GeniSlivers();
 						
-//						TODO: openstackResourceAdapter.getId() is null!!!!!!!!!!!!!!!
 						tmpSliver1.setGeni_sliver_urn(new URN("urn:publicid:IDN" + "+" + InterfaceConfiguration.getInstance().getDomain() + "+sliver+" +openstackResourceAdapter.getId()).toString());
 						tmpSliver1.setGeni_allocation_status((String) openstackResourceAdapter.getProperties().get("allocation_status"));
 						tmpSliver1.setGeni_expires(DateUtil.getFormatedDate(openstackResourceAdapter
@@ -544,6 +573,16 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		this.resourceManager = resourceManager;
 	}
 
+	
+	
+	
+	public SignedCredential buildCredential(String credential) throws JAXBException {
+		  JAXBContext context = JAXBContext.newInstance("org.fiteagle.interactors.sfa.getSelfCredential.jaxbClasses");
+	      Unmarshaller unmarshaller = context.createUnmarshaller();
+	      StringReader reader = new StringReader(credential);
+	      SignedCredential sc = (SignedCredential) unmarshaller.unmarshal(reader);
+	      return sc;
+	  }
 	//
 
 }

@@ -127,16 +127,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
 						tmpSliver.setGeni_sliver_urn(URN
 								.getURNFromResourceAdapter(ra).toString());
 						tmpSliver.setGeni_allocation_status((String) ra
-								.getProperties().get("allocation_status"));// TODO:
-																			// set
-																			// right
-																			// status
-																			// information
-																			// over
-																			// translator(implement
-																			// this
-																			// in
-																			// translator)
+								.getProperties().get("allocation_status"));
 						tmpSliver.setGeni_operational_status((String) ra
 								.getProperties().get("operational_status"));
 						tmpSliver.setGeni_expires(DateUtil.getFormatedDate(ra
