@@ -76,6 +76,11 @@ public class StopwatchAdapter extends ResourceAdapter implements Instantiable {
 	public void configure(AdapterConfiguration configuration) {
 		//TODO do something
 	}
+	@Override
+	public void checkStatus() {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

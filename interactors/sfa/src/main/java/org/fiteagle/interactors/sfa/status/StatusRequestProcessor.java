@@ -76,6 +76,7 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
 	}
 
 	private StatusValue getResultStatusValue(List<String> urns) {
+		//TODO: check status also for slivers. call checkStatus on RAs
 
 		SFAv3RspecTranslator translator = new SFAv3RspecTranslator();
 		ResourceAdapterManager resourceManager = ResourceAdapterManager
@@ -103,6 +104,9 @@ public class StatusRequestProcessor extends SFAv3RequestProcessor {
 				for (String resourceID : groupResources) {
 					ResourceAdapter ra = resourceManager
 							.getResourceAdapterInstance(resourceID);
+					
+					ra.checkStatus();
+					
 					if (ra instanceof NodeAdapterInterface) {
 						NodeAdapterInterface nodeAdapter = (NodeAdapterInterface) ra;
 						for (OpenstackResourceAdapter vm : nodeAdapter.getVms()) {

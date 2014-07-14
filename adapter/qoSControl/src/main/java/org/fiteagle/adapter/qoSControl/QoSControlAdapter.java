@@ -154,4 +154,10 @@ private String clientIP;
 	public void setBandwidthUL(@Named(name="source_ip")String ip, @Named(name="bandwidth") int bandwitdh ){
 		
 	}
+
+	@Override
+	public void checkStatus() {
+		// TODO Auto-generated method stub
+		
+	}
 }

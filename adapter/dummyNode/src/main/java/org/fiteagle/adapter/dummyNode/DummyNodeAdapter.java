@@ -154,4 +154,10 @@ public class DummyNodeAdapter extends ResourceAdapter implements SSHAccessable{
 		
 	}
 
+	@Override
+	public void checkStatus() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

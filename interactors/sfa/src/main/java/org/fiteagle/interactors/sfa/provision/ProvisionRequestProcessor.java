@@ -282,7 +282,7 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 						GENISliverOperationalState.geni_configuring.toString());
 				
 				//start checking if VM is ready!!
-				openstackResourceAdapter.checkAndSetRAReady();
+//				openstackResourceAdapter.checkAndSetRAReady();
 				
 
 				openstackResourceAdapter
@@ -316,11 +316,11 @@ public class ProvisionRequestProcessor extends SFAv3RequestProcessor {
 			
 			//if resource adapter openstackResAdap => check..
 			
-			if (OpenstackResourceAdapter.class.isAssignableFrom(resourceAdapter
-					.getClass())) {
-				OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter)resourceAdapter;
-				openstackResourceAdapter.checkAndSetRAReady();
-			}
+//			if (OpenstackResourceAdapter.class.isAssignableFrom(resourceAdapter
+//					.getClass())) {
+//				OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter)resourceAdapter;
+//				openstackResourceAdapter.checkAndSetRAReady();
+//			}
 
 //			props.put("operational_status",
 //					GENISliverOperationalState.geni_ready.toString());

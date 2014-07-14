@@ -27,6 +27,7 @@ import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
+import org.fiteagle.adapter.nodeadapter.client.AdapterSSHClient;
 import org.fiteagle.adapter.nodeadapter.client.OfflineTestClient;
 import org.fiteagle.adapter.nodeadapter.client.OpenstackClient;
 import org.fiteagle.adapter.nodeadapter.client.Utils;
@@ -56,6 +57,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 	private String parentNode;
 
 	private String floatingIp = null;
+	int port=8081;
 
 	private static boolean offlineTestMode = false;
 
@@ -664,6 +666,18 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 			openstackVMAdapter.getProperties().put("operational_status", "geni_ready");
 			
 			
+		}
+		
+	}
+
+
+	@Override
+	public void checkStatus() {
+		//check and set the new status using the AdapterSSHClient!
+		
+		//if accessable:
+		if(new AdapterSSHClient().isAccessable(this.floatingIp, port)){
+			this.getProperties().put("operational_status", "geni_ready");
 		}
 		
 	}

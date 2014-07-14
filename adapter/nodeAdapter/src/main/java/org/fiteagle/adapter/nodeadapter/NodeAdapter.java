@@ -179,4 +179,16 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 		
 	}
 
+	@Override
+	public void checkStatus() {
+		// TODO Auto-generated method stub
+//		check and set the status for every openstack adapter using AdapterSSHClient.
+		List<OpenstackResourceAdapter> vmList = this.getVms();
+		for (Iterator iterator = vmList.iterator(); iterator.hasNext();) {
+			ResourceAdapter openstackResourceAdapter = (ResourceAdapter) iterator
+					.next();
+			openstackResourceAdapter.checkStatus();
+		}
+	}
+
 }
