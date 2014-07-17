@@ -116,23 +116,41 @@ public class PerformOperationalActionRequestProcessor extends
 						List<OpenstackResourceAdapter> vms = ((NodeAdapterInterface) resourceAdapter)
 								.getVms();
 
-						for (Iterator iterator1 = vms.iterator(); iterator
-								.hasNext();) {
+						for (Iterator iterator1 = vms.iterator(); iterator1.hasNext();) {
 							OpenstackResourceAdapter openstackResourceAdapter = (OpenstackResourceAdapter) iterator1
 									.next();
 
 							HashMap<String, Object> props = openstackResourceAdapter
 									.getProperties();
+//							GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
+//							tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+"+ InterfaceConfiguration.getInstance().getDomain()+ "+sliver+"+ openstackResourceAdapter.getId()).toString());
+//							tmpSliver.setGeni_operational_status((String) resourceAdapter.getProperties().get("operational_status"));
+////							tmpSliver.setGeni_allocation_status((String) resourceAdapter.getProperties().get("allocation_status")); //TODO
+//							// tmpSliver.setGeni_operational_status((String)
+//							// openstackResourceAdapter.getProperties().get("operational_status"));
+//							tmpSliver.setGeni_expires(DateUtil
+//									.getFormatedDate(openstackResourceAdapter
+//											.getExpirationTime()));
+//							slivers.add(tmpSliver);
+							
+							
+							
 							GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
 							tmpSliver.setGeni_sliver_urn(new URN("urn:publicid:IDN"+ "+"+ InterfaceConfiguration.getInstance().getDomain()+ "+sliver+"+ openstackResourceAdapter.getId()).toString());
-							tmpSliver.setGeni_operational_status((String) resourceAdapter.getProperties().get("operational_status"));
-//							tmpSliver.setGeni_allocation_status((String) resourceAdapter.getProperties().get("allocation_status")); //TODO
-							// tmpSliver.setGeni_operational_status((String)
-							// openstackResourceAdapter.getProperties().get("operational_status"));
-							tmpSliver.setGeni_expires(DateUtil
-									.getFormatedDate(openstackResourceAdapter
-											.getExpirationTime()));
+							tmpSliver.setGeni_allocation_status((String) openstackResourceAdapter.getProperties().get("allocation_status"));
+							tmpSliver.setGeni_operational_status(openstackResourceAdapter.getProperties().get("operational_status").toString());
+							tmpSliver.setGeni_expires(DateUtil.getFormatedDate(openstackResourceAdapter.getExpirationTime()));
 							slivers.add(tmpSliver);
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
 						}
 					}else {
 						GeniSliversOperationalStatus tmpSliver = new GeniSliversOperationalStatus();
@@ -200,9 +218,10 @@ public class PerformOperationalActionRequestProcessor extends
 		
 		if (NodeAdapterInterface.class.isAssignableFrom(resourceAdapter.getClass())){
 			List<OpenstackResourceAdapter> vms = ((NodeAdapterInterface) resourceAdapter).getVms();
-
-			for (Iterator iterator1 = vms.iterator(); iterator1.hasNext();) {
-				ResourceAdapter vmAdapter = (ResourceAdapter)iterator1;
+			
+			for (Iterator iterator = vms.iterator(); iterator.hasNext();) {
+				ResourceAdapter vmAdapter = (ResourceAdapter) iterator
+						.next();
 				
 				try {
 					if (action.equalsIgnoreCase("geni_start")) {
