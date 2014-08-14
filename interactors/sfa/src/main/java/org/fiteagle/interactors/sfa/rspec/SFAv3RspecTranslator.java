@@ -252,16 +252,19 @@ public Object translateToFITeagleResource(ResourceAdapter resourceAdapter) {
 				.getImageProperties();
 		image.setId(imageProperties.get(resourceAdapter.IMAGE_ID));
 		image.setName(imageProperties.get(resourceAdapter.IMAGE_NAME));
-		image.setMinDisk(Integer.valueOf(imageProperties
-				.get(resourceAdapter.IMAGE_MINDISK)));
+		if(imageProperties.get(resourceAdapter.IMAGE_MINDISK)!=null)
+		image.setMinDisk(Integer.valueOf(imageProperties.get(resourceAdapter.IMAGE_MINDISK)));
 		
 		if(imageProperties.get(resourceAdapter.IMAGE_CREATED)!=null && imageProperties.get(resourceAdapter.IMAGE_CREATED)!="")
 			image.setCreated(convertLongToXMLGregCal(Long.parseLong(imageProperties.get(resourceAdapter.IMAGE_CREATED))));
 		
+		if(imageProperties.get(resourceAdapter.IMAGE_MINRAM)!=null)
 		image.setMinRam(Integer.valueOf(imageProperties
 				.get(resourceAdapter.IMAGE_MINRAM)));
+		if(imageProperties.get(resourceAdapter.IMAGE_OSEXTIMG_SIZE)!=null)
 		image.setOSEXTIMGSIZE(Double.valueOf(imageProperties
 				.get(resourceAdapter.IMAGE_OSEXTIMG_SIZE)));
+		if(imageProperties.get(resourceAdapter.IMAGE_PROGRESS)!=null)
 		image.setProgress(Integer.valueOf(imageProperties
 				.get(resourceAdapter.IMAGE_PROGRESS)));
 		image.setStatus(imageProperties.get(resourceAdapter.IMAGE_STATUS));

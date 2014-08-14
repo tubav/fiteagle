@@ -30,7 +30,8 @@ public class Main {
 		new OpenstackVMAdapter();
 		OpenstackClient client = new OpenstackClient();
 //		listFlavors(client);
-////		listImages(client);
+//		listImages(client);
+		listonlyPrivateImages(client);
 //		client.checkEveryThing();
 //		getServerDetail(client);
 		
@@ -56,8 +57,8 @@ public class Main {
 //		client.deleteKeyPair(keyPairName);
 //		String network = client.getNetworkId();
 //		System.out.println(network);
-		FloatingIp response = client.getAFreeFloatingIpFromTenant();
-		System.out.println(response);
+//		FloatingIp response = client.getAFreeFloatingIpFromTenant();
+//		System.out.println(response);
 
 	}
 
@@ -83,6 +84,13 @@ public class Main {
 
 	private static void listImages(OpenstackClient client) {
 		Images images = client.listImages();
+		for (Image image : images) {
+			System.out.println(image);
+		}
+	}
+	
+	private static void listonlyPrivateImages(OpenstackClient client) {
+		Images images = client.listOnlyPrivateImages();
 		for (Image image : images) {
 			System.out.println(image);
 		}

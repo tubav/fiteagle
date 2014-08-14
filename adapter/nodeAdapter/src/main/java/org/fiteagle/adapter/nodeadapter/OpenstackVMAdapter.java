@@ -66,7 +66,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		if (!utilsConfigured) {
 			this.configureUtils();
 		}
-		this.setType("org.fiteagle.adapter.openstackvmadapter.OpenstackVMAdapter");
+		this.setType("org.fiteagle.adapter.openstackvmadapter.OpenstackVMAdapter");//TODO: check this
 
 	}
 
@@ -96,6 +96,8 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 			Utils.NOVA_ENDPOINT = preferences.get("nova_endpoint", null);
 		if (preferences.get("tenant_name", null) != null)
 			Utils.TENANT_NAME = preferences.get("tenant_name", null);
+		if (preferences.get("glance_endpoint", null) != null)
+			Utils.GLANCE_ENDPOINT = preferences.get("glance_endpoint", null);
 
 	}
 
@@ -177,7 +179,8 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 		Flavors flavors = createClient().listFlavors();
 		List<Flavor> flavorsList = flavors.getList();
-		Images images = createClient().listImages();
+//		Images images = createClient().listImages();
+		Images images = createClient().listOnlyPrivateImages();
 		List<Image> imagesList = images.getList();
 
 		for (Image image : imagesList) {
@@ -259,16 +262,22 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_ID, image.getId());
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_NAME,
 				image.getName());
+		if(image.getMinDisk()!=null)
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_MINDISK, image
 				.getMinDisk().toString());
 
 		if (image.getCreated() != null)
 			imageProperties.put(OpenstackResourceAdapter.IMAGE_CREATED,
 					getLongValueAsStringOfCalendar((image.getCreated())));
+		if(image.getMinRam()!=null)
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_MINRAM, image
 				.getMinRam().toString());
+		
+		if(image.getSize()!=null)
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_OSEXTIMG_SIZE, image
 				.getSize().toString());
+		
+		if(image.getProgress()!=null)
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_PROGRESS, image
 				.getProgress().toString());
 		imageProperties.put(OpenstackResourceAdapter.IMAGE_STATUS,
@@ -291,6 +300,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 
 			Flavor flavor = (Flavor) iterator.next();
 			HashMap<String, String> tmpProperties = new HashMap<String, String>();
+			if(flavor.getDisabled()!=null)
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_OSFLVDISABLED,
 					flavor.getDisabled().toString());
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_DISK,
@@ -299,16 +309,20 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 					flavor.getId());
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_NAME,
 					flavor.getName());
+			if(flavor.isPublic()!=null)
 			tmpProperties.put(
 					OpenstackResourceAdapter.FLAVOR_OSFLAVORACCESSISPUBLIC,
 					flavor.isPublic().toString());
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_VCPUS,
 					flavor.getVcpus());
+			if(flavor.getEphemeral()!=null)
 			tmpProperties.put(
 					OpenstackResourceAdapter.FLAVOR_OSFLVEXTDATAEPHEMERAL,
 					flavor.getEphemeral().toString());
+			if(flavor.getRam()!=null)
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_RAM, flavor
 					.getRam().toString());
+			if(flavor.getRxtxFactor()!=null)
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_RXTXFACTOR,
 					flavor.getRxtxFactor().toString());
 			tmpProperties.put(OpenstackResourceAdapter.FLAVOR_SWAP,

@@ -26,7 +26,8 @@ public class Main {
 		new OpenstackVMAdapter();
 		OpenstackClient client = new OpenstackClient();
 //		listFlavors(client);
-////		listImages(client);
+//		listImages(client);
+		listonlyPrivateImages(client);
 //		client.checkEveryThing();
 //		getServerDetail(client);
 		
@@ -35,13 +36,15 @@ public class Main {
 //		addFloatingIp(client);
 		
 //		getFloatingIpPools(client);
-		client.addKeyPair("test", "");
-		Server server = client.createServer(imageId, flavorId, serverName, keyPairName);
-//		
-		Server serverDetails = client.getServerDetails(server.getId());
-//		Server serverDetails = client.getServerDetails("");
-//		
-		FloatingIp floatingIp = client.addFloatingIp();
+		
+//		client.addKeyPair("test", "");
+//		Server server = client.createServer(imageId, flavorId, serverName, keyPairName);
+////		
+//		Server serverDetails = client.getServerDetails(server.getId());
+////		Server serverDetails = client.getServerDetails("");
+////		
+//		FloatingIp floatingIp = client.addFloatingIp();
+		
 //		client.allocateFloatingIpForServer("", floatingIp.getIp());
 //		client.allocateFloatingIpForServer(serverDetails.getId(), floatingIp.getIp());
 ////		client.allocateFloatingIpForServer(server.getId(), "");
@@ -80,6 +83,14 @@ public class Main {
 		for (Image image : images) {
 			System.out.println(image);
 		}
+	}
+	
+	private static void listonlyPrivateImages(OpenstackClient client) {
+//		Images images = client.listOnlyPrivateImages();
+		client.listOnlyPrivateImages();
+//		for (Image image : images) {
+//			System.out.println(image);
+//		}
 	}
 
 	private static void listFlavors(OpenstackClient client) {

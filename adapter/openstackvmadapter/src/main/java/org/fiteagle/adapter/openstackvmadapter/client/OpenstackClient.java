@@ -40,6 +40,7 @@ import com.woorea.openstack.base.client.HttpMethod;
 import com.woorea.openstack.base.client.OpenStackRequest;
 import com.woorea.openstack.base.client.OpenStackSimpleTokenProvider;
 import com.woorea.openstack.connector.JerseyConnector;
+import com.woorea.openstack.glance.Glance;
 import com.woorea.openstack.keystone.Keystone;
 import com.woorea.openstack.keystone.api.TokensResource;
 import com.woorea.openstack.keystone.model.Access;
@@ -97,6 +98,7 @@ public class OpenstackClient {
 		OpenStackRequest<String> request = new OpenStackRequest<String>(
 				novaClient, HttpMethod.GET, "/images/detail", null,
 				String.class);
+		
 		String responseImagesString = novaClient.execute(request);
 		System.out.println(responseImagesString);
 
@@ -112,6 +114,43 @@ public class OpenstackClient {
 		}
 
 		return images;
+	}
+	
+	public void listOnlyPrivateImages(){
+		
+		Access access = getAccessWithTenantId();
+		
+		Glance glanceClient = new Glance(Utils.GLANCE_ENDPOINT.concat("/").concat(tenantId));
+		
+//		Nova novaClient = new Nova(Utils.NOVA_ENDPOINT.concat("/").concat(
+//				tenantId));
+		glanceClient.token(access.getToken().getId());
+
+//		OpenStackRequest<String> request = new OpenStackRequest<String>(
+//				novaClient, HttpMethod.GET, "/images/detail", null,
+//				String.class);
+		
+		OpenStackRequest<String> request = new OpenStackRequest<String>(
+				glanceClient, HttpMethod.GET, "/images", null,
+				String.class);
+		
+		request.queryParam("visibility", "private");
+		
+		String responseImagesString = glanceClient.execute(request);
+		System.out.println(responseImagesString);
+
+		Images images;
+		try {
+			images = this.openstackParser.parseToImages(responseImagesString);
+		} catch (JsonParseException e) {
+			throw new RuntimeException(e);
+		} catch (JsonMappingException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+//		return images;
 	}
 
 	private Access getAccessWithTenantId() {
