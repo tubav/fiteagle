@@ -16,6 +16,7 @@ private FiteaglePreferences preferences;
   private String DEFAULT_DOMAIN = "localhost";
   private String DEFAULT_AM_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+root";
   private String DEFAULT_SA_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+sa";
+  private String DEFAULT_CM_URN = DEFAULT_URN_PREFIX+"+"+DEFAULT_DOMAIN+"+"+"authority+cm";
   private String DEFAULT_HOSTNAME = "localhost";
   private String DEFAULT_AM_URL = "https://localhost/api/sfa/am/v3";
   private String DEFAULT_HRN = DEFAULT_HOSTNAME;
@@ -48,6 +49,9 @@ private FiteaglePreferences preferences;
       
     if(preferences.get("am_urn")== null)
       preferences.put("am_urn", DEFAULT_AM_URN);
+    
+    if(preferences.get("cm_urn")== null)
+        preferences.put("cm_urn", DEFAULT_CM_URN);
     
     if(preferences.get("hostname") == null)
       preferences.put("hostname", DEFAULT_HOSTNAME);
@@ -144,6 +148,10 @@ private FiteaglePreferences preferences;
     return preferences.get("sa_urn");
   }
   
+  public String getCM_URN() {
+		return preferences.get("cm_urn");
+	}
+  
   public String getTestbed_description(){
 	  return preferences.get("testbed_description");
   }
@@ -175,6 +183,8 @@ private FiteaglePreferences preferences;
   public int getGeni_allocate(){
 	  return Integer.parseInt(preferences.get("geni_allocate"));
   }
+
+
   
   
 }

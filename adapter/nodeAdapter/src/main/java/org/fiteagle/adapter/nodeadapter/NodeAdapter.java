@@ -32,7 +32,10 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 	private List<OpenstackResourceAdapter> vms = null;
 	
 	private ScheduledExecutorService executor;
-	  private HashMap<OpenstackResourceAdapter, ScheduledFuture<?>> expirationMap;
+	
+	private HashMap<OpenstackResourceAdapter, ScheduledFuture<?>> expirationMap;
+	
+	private String callerId="";
 
 	public static List<ResourceAdapter> getJavaInstances() {
 
@@ -129,7 +132,7 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 	}
 	
 	@Override
-	public NodeAdapter create(String id, List<OpenstackResourceAdapter> vms) {
+	public NodeAdapter create(String id, List<OpenstackResourceAdapter> vms, String callerId) {
 		
 		NodeAdapter result = new NodeAdapter();
 		if(id==null || id.compareTo("")==0) id = UUID.randomUUID().toString();
@@ -137,6 +140,8 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 		result.setVms(vms);
 		result.setImages(this.getImages());
 		result.setFlavorsList(this.getFlavorsList());
+		if(callerId!=null)
+			result.setCallerId(callerId);
 		return result;
 	}
 
@@ -189,6 +194,14 @@ public class NodeAdapter extends ResourceAdapter implements NodeAdapterInterface
 					.next();
 			openstackResourceAdapter.checkStatus();
 		}
+	}
+
+	public String getCallerId() {
+		return callerId;
+	}
+
+	public void setCallerId(String callerId) {
+		this.callerId = callerId;
 	}
 
 }

@@ -20,6 +20,7 @@ import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.core.ResourceAdapterManager;
+import org.fiteagle.core.config.InterfaceConfiguration;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.provision.ProvisionRequestProcessor;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
@@ -85,6 +86,12 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 		List<Object> rspecContentElements = manifestRspec.getAnyOrNodeOrLink();
 
 		org.fiteagle.interactors.sfa.rspec.manifest.NodeContents node = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents();
+		if(openstackNodeResourceAdapter.getCallerId()!=null)
+			node.setClientId(openstackNodeResourceAdapter.getCallerId());
+		
+		if(InterfaceConfiguration.getInstance().getCM_URN()!=null)
+			node.setComponentManagerId(InterfaceConfiguration.getInstance().getCM_URN());
+		
 		List<Object> nodeContentsList = node.getAnyOrRelationOrLocation();
 
 		List<OpenstackResourceAdapter> allocatedVms = openstackNodeResourceAdapter

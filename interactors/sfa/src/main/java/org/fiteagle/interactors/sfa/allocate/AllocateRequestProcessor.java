@@ -48,9 +48,12 @@ import org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType;
 import org.fiteagle.interactors.sfa.rspec.request.RSpecContents;
 import org.fiteagle.interactors.sfa.rspec.request.RequestRspecTranslator;
 import org.fiteagle.interactors.sfa.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	private ResourceAdapterManager resourceManager;
 
 	public AllocateResult processRequest(String urn,
@@ -198,27 +201,32 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 
 						if (NodeContents.class.isAssignableFrom(jaxbElem
 								.getValue().getClass())) {
-
+							
 							NodeContents node = (NodeContents) jaxbElem
 									.getValue();
 
+							//if component manager id is not the same as on the server this should not be processed on this server
+							if(node.getComponentManagerId()!=null && (node.getComponentManagerId().compareToIgnoreCase(InterfaceConfiguration.getInstance().getCM_URN())!=0)){
+								continue;
+							}
 							String nodeName = new RequestRspecTranslator()
-									.getNodeNameFromNodeComponentId(node
-											.getComponentId());
-
+							.getNodeNameFromNodeComponentId(node
+									.getComponentId());
+							
+							
 							if (nodeName == null
 									|| nodeName
-											.compareToIgnoreCase(NodeAdapterInterface.nodeName) == 0) {
+									.compareToIgnoreCase(NodeAdapterInterface.nodeName) == 0) {
 								// this is an openstack node resource
-
+								
 								if(nodeName == null) 
 									nodeName = NodeAdapterInterface.nodeName;
 								
 								NodeAdapterInterface openstackNodeResourceAdapter = (NodeAdapterInterface) resourceManager
 										.getResourceAdapterInstance(NodeAdapterInterface.nodeName);
-
+								
 								List<OpenstackResourceAdapter> allocatedImages = new ArrayList<OpenstackResourceAdapter>();
-
+								
 								List<Object> nodeContentsList = node
 										.getAnyOrRelationOrLocation();
 								// List<OpenstackResourceAdapter>
@@ -226,30 +234,37 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 								// openstackNodeResourceAdapter.getImages();
 								
 								//TODO: if node content list is empty.. get first image first flavor. add a sliver type with these
-
+								
 								for (Iterator iterator2 = nodeContentsList
 										.iterator(); iterator2.hasNext();) {
 									// if assignable..
 									// Object object2 = (Object)
 									// iterator2.next();
-									JAXBElement object2 = (JAXBElement) iterator2
-											.next();
+									JAXBElement object2 = null;
+									try {
+										object2 = (JAXBElement) iterator2.next();
+									} catch (Exception e) {
+										log.warn("Unknown XML element in request will be ignored");
+//										log.warn(e.getMessage(), e);
+										continue;
+									}
+									
 									if (org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType.class
 											.isAssignableFrom(object2
 													.getValue().getClass())) {
 										// add the openstack resources one by
 										// one into a list
-
+										
 										org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType sliverTypeTmp = (org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType) object2
 												.getValue();
 										List<OpenstackResourceAdapter> tmpAllocatedImages = this
 												.allocateOpenstackResourceAdaptersMatchingSliverType(
 														sliverTypeTmp,
 														openstackNodeResourceAdapter
-																.getImages());
+														.getImages());
 										allocatedImages
-												.addAll(tmpAllocatedImages);
-
+										.addAll(tmpAllocatedImages);
+										
 										// getSliverId over sliver name!!
 										// TODO: get vms and add the
 										// allocatedImages
@@ -257,23 +272,16 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 										// in request node!
 									}
 								}
-
+								
 								// it can be ok to set the id like
 								// node.client_id?
+								
 								NodeAdapterInterface allocatedNode = openstackNodeResourceAdapter
-										.create(null, allocatedImages);
+										.create(null, allocatedImages, node.getClientId());
 								ResourceAdapter result1 = (ResourceAdapter) allocatedNode;
 								resource = result1;
 								resourceManager
-										.addResourceAdapterInstance(resource);// TODO:
-																				// check
-																				// this
-																				// if
-																				// this
-																				// is
-																				// needed
-																				// or
-																				// extra!!
+								.addResourceAdapterInstance(resource);// TODO: check this if this is needed or extra!!
 								
 								List<OpenstackResourceAdapter> allocatedVMs = allocatedNode.getVms();
 								for (Iterator iterator2 = allocatedVMs
@@ -281,7 +289,7 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 									ResourceAdapter openstackResourceAdapter = (ResourceAdapter) iterator2.next();
 									resourceManager.addResourceAdapterInstance(openstackResourceAdapter);
 								}
-
+								
 							}
 
 							// String id = node.getClientId();
