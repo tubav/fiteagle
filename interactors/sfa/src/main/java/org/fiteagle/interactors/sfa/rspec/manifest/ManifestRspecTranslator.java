@@ -16,6 +16,7 @@ import javax.xml.bind.Marshaller;
 import org.fiteagle.adapter.common.Named;
 import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
+import org.fiteagle.adapter.common.PhysicalNodeAdapterInterface;
 import org.fiteagle.adapter.common.Publish;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
@@ -70,11 +71,51 @@ public class ManifestRspecTranslator extends SFAv3RspecTranslator {
 				resource = translateToNode(resourceAdapter);
 			else if (resourceAdapter instanceof NodeAdapterInterface)
 				resource = translateToOpenstackNode(resourceAdapter);
+			else if (resourceAdapter instanceof PhysicalNodeAdapterInterface)
+				resource = translateToPhysicalNode(resourceAdapter);
 			else
 				resource = translateToFITeagleResource(resourceAdapter);
 			rspecContentElements.add(resource);
 		}
 		return manifestRspec;
+	}
+
+	private Object translateToPhysicalNode(ResourceAdapter resourceAdapter) {
+		PhysicalNodeAdapterInterface physicalNodeResourceAdapter = (PhysicalNodeAdapterInterface) resourceAdapter;
+
+		RSpecContents manifestRspec = new RSpecContents();
+
+		List<Object> rspecContentElements = manifestRspec.getAnyOrNodeOrLink();
+
+		org.fiteagle.interactors.sfa.rspec.manifest.NodeContents nodeContents = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents();
+		if(physicalNodeResourceAdapter.getCallerId()!=null)
+			nodeContents.setClientId(physicalNodeResourceAdapter.getCallerId());
+		
+		if(InterfaceConfiguration.getInstance().getCM_URN()!=null)
+			nodeContents.setComponentManagerId(InterfaceConfiguration.getInstance().getCM_URN());
+		
+		List<Object> nodeContentsList = nodeContents.getAnyOrRelationOrLocation();
+		org.fiteagle.interactors.sfa.rspec.manifest.NodeContents.SliverType tmpSliverType = new org.fiteagle.interactors.sfa.rspec.manifest.NodeContents.SliverType();
+		
+		tmpSliverType.setName("raw-pc");
+		
+		nodeContentsList.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createNodeContentsSliverType(tmpSliverType));
+		
+//		TODO: ADD THE FOLLOWING PROPERTIES TO THE NODE, SOTHAT IT LOGIN IS POSSIBLE. THESE PROPS MUST BE DERIVED FROM THE PHYNODEADAPTER
+		
+		ServiceContents services = new org.fiteagle.interactors.sfa.rspec.manifest.ServiceContents();
+		LoginServiceContents login = new org.fiteagle.interactors.sfa.rspec.manifest.LoginServiceContents();
+		login.setAuthentication("ssh-keys");
+		if(physicalNodeResourceAdapter.getConfiguration()!=null)
+			login.setUsername(physicalNodeResourceAdapter.getConfiguration().getUsers().get(0).getUsername());
+		login.setHostname(physicalNodeResourceAdapter.getIp());
+		login.setPort(physicalNodeResourceAdapter.getPort());
+		services.getAnyOrLoginOrInstall().add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createLogin(login));
+		nodeContentsList.add(new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createServices(services));
+		
+		
+		return new org.fiteagle.interactors.sfa.rspec.manifest.ObjectFactory().createNode(nodeContents);
+		
 	}
 
 	private Object translateToOpenstackNode(ResourceAdapter resourceAdapter) {

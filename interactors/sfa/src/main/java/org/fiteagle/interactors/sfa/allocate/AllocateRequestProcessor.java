@@ -16,6 +16,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
+import org.fiteagle.adapter.common.PhysicalNodeAdapterInterface;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.ResourceAdapterStatus;
 import org.fiteagle.core.ResourceAdapterManager;
@@ -290,13 +291,56 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 									resourceManager.addResourceAdapterInstance(openstackResourceAdapter);
 								}
 								
+							}else {
+								//this is a node but not for a virtual machine
+								List<Object> nodeContents = node.getAnyOrRelationOrLocation();
+								
+								for (Iterator iterator2 = nodeContents.iterator(); iterator2.hasNext();) {
+									
+									JAXBElement tmpContent = null;
+									try {
+										tmpContent = (JAXBElement) iterator2.next();
+									} catch (Exception e) {
+										log.warn("Unknown XML element in request will be ignored");
+										continue;
+									}
+									
+//									check the sliver type!!
+									if (org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType.class
+											.isAssignableFrom(tmpContent.getValue().getClass())) {
+										org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType sliverTypeTmp = (org.fiteagle.interactors.sfa.rspec.request.NodeContents.SliverType) tmpContent.getValue();
+										if(sliverTypeTmp.getName().compareToIgnoreCase("raw-pc")==0){//TODO: use constants here
+											// get the resource adapter with this name..
+											PhysicalNodeAdapterInterface physicalNodeAdapter = (PhysicalNodeAdapterInterface) resourceManager.getResourceAdapterInstance(nodeName);
+											physicalNodeAdapter.create(node.getClientId());
+											
+											
+											ResourceAdapter tmpPhysicalNodeAdapter = (ResourceAdapter) physicalNodeAdapter;
+											tmpPhysicalNodeAdapter.getProperties().put("operational_status",GENISliverOperationalState.geni_pending_allocation.toString());
+											tmpPhysicalNodeAdapter.getProperties().put("allocation_status",GENISliverAllocationState.geni_allocated.toString());
+											tmpPhysicalNodeAdapter.setStatus(ResourceAdapterStatus.Reserved);
+											tmpPhysicalNodeAdapter.setExpirationTime(expirationDate);
+											resourceManager.setExpires(tmpPhysicalNodeAdapter.getId(), expirationDate);
+											resource = (ResourceAdapter) physicalNodeAdapter;
+										}
+										
+									}
+								}
 							}
 
-							// String id = node.getClientId();
 
 						}
-
+						
 						if (resource != null
+								&& !(resource.isExclusive() && !resource
+										.getStatus()
+										.equals(ResourceAdapterStatus.Available))
+								&& PhysicalNodeAdapterInterface.class
+										.isAssignableFrom(resource.getClass())) {
+							
+							resourcesList.add(resource);
+							
+						}else if (resource != null
 								&& !(resource.isExclusive() && !resource
 										.getStatus()
 										.equals(ResourceAdapterStatus.Available))

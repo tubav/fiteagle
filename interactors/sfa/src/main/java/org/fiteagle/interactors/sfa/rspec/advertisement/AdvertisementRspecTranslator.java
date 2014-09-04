@@ -14,6 +14,7 @@ import javax.xml.bind.Marshaller;
 
 import org.fiteagle.adapter.common.NodeAdapterInterface;
 import org.fiteagle.adapter.common.OpenstackResourceAdapter;
+import org.fiteagle.adapter.common.PhysicalNodeAdapterInterface;
 import org.fiteagle.adapter.common.ResourceAdapter;
 import org.fiteagle.adapter.common.SSHAccessable;
 import org.fiteagle.interactors.sfa.common.Geni_RSpec_Version;
@@ -54,6 +55,9 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 			} else if (ra instanceof NodeAdapterInterface) {
 				Object node = translateNodeAdapterInterfaceToAdvertisementNode(ra);
 				rspecElements.add(node);
+			} else if (ra instanceof PhysicalNodeAdapterInterface) {
+				Object node = translatePhysicalNodeAdapterInterfaceToAdvertisementNode(ra);
+				rspecElements.add(node);
 			} else if (ra instanceof SSHAccessable) {
 				Object node = translateSSHAccesableToAdvertisementNode(ra);
 				rspecElements.add(node);
@@ -65,6 +69,28 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		return adRSpecContents;
 	}
 
+	private Object translatePhysicalNodeAdapterInterfaceToAdvertisementNode(
+			ResourceAdapter ra) {
+		NodeContents node = new NodeContents();
+
+		node.setComponentId(COMPONENT_ID_PREFIX + "+node+"+ ra.getId());
+		node.setComponentManagerId(COMPONENT_MANAGER_ID);
+		node.setComponentName(ra.getId());
+		
+		List<Object> sliverTypes = node.getAnyOrRelationOrLocation();
+		PhysicalNodeAdapterInterface nodeAdapter = (PhysicalNodeAdapterInterface) ra;
+
+		SliverType sliverType = new NodeContents.SliverType();
+		sliverType.setName("raw-pc");
+		sliverTypes.add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory().createNodeContentsSliverType(sliverType)); 
+		AvailableContents available = new AvailableContents();
+		available.setNow(ra.isAvailable());
+		// add the availability into the node
+		sliverTypes.add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory().createAvailable(available));
+		return new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory().createNode(node);
+
+	}
+
 	private Object translateNodeAdapterInterfaceToAdvertisementNode(
 			ResourceAdapter resourceAdapter) {
 		// TODO: check here the constraints!!
@@ -72,15 +98,12 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		NodeContents node = new NodeContents();// this is the respons
 												// representing openstack as
 												// resource
-		
+
 		node.setComponentId(COMPONENT_ID_PREFIX + "+node+"
 				+ resourceAdapter.getId());
 		node.setComponentManagerId(COMPONENT_MANAGER_ID);
 		node.setComponentName(resourceAdapter.getId());
-		
-		
-		
-		
+
 		List<Object> sliverTypes = node.getAnyOrRelationOrLocation();// these
 																		// are
 																		// the
@@ -138,8 +161,9 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 			OpenstackResourceAdapter openstackResourceAdapterContainingDiskImage = (OpenstackResourceAdapter) iterator
 					.next();
 
-//			HashMap<String, String> imageProperties = openstackResourceAdapterContainingDiskImage
-//					.getImageProperties();
+			// HashMap<String, String> imageProperties =
+			// openstackResourceAdapterContainingDiskImage
+			// .getImageProperties();
 
 			// add for every sliverType the current image
 			for (Iterator iterator2 = sliverTypes.iterator(); iterator2
@@ -157,7 +181,10 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 
 				NodeContents.SliverType.DiskImage diskImage = new NodeContents.SliverType.DiskImage();
 				diskImage.setName(openstackResourceImage.getName());
-				sliverType.getAnyOrDiskImage().add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory().createNodeContentsSliverTypeDiskImage(diskImage));
+				sliverType
+						.getAnyOrDiskImage()
+						.add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory()
+								.createNodeContentsSliverTypeDiskImage(diskImage));
 			}
 
 			// diskImages = sliverType.getAnyOrDiskImage();
@@ -183,9 +210,11 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		}
 		AvailableContents available = new AvailableContents();
 		available.setNow(resourceAdapter.isAvailable());
-		//add the availability into the node
-		sliverTypes.add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory().createAvailable(available));
-		
+		// add the availability into the node
+		sliverTypes
+				.add(new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory()
+						.createAvailable(available));
+
 		return new org.fiteagle.interactors.sfa.rspec.advertisement.ObjectFactory()
 				.createNode(node);
 	}
@@ -193,7 +222,7 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 	public Object translateSSHAccesableToAdvertisementNode(
 			ResourceAdapter resourceAdapter) {
 		NodeContents node = new NodeContents();
-		
+
 		HashMap<String, Object> resourceAdapterProperties = resourceAdapter
 				.getProperties();
 
@@ -224,22 +253,25 @@ public class AdvertisementRspecTranslator extends SFAv3RspecTranslator {
 		HardwareTypeContents hardwareType = new HardwareTypeContents();
 		hardwareType.setName(sshAccesableResource.getHardwareType());
 		nodeContent.add(factory.createHardwareType(hardwareType));
-		
-		
-		//TODO: this is just to test
-				//if dummy...
-				//this is just to test
-				
-				if(resourceAdapter.getType()!=null && resourceAdapter.getType().compareTo("org.fiteagle.adapter.dummyNode.DummyNodeAdapter")==0){
-					
-					if(resourceAdapterProperties != null && resourceAdapterProperties.get("sliverTypeName")!=null){
-						SliverType sliverType = new SliverType();
-						sliverType.setName((String)resourceAdapter.getProperties().get("sliverTypeName"));
-						nodeContent.add(factory.createNodeContentsSliverType(sliverType));
-					}
-				}
-				//this is just to test
-		
+
+		// TODO: this is just to test
+		// if dummy...
+		// this is just to test
+
+		if (resourceAdapter.getType() != null
+				&& resourceAdapter.getType().compareTo(
+						"org.fiteagle.adapter.dummyNode.DummyNodeAdapter") == 0) {
+
+			if (resourceAdapterProperties != null
+					&& resourceAdapterProperties.get("sliverTypeName") != null) {
+				SliverType sliverType = new SliverType();
+				sliverType.setName((String) resourceAdapter.getProperties()
+						.get("sliverTypeName"));
+				nodeContent.add(factory
+						.createNodeContentsSliverType(sliverType));
+			}
+		}
+		// this is just to test
 
 		return new ObjectFactory().createNode(node);
 	}

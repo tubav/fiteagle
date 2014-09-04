@@ -21,6 +21,7 @@
 
     <module>dummyNode</module>
     <module>nodeAdapter</module>
+    <module>physicalNodeAdapter</module>
   </modules>
 
    <repositories>
