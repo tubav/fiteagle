@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -14,11 +13,8 @@ import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
 import org.fiteagle.adapter.common.AdapterConfiguration;
 import org.fiteagle.adapter.common.AdapterUser;
-import org.fiteagle.adapter.common.OpenstackResourceAdapter;
 import org.fiteagle.adapter.common.PhysicalNodeAdapterInterface;
 import org.fiteagle.adapter.common.ResourceAdapter;
-import org.fiteagle.adapter.common.SSHAccessable;
-import org.junit.internal.matchers.IsCollectionContaining;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
