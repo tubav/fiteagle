@@ -1,5 +1,6 @@
 package org.fiteagle.adapter.dummyNode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,28 +58,29 @@ public class DummyNodeAdapter extends ResourceAdapter implements SSHAccessable{
 	}
 	
 	public static List<ResourceAdapter> getJavaInstances(){
-		List<ResourceAdapter> list = new LinkedList<>();
-		
-		for (int i = 0; i < ids.length; i++) {
-			DummyNodeAdapter dummy = new DummyNodeAdapter();
-			dummy.setType("org.fiteagle.adapter.dummyNode.DummyNodeAdapter");
-			dummy.setId(ids[i]);
-			if(ids[i].compareTo("lte-connectivity")==0){
-				HashMap<String, Object> tmpProps = new HashMap<String, Object>();
-				tmpProps.put("sliverTypeName", "connectivity");
-				dummy.setProperties(tmpProps);
-				dummy.setHardwareType("lte-cell");
-			}
-			if(ids[i].compareTo("epc-as-a-service")==0){
-				HashMap<String, Object> tmpProps = new HashMap<String, Object>();
-				tmpProps.put("sliverTypeName", "epc-service");
-				dummy.setProperties(tmpProps);
-				dummy.setHardwareType("epc-installation");
-			}
-			
-			list.add(dummy);
-		}
-		return list;
+//		List<ResourceAdapter> list = new LinkedList<>();
+//		
+//		for (int i = 0; i < ids.length; i++) {
+//			DummyNodeAdapter dummy = new DummyNodeAdapter();
+//			dummy.setType("org.fiteagle.adapter.dummyNode.DummyNodeAdapter");
+//			dummy.setId(ids[i]);
+//			if(ids[i].compareTo("lte-connectivity")==0){
+//				HashMap<String, Object> tmpProps = new HashMap<String, Object>();
+//				tmpProps.put("sliverTypeName", "connectivity");
+//				dummy.setProperties(tmpProps);
+//				dummy.setHardwareType("lte-cell");
+//			}
+//			if(ids[i].compareTo("epc-as-a-service")==0){
+//				HashMap<String, Object> tmpProps = new HashMap<String, Object>();
+//				tmpProps.put("sliverTypeName", "epc-service");
+//				dummy.setProperties(tmpProps);
+//				dummy.setHardwareType("epc-installation");
+//			}
+//			
+//			list.add(dummy);
+//		}
+//		return list;
+		return new ArrayList<ResourceAdapter>();
 		
 	}
 

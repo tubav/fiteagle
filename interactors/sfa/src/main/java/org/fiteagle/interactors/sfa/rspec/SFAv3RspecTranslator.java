@@ -38,7 +38,7 @@ public class SFAv3RspecTranslator {
 	protected static final String COMPONENT_ID_PREFIX = "urn:publicid:IDN+"
 			+ InterfaceConfiguration.getInstance().getDomain();
 	protected static final String COMPONENT_MANAGER_ID = InterfaceConfiguration
-			.getInstance().getAM_URN();
+			.getInstance().getCM_URN();
 	private final Geni_RSpec_Version geni_rspec_version;
 
 

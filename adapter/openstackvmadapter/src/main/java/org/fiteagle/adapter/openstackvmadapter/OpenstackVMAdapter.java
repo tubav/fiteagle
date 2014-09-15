@@ -141,28 +141,29 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 	}
 
 	public static List<ResourceAdapter> getJavaInstances() {
-		List<ResourceAdapter> resultList = new ArrayList<ResourceAdapter>();
-
-		if (!utilsConfigured) {
-			new OpenstackVMAdapter();
-		}
-
-		Flavors flavors = createClient().listFlavors();
-		List<Flavor> flavorsList = flavors.getList();
-		
-		Images images = createClient().listImages();
-		List<Image> imagesList = images.getList();
-
-		for (Image image : imagesList) {
-			OpenstackVMAdapter openstackVMAdapter = new OpenstackVMAdapter();
-			openstackVMAdapter.setExclusive(false);
-			openstackVMAdapter.setAvailable(true);
-			openstackVMAdapter.setImage(image);
-			openstackVMAdapter.setFlavorsList(flavorsList);
-			resultList.add(openstackVMAdapter);
-		}
-
-		return resultList;
+//		List<ResourceAdapter> resultList = new ArrayList<ResourceAdapter>();
+//
+//		if (!utilsConfigured) {
+//			new OpenstackVMAdapter();
+//		}
+//
+//		Flavors flavors = createClient().listFlavors();
+//		List<Flavor> flavorsList = flavors.getList();
+//		
+//		Images images = createClient().listImages();
+//		List<Image> imagesList = images.getList();
+//
+//		for (Image image : imagesList) {
+//			OpenstackVMAdapter openstackVMAdapter = new OpenstackVMAdapter();
+//			openstackVMAdapter.setExclusive(false);
+//			openstackVMAdapter.setAvailable(true);
+//			openstackVMAdapter.setImage(image);
+//			openstackVMAdapter.setFlavorsList(flavorsList);
+//			resultList.add(openstackVMAdapter);
+//		}
+//
+//		return resultList;
+		return new ArrayList<ResourceAdapter>();
 	}
 
 	@Override

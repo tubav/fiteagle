@@ -161,83 +161,84 @@ public class SSHDeployAdapter extends ResourceAdapter implements SSHAccessable {
 
 	
 	public static List<ResourceAdapter> getJavaInstances() {
-		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
-
-		String[] ips = null;
-		String[] ports = null;
-		String[] usernames = null;
-		String[] passwords = null;
-		String[] sshKeys = null;
-		String[] countries = null;
-		String[] latitudes = null;
-		String[] longitudes = null;
-		String[] hardwareTypes = null;
-
-		if (sshDeployAdapterConfig.getPasswords() == null
-				&& sshDeployAdapterConfig.getSsh_keys() == null
-				|| sshDeployAdapterConfig.getIps() == null
-				|| sshDeployAdapterConfig.getUsernames() == null)
-			return resourceAdapters;
-
-		if (sshDeployAdapterConfig.getIps() != null) {
-			ips = sshDeployAdapterConfig.getIps().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getUsernames() != null) {
-			usernames = sshDeployAdapterConfig.getUsernames().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getPasswords() != null) {
-			passwords = sshDeployAdapterConfig.getPasswords().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getSsh_keys() != null) {
-			sshKeys = sshDeployAdapterConfig.getSsh_keys().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getCountries() != null) {
-			countries = sshDeployAdapterConfig.getCountries().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getLatitudes() != null) {
-			latitudes = sshDeployAdapterConfig.getLatitudes().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getLongitues() != null) {
-			longitudes = sshDeployAdapterConfig.getLongitues().split(",");
-		}
-
-		if (sshDeployAdapterConfig.getHardwareTypes() != null) {
-			hardwareTypes = sshDeployAdapterConfig.getHardwareTypes()
-					.split(",");
-		}
-		if (sshDeployAdapterConfig.getPorts() != null) {
-			ports = sshDeployAdapterConfig.getPorts().split(",");
-		}
-
-		if (!(ips.length == usernames.length && usernames.length == passwords.length)
-				&& (!(ips.length == usernames.length && usernames.length == sshKeys.length)))
-			return resourceAdapters;
-
-		for (int i = 0; i < usernames.length; i++) {
-			SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(
-					ips[i].trim(), ports[i].trim(), usernames[i].trim(),
-					passwords[i].trim(), sshKeys[i].trim());
-
-			if (hardwareTypes != null && i < hardwareTypes.length)
-				sshDeployAdapter.setHardwareType(hardwareTypes[i].trim());
-			if (countries != null && i < countries.length)
-				sshDeployAdapter.addProperty("country", countries[i].trim());
-			if (latitudes != null && i < latitudes.length)
-				sshDeployAdapter.addProperty("latitude", latitudes[i].trim());
-			if (longitudes != null && i < longitudes.length)
-				sshDeployAdapter.addProperty("longitude", longitudes[i].trim());
-
-			sshDeployAdapter.setExclusive(true);
-			resourceAdapters.add(sshDeployAdapter);
-		}
-
-		return resourceAdapters;
+//		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
+//
+//		String[] ips = null;
+//		String[] ports = null;
+//		String[] usernames = null;
+//		String[] passwords = null;
+//		String[] sshKeys = null;
+//		String[] countries = null;
+//		String[] latitudes = null;
+//		String[] longitudes = null;
+//		String[] hardwareTypes = null;
+//
+//		if (sshDeployAdapterConfig.getPasswords() == null
+//				&& sshDeployAdapterConfig.getSsh_keys() == null
+//				|| sshDeployAdapterConfig.getIps() == null
+//				|| sshDeployAdapterConfig.getUsernames() == null)
+//			return resourceAdapters;
+//
+//		if (sshDeployAdapterConfig.getIps() != null) {
+//			ips = sshDeployAdapterConfig.getIps().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getUsernames() != null) {
+//			usernames = sshDeployAdapterConfig.getUsernames().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getPasswords() != null) {
+//			passwords = sshDeployAdapterConfig.getPasswords().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getSsh_keys() != null) {
+//			sshKeys = sshDeployAdapterConfig.getSsh_keys().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getCountries() != null) {
+//			countries = sshDeployAdapterConfig.getCountries().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getLatitudes() != null) {
+//			latitudes = sshDeployAdapterConfig.getLatitudes().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getLongitues() != null) {
+//			longitudes = sshDeployAdapterConfig.getLongitues().split(",");
+//		}
+//
+//		if (sshDeployAdapterConfig.getHardwareTypes() != null) {
+//			hardwareTypes = sshDeployAdapterConfig.getHardwareTypes()
+//					.split(",");
+//		}
+//		if (sshDeployAdapterConfig.getPorts() != null) {
+//			ports = sshDeployAdapterConfig.getPorts().split(",");
+//		}
+//
+//		if (!(ips.length == usernames.length && usernames.length == passwords.length)
+//				&& (!(ips.length == usernames.length && usernames.length == sshKeys.length)))
+//			return resourceAdapters;
+//
+//		for (int i = 0; i < usernames.length; i++) {
+//			SSHDeployAdapter sshDeployAdapter = new SSHDeployAdapter(
+//					ips[i].trim(), ports[i].trim(), usernames[i].trim(),
+//					passwords[i].trim(), sshKeys[i].trim());
+//
+//			if (hardwareTypes != null && i < hardwareTypes.length)
+//				sshDeployAdapter.setHardwareType(hardwareTypes[i].trim());
+//			if (countries != null && i < countries.length)
+//				sshDeployAdapter.addProperty("country", countries[i].trim());
+//			if (latitudes != null && i < latitudes.length)
+//				sshDeployAdapter.addProperty("latitude", latitudes[i].trim());
+//			if (longitudes != null && i < longitudes.length)
+//				sshDeployAdapter.addProperty("longitude", longitudes[i].trim());
+//
+//			sshDeployAdapter.setExclusive(true);
+//			resourceAdapters.add(sshDeployAdapter);
+//		}
+//
+//		return resourceAdapters;
+		return new ArrayList<ResourceAdapter>();
 	}
 
 	public void setPreferences(String ips, String usernames, String passwords,

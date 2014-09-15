@@ -35,23 +35,23 @@ public class GroupManagerTest {
     Assert.assertNotNull(g2);
   }
 
-  @Test
-  public void testAddGroupWithResources(){
-	Group g2 = new Group("g2", "test");
-	g2.addResource(ra);
-	gm.addGroup(g2);
-  }
-  
- 
-  @Test
-  public void testUpdateGroup(){
-	  Group g3 = gm.getGroup(group.getGroupId());
-	  Assert.assertNotNull(g3);
-	  g3.addResource(ra);
-	  gm.updateGroup(g3); 
-	  Group g4 = gm.getGroup(group.getGroupId());
-	  Assert.assertTrue(g4.contains(ra.getId()));
-  }
+//  @Test
+//  public void testAddGroupWithResources(){
+//	Group g2 = new Group("g2", "test");
+//	g2.addResource(ra);
+//	gm.addGroup(g2);
+//  }
+//  
+// 
+//  @Test
+//  public void testUpdateGroup(){
+//	  Group g3 = gm.getGroup(group.getGroupId());
+//	  Assert.assertNotNull(g3);
+//	  g3.addResource(ra);
+//	  gm.updateGroup(g3); 
+//	  Group g4 = gm.getGroup(group.getGroupId());
+//	  Assert.assertTrue(g4.contains(ra.getId()));
+//  }
   
   
  

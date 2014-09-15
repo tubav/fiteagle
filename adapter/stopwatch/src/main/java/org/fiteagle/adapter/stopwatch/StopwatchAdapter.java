@@ -56,13 +56,14 @@ public class StopwatchAdapter extends ResourceAdapter implements Instantiable {
 	}
 	
 	public static List<ResourceAdapter> getJavaInstances() {
-		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
-	    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
-	    dummyResourceAdapter.setExclusive(false);
-	    dummyResourceAdapter.setAvailable(true);
-	    resourceAdapters.add(dummyResourceAdapter);
-		
-		return resourceAdapters;
+//		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
+//	    ResourceAdapter dummyResourceAdapter = new StopwatchAdapter();
+//	    dummyResourceAdapter.setExclusive(false);
+//	    dummyResourceAdapter.setAvailable(true);
+//	    resourceAdapters.add(dummyResourceAdapter);
+//		
+//		return resourceAdapters;
+		return new ArrayList<ResourceAdapter>();
 	}
 	@Override
 	public boolean isLoaded() {

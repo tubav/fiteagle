@@ -1,5 +1,6 @@
 package org.fiteagle.adapter.qoSControl;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,10 +73,11 @@ private String clientIP;
 
 	
 	public static List<ResourceAdapter> getJavaInstances() {
-		LinkedList<ResourceAdapter> adapers = new LinkedList<>();
-
-		adapers.add(new QoSControlAdapter());
-		return adapers;
+//		LinkedList<ResourceAdapter> adapers = new LinkedList<>();
+//
+//		adapers.add(new QoSControlAdapter());
+//		return adapers;
+		return new ArrayList<ResourceAdapter>();
 	}
 
 	@Override

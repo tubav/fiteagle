@@ -54,11 +54,13 @@ public class LteAdapter extends ResourceAdapter implements SSHAccessable{
 	}
 	
 	public static List<ResourceAdapter> getJavaInstances(){
-		List<ResourceAdapter> list = new LinkedList<>();
-		ResourceAdapter dummy = new LteAdapter();
-		dummy.setId("LTE");
-		list.add(dummy);
-		return list;
+//		List<ResourceAdapter> list = new LinkedList<>();
+//		ResourceAdapter dummy = new LteAdapter();
+//		dummy.setId("LTE");
+//		list.add(dummy);
+//		return list;
+		
+		return new ArrayList<ResourceAdapter>();
 		
 	}
 

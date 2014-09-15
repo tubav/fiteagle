@@ -44,13 +44,14 @@ public class AttenuatorAdapter extends ResourceAdapter{
 	public static List<ResourceAdapter> getJavaInstances() {
 		//TODO: set the adapter specific staff to set the correct properties
 		
-		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
-		
-		AttenuatorAdapter testAttentuatorAdapter = new AttenuatorAdapter();
-		testAttentuatorAdapter.setExclusive(true);
-		resourceAdapters.add(testAttentuatorAdapter);
-		
-		return resourceAdapters;
+//		List<ResourceAdapter> resourceAdapters = new ArrayList<ResourceAdapter>();
+//		
+//		AttenuatorAdapter testAttentuatorAdapter = new AttenuatorAdapter();
+//		testAttentuatorAdapter.setExclusive(true);
+//		resourceAdapters.add(testAttentuatorAdapter);
+//		
+//		return resourceAdapters;
+		return new ArrayList<ResourceAdapter>();
 	}
 
 	@Override
