@@ -19,14 +19,10 @@ import org.fiteagle.interactors.sfa.common.AMCode;
 import org.fiteagle.interactors.sfa.common.AMResult;
 import org.fiteagle.interactors.sfa.common.Authorization;
 import org.fiteagle.interactors.sfa.common.GENISliverAllocationState;
-import org.fiteagle.interactors.sfa.common.GENISliverOperationalState;
 import org.fiteagle.interactors.sfa.common.GENI_CodeEnum;
 import org.fiteagle.interactors.sfa.common.GeniSlivers;
 import org.fiteagle.interactors.sfa.common.ListCredentials;
 import org.fiteagle.interactors.sfa.common.SFAv3RequestProcessor;
-import org.fiteagle.interactors.sfa.describe.DescribeValue;
-import org.fiteagle.interactors.sfa.provision.ProvisionOptions;
-import org.fiteagle.interactors.sfa.provision.ProvisionResult;
 import org.fiteagle.interactors.sfa.rspec.SFAv3RspecTranslator;
 import org.fiteagle.interactors.sfa.util.DateUtil;
 

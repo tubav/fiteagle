@@ -221,6 +221,32 @@ public class PhysicalNodeAdapter extends ResourceAdapter implements
 			
 			
 			for (int i = 0; i < Utils.NODE_NAMES.length; i++) {
+				
+				//TODO: activate android physical adapter after it is finished!
+//				if(Utils.NODE_NAMES[i].startsWith("ANDROID")){
+//					//this is an android device
+//					AndroidPhysicalNodeAdapter tmpAndroidPhysicalNodeAdapter = new AndroidPhysicalNodeAdapter();
+//					
+//					tmpAndroidPhysicalNodeAdapter.setNodeName(Utils.NODE_NAMES[i]);
+//					tmpAndroidPhysicalNodeAdapter.setId(Utils.NODE_NAMES[i]);
+//					
+//					if(Utils.ROOT_USER_NAMES != null && Utils.ROOT_USER_NAMES.length > i)
+//						tmpAndroidPhysicalNodeAdapter.setRootUserName(Utils.ROOT_USER_NAMES[i]);
+//					
+//					if(Utils.NODES_PASSWORDS != null && Utils.NODES_PASSWORDS.length > i)
+//						tmpAndroidPhysicalNodeAdapter.setRootPassword(Utils.NODES_PASSWORDS[i]);
+//					
+//					if(Utils.NODES_IPS != null && Utils.NODES_IPS.length > i)
+//						tmpAndroidPhysicalNodeAdapter.setIp(Utils.NODES_IPS[i]);
+//					
+//					if(Utils.NODES_PORTS != null && Utils.NODES_PORTS.length > i)
+//						tmpAndroidPhysicalNodeAdapter.setPort(Utils.NODES_PORTS[i]);
+//				
+//					
+//					adapterList.add(tmpAndroidPhysicalNodeAdapter);
+//					continue;
+//				}
+				
 				PhysicalNodeAdapter tmpPhysicalNodeAdapter = new PhysicalNodeAdapter();
 				
 				tmpPhysicalNodeAdapter.setNodeName(Utils.NODE_NAMES[i]);
@@ -291,10 +317,10 @@ public class PhysicalNodeAdapter extends ResourceAdapter implements
 
 	@Override
 	public PhysicalNodeAdapterInterface create(String callerId) {
-		log.warn("CREATE METHODE WITH 1 PARAM CALLED!!");
+//		log.warn("CREATE METHODE WITH 1 PARAM CALLED!!");
 		this.setCallerId(callerId);
 		this.setAvailable(false);
-		log.warn("set caller id is: "+this.getCallerId());
+//		log.warn("set caller id is: "+this.getCallerId());
 		return this;
 	}
 
