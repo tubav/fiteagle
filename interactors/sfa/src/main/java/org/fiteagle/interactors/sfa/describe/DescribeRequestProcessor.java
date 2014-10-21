@@ -156,6 +156,14 @@ public class DescribeRequestProcessor extends SFAv3RequestProcessor {
 			for (Iterator iterator = resources.iterator(); iterator.hasNext();) {
 				ResourceAdapter resourceAdapter = (ResourceAdapter) iterator
 						.next();
+				if(NodeAdapterInterface.class.isAssignableFrom(resourceAdapter.getClass())){
+					NodeAdapterInterface nodeAdapter = (NodeAdapterInterface)resourceAdapter;
+					List<GeniSlivers> sliverList = buildSliversForNodeAdapter(nodeAdapter);
+					if (sliverList != null)
+						slivers.addAll(sliverList);
+					continue;
+				}
+				
 				GeniSlivers tmpSliver = new GeniSlivers();
 				tmpSliver.setGeni_sliver_urn(URN.getURNFromResourceAdapter(
 						resourceAdapter).toString());
