@@ -66,7 +66,7 @@ public class OpenstackVMAdapter extends ResourceAdapter implements
 		if (!utilsConfigured) {
 			this.configureUtils();
 		}
-		this.setType("org.fiteagle.adapter.openstackvmadapter.OpenstackVMAdapter");//TODO: check this
+		this.setType("org.fiteagle.adapter.nodeadapter.OpenstackVMAdapter");//TODO: check this
 
 	}
 

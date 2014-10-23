@@ -83,6 +83,7 @@ private URLClassLoader sysloader;
 					java.lang.reflect.Method method =adapterClass.getDeclaredMethod("getJavaInstances", null);
 					List<ResourceAdapter> resourceAdapters = (List<ResourceAdapter>) method.invoke(null, null);
 					adapterInstancesDatabase.addResourceAdapters(resourceAdapters);
+					adapterDatabase.addResourceAdapters(resourceAdapters);
 //					if(resourceAdapter.isExclusive())
 //						adapterInstancesDatabase.addResourceAdapters(resourceAdapters);
 				}
@@ -302,6 +303,15 @@ private URLClassLoader sysloader;
 	}
 
 	public List<ResourceAdapter> getResourceAdapterInstancesAvailable() {
+		List<ResourceAdapter> availableAdapters = new LinkedList<>();
+		for(ResourceAdapter ra: adapterInstancesDatabase.getResourceAdapters()){
+			if(ra.isAvailable())
+				availableAdapters.add(ra);
+		}
+		return availableAdapters;
+	}
+	
+	public List<ResourceAdapter> getResourceAdaptersAvailable() {
 		List<ResourceAdapter> availableAdapters = new LinkedList<>();
 		for(ResourceAdapter ra: adapterInstancesDatabase.getResourceAdapters()){
 			if(ra.isAvailable())

@@ -1,5 +1,6 @@
 package org.fiteagle.interactors.sfa.listresources;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.fiteagle.adapter.common.ResourceAdapter;
@@ -107,13 +108,18 @@ public class ListResourceRequestProcessor extends SFAv3RequestProcessor {
 
 		List<ResourceAdapter> resourceAdapters;
 		RSpecContents advertisedRspec;
-		
+		//TODO: check if this works correctly!! this will be needed to list resources.
 		if (optionsService.isAvailableSet()) {
-			resourceAdapters = resourceManager.getResourceAdapterInstancesAvailable();
+//			resourceAdapters = resourceManager.getResourceAdapterInstancesAvailable();
+			resourceAdapters = resourceManager.getResourceAdaptersAvailable();
 		} 
 		else{
-			resourceAdapters = resourceManager.getResourceAdapterInstances();
+//			resourceAdapters = resourceManager.getResourceAdapterInstances();
+			resourceAdapters = resourceManager.getResourceAdapters();
 		}
+		
+		
+		
 		AdvertisementRspecTranslator adTranslator = new AdvertisementRspecTranslator();
 		advertisedRspec = adTranslator.getAdvertisedRSpec(resourceAdapters);
 		String advertisedRspecSTR = adTranslator.getAdvertisedRSpecString(advertisedRspec);
