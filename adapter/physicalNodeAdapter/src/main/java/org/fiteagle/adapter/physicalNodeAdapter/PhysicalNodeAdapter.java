@@ -181,6 +181,7 @@ public class PhysicalNodeAdapter extends ResourceAdapter implements
 	public void release() {
 		// ON THE REMOTE MACHINE FOR THIS USER// OR ALL OF THE HOME DIRECTORIES
 		// UNDER HOME!
+		this.setAvailable(true);
 		SSHConnector connector = new SSHConnector(this.getIp(), this.getPort(), this.getRootUserName(), this.getRootPassword(), getConfiguration());
 		for (AdapterUser user : getConfiguration().getUsers()) {
 			String newUser = user.getUsername();
