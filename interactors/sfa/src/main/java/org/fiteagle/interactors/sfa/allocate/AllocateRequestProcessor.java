@@ -143,6 +143,19 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 				ArrayList<ResourceAdapter> resourcesList = new ArrayList<ResourceAdapter>();
 
 				boolean allocationSuccess = true;
+				
+				
+					String error;
+					if ((error = checkDuplicateClientId(rspecRequestedResources)) != null)
+					{
+						AMCode errorCode = new AMCode();
+						errorCode.setGeni_code(GENI_CodeEnum.BADARGS);
+						result.setCode(errorCode);
+						result.setOutput(error);
+						return result;
+					}
+				
+				
 				for (Iterator iterator = rspecRequestedResources.iterator(); iterator
 						.hasNext();) {
 					Object object = (Object) iterator.next();
@@ -205,11 +218,12 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 							
 							NodeContents node = (NodeContents) jaxbElem
 									.getValue();
-
+							
 							//if component manager id is not the same as on the server this should not be processed on this server
 							if(node.getComponentManagerId()!=null && (node.getComponentManagerId().compareToIgnoreCase(InterfaceConfiguration.getInstance().getCM_URN())!=0)){
 								continue;
 							}
+
 							String nodeName = new RequestRspecTranslator()
 							.getNodeNameFromNodeComponentId(node
 									.getComponentId());
@@ -443,6 +457,44 @@ public class AllocateRequestProcessor extends SFAv3RequestProcessor {
 		result.setValue(allocateValue);
 
 		return result;
+	}
+
+	private String checkDuplicateClientId(List<Object> rspecRequestedResources) {
+		
+		List<String> rspec_clientIds = new ArrayList<>();
+		String error = null;
+		
+		for (Iterator iterator = rspecRequestedResources.iterator(); iterator
+				.hasNext();) {
+			
+			final Object rspecNode = ((JAXBElement) iterator.next()).getValue();
+	
+			if ( !(rspecNode instanceof NodeContents))
+				continue;
+			
+			NodeContents node = (NodeContents) rspecNode;
+			String node_clientId = node.getClientId();
+			for(String id: rspec_clientIds){
+				if(id.equals(node_clientId)){
+					error = "ClientId: "+ node_clientId + " already exists";
+				}
+			}
+			rspec_clientIds.add(node_clientId);
+			
+		}
+return error;
+		
+	}
+
+	private void checkDuplicateClientId(List<String> rspec_clientIds,
+			NodeContents node) {
+		String node_clientId = node.getClientId();
+		for(String id: rspec_clientIds){
+			if(id.equals(node_clientId)){
+				throw new RuntimeException("ClientId: "+ node_clientId + " already exists");
+			}
+		}
+		rspec_clientIds.add(node_clientId);
 	}
 
 	private Date getExpirationDate(AllocateOptions options) {
