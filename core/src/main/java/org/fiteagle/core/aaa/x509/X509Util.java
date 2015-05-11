@@ -158,8 +158,11 @@ public static String getUserNameFromX509Certificate(X509Certificate cert) throws
 		try {
 			return (X509Certificate) cf.generateCertificate(in);
 		} catch (Exception e) {
-			throw new GenerateCertificateException();
-		}
+
+          System.out.println(e.getStackTrace());
+          throw new GenerateCertificateException();
+
+        }
 	}
   
  
