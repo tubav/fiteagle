@@ -2,6 +2,7 @@ package org.fiteagle.delivery.xmlrpc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.io.Writer;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bouncycastle.openssl.PEMReader;
 import org.fiteagle.core.aaa.AuthenticationHandler;
 import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
@@ -82,10 +84,13 @@ public class FITeagleServlet extends XmlRpcServlet {
         return certs[0];
     }else {
 		String certString = req.getHeader("SSL_CLIENT_CERT");
-		if(certString != null){
-			log.info("Certifcate: " + certString);
-			X509Certificate x509Certificate = X509Util.buildX509Certificate(certString);
-			return x509Certificate;
+
+
+	if(certString != null){
+		X509Certificate cert = null;
+		StringReader reader = new StringReader(certString);
+		PEMReader pr = new PEMReader(reader);
+		cert = (X509Certificate)pr.readObject();
 		}
 
 		throw new RuntimeException("No X.509 client certificate found in request");
