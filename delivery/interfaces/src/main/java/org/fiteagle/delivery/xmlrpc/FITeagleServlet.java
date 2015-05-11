@@ -99,6 +99,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 		StringReader reader = new StringReader(certString);
 		PEMReader pr = new PEMReader(reader);
 		cert = (X509Certificate)pr.readObject();
+		return cert;
 		}
 
 		throw new RuntimeException("No X.509 client certificate found in request");
