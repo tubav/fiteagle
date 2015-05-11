@@ -78,8 +78,17 @@ public class FITeagleServlet extends XmlRpcServlet {
     X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
     if (null != certs && certs.length > 0) {
         return certs[0];
-    }
-    throw new RuntimeException("No X.509 client certificate found in request");
+    }}else {
+		Enumeration<String> certString  = req.getHeaderNames();
+
+		//FUSECO quickfix!!!
+		while(certString.hasMoreElements()){
+			String header = certString.nextElement();
+			log.info("Header: "+ header + " Value: " + req.getHeader(header));
+		}
+	}
+
+	throw new RuntimeException("No X.509 client certificate found in request");
   }
 
   public String handleRequestGetVersionStatic() throws IOException {
