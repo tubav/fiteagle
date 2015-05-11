@@ -88,9 +88,9 @@ public class FITeagleServlet extends XmlRpcServlet {
 
 	if(certString != null){
 		log.info(certString);
-		
-		certString.replace("-----BEGIN CERTIFICATE-----","");
-		certString.replace("-----END CERTIFICATE-----","");
+
+		certString.replaceAll("-----BEGIN CERTIFICATE-----","");
+		certString.replaceAll("-----END CERTIFICATE-----","");
 		certString = certString.replaceAll("\t", "");
 		certString = certString.replaceAll("\n", "");
 		certString = certString.replaceAll(" ", "");
