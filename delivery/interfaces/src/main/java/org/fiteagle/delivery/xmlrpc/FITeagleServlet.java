@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.security.cert.X509Certificate;
+import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fiteagle.core.aaa.AuthenticationHandler;
+import org.fiteagle.core.aaa.x509.X509Util;
 import org.fiteagle.delivery.xmlrpc.util.FITeagleUtils;
 import org.fiteagle.delivery.xmlrpc.util.FixedSerializer;
 import org.fiteagle.delivery.xmlrpc.util.GeniAMHandler;
@@ -78,17 +80,17 @@ public class FITeagleServlet extends XmlRpcServlet {
     X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
     if (null != certs && certs.length > 0) {
         return certs[0];
-    }}else {
-		Enumeration<String> certString  = req.getHeaderNames();
-
-		//FUSECO quickfix!!!
-		while(certString.hasMoreElements()){
-			String header = certString.nextElement();
-			log.info("Header: "+ header + " Value: " + req.getHeader(header));
+    }else {
+		String certString = req.getHeader("SSL_CLIENT_CERT");
+		if(certString != null){
+			X509Certificate x509Certificate = X509Util.buildX509Certificate(certString);
+			return x509Certificate;
 		}
+
+		throw new RuntimeException("No X.509 client certificate found in request");
+
 	}
 
-	throw new RuntimeException("No X.509 client certificate found in request");
   }
 
   public String handleRequestGetVersionStatic() throws IOException {
