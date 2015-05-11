@@ -83,6 +83,7 @@ public class FITeagleServlet extends XmlRpcServlet {
     }else {
 		String certString = req.getHeader("SSL_CLIENT_CERT");
 		if(certString != null){
+			log.info("Certifcate: " + certString);
 			X509Certificate x509Certificate = X509Util.buildX509Certificate(certString);
 			return x509Certificate;
 		}
