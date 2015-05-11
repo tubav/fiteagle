@@ -87,6 +87,7 @@ public class FITeagleServlet extends XmlRpcServlet {
 
 
 	if(certString != null){
+		log.info(certString);
 		X509Certificate cert = null;
 		StringReader reader = new StringReader(certString);
 		PEMReader pr = new PEMReader(reader);
